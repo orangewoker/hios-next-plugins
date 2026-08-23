@@ -34,3 +34,9 @@ plugins/
 ## 许可证
 
 仓库中的清单与示例文档使用 MIT License。第三方站点内容及服务遵循各自条款。
+
+## 主题
+
+| 主题 | 版本 | 安装 URL |
+| --- | --- | --- |
+| 夏日晴空 | 1.0.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/themes/summer-breeze` |

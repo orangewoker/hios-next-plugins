@@ -1,0 +1,79 @@
+:root[data-theme-id="hios.summer-breeze"] {
+  --ink: #123047;
+  --muted: #668397;
+  --faint: #91a9b6;
+  --line: #cbe8ec;
+  --primary: #0797ca;
+  --primary-2: #24b9b1;
+  --card: rgba(255,255,255,.82);
+  color: var(--ink);
+  background: #eefbfb;
+}
+:root[data-theme-id="hios.summer-breeze"] body {
+  background:
+    radial-gradient(circle at 85% 4%, rgba(255,202,91,.30), transparent 24%),
+    radial-gradient(circle at 10% 88%, rgba(47,196,178,.18), transparent 31%),
+    linear-gradient(145deg,#f6fdff 0%,#eaf9fb 52%,#fff9e9 100%);
+}
+:root[data-theme-id="hios.summer-breeze"] .sidebar {
+  background: linear-gradient(180deg,rgba(240,252,255,.94),rgba(234,249,246,.9));
+  border-color: rgba(92,183,197,.24);
+}
+:root[data-theme-id="hios.summer-breeze"] .brand-mark,
+:root[data-theme-id="hios.summer-breeze"] .primary-button,
+:root[data-theme-id="hios.summer-breeze"] .command-bar > button,
+:root[data-theme-id="hios.summer-breeze"] .send-button,
+:root[data-theme-id="hios.summer-breeze"] .node-run {
+  background: linear-gradient(135deg,#08a9d7,#23c2ad);
+  box-shadow: 0 9px 22px rgba(5,158,190,.25);
+}
+:root[data-theme-id="hios.summer-breeze"] .brand strong em,
+:root[data-theme-id="hios.summer-breeze"] .text-button,
+:root[data-theme-id="hios.summer-breeze"] .soft-button { color: #068ebd; }
+:root[data-theme-id="hios.summer-breeze"] .nav-item:hover { color: #087fa5; background: rgba(212,246,248,.72); }
+:root[data-theme-id="hios.summer-breeze"] .nav-item.active {
+  color: #047da6;
+  background: linear-gradient(90deg,#dff7fb,#f2fffb);
+  box-shadow: inset 0 0 0 1px #a9e4eb,0 8px 20px rgba(13,146,170,.08);
+}
+:root[data-theme-id="hios.summer-breeze"] .quick-card,
+:root[data-theme-id="hios.summer-breeze"] .recent-card,
+:root[data-theme-id="hios.summer-breeze"] .capability,
+:root[data-theme-id="hios.summer-breeze"] .status-card,
+:root[data-theme-id="hios.summer-breeze"] .dashboard-page article,
+:root[data-theme-id="hios.summer-breeze"] .settings-sections section {
+  border-color: rgba(130,205,213,.38);
+  box-shadow: 0 12px 30px rgba(40,126,146,.08),inset 0 1px rgba(255,255,255,.94);
+}
+:root[data-theme-id="hios.summer-breeze"] .quick-icon,
+:root[data-theme-id="hios.summer-breeze"] .capability > span,
+:root[data-theme-id="hios.summer-breeze"] .command-icon,
+:root[data-theme-id="hios.summer-breeze"] .agent-mark,
+:root[data-theme-id="hios.summer-breeze"] .agent-orb {
+  color: #078fb9;
+  background: linear-gradient(145deg,#e1f8ff,#ddfbf4);
+}
+:root[data-theme-id="hios.summer-breeze"] .status-card {
+  background: linear-gradient(145deg,rgba(236,253,255,.94),rgba(255,249,226,.86));
+}
+:root[data-theme-id="hios.summer-breeze"] .status-line span { background: linear-gradient(90deg,#14b8a6,#0ea5e9,#f5b942); }
+:root[data-theme-id="hios.summer-breeze"] .canvas-shell,
+:root[data-theme-id="hios.summer-breeze"] .flow-wrap,
+:root[data-theme-id="hios.summer-breeze"] .flow-wrap .react-flow { background-color: #eef9f9 !important; }
+:root[data-theme-id="hios.summer-breeze"] .canvas-topbar,
+:root[data-theme-id="hios.summer-breeze"] .agent-panel {
+  background: rgba(248,255,255,.9) !important;
+  border-color: #c9e7e9 !important;
+}
+:root[data-theme-id="hios.summer-breeze"] .canvas-node { border-color: #cbe8e9; box-shadow: 0 12px 30px rgba(34,116,132,.12); }
+:root[data-theme-id="hios.summer-breeze"] .canvas-node.is-selected { border-color: #08a5c6; box-shadow: 0 0 0 3px rgba(8,165,198,.16),0 12px 30px rgba(34,116,132,.12); }
+:root[data-theme-id="hios.summer-breeze"] .react-flow__handle { background: #09a9c6; }
+:root[data-theme-id="hios.summer-breeze"] .react-flow__edge-path { stroke: #55b9c4; }
+:root[data-theme-id="hios.summer-breeze"] .canvas-floating-toolbar button.active { color: #fff; background: linear-gradient(135deg,#0ba7d1,#24bfae); }
+:root[data-theme-id="hios.summer-breeze"] input:focus,
+:root[data-theme-id="hios.summer-breeze"] textarea:focus,
+:root[data-theme-id="hios.summer-breeze"] select:focus { border-color: #12a9c2 !important; box-shadow: 0 0 0 3px rgba(18,169,194,.12) !important; }
+:root[data-theme-id="hios.summer-breeze"] .avatar { background: linear-gradient(145deg,#0aa4ce,#25bfa9); }
+:root[data-theme-id="hios.summer-breeze"] .notification i { background: #ff775d; }
+:root[data-theme-id="hios.summer-breeze"] .civitai-image-card,
+:root[data-theme-id="hios.summer-breeze"] .account-dialog { border-color: #bfe3e7; }
