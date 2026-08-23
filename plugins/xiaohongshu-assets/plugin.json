@@ -1,0 +1,12 @@
+{
+  "id": "xiaohongshu-assets",
+  "name": "小红书素材库",
+  "version": "0.2.0",
+  "description": "扫码登录小红书，在可调整大小的画布悬浮窗口中浏览、采集并加入图片素材。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets",
+  "permissions": ["network", "filesystem", "canvas", "agent"],
+  "capabilities": [{ "id": "xiaohongshu.assets", "title": "小红书素材库", "description": "登录、浏览和采集小红书图片素材。", "settings": true }],
+  "nodes": [{ "id": "xiaohongshu.browser", "title": "小红书素材库", "description": "在可拖动、可缩放的画布悬浮窗口中浏览并采集小红书图片。", "builtin": "xiaohongshu-assets" }],
+  "builtin": "xiaohongshu-assets"
+}
