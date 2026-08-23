@@ -27,6 +27,17 @@
   background: linear-gradient(135deg,#08a9d7,#23c2ad);
   box-shadow: 0 9px 22px rgba(5,158,190,.25);
 }
+:root[data-theme-id="hios.summer-breeze"] .brand-mark {
+  color: #fffbe0 !important;
+  background: linear-gradient(145deg,#ffc83d 0%,#12bfe0 48%,#20c89a 100%) !important;
+  border-color: rgba(8,153,184,.55) !important;
+  box-shadow: 0 9px 22px rgba(5,158,190,.28),inset 0 1px rgba(255,255,255,.8) !important;
+}
+:root[data-theme-id="hios.summer-breeze"] .brand-mark svg {
+  color: #fffbe0 !important;
+  stroke: #fffbe0 !important;
+  filter: drop-shadow(0 1px 2px rgba(5,96,123,.3)) !important;
+}
 :root[data-theme-id="hios.summer-breeze"] .brand strong em,
 :root[data-theme-id="hios.summer-breeze"] .text-button,
 :root[data-theme-id="hios.summer-breeze"] .soft-button { color: #068ebd; }

@@ -39,4 +39,4 @@ plugins/
 
 | 主题 | 版本 | 安装 URL |
 | --- | --- | --- |
-| 夏日晴空 | 1.0.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/themes/summer-breeze` |
+| 夏日晴空 | 1.0.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/themes/summer-breeze` |
