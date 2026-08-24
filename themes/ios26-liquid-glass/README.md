@@ -17,6 +17,7 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/themes/ios26-liquid-g
 - 内容层与导航层分离，彩色背景会透过玻璃窗格与卡片；
 - 玻璃材质包含高饱和背景取样、蓝紫染色、镜面边缘和柔和投影；
 - 浮动 Dock、按钮、输入板块和弹窗采用连续圆角；
+- 首页、画布、智能体、能力中心、插件服务、设置与浏览器控件均使用统一玻璃层级；
 - 重复卡片避免逐层模糊，降低 GPU 与内存压力；
 - 支持减少动态效果和不支持 `backdrop-filter` 的降级显示。
 

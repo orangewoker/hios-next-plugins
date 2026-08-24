@@ -11,8 +11,8 @@
   --ios-indigo: #5e5ce6;
   --ios-mint: #63e6d4;
   --ios-ink: #f8f8ff;
-  --ios-secondary: rgba(244,247,255,.76);
-  --ios-tertiary: rgba(226,232,247,.52);
+  --ios-secondary: rgba(248,250,255,.84);
+  --ios-tertiary: rgba(231,237,251,.68);
   --ios-glass: rgba(71,72,105,.20);
   --ios-glass-raised: rgba(122,112,158,.27);
   --ios-glass-solid: rgba(85,85,118,.56);
@@ -33,11 +33,11 @@
   --primary-line: rgba(10,132,255,.25);
 
   --liquid-bg:
-    radial-gradient(86vw 78vh at -12% -15%, rgba(58,139,255,.72), transparent 62%),
-    radial-gradient(72vw 68vh at 108% 0%, rgba(169,86,255,.64), transparent 63%),
-    radial-gradient(64vw 58vh at 63% 108%, rgba(40,185,200,.38), transparent 66%),
-    radial-gradient(54vw 50vh at 18% 92%, rgba(208,92,160,.28), transparent 68%),
-    linear-gradient(146deg,#15192c 0%,#272743 44%,#111827 100%);
+    radial-gradient(86vw 78vh at -12% -15%, rgba(44,128,245,.56), transparent 62%),
+    radial-gradient(72vw 68vh at 108% 0%, rgba(145,77,237,.50), transparent 63%),
+    radial-gradient(64vw 58vh at 63% 108%, rgba(34,170,192,.30), transparent 66%),
+    radial-gradient(54vw 50vh at 18% 92%, rgba(194,78,151,.20), transparent 68%),
+    linear-gradient(146deg,#101528 0%,#23233d 44%,#0d1525 100%);
   --liquid-surface: var(--ios-glass);
   --liquid-surface-raised: var(--ios-glass-raised);
   --liquid-surface-solid: var(--ios-glass-solid);
@@ -402,6 +402,428 @@
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
+}
+
+/* v1.0.2 — complete workspace adaptation and accessible optical contrast. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .brand-mark .hios-logo-image {
+  filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(3,8,28,.26)) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  h1,h2,h3,h4,strong,.page-title,.node-title-display,.canvas-title-group strong,
+  .plugin-row-title,.agent-slot-heading strong,.agent-message header strong
+) { color: #fff !important; }
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .brand small,.home-header p,.page-header p,.section-heading p,.quick-card small,
+  .recent-card small,.workspace-card small,.capability small,.status-card p,
+  .plugin-row small,.plugin-row p,.theme-option small,.theme-option p,.setting-note,
+  .settings-section-title p,.agent-head small,.agent-empty p,.agent-slot-heading small,
+  .agent-message header small,.agent-message footer,.node-image-meta,.canvas-title-group small,
+  .browser-status,.browser-tab small,.asset-card small,.task-card small
+) { color: rgba(242,247,255,.74) !important; }
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  input,textarea,select,.search-field,.route-select,.agent-model-picker-trigger
+) {
+  color: #f9fbff !important;
+  background: linear-gradient(150deg,rgba(8,15,34,.30),rgba(61,73,112,.18)) !important;
+  border-color: rgba(255,255,255,.21) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.10), 0 1px 0 rgba(0,0,0,.12) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(input,textarea)::placeholder {
+  color: rgba(229,236,250,.58) !important;
+  opacity: 1;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(input,textarea,select):focus {
+  border-color: rgba(98,190,255,.68) !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,.16), inset 0 1px rgba(255,255,255,.14) !important;
+}
+
+/* Keep structural panes transparent; color comes from the shared wallpaper. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .canvas-topbar,.agent-workspace-head,.agent-panel,.agent-config-panel
+) {
+  background: linear-gradient(145deg,rgba(104,117,156,.20),rgba(18,27,50,.16)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.28), 0 18px 48px rgba(2,7,24,.26) !important;
+  backdrop-filter: saturate(155%) blur(34px) brightness(1.03) !important;
+  -webkit-backdrop-filter: saturate(155%) blur(34px) brightness(1.03) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .command-bar,.quick-card,.recent-card,.workspace-card,.capability,.status-card,
+  .plugin-row,.theme-option,.settings-section,.route-editor,.task-card,.asset-card,
+  .agent-slot-card,.agent-config-library,.agent-message > div
+) {
+  background: linear-gradient(148deg,rgba(138,145,176,.22),rgba(30,39,68,.17) 58%,rgba(47,81,111,.15)) !important;
+  border-color: rgba(255,255,255,.23) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.30), 0 14px 38px rgba(2,7,23,.22) !important;
+}
+
+/* Navigation and buttons stay legible over every aurora color. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .sidebar :is(.nav-item,.sidebar-nav-item) {
+  color: rgba(246,249,255,.79) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .sidebar :is(.nav-item,.sidebar-nav-item):is(:hover,.active) {
+  color: #fff !important;
+  background: linear-gradient(110deg,rgba(31,151,255,.29),rgba(119,105,255,.19)) !important;
+  border-color: rgba(132,205,255,.34) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .icon-button,.ghost-button,.agent-history-open,.agent-history-delete,.plugin-row-actions button
+) {
+  color: rgba(246,249,255,.82) !important;
+  background: rgba(255,255,255,.075) !important;
+  border-color: rgba(255,255,255,.17) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .icon-button,.ghost-button,.agent-history-open,.agent-history-delete,.plugin-row-actions button
+):hover {
+  color: #fff !important;
+  background: rgba(255,255,255,.15) !important;
+  border-color: rgba(255,255,255,.29) !important;
+}
+
+/* Plugin, settings and workspace screens. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-icon {
+  color: #73ceff !important;
+  background: linear-gradient(145deg,rgba(10,132,255,.22),rgba(90,200,250,.10)) !important;
+  border: 1px solid rgba(112,203,255,.28) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.22) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-row :is(.plugin-row-title,strong) { color: #fff !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-row :is(small,p) { color: rgba(235,242,255,.70) !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .theme-option :is(strong,h3) { color: #fff !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .theme-option :is(small,p) { color: rgba(235,242,255,.72) !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .workspace-card :is(strong,h3) { color: #fff !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .workspace-card small { color: rgba(236,243,255,.72) !important; }
+
+/* Agent history uses a blue glass selection instead of an inherited opaque color. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-history-dock article.active,
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-history-dock article[aria-current="true"] {
+  color: #fff !important;
+  background: linear-gradient(120deg,rgba(24,145,255,.32),rgba(106,102,234,.22)) !important;
+  border-color: rgba(112,202,255,.43) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.23) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-history-dock article :is(strong,span) { color: inherit !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-history-dock article small { color: rgba(238,245,255,.70) !important; }
+
+/* Conversation: neutral assistant glass, crisp typography and visible metadata. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.assistant > div {
+  background: linear-gradient(150deg,rgba(82,94,131,.29),rgba(15,24,45,.27)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.assistant :is(p,li,blockquote,td,th) {
+  color: rgba(249,251,255,.92) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.assistant pre,
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.assistant code {
+  color: #eff8ff !important;
+  background: rgba(3,9,24,.34) !important;
+  border-color: rgba(255,255,255,.14) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message footer {
+  border-color: rgba(255,255,255,.13) !important;
+  color: rgba(230,239,255,.68) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message footer button {
+  color: rgba(239,246,255,.76) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-config-panel :is(label,small,p),
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-config-library :is(small,p),
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-slot-card :is(small,p) {
+  color: rgba(235,242,255,.73) !important;
+}
+
+/* Canvas nodes remain translucent while retaining readable labels and controls. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-node {
+  color: #f8fbff !important;
+  background: linear-gradient(148deg,rgba(91,102,139,.38),rgba(13,22,42,.42)) !important;
+  border-color: rgba(255,255,255,.24) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.30), 0 16px 40px rgba(2,7,23,.26) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-node :is(.node-title-display,strong,label) { color: #fff !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-node :is(small,.node-image-meta,.port-label) { color: rgba(235,243,255,.73) !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-node :is(input,textarea,select) {
+  background: rgba(3,10,26,.30) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-panel :is(h2,h3,strong) { color: #fff !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-panel :is(p,small,.agent-context) { color: rgba(238,245,255,.75) !important; }
+
+/* Never let inactive/disabled labels disappear into translucent panes. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :disabled,
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell [aria-disabled="true"] {
+  color: rgba(226,234,249,.48) !important;
+  opacity: .72 !important;
+}
+
+/* v1.0.3 — finish every control and service surface highlighted in the visual audit. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  input,textarea,select,.search-field,.route-select,.agent-model-picker-trigger,
+  .model-picker-trigger,.inspector-select
+) {
+  background: linear-gradient(150deg,rgba(132,151,192,.22),rgba(54,67,103,.18)) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  color: rgba(249,251,255,.94) !important;
+}
+
+/* Composite fields own the focus ring: never draw a second rectangular input inside them. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .command-bar,.search-field,.browser-address,.agent-chat-composer
+) > :is(input,textarea) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-title-input {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.command-bar,.search-field,.browser-address):focus-within {
+  border-color: rgba(104,198,255,.72) !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,.17), inset 0 1px rgba(255,255,255,.28) !important;
+}
+
+/* macOS-style toolbar actions: translucent instead of charcoal blocks. */
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(
+  .agent-workspace-head .agent-back-button,
+  .agent-workspace-head > div:last-child button,
+  .agent-config-actions button,
+  .canvas-topbar .top-action,
+  .canvas-topbar .icon-button,
+  .browser-toolbar button,
+  .route-test,.route-icon,.soft-button,.text-button
+) {
+  color: rgba(244,249,255,.82) !important;
+  background: linear-gradient(145deg,rgba(255,255,255,.13),rgba(98,116,157,.12)) !important;
+  border: 1px solid rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18), 0 5px 15px rgba(3,8,24,.12) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(
+  .agent-workspace-head .agent-back-button,
+  .agent-workspace-head > div:last-child button,
+  .agent-config-actions button,
+  .canvas-topbar .top-action,
+  .canvas-topbar .icon-button,
+  .browser-toolbar button,
+  .route-test,.route-icon,.soft-button,.text-button
+):hover:not(:disabled) {
+  color: #fff !important;
+  background: linear-gradient(145deg,rgba(68,167,255,.28),rgba(125,104,244,.19)) !important;
+  border-color: rgba(121,203,255,.38) !important;
+}
+
+/* Agent inspector statuses and routing summary. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-slot-heading em {
+  color: rgba(235,243,255,.76) !important;
+  background: rgba(255,255,255,.09) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.12) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-slot-heading em.configured {
+  color: #9cddff !important;
+  background: rgba(10,132,255,.18) !important;
+  border-color: rgba(95,190,255,.28) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.agent-capability-card,.agent-route-summary) {
+  color: rgba(235,245,255,.82) !important;
+  background: linear-gradient(145deg,rgba(21,111,156,.20),rgba(50,66,105,.15)) !important;
+  border: 1px solid rgba(108,204,255,.22) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-capability-card > div span {
+  color: rgba(218,242,255,.86) !important;
+  background: rgba(70,169,229,.13) !important;
+  border: 1px solid rgba(115,204,255,.16) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-capability-card p { color: rgba(225,237,250,.68) !important; }
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-route-summary { border-radius: 9px !important; }
+
+/* Canvas inspector, closed assistant tab, node metadata and action cards. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-context span,
+:root[data-theme-id="hios.ios26-liquid-glass"] .node-image-meta > span {
+  color: #a6e1ff !important;
+  background: linear-gradient(145deg,rgba(10,132,255,.24),rgba(90,200,250,.12)) !important;
+  border: 1px solid rgba(103,198,255,.27) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.15) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-empty button {
+  color: #93d8ff !important;
+  background: linear-gradient(145deg,rgba(45,146,220,.20),rgba(42,70,119,.16)) !important;
+  border-color: rgba(104,197,255,.24) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-ai-fab {
+  color: #d8f2ff !important;
+  background: linear-gradient(145deg,rgba(74,111,170,.34),rgba(34,44,78,.30)) !important;
+  border: 1px solid rgba(255,255,255,.24) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.28),0 14px 36px rgba(2,7,24,.26) !important;
+  backdrop-filter: saturate(165%) blur(26px) !important;
+  -webkit-backdrop-filter: saturate(165%) blur(26px) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .node-image-meta > button {
+  color: rgba(237,246,255,.76) !important;
+  background: rgba(255,255,255,.075) !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+/* Capability controls and plugin capability rows. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .capability-selectors select,
+:root[data-theme-id="hios.ios26-liquid-glass"] .capability-selectors .model-picker-trigger {
+  color: rgba(246,250,255,.90) !important;
+  background: linear-gradient(145deg,rgba(119,137,179,.24),rgba(42,55,91,.19)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.14) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-capability-list article,
+:root[data-theme-id="hios.ios26-liquid-glass"] .capability-plugin-list article {
+  background: linear-gradient(145deg,rgba(133,148,183,.19),rgba(42,55,89,.14)) !important;
+  border-color: rgba(255,255,255,.19) !important;
+}
+
+/* RunningHub and ComfyUI workflow chips. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-plugin-apps > span,
+:root[data-theme-id="hios.ios26-liquid-glass"] .comfy-workflow-list button,
+:root[data-theme-id="hios.ios26-liquid-glass"] .comfy-instance {
+  color: rgba(244,249,255,.88) !important;
+  background: linear-gradient(145deg,rgba(132,149,186,.21),rgba(39,53,88,.16)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-plugin-apps > span :is(strong,small),
+:root[data-theme-id="hios.ios26-liquid-glass"] .comfy-workflow-list button :is(strong,small) {
+  color: inherit !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .comfy-workflow-list button.active {
+  color: #eaf8ff !important;
+  background: linear-gradient(145deg,rgba(27,147,235,.29),rgba(73,93,189,.20)) !important;
+  border-color: rgba(111,201,255,.40) !important;
+}
+
+/* Local services are glass panes, not isolated near-black rectangles. */
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(
+  .upscaler-plugin-card,.birefnet-plugin-card,.runninghub-plugin-card,
+  .comfy-plugin-card,.comfy-capability-section
+) {
+  color: #f7faff !important;
+  background: linear-gradient(148deg,rgba(124,143,181,.22),rgba(25,39,67,.17) 62%,rgba(31,88,110,.14)) !important;
+  border: 1px solid rgba(255,255,255,.23) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.28),0 18px 48px rgba(2,7,24,.22) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(
+  .upscaler-plugin-card,.birefnet-plugin-card,.runninghub-plugin-card,
+  .comfy-plugin-card,.comfy-capability-section
+) :is(p,small,.setting-note) { color: rgba(232,240,253,.70) !important; }
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.upscaler-logo,.birefnet-logo,.runninghub-logo) {
+  background: linear-gradient(145deg,rgba(10,132,255,.23),rgba(90,200,250,.10)) !important;
+  border-color: rgba(101,199,255,.25) !important;
+}
+
+/* Settings rows and route actions. */
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.data-location-row,.route-row) {
+  color: #f8fbff !important;
+  background: linear-gradient(145deg,rgba(130,148,187,.21),rgba(34,48,82,.16)) !important;
+  border-color: rgba(255,255,255,.21) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.17) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .data-location-row small,
+:root[data-theme-id="hios.ios26-liquid-glass"] .route-row :is(small,em) {
+  color: rgba(229,238,252,.69) !important;
+}
+
+/* Browser chrome follows the same material as the app instead of a black clip button. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .browser-clip {
+  color: #bdeaff !important;
+  background: linear-gradient(145deg,rgba(10,132,255,.24),rgba(90,200,250,.12)) !important;
+  border-color: rgba(104,199,255,.31) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .browser-address > input {
+  color: rgba(249,251,255,.92) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(
+  .plugin-capability-section,.runninghub-capability-section
+) {
+  color: #f8fbff !important;
+  background: linear-gradient(148deg,rgba(126,144,183,.22),rgba(30,42,73,.16)) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.27),0 18px 48px rgba(2,7,24,.21) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-capability-grid article,
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-app-grid article {
+  color: #f7faff !important;
+  background: linear-gradient(145deg,rgba(133,149,187,.21),rgba(39,53,88,.16)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-capability-icon {
+  color: #75cfff !important;
+  background: linear-gradient(145deg,rgba(10,132,255,.22),rgba(90,200,250,.09)) !important;
+  border: 1px solid rgba(105,201,255,.23) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-capability-grid :is(small,p) {
+  color: rgba(229,239,253,.68) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .plugin-capability-grid em.configured {
+  color: #77e4ad !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-app-grid :is(strong,small,p) {
+  color: inherit !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-app-grid article > em,
+:root[data-theme-id="hios.ios26-liquid-glass"] .runninghub-field-tags span {
+  color: #a5e0ff !important;
+  background: rgba(10,132,255,.16) !important;
+  border: 1px solid rgba(104,199,255,.18) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .collapse-button {
+  color: rgba(242,248,255,.82) !important;
+  background: linear-gradient(145deg,rgba(255,255,255,.12),rgba(83,104,149,.12)) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.17) !important;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
