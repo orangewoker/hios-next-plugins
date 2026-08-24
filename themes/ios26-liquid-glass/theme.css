@@ -1,0 +1,417 @@
+/*
+ * HIOS Next — iOS 26 Liquid Glass
+ * Layered navigation, optical depth, continuous corners and specular edges.
+ * Expensive live blur is intentionally reserved for stable top-level panes.
+ */
+
+:root[data-theme-id="hios.ios26-liquid-glass"] {
+  color-scheme: light;
+  --ios-blue: #0a84ff;
+  --ios-cyan: #5ac8fa;
+  --ios-indigo: #5e5ce6;
+  --ios-mint: #63e6d4;
+  --ios-ink: #142033;
+  --ios-secondary: #536176;
+  --ios-tertiary: #8995a8;
+  --ios-glass: rgba(255,255,255,.43);
+  --ios-glass-raised: rgba(255,255,255,.64);
+  --ios-glass-solid: rgba(248,251,255,.86);
+  --ios-hairline: rgba(255,255,255,.82);
+  --ios-edge: rgba(104,126,153,.14);
+  --ios-shadow: 0 18px 54px rgba(45,68,101,.13), 0 3px 10px rgba(45,68,101,.07);
+  --ios-shadow-small: 0 9px 28px rgba(45,68,101,.105), 0 2px 7px rgba(45,68,101,.055);
+  --ios-highlight: inset 0 1px 0 rgba(255,255,255,.96), inset 0 0 0 .5px rgba(255,255,255,.54), inset 0 -1px 0 rgba(78,101,132,.075);
+
+  --ink: var(--ios-ink);
+  --muted: var(--ios-secondary);
+  --faint: var(--ios-tertiary);
+  --line: rgba(114,136,164,.18);
+  --card: var(--ios-glass-raised);
+  --primary: var(--ios-blue);
+  --primary-dark: #0066d6;
+  --primary-soft: rgba(10,132,255,.105);
+  --primary-line: rgba(10,132,255,.25);
+
+  --liquid-bg:
+    radial-gradient(78vw 72vh at -5% -12%, rgba(86,190,255,.50), transparent 66%),
+    radial-gradient(66vw 62vh at 108% 3%, rgba(156,132,255,.32), transparent 65%),
+    radial-gradient(54vw 54vh at 55% 112%, rgba(80,224,208,.24), transparent 69%),
+    linear-gradient(146deg,#eef8ff 0%,#f7f9fd 45%,#f0f4fb 100%);
+  --liquid-surface: var(--ios-glass);
+  --liquid-surface-raised: var(--ios-glass-raised);
+  --liquid-surface-solid: var(--ios-glass-solid);
+  --liquid-surface-soft: rgba(246,250,255,.42);
+  --liquid-border: var(--ios-hairline);
+  --liquid-highlight: var(--ios-highlight);
+  --liquid-shadow: var(--ios-shadow);
+  --liquid-shadow-small: var(--ios-shadow-small);
+  --liquid-text: var(--ios-ink);
+  --liquid-text-2: var(--ios-secondary);
+  --liquid-text-3: var(--ios-tertiary);
+  --liquid-accent: var(--ios-blue);
+  --liquid-radius-xl: 26px;
+  --liquid-radius-lg: 20px;
+  --liquid-radius-md: 14px;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] body,
+:root[data-theme-id="hios.ios26-liquid-glass"] button,
+:root[data-theme-id="hios.ios26-liquid-glass"] input,
+:root[data-theme-id="hios.ios26-liquid-glass"] textarea,
+:root[data-theme-id="hios.ios26-liquid-glass"] select {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-feature-settings: "kern" 1, "ss01" 1;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] body {
+  background: #eef5fb;
+  color: var(--ios-ink);
+  font-weight: 440;
+  letter-spacing: -.008em;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell {
+  --ui-text: var(--ios-ink);
+  --ui-text-2: var(--ios-secondary);
+  --ui-text-3: var(--ios-tertiary);
+  --ui-workspace: transparent;
+  --ui-sidebar: transparent;
+  --ui-surface: var(--ios-glass);
+  --ui-surface-raised: var(--ios-glass-raised);
+  --ui-surface-muted: rgba(244,248,253,.44);
+  --ui-control: rgba(239,246,254,.58);
+  --ui-hover: rgba(255,255,255,.55);
+  --ui-separator: rgba(107,131,161,.15);
+  --ui-accent: var(--ios-blue);
+  --ui-accent-soft: rgba(10,132,255,.105);
+  --ui-accent-border: rgba(10,132,255,.24);
+  background: var(--liquid-bg) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell::before {
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.30),transparent 25%,transparent 71%,rgba(255,255,255,.17)),
+    radial-gradient(ellipse at 70% 12%,rgba(255,255,255,.35),transparent 27%),
+    radial-gradient(ellipse at 40% 105%,rgba(255,255,255,.20),transparent 34%);
+  opacity: .92;
+}
+
+/* Stable optical panes */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .sidebar,.canvas-topbar,.agent-workspace-head,.agent-panel,.agent-config-panel,
+  .browser-chrome,.floating-tool-window,.notification-panel,.canvas-popover,
+  .node-context-menu,.agent-model-picker-menu,.browser-menu,.mac-dialog,
+  .plugin-install-panel,.account-dialog,.image-viewer,.asset-detail
+) {
+  background:
+    linear-gradient(138deg,rgba(255,255,255,.72),rgba(255,255,255,.39) 48%,rgba(240,248,255,.48)) !important;
+  border-color: var(--ios-hairline) !important;
+  box-shadow: var(--ios-highlight), var(--ios-shadow) !important;
+  backdrop-filter: saturate(185%) blur(34px) brightness(1.035) !important;
+  -webkit-backdrop-filter: saturate(185%) blur(34px) brightness(1.035) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell .sidebar {
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.58),rgba(245,250,255,.32)),
+    radial-gradient(circle at 20% 8%,rgba(255,255,255,.48),transparent 28%) !important;
+  border-right: 1px solid rgba(255,255,255,.78) !important;
+  box-shadow: inset -1px 0 rgba(91,116,149,.09), 12px 0 42px rgba(53,78,110,.075) !important;
+  backdrop-filter: saturate(190%) blur(38px) !important;
+  -webkit-backdrop-filter: saturate(190%) blur(38px) !important;
+}
+
+/* Repeated content surfaces: refractive paint without stacked blur. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .command-bar,.quick-card,.recent-card,.workspace-card,.capability,.status-card,
+  .dashboard-page article,.settings-sections section,.management-section,.empty-state,
+  .search-field,.canvas-node,.agent-chat-composer,.agent-composer,.agent-slot-card,
+  .agent-config-library,.inspector-section,.route-editor,.comfy-instance,
+  .runninghub-plugin-card,.plugin-row,.civitai-image-card,.xiaohongshu-results,
+  .agent-history-dock,.agent-message.assistant > div
+) {
+  background:
+    linear-gradient(142deg,rgba(255,255,255,.68),rgba(255,255,255,.38) 58%,rgba(235,246,255,.43)) !important;
+  border-color: rgba(255,255,255,.82) !important;
+  box-shadow: var(--ios-highlight), var(--ios-shadow-small) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .quick-card,.recent-card,.workspace-card,.capability,.dashboard-page article,.plugin-row,.canvas-node
+) {
+  transition: transform .24s cubic-bezier(.2,.82,.2,1), box-shadow .24s ease, border-color .24s ease, filter .24s ease;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .quick-card,.recent-card,.workspace-card,.capability,.dashboard-page article,.plugin-row
+):hover {
+  transform: translateY(-3px) scale(1.004);
+  border-color: rgba(255,255,255,.96) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,1), 0 24px 58px rgba(43,67,101,.17), 0 5px 14px rgba(43,67,101,.08) !important;
+  filter: saturate(1.035);
+}
+
+/* Continuous corners and iOS hierarchy */
+:root[data-theme-id="hios.ios26-liquid-glass"] .home-header h1,
+:root[data-theme-id="hios.ios26-liquid-glass"] .page-header h1 {
+  color: #101b2d;
+  font-weight: 735;
+  letter-spacing: -.052em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.62), 0 8px 24px rgba(73,96,128,.08);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.eyebrow,.section-kicker,.page-header > span) {
+  color: #718095;
+  font-weight: 690;
+  letter-spacing: .14em;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.quick-card,.capability,.status-card) { border-radius: 18px; }
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.recent-card,.workspace-card,.dashboard-page article) { border-radius: 22px; }
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.canvas-node,.agent-chat-composer,.agent-composer,.agent-slot-card) { border-radius: 19px; }
+
+/* Source-list navigation */
+:root[data-theme-id="hios.ios26-liquid-glass"] .nav-item {
+  height: 42px;
+  border-radius: 14px;
+  color: #536277;
+  font-weight: 535;
+  transition: color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .nav-item:hover {
+  color: #17263b;
+  background: rgba(255,255,255,.43) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.72);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .nav-item.active {
+  color: #006edb !important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.78),rgba(213,238,255,.48)),
+    rgba(10,132,255,.08) !important;
+  border-color: rgba(255,255,255,.92) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,1), inset 0 -1px rgba(10,132,255,.08), 0 8px 24px rgba(10,132,255,.14) !important;
+  font-weight: 650;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .nav-item.active::before {
+  background: linear-gradient(180deg,#6dc7ff,#0a84ff 58%,#5e5ce6);
+  box-shadow: 0 0 12px rgba(10,132,255,.34);
+}
+
+/* Buttons become compact floating lenses. */
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.soft-button,.icon-button,.top-action,.route-icon,.plugin-settings-button) {
+  color: #536277;
+  background: linear-gradient(145deg,rgba(255,255,255,.78),rgba(241,247,253,.47)) !important;
+  border: 1px solid rgba(255,255,255,.88) !important;
+  border-radius: 13px;
+  box-shadow: var(--ios-highlight), 0 6px 17px rgba(48,71,103,.095) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.soft-button,.icon-button,.top-action,.route-icon,.plugin-settings-button):hover {
+  color: #0a73db;
+  background: rgba(255,255,255,.82) !important;
+  border-color: #fff !important;
+  box-shadow: inset 0 1px #fff, 0 10px 24px rgba(36,70,113,.14) !important;
+  transform: translateY(-1px);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.primary-button,.send-button,.command-bar > button,.node-run) {
+  color: #fff !important;
+  background: linear-gradient(180deg,#42a5ff 0%,#0a84ff 48%,#0877ea 100%) !important;
+  border: 1px solid rgba(255,255,255,.38) !important;
+  border-radius: 13px;
+  box-shadow: inset 0 1px rgba(255,255,255,.48), inset 0 -1px rgba(0,75,170,.22), 0 10px 25px rgba(10,132,255,.28) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] button:active { transform: scale(.965); }
+
+/* One luminous plate per input, never an inner rectangular focus ring. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+  .command-bar,.search-field,.browser-address,.agent-chat-composer,.agent-composer,
+  .inspector-field,.agent-slot-card,.civitai-search-row,.xiaohongshu-search
+):focus-within {
+  border-color: rgba(10,132,255,.34) !important;
+  box-shadow: var(--ios-highlight), 0 0 0 4px rgba(10,132,255,.105), 0 18px 44px rgba(44,82,127,.13) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(input,textarea,select):focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),textarea,select) {
+  color: #243349;
+  border-color: rgba(122,145,174,.14);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .command-bar {
+  min-height: 68px;
+  border-radius: 23px !important;
+  box-shadow: var(--ios-highlight), 0 22px 56px rgba(50,76,110,.13) !important;
+}
+
+/* Floating Dock */
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-floating-toolbar {
+  padding: 8px 10px;
+  gap: 4px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.73),rgba(238,247,255,.43)),
+    radial-gradient(circle at 40% 0,rgba(255,255,255,.75),transparent 46%) !important;
+  border: 1px solid rgba(255,255,255,.94) !important;
+  border-radius: 21px;
+  box-shadow: inset 0 1px rgba(255,255,255,1), inset 0 -1px rgba(82,109,143,.09), 0 18px 48px rgba(37,65,102,.18) !important;
+  backdrop-filter: saturate(190%) blur(30px) !important;
+  -webkit-backdrop-filter: saturate(190%) blur(30px) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-floating-toolbar button {
+  color: #53657a;
+  border-radius: 14px;
+  transition: transform .2s cubic-bezier(.2,.9,.2,1), background .18s ease, box-shadow .18s ease;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-floating-toolbar button:hover {
+  color: #087be9;
+  background: rgba(255,255,255,.76) !important;
+  box-shadow: inset 0 1px #fff, 0 10px 22px rgba(48,78,116,.15) !important;
+  transform: translateY(-5px) scale(1.11);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-floating-toolbar button.active {
+  color: #fff;
+  background: linear-gradient(155deg,#4db4ff,#0a84ff 58%,#5268ee) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.48), 0 10px 24px rgba(10,132,255,.31) !important;
+}
+
+/* Canvas and nodes */
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-body,
+:root[data-theme-id="hios.ios26-liquid-glass"] .react-flow {
+  background-color: rgba(247,250,254,.36) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .react-flow__background pattern circle {
+  fill: rgba(76,105,141,.18);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .canvas-node {
+  border-color: rgba(255,255,255,.91) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.98), inset 0 -1px rgba(82,105,136,.06), 0 16px 42px rgba(48,70,101,.13) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .react-flow__node.selected .canvas-node {
+  border-color: rgba(10,132,255,.55) !important;
+  box-shadow: inset 0 1px #fff, 0 0 0 3px rgba(10,132,255,.11), 0 20px 48px rgba(10,104,201,.18) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .react-flow__handle {
+  background: linear-gradient(145deg,#55b9ff,#0a84ff) !important;
+  border: 2px solid rgba(255,255,255,.94) !important;
+  box-shadow: 0 3px 10px rgba(10,132,255,.30);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .react-flow__edge-path {
+  stroke: rgba(10,132,255,.62);
+  filter: drop-shadow(0 1px 2px rgba(10,132,255,.16));
+}
+
+/* Agent workspace keeps messages visually quiet and tools floating. */
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-workspace-page {
+  background:
+    radial-gradient(55vw 48vh at 32% 2%,rgba(102,195,255,.15),transparent 68%),
+    radial-gradient(48vw 48vh at 91% 85%,rgba(142,120,255,.10),transparent 72%),
+    transparent !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-history-dock {
+  border-radius: 18px;
+  background: linear-gradient(160deg,rgba(255,255,255,.64),rgba(239,247,254,.38)) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.user {
+  margin-left: auto;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.user > div {
+  color: #15314f;
+  background: linear-gradient(145deg,rgba(224,242,255,.94),rgba(213,235,255,.76)) !important;
+  border: 1px solid rgba(255,255,255,.82) !important;
+  border-radius: 20px 20px 7px 20px !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.78), 0 8px 20px rgba(37,102,163,.10) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-message.assistant > div {
+  border-radius: 7px 20px 20px 20px !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .agent-chat-composer {
+  border-radius: 22px;
+  background: linear-gradient(145deg,rgba(255,255,255,.72),rgba(239,247,254,.44)) !important;
+  box-shadow: inset 0 1px #fff, 0 20px 52px rgba(44,68,101,.16) !important;
+  backdrop-filter: saturate(180%) blur(30px) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(30px) !important;
+}
+
+/* Segmented controls, switches, chips and menus */
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.segmented,.agent-model-picker-trigger,.browser-tab,.civitai-category-chips button) {
+  background: rgba(237,244,251,.58) !important;
+  border-color: rgba(255,255,255,.76) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.72);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] .switch.on {
+  background: linear-gradient(180deg,#45a9ff,#0a84ff) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.45), 0 3px 10px rgba(10,132,255,.22);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.canvas-popover,.node-context-menu,.agent-model-picker-menu,.browser-menu) {
+  border-radius: 18px !important;
+  overflow: hidden;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] :is(.modal-backdrop,.plugin-install-backdrop,.account-backdrop,.image-viewer-backdrop,.asset-detail-backdrop) {
+  background: rgba(48,65,88,.18) !important;
+  backdrop-filter: blur(10px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(125%) !important;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] ::selection {
+  color: #082642;
+  background: rgba(90,200,250,.34);
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] * {
+  scrollbar-color: rgba(97,121,151,.31) transparent;
+}
+
+:root[data-theme-id="hios.ios26-liquid-glass"] ::-webkit-scrollbar { width: 9px; height: 9px; }
+:root[data-theme-id="hios.ios26-liquid-glass"] ::-webkit-scrollbar-track { background: transparent; }
+:root[data-theme-id="hios.ios26-liquid-glass"] ::-webkit-scrollbar-thumb {
+  background: rgba(98,122,152,.28);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-theme-id="hios.ios26-liquid-glass"] .app-shell :is(
+    .sidebar,.canvas-topbar,.agent-workspace-head,.agent-panel,.agent-config-panel,
+    .browser-chrome,.floating-tool-window,.notification-panel,.canvas-popover,
+    .node-context-menu,.agent-model-picker-menu,.browser-menu,.mac-dialog,.plugin-install-panel
+  ) { background: rgba(247,250,254,.96) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme-id="hios.ios26-liquid-glass"] *,
+  :root[data-theme-id="hios.ios26-liquid-glass"] *::before,
+  :root[data-theme-id="hios.ios26-liquid-glass"] *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

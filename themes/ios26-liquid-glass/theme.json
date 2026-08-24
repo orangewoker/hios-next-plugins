@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "hios.ios26-liquid-glass",
+  "name": "iOS 26 Liquid Glass",
+  "version": "1.0.0",
+  "description": "以 iOS 26 Liquid Glass 为灵感的高通透、动态高光与分层景深主题。",
+  "author": "LIANG.VISION",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/themes/ios26-liquid-glass",
+  "base": "light",
+  "css": "theme.css"
+}
