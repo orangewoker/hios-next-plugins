@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI 提示词库</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg:#edf2f6;--surface:#f6f9fb;--muted:#e8eef3;--control:#e7edf2;
+      --text:#253143;--text-2:#5f6c7e;--text-3:#8e99a7;--border:#cbd6df;
+      --accent:#007aff;--accent-soft:rgba(0,122,255,.1);--positive:#2e9b63;--negative:#d4525f;
+      --shadow:0 12px 34px rgba(44,60,78,.12);--radius:14px;
+    }
+    :root[data-theme="dark"] { color-scheme:dark;--bg:#18212c;--surface:#202c39;--muted:#17212b;--control:#253240;--text:#edf3f8;--text-2:#b6c1cd;--text-3:#7f8c99;--border:#344352;--accent-soft:rgba(50,145,255,.16);--shadow:0 14px 38px rgba(0,0,0,.26); }
+    * { box-sizing:border-box; }
+    html,body { width:100%;height:100%;margin:0;overflow:hidden; }
+    body { color:var(--text);background:var(--bg);font-family:"PingFang SC","苹方黑体","苹方-简","Microsoft YaHei UI",sans-serif;font-size:12px; }
+    button,input { font:inherit; }
+    button { border:0;cursor:pointer; }
+    .app { height:100%;display:grid;grid-template-rows:auto minmax(0,1fr); }
+    .top { display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-bottom:1px solid var(--border);background:var(--surface); }
+    .brand { min-width:0;display:flex;align-items:center;gap:9px; }
+    .brand-icon { width:31px;height:31px;display:grid;place-items:center;flex:none;color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 22%,var(--border));border-radius:10px;font-size:17px; }
+    .brand strong,.brand small { display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .brand strong { font-size:12px;font-weight:720; }
+    .brand small { margin-top:2px;color:var(--text-3);font-size:9px; }
+    .status { display:inline-flex;align-items:center;gap:5px;flex:none;padding:5px 8px;color:var(--text-3);background:var(--muted);border:1px solid var(--border);border-radius:999px;font-size:9px; }
+    .status::before { content:"";width:6px;height:6px;background:currentColor;border-radius:50%; }
+    .status.ok { color:var(--positive); }.status.error { color:var(--negative); }
+    .scroll { min-height:0;overflow:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent; }
+    .stack { display:grid;gap:9px; }
+    .panel { overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 5px 18px rgba(29,48,67,.05); }
+    .panel-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;color:var(--text);background:transparent;text-align:left; }
+    .panel-head span { display:grid;gap:2px; }.panel-head strong { font-size:11px; }.panel-head small { color:var(--text-3);font-size:8px;font-weight:400; }
+    .chevron { color:var(--text-3);font-size:12px;transition:transform .15s ease; }.panel.open .chevron { transform:rotate(180deg); }
+    .panel-body { display:none;padding:0 11px 11px; }.panel.open .panel-body { display:grid;gap:8px; }
+    label { display:grid;gap:4px;color:var(--text-2);font-size:9px; }
+    .field-row { display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:7px; }
+    .input-wrap { position:relative; }
+    input { width:100%;height:32px;padding:0 9px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;outline:0; }
+    input:hover { border-color:color-mix(in srgb,var(--accent) 35%,var(--border)); }
+    input:focus { border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent); }
+    input::placeholder { color:var(--text-3);opacity:.62; }
+    input[type="number"] { appearance:textfield;-moz-appearance:textfield; }
+    input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button { appearance:none;margin:0; }
+    .secret { padding-right:38px; }.reveal { position:absolute;right:4px;top:4px;width:29px;height:24px;color:var(--text-3);background:transparent;border-radius:6px;font-size:10px; }.reveal:hover { color:var(--accent);background:var(--accent-soft); }
+    .actions { display:flex;flex-wrap:wrap;gap:6px; }
+    .btn { min-height:31px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 10px;color:var(--text-2);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:9px;font-weight:650; }
+    .btn:hover { color:var(--text);border-color:color-mix(in srgb,var(--accent) 42%,var(--border)); }
+    .btn.primary { color:#fff;background:var(--accent);border-color:var(--accent); }
+    .btn.primary:hover { filter:brightness(1.06); }.btn:disabled { opacity:.42;cursor:not-allowed; }
+    .note { margin:0;color:var(--text-3);font-size:8px;line-height:1.55; }
+    .categories { display:flex;flex-wrap:wrap;gap:5px; }
+    .category { display:inline-flex;align-items:center;gap:5px;min-height:27px;padding:0 8px;color:var(--text-2);background:var(--control);border:1px solid var(--border);border-radius:8px;font-size:9px; }
+    .category:hover { border-color:color-mix(in srgb,var(--accent) 40%,var(--border)); }.category.active { color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 42%,var(--border)); }
+    .category em { color:var(--text-3);font-size:8px;font-style:normal; }
+    .empty { padding:12px;color:var(--text-3);background:var(--muted);border:1px dashed var(--border);border-radius:10px;text-align:center;font-size:9px; }
+    .run-row { display:grid;grid-template-columns:80px 100px minmax(0,1fr);gap:7px;align-items:end; }
+    .auto { height:32px;display:flex;align-items:center;gap:6px;padding:0 8px;color:var(--text-2);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:9px; }
+    .auto input { width:14px;height:14px;padding:0;accent-color:var(--accent);box-shadow:none; }
+    .result-head { display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 1px; }
+    .result-head strong { font-size:10px; }.result-head span { color:var(--text-3);font-size:8px; }
+    .results { display:grid;gap:6px; }
+    .result { width:100%;display:grid;grid-template-columns:43px minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:11px;text-align:left; }
+    .result:hover { border-color:color-mix(in srgb,var(--accent) 38%,var(--border)); }.result.active { color:var(--text);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 48%,var(--border)); }
+    .thumb { width:43px;height:43px;display:grid;place-items:center;overflow:hidden;color:var(--text-3);background:var(--muted);border-radius:8px;font-size:15px; }.thumb img { width:100%;height:100%;object-fit:cover; }
+    .result-copy { min-width:0; }.result-copy strong,.result-copy small,.result-copy p { display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .result-copy strong { font-size:9px; }.result-copy small { margin-top:2px;color:var(--text-3);font-size:8px; }.result-copy p { margin:5px 0 0;font-size:9px; }
+    .check { width:19px;height:19px;display:grid;place-items:center;color:transparent;border:1px solid var(--border);border-radius:50%;font-size:11px; }.result.active .check { color:#fff;background:var(--accent);border-color:var(--accent); }
+    .footer-actions { position:sticky;bottom:-10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:9px 0 1px;background:linear-gradient(180deg,transparent,var(--bg) 25%); }
+    .message { display:none;padding:8px 9px;border-radius:9px;font-size:9px;line-height:1.45; }.message.show { display:block; }.message.info { color:var(--text-2);background:var(--muted); }.message.error { color:var(--negative);background:color-mix(in srgb,var(--negative) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--negative) 24%,var(--border)); }
+    @media (max-width:440px) { .field-row,.run-row { grid-template-columns:1fr; }.footer-actions { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="brand"><span class="brand-icon">✦</span><span><strong>AI 提示词库</strong><small>随机抽取 · 文本输出</small></span></div>
+      <span id="status" class="status">未连接</span>
+    </header>
+    <div class="scroll"><div class="stack">
+      <section id="settingsPanel" class="panel open">
+        <button id="settingsToggle" class="panel-head" type="button"><span><strong>连接设置</strong><small>密钥仅保存在插件隔离存储中</small></span><b class="chevron">⌄</b></button>
+        <div class="panel-body">
+          <label>服务地址<input id="serverUrl" inputmode="url" placeholder="http://NAS-IP:8765" autocomplete="off" /></label>
+          <label>访问密钥<div class="input-wrap"><input id="apiKey" class="secret" type="password" placeholder="填写 ComfyUI / API Key" autocomplete="off" /><button id="revealKey" class="reveal" type="button" aria-label="显示或隐藏密钥">显示</button></div></label>
+          <div class="actions"><button id="connect" class="btn primary" type="button">连接并读取分类</button><button id="clearKey" class="btn" type="button">清除密钥</button></div>
+          <p class="note">填写服务根地址，不要附加 <code>/api/v1</code>。插件只调用健康检查、分类和随机抽取接口。</p>
+        </div>
+      </section>
+
+      <section class="panel open">
+        <div class="panel-head"><span><strong>抽取范围</strong><small>不选择分类时使用全部授权分类</small></span><button id="reloadCategories" class="btn" type="button">刷新</button></div>
+        <div class="panel-body" style="display:grid">
+          <div id="categories" class="categories"><div class="empty">连接服务后读取分类</div></div>
+          <div class="run-row">
+            <label>抽取数量<input id="count" type="number" min="1" max="20" step="1" value="1" /></label>
+            <label>随机 Seed<input id="seed" type="number" min="0" max="2147483647" step="1" value="0" /></label>
+            <label class="auto"><input id="autoOutput" type="checkbox" checked />抽取后自动输出</label>
+          </div>
+        </div>
+      </section>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <section>
+        <div class="result-head"><strong>候选提示词</strong><span id="resultCount">还没有抽取</span></div>
+        <div id="results" class="results"><div class="empty">点击“随机抽取”获得提示词</div></div>
+      </section>
+      <div class="footer-actions"><button id="random" class="btn primary" type="button">✦ 随机抽取</button><button id="output" class="btn" type="button" disabled>输出到画布</button></div>
+    </div></div>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const PROTOCOL = 'hios-plugin-node/v1';
+      const STORAGE_URL = 'hios.ai-prompt-library.server-url';
+      const STORAGE_KEY = 'hios.ai-prompt-library.api-key';
+      const $ = (id) => document.getElementById(id);
+      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output') };
+      let nodeId = '';
+      let pluginId = 'ai-prompt-library';
+      let categories = [];
+      let busy = false;
+      let state = { selectedCategoryIds:[], count:1, seed:0, autoOutput:true, selectedIndex:0, lastItems:[] };
+
+      function post(type, payload = {}) { parent.postMessage({ protocol:PROTOCOL, nodeId, pluginId, type, payload }, '*'); }
+      function safeNumber(value, min, max, fallback) { const number = Number(value); return Number.isFinite(number) ? Math.max(min, Math.min(max, Math.trunc(number))) : fallback; }
+      function normalizedBase() { const value = String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, ''); if (!/^https?:\/\//i.test(value)) throw new Error('服务地址必须以 http:// 或 https:// 开头'); return value; }
+      function headers(json = false) { const result = {}; const key = String(els.apiKey.value || '').trim(); if (key) result['X-API-Key'] = key; if (json) result['Content-Type'] = 'application/json'; return result; }
+      function saveConnection() { localStorage.setItem(STORAGE_URL, String(els.serverUrl.value || '').trim()); localStorage.setItem(STORAGE_KEY, String(els.apiKey.value || '').trim()); }
+      function stateForHost() { return { selectedCategoryIds:[...state.selectedCategoryIds], count:state.count, seed:state.seed, autoOutput:state.autoOutput, selectedIndex:state.selectedIndex, lastItems:state.lastItems.slice(0,20).map((item) => ({ asset_id:item.asset_id, category_id:item.category_id, category_name:String(item.category_name || ''), prompt:String(item.prompt || ''), thumbnail_url:String(item.thumbnail_url || '') })) }; }
+      function persist() { post('state', { state:stateForHost() }); }
+      function setStatus(text, kind = '') { els.status.textContent = text; els.status.className = `status ${kind}`.trim(); }
+      function showMessage(text = '', kind = 'info') { els.message.textContent = text; els.message.className = text ? `message show ${kind}` : 'message'; }
+      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; if (next && label) showMessage(label, 'info'); }
+      function applyTheme(theme) {
+        const mode = theme && theme.mode === 'dark' ? 'dark' : 'light';
+        document.documentElement.dataset.theme = mode;
+        const map = { background:'--bg', surface:'--surface', muted:'--muted', control:'--control', text:'--text', textSecondary:'--text-2', textMuted:'--text-3', border:'--border', accent:'--accent', accentSoft:'--accent-soft', positive:'--positive', negative:'--negative' };
+        const tokens = theme && theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
+        Object.entries(map).forEach(([key, css]) => { if (typeof tokens[key] === 'string' && tokens[key].trim()) document.documentElement.style.setProperty(css, tokens[key]); });
+      }
+      async function request(path, options = {}) {
+        const base = normalizedBase();
+        const response = await fetch(base + path, { ...options, headers:{ ...headers(Boolean(options.body)), ...(options.headers || {}) } });
+        let data = null; try { data = await response.json(); } catch { data = null; }
+        if (!response.ok) { const detail = data && (data.detail || data.message); throw new Error(detail || `请求失败（HTTP ${response.status}）`); }
+        return data;
+      }
+      function fullUrl(path) { try { return new URL(String(path || ''), normalizedBase() + '/').toString(); } catch { return ''; } }
+      function renderCategories() {
+        els.categories.replaceChildren();
+        if (!categories.length) { const empty = document.createElement('div'); empty.className='empty'; empty.textContent='没有可用分类，或尚未连接服务'; els.categories.append(empty); return; }
+        categories.forEach((item) => {
+          const button = document.createElement('button'); button.type='button'; button.className=`category ${state.selectedCategoryIds.includes(Number(item.id)) ? 'active' : ''}`;
+          const name = document.createElement('span'); name.textContent=String(item.name || `分类 ${item.id}`);
+          const count = document.createElement('em'); count.textContent=String(item.asset_count ?? 0);
+          button.append(name,count);
+          button.addEventListener('click', () => { const id=Number(item.id); state.selectedCategoryIds = state.selectedCategoryIds.includes(id) ? state.selectedCategoryIds.filter((value) => value !== id) : [...state.selectedCategoryIds,id]; renderCategories(); persist(); });
+          els.categories.append(button);
+        });
+      }
+      function renderResults() {
+        els.results.replaceChildren();
+        els.output.disabled = busy || !state.lastItems.length;
+        els.resultCount.textContent = state.lastItems.length ? `${state.lastItems.length} 条 · 当前第 ${Math.min(state.selectedIndex + 1,state.lastItems.length)} 条` : '还没有抽取';
+        if (!state.lastItems.length) { const empty=document.createElement('div'); empty.className='empty'; empty.textContent='点击“随机抽取”获得提示词'; els.results.append(empty); return; }
+        state.lastItems.forEach((item,index) => {
+          const button=document.createElement('button'); button.type='button'; button.className=`result ${index===state.selectedIndex?'active':''}`;
+          const thumb=document.createElement('span'); thumb.className='thumb'; const url=fullUrl(item.thumbnail_url); if(url){ const image=document.createElement('img'); image.src=url; image.alt=''; image.loading='lazy'; image.referrerPolicy='no-referrer'; image.onerror=()=>{ thumb.replaceChildren(document.createTextNode('✦')); }; thumb.append(image); } else thumb.textContent='✦';
+          const copy=document.createElement('span'); copy.className='result-copy'; const title=document.createElement('strong'); title.textContent=`${item.category_name || '未分类'} · #${item.asset_id || '-'}`; const meta=document.createElement('small'); meta.textContent=`候选 ${index+1}`; const prompt=document.createElement('p'); prompt.textContent=String(item.prompt || ''); copy.append(title,meta,prompt);
+          const check=document.createElement('span'); check.className='check'; check.textContent='✓'; button.append(thumb,copy,check);
+          button.addEventListener('click',()=>{ state.selectedIndex=index; renderResults(); persist(); }); els.results.append(button);
+        });
+      }
+      function emitSelected() {
+        const item = state.lastItems[state.selectedIndex];
+        if (!item || !String(item.prompt || '').trim()) { showMessage('请先随机抽取并选择一条提示词', 'error'); return; }
+        post('output', { output:{ kind:'text', portId:'prompt', value:String(item.prompt), name:`${item.category_name || '提示词'} #${item.asset_id || ''}`.trim(), metadata:{ assetId:item.asset_id, categoryId:item.category_id, categoryName:item.category_name, thumbnailUrl:fullUrl(item.thumbnail_url) } } });
+        setStatus('已输出', 'ok'); showMessage('当前提示词已写入画布输出端口，可连接到下游节点。', 'info');
+      }
+      async function loadCategories(quiet = false) {
+        if (busy) return; setBusy(true, quiet ? '' : '正在连接提示词库…');
+        try {
+          saveConnection();
+          const health = await request('/api/v1/health');
+          const rows = await request('/api/v1/categories?enabled_only=true');
+          if (!Array.isArray(rows)) throw new Error('分类接口返回格式不正确');
+          categories = rows.filter((item) => item && Number.isFinite(Number(item.id)));
+          state.selectedCategoryIds = state.selectedCategoryIds.filter((id) => categories.some((item) => Number(item.id) === id));
+          renderCategories(); persist(); setStatus('已连接', 'ok'); showMessage(`服务连接正常，共读取 ${categories.length} 个分类。`, 'info');
+          if (health && health.status !== 'ok') showMessage('服务已响应，但健康状态不是 ok。', 'error');
+        } catch (error) { categories=[]; renderCategories(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
+        finally { setBusy(false); }
+      }
+      async function randomPrompt() {
+        if (busy) return;
+        if (!categories.length) { await loadCategories(true); if (!categories.length) return; }
+        const ids = state.selectedCategoryIds.length ? state.selectedCategoryIds : categories.map((item)=>Number(item.id));
+        state.count=safeNumber(els.count.value,1,20,1); state.seed=safeNumber(els.seed.value,0,2147483647,0); state.autoOutput=els.autoOutput.checked;
+        setBusy(true,'正在随机抽取提示词…');
+        try {
+          saveConnection();
+          const result=await request('/api/v1/random',{method:'POST',body:JSON.stringify({category_ids:ids,count:state.count,seed:state.seed})});
+          const items=result && Array.isArray(result.items) ? result.items.filter((item)=>item && String(item.prompt || '').trim()) : [];
+          if (!items.length) throw new Error('所选分类中没有可用提示词');
+          state.lastItems=items; state.selectedIndex=0; renderResults(); persist(); setStatus('抽取完成','ok'); showMessage(`已抽取 ${items.length} 条提示词。`,'info'); if(state.autoOutput) emitSelected();
+        } catch(error) { setStatus('抽取失败','error'); showMessage(error instanceof Error?error.message:String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
+        finally { setBusy(false); renderResults(); }
+      }
+      function hydrate(payload) {
+        const incoming=payload && payload.state && typeof payload.state==='object' ? payload.state : {};
+        state={ ...state, ...incoming, selectedCategoryIds:Array.isArray(incoming.selectedCategoryIds)?incoming.selectedCategoryIds.map(Number).filter(Number.isFinite):state.selectedCategoryIds, lastItems:Array.isArray(incoming.lastItems)?incoming.lastItems.slice(0,20):state.lastItems };
+        state.count=safeNumber(state.count,1,20,1); state.seed=safeNumber(state.seed,0,2147483647,0); state.selectedIndex=safeNumber(state.selectedIndex,0,Math.max(0,state.lastItems.length-1),0); state.autoOutput=state.autoOutput!==false;
+        els.count.value=String(state.count); els.seed.value=String(state.seed); els.autoOutput.checked=state.autoOutput; renderCategories(); renderResults(); applyTheme(payload && payload.theme);
+      }
+
+      els.settingsToggle.addEventListener('click',()=>els.panel.classList.toggle('open'));
+      els.revealKey.addEventListener('click',()=>{ const reveal=els.apiKey.type==='password'; els.apiKey.type=reveal?'text':'password'; els.revealKey.textContent=reveal?'隐藏':'显示'; });
+      els.clearKey.addEventListener('click',()=>{ els.apiKey.value=''; localStorage.removeItem(STORAGE_KEY); setStatus('密钥已清除'); showMessage('本机保存的访问密钥已清除。','info'); });
+      els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',randomPrompt); els.output.addEventListener('click',emitSelected);
+      els.serverUrl.addEventListener('change',saveConnection); els.apiKey.addEventListener('change',saveConnection);
+      els.count.addEventListener('change',()=>{ state.count=safeNumber(els.count.value,1,20,1); els.count.value=String(state.count); persist(); });
+      els.seed.addEventListener('change',()=>{ state.seed=safeNumber(els.seed.value,0,2147483647,0); els.seed.value=String(state.seed); persist(); });
+      els.autoOutput.addEventListener('change',()=>{ state.autoOutput=els.autoOutput.checked; persist(); });
+      window.addEventListener('message',(event)=>{ const message=event.data; if(!message||message.protocol!==PROTOCOL||message.type!=='init')return; nodeId=String(message.nodeId||message.payload?.nodeId||nodeId); pluginId=String(message.pluginId||message.payload?.pluginId||pluginId); hydrate(message.payload||{}); post('loaded',{}); });
+      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; renderResults(); post('ready',{});
+    })();
+  </script>
+</body>
+</html>
