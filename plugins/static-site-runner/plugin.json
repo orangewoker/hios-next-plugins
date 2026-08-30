@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "static-site-runner",
+  "name": "静态网页",
+  "version": "0.1.0",
+  "description": "在 HIOS 画布中选择本地静态网页目录并运行，可同时打开多个独立、可拖动和可缩放的网页窗口。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/static-site-runner",
+  "permissions": ["filesystem", "canvas"],
+  "capabilities": [
+    {
+      "id": "static-site.run",
+      "title": "静态网页",
+      "description": "选择本地目录，识别 HTML 入口并在画布悬浮窗口中运行。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "static-site.browser",
+      "title": "静态网页",
+      "description": "在可拖动、可缩放的画布窗口中运行本地静态网页，可创建多个实例。",
+      "builtin": "static-site-runner"
+    }
+  ],
+  "builtin": "static-site-runner"
+}
