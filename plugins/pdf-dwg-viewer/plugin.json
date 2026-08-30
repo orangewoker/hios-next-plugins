@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "pdf-dwg-viewer",
+  "name": "PDF / DWG 图纸查看器",
+  "version": "0.1.1",
+  "description": "在 HIOS 无限画布节点中本地打开 PDF、DWG 与 DXF，浏览页面或图纸，并把当前视图输出为图片。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pdf-dwg-viewer",
+  "permissions": ["filesystem", "canvas"],
+  "capabilities": [
+    {
+      "id": "document.preview",
+      "title": "PDF / DWG 图纸预览",
+      "description": "在本机渲染 PDF 页面和 CAD 图纸，不上传源文件。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "document.viewer",
+      "title": "PDF / DWG 查看器",
+      "description": "打开 PDF、DWG 或 DXF，并从 image 端口输出当前页面或视图。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [],
+      "outputs": [
+        { "id": "image", "title": "当前视图", "type": "image" }
+      ],
+      "defaultSize": { "width": 680, "height": 590 },
+      "defaultData": { "page": 1, "pdfZoom": 1, "rotation": 0, "cadBackground": "dark" }
+    }
+  ],
+  "fileAssociations": [
+    {
+      "extensions": ["pdf", "dwg", "dxf"],
+      "mimeTypes": ["application/pdf", "application/acad", "application/x-acad", "application/autocad_dwg", "application/dwg", "application/x-dwg", "application/vnd.dwg", "image/vnd.dwg", "application/dxf", "application/x-dxf", "image/vnd.dxf"],
+      "nodeId": "document.viewer"
+    }
+  ],
+  "rendererEntry": "runtime/index.html"
+}

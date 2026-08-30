@@ -1,0 +1,50 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, "SF Pro Text", "Segoe UI", "Microsoft YaHei", sans-serif;
+  background: #15171b;
+  color: #f2f3f5;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+button, input { font: inherit; }
+button { color: inherit; }
+
+.viewer-shell { display: grid; grid-template-rows: 44px minmax(0, 1fr) 25px; background: #15171b; }
+.viewer-toolbar { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 8px; border-bottom: 1px solid #30343b; background: #202329; }
+.document-identity { display: flex; align-items: center; gap: 7px; min-width: 96px; flex: 1 1 auto; }
+.format-badge { flex: 0 0 auto; min-width: 31px; padding: 3px 5px; border: 1px solid #4b515c; border-radius: 5px; color: #aeb5c0; font-size: 9px; font-weight: 760; line-height: 1; text-align: center; letter-spacing: .08em; }
+.format-badge.pdf { color: #ffb3a8; border-color: #73433f; background: #3c2727; }
+.format-badge.dwg, .format-badge.dxf { color: #8fd8ff; border-color: #315c74; background: #1c3441; }
+.file-name { min-width: 0; overflow: hidden; color: #dfe2e7; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.toolbar-group { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.toolbar-group[hidden] { display: none; }
+.toolbar-actions { margin-left: auto; }
+.viewer-toolbar button, .empty-state button, .error-state button { height: 28px; padding: 0 9px; border: 1px solid #3b4049; border-radius: 6px; background: #2a2e35; color: #e7e9ed; font-size: 10px; font-weight: 620; cursor: pointer; }
+.viewer-toolbar button:hover, .empty-state button:hover, .error-state button:hover { background: #343943; border-color: #4a515d; }
+.viewer-toolbar button:disabled { opacity: .42; cursor: default; }
+.viewer-toolbar button.primary { border-color: #4074c7; background: #2c66be; color: white; }
+.viewer-toolbar button.primary:hover { background: #3472d1; }
+.page-field { display: flex; align-items: center; height: 28px; padding: 0 6px; border: 1px solid #3b4049; border-radius: 6px; background: #17191d; color: #9299a4; font-size: 10px; }
+.page-field input { width: 34px; padding: 0; border: 0; outline: none; background: transparent; color: #eef0f3; text-align: right; }
+.viewer-stage { position: relative; min-width: 0; min-height: 0; overflow: hidden; background: #101215; }
+.empty-state, .error-state { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; color: #8f96a1; text-align: center; }
+.empty-state[hidden], .error-state[hidden] { display: none; }
+.empty-state strong, .error-state strong { color: #dfe2e7; font-size: 13px; }
+.empty-state span, .error-state span { max-width: 320px; font-size: 10px; line-height: 1.5; }
+.empty-icon { display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid #3c424c; border-radius: 14px; background: linear-gradient(145deg, #272b32, #1a1d22); color: #9fa7b2; font-size: 12px; font-weight: 800; line-height: 1.15; letter-spacing: .08em; }
+.pdf-stage { width: 100%; height: 100%; overflow: auto; padding: 18px; background: #2a2d33; text-align: center; }
+.pdf-stage[hidden], .cad-stage[hidden] { display: none; }
+.pdf-stage canvas { display: inline-block; max-width: none; box-shadow: 0 12px 34px rgba(0,0,0,.44); background: white; }
+.cad-stage { width: 100%; height: 100%; background: #101216; }
+.cad-stage canvas { display: block; width: 100% !important; height: 100% !important; }
+.loading-overlay { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(16,18,21,.9); color: #dfe2e7; }
+.loading-overlay[hidden] { display: none; }
+.loading-overlay small { color: #929aa6; font-size: 10px; }
+.loading-overlay progress { width: min(260px, 64%); height: 4px; accent-color: #4b88e6; }
+.spinner { width: 22px; height: 22px; border: 2px solid #3d434d; border-top-color: #77aafa; border-radius: 50%; animation: spin .8s linear infinite; }
+.viewer-statusbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 9px; border-top: 1px solid #2b2f36; background: #1c1f24; color: #838b97; font-size: 9px; }
+.viewer-statusbar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 1.8s; } }

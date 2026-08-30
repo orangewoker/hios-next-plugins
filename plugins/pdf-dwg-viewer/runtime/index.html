@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: hios-asset:; connect-src 'self' data: blob: hios-asset:; font-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'" />
+    <title>PDF / DWG Viewer</title>
+    <script type="module" crossorigin src="./assets/index-Ckqc7Hl7.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-kA7YQlJf.css">
+  </head>
+  <body>
+    <main id="app" class="viewer-shell">
+      <header class="viewer-toolbar">
+        <div class="document-identity">
+          <span id="formatBadge" class="format-badge">DOC</span>
+          <span id="fileName" class="file-name">尚未选择文件</span>
+        </div>
+        <div id="pdfControls" class="toolbar-group" hidden>
+          <button id="previousPage" type="button" title="上一页" aria-label="上一页">‹</button>
+          <label class="page-field"><input id="pageNumber" type="number" min="1" value="1" aria-label="页码" /><span id="pageCount">/ 0</span></label>
+          <button id="nextPage" type="button" title="下一页" aria-label="下一页">›</button>
+          <button id="rotatePage" type="button" title="顺时针旋转" aria-label="顺时针旋转">↻</button>
+        </div>
+        <div id="cadControls" class="toolbar-group" hidden>
+          <button id="zoomOut" type="button" title="缩小" aria-label="缩小">−</button>
+          <button id="fitView" type="button">适合窗口</button>
+          <button id="zoomIn" type="button" title="放大" aria-label="放大">＋</button>
+          <button id="toggleBackground" type="button" title="切换深浅背景" aria-label="切换深浅背景">◐</button>
+        </div>
+        <div class="toolbar-group toolbar-actions">
+          <button id="openFile" type="button">选择文件</button>
+          <button id="exportImage" class="primary" type="button" disabled>输出图片</button>
+        </div>
+      </header>
+      <section id="stage" class="viewer-stage">
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">PDF<br />DWG</div>
+          <strong>在节点中打开文档或图纸</strong>
+          <span>支持 PDF、DWG、DXF，文件仅在本机处理</span>
+          <button id="emptyOpenFile" type="button">选择文件</button>
+        </div>
+        <div id="pdfStage" class="pdf-stage" hidden><canvas id="pdfCanvas"></canvas></div>
+        <div id="cadStage" class="cad-stage" hidden></div>
+        <div id="loadingOverlay" class="loading-overlay" hidden>
+          <span class="spinner"></span>
+          <strong id="loadingTitle">正在打开文件</strong>
+          <small id="loadingDetail">准备渲染器…</small>
+          <progress id="loadingProgress" max="100" value="0"></progress>
+        </div>
+        <div id="errorState" class="error-state" hidden><strong>文件打开失败</strong><span id="errorMessage"></span><button id="retryOpen" type="button">重新选择</button></div>
+      </section>
+      <footer class="viewer-statusbar">
+        <span id="statusText">等待文件</span>
+        <span id="viewInfo">本地渲染</span>
+      </footer>
+    </main>
+  </body>
+</html>
