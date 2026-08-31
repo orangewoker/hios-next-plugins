@@ -55,7 +55,7 @@
       <div id="layerA" class="layer layer-a"><img id="imageA" alt="图片 A" /></div>
       <span id="divider" class="divider"></span>
       <span class="badge badge-a">A</span><span class="badge badge-b">B</span>
-      <div id="empty" class="empty"><strong>连接两张图片</strong><span>将图片节点连接到 imageA 与 imageB 端口，图片始终保持固定尺寸叠放。</span></div>
+      <div id="empty" class="empty"><strong>连接两张图片</strong><span>将左侧图片节点分别连接到“图片 A”和“图片 B”输入口，图片始终保持固定尺寸叠放。</span></div>
     </section>
     <footer class="controls">
       <span id="value" class="value">A 50%</span>
@@ -197,7 +197,7 @@
       });
       window.addEventListener('beforeunload', () => { revoke('imageA'); revoke('imageB'); });
       applySlider(50, false);
-      post('ready', { version:'0.3.0' });
+      post('ready', { version:'0.3.1' });
     })();
   </script>
 </body>
