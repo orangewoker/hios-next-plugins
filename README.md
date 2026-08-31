@@ -8,7 +8,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | --- | --- | --- |
 | Civitai 素材库 | 0.2.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/civitai-assets` |
 | 小红书素材库 | 0.2.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets` |
-| Pinterest 素材库 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pinterest-assets` |
+| Pinterest 素材库 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pinterest-assets` |
 | 图片对比 | 0.2.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare` |
 | AI 提示词库 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |
 | 静态网页 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/static-site-runner` |
