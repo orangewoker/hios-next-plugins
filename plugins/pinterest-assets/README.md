@@ -2,6 +2,10 @@
 
 在 HIOS Next 的独立插件节点中登录、搜索并浏览 Pinterest。对任意 Pin 图片点击右键，即可解析 `i.pinimg.com/originals/` 原图并从图片端口输出。
 
+## 0.2.1
+
+- 改用 HIOS 通用插件浏览器桥接协议，修复沙箱 iframe 内 Electron WebView API 无法激活的问题。
+
 ## 0.2.0
 
 - 浏览器界面、右键识图和原图解析全部迁入插件自己的 `runtime/index.html`。

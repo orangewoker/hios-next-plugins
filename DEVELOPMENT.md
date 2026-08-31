@@ -31,6 +31,7 @@
 - `builtin`：仅供 HIOS 主程序内置能力使用，第三方插件不得声明，内置能力也不会出现在插件管理页。
 - `rendererEntry`：第三方画布插件的正式入口。界面与业务逻辑应提交到插件目录，主程序只提供稳定协议。
 - 声明 `filesystem` 权限后，renderer 可发送 `request-directory`，用通用目录接口运行本地静态站点。
+- 声明 `network` 权限后，renderer 可使用宿主的通用插件浏览器接口。sandbox iframe 内不要直接创建 Electron `<webview>`。
 
 权限：
 
@@ -51,6 +52,37 @@
 
 仅当目录存在 `package.json` / `requirements.txt` 时才会安装对应依赖。
 
+## 通用插件浏览器接口
+
+网页素材类插件通过 `hios-plugin-node/v1` 消息协议使用宿主 WebView：
+
+- `browser-open`：传入 `src`、可选 `userAgent` 和 `{ top, right, bottom, left }` 边距。
+- `browser-close`：关闭宿主 WebView。
+- `browser-command`：传入唯一 `requestId` 及命令 `load-url`、`back`、`forward`、`reload`、`set-zoom`、`execute-js` 或 `state`。
+- `browser-result`：宿主按 `requestId` 返回 `result` 或 `error`。
+- `browser-event`：宿主推送 `dom-ready`、`did-stop-loading`、`did-fail-load`、`navigation`、`context-menu`。
+
+示例：
+
+```js
+parent.postMessage({
+  protocol: 'hios-plugin-node/v1', nodeId, pluginId,
+  type: 'browser-open',
+  payload: {
+    src: 'https://example.com/',
+    bounds: { top: 70, right: 0, bottom: 0, left: 0 }
+  }
+}, '*');
+
+parent.postMessage({
+  protocol: 'hios-plugin-node/v1', nodeId, pluginId,
+  type: 'browser-command',
+  payload: { requestId: crypto.randomUUID(), command: 'state' }
+}, '*');
+```
+
+浏览器会话按 `pluginId` 隔离并持久保存。插件应在 `browser-result` 中匹配 `requestId`，用 `browser-event` 更新导航状态；需要采集网页元素时，可在 `context-menu` 后调用 `execute-js`。该协议不依赖具体插件 ID，插件可以独立更新 UI、解析与输出逻辑。
+
 ## 仓库工作流
 
 1. 在 `plugins/<plugin-id>` 新建插件目录。
@@ -62,4 +94,4 @@
 
 ## 兼容性
 
-`civitai-assets`、`xiaohongshu-assets` 和 `image-compare` 是官方桥接插件：仓库清单负责安装、激活、版本与更新，功能适配器由兼容版本的 HIOS Next 提供。安装前请更新 HIOS Next。
+仓库中的第三方插件均自行携带 `runtime` 界面与业务逻辑，不依赖主程序内的插件 ID 专用适配器。主程序只提供版本化消息协议、画布端口、目录选择和通用浏览器等稳定接口。插件新增页面、解析规则或交互时只需发布新的插件版本；仅在需要一种尚未开放的宿主级能力时，才需要升级 HIOS Next。
