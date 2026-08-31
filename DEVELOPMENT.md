@@ -28,8 +28,9 @@
 - `version`：遵循 SemVer；发布更新必须递增。
 - `capabilities`：安装后注册到能力中心，可声明 `settings: true`。
 - `nodes`：安装后注册到无限画布节点菜单。
-- `builtin`：官方桥接插件可选择 HIOS 内置适配器；第三方插件不应猜测未公开的适配器名。
-- `rendererEntry` / `mainEntry`：为后续独立渲染和主进程入口预留。
+- `builtin`：仅供 HIOS 主程序内置能力使用，第三方插件不得声明，内置能力也不会出现在插件管理页。
+- `rendererEntry`：第三方画布插件的正式入口。界面与业务逻辑应提交到插件目录，主程序只提供稳定协议。
+- 声明 `filesystem` 权限后，renderer 可发送 `request-directory`，用通用目录接口运行本地静态站点。
 
 权限：
 

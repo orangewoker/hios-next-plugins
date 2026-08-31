@@ -1,6 +1,11 @@
 # 小红书素材库
 
-在 HIOS Next 画布悬浮窗口中扫码登录、浏览并采集小红书图片素材，窗口位置和大小会持久化。
+在 HIOS Next 独立插件节点中扫码登录、浏览并采集小红书图片素材。
+
+## 0.3.0
+
+- 浏览器界面与右键高清图片解析已迁入插件自己的 `runtime/index.html`。
+- 插件可直接从 GitHub 更新并热重载，不再依赖主程序的插件 ID 专用分支。
 
 安装 URL：`https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets`
 

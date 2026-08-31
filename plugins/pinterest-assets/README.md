@@ -1,6 +1,11 @@
 # Pinterest 素材库
 
-在 HIOS Next 的画布悬浮窗口中登录、搜索并浏览 Pinterest。对任意 Pin 图片点击右键，即可解析 `i.pinimg.com/originals/` 原图并直接加入画布；原图不可用时自动回退到 1200px 高清版本。
+在 HIOS Next 的独立插件节点中登录、搜索并浏览 Pinterest。对任意 Pin 图片点击右键，即可解析 `i.pinimg.com/originals/` 原图并从图片端口输出。
+
+## 0.2.0
+
+- 浏览器界面、右键识图和原图解析全部迁入插件自己的 `runtime/index.html`。
+- GitHub 更新后直接热重载，不再依赖主程序中的 Pinterest 专用 React 组件。
 
 ## 功能
 

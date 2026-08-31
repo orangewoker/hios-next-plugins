@@ -1,12 +1,21 @@
 {
+  "schemaVersion": 1,
   "id": "civitai-assets",
   "name": "Civitai 素材库",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "搜索、预览、下载 Civitai 图片并拖入画布，支持 API Key 与代理设置。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/civitai-assets",
   "permissions": ["network", "filesystem", "canvas", "agent"],
   "capabilities": [{ "id": "civitai.assets", "title": "Civitai 素材库", "description": "搜索、预览和下载 Civitai 图片素材。", "settings": true }],
-  "nodes": [{ "id": "civitai.browser", "title": "Civitai 素材库", "description": "在可拖动、可缩放的画布悬浮窗口中浏览 Civitai 图片素材。", "builtin": "civitai-assets" }],
-  "builtin": "civitai-assets"
+  "nodes": [{
+    "id": "civitai.browser",
+    "title": "Civitai 素材库",
+    "description": "独立搜索 Civitai 图片并从 image 端口输出选中的素材。",
+    "rendererEntry": "runtime/index.html",
+    "inputs": [{ "id": "query", "title": "搜索词", "type": "text" }],
+    "outputs": [{ "id": "image", "title": "选中图片", "type": "image" }],
+    "defaultSize": { "width": 820, "height": 620 },
+    "defaultData": { "query": "", "page": 1 }
+  }]
 }

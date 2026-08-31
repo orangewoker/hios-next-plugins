@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "pinterest-assets",
   "name": "Pinterest 素材库",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "登录并浏览 Pinterest，右键任意 Pin 图片即可解析 originals 原图并直接导入 HIOS 画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pinterest-assets",
@@ -19,10 +19,13 @@
     {
       "id": "pinterest.browser",
       "title": "Pinterest 素材库",
-      "description": "在可拖动、可缩放的画布窗口中浏览 Pinterest，右键 Pin 图片直接采集原图。",
-      "builtin": "pinterest-assets"
+      "description": "独立浏览 Pinterest，右键 Pin 图片解析 originals 原图并从 image 端口输出。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [{ "id": "query", "title": "搜索词", "type": "text" }],
+      "outputs": [{ "id": "image", "title": "采集原图", "type": "image" }],
+      "defaultSize": { "width": 920, "height": 680 },
+      "defaultData": { "query": "" }
     }
-  ],
-  "builtin": "pinterest-assets"
+  ]
 }
 
