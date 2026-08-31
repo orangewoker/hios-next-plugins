@@ -1,12 +1,34 @@
 {
+  "schemaVersion": 1,
   "id": "image-compare",
   "name": "图片对比",
-  "version": "0.2.2",
-  "description": "在画布节点内叠放两张固定尺寸图片，滑杆只改变可见遮罩范围，不缩放图片。",
+  "version": "0.3.0",
+  "description": "完全独立的图片遮罩对比节点。两张图片固定叠放，滑杆只改变 A 图的可见范围。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare",
-  "permissions": ["canvas", "filesystem"],
-  "capabilities": [{ "id": "image.compare", "title": "图片对比", "description": "在画布节点中运行并用滑杆对比图片 A 与图片 B。" }],
-  "nodes": [{ "id": "image.compare", "title": "图片对比", "description": "输入图片 A、图片 B，运行后在节点中拖动滑杆查看差异。", "builtin": "image-compare" }],
-  "builtin": "image-compare"
+  "permissions": ["canvas", "network"],
+  "capabilities": [
+    {
+      "id": "image.compare",
+      "title": "图片对比",
+      "description": "在沙箱插件节点内叠放两张图片并输出当前遮罩对比图。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "image.compare",
+      "title": "图片对比",
+      "description": "连接图片 A 与图片 B，拖动滑杆对比；图片本身不会随滑杆缩放。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        { "id": "imagea", "title": "图片 A", "type": "image", "required": true },
+        { "id": "imageb", "title": "图片 B", "type": "image", "required": true }
+      ],
+      "outputs": [
+        { "id": "image", "title": "当前对比图", "type": "image" }
+      ],
+      "defaultSize": { "width": 520, "height": 430 },
+      "defaultData": { "slider": 50 }
+    }
+  ]
 }
