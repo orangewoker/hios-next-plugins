@@ -1,8 +1,8 @@
 {
   "id": "image-compare",
   "name": "图片对比",
-  "version": "0.2.1",
-  "description": "在画布节点内直接运行并稳定对比两张图片，滑杆绑定图片边界并按比例展示。",
+  "version": "0.2.2",
+  "description": "在画布节点内叠放两张固定尺寸图片，滑杆只改变可见遮罩范围，不缩放图片。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare",
   "permissions": ["canvas", "filesystem"],
