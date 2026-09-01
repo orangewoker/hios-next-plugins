@@ -1,5 +1,34 @@
 # HIOS Next 插件开发规范
 
+## Skill + MCP 插件（schemaVersion 2）
+
+插件可以独立贡献标准 `SKILL.md` 和 MCP Server，更新插件即可更新能力，不需要修改或重新打包 HIOS 主程序：
+
+```json
+{
+  "schemaVersion": 2,
+  "id": "my-agent-plugin",
+  "name": "My Agent Plugin",
+  "version": "0.1.0",
+  "permissions": ["agent", "process"],
+  "contributes": {
+    "skills": [
+      { "id": "my-skill", "path": "skills/my-skill/SKILL.md", "enabledByDefault": true }
+    ],
+    "mcpServers": [
+      { "id": "server", "name": "My MCP", "transport": "stdio", "entry": "mcp/server.mjs", "runtime": "node", "enabledByDefault": true }
+    ]
+  }
+}
+```
+
+- Skill 目录名必须与 `SKILL.md` frontmatter 的 `name` 一致。
+- STDIO MCP 需要 `process` 权限；HTTP MCP 需要 `network` 权限。
+- `entry` 只能指向插件目录内的 `.js`、`.mjs`、`.cjs` 或 `.py` 文件。
+- Node MCP 可声明 `"install": { "npm": true }` 并提交 `package-lock.json`，不要提交 `node_modules`。
+- API Key、Token、Cookie、Authorization 等 Secret 不得写入清单；由 HIOS MCP 设置写入系统安全存储。
+- MCP Tool 在 Agent 中的唯一 ID 为 `mcp:{pluginId}.{serverId}:{toolName}`。
+
 ## 最小清单
 
 每个插件必须包含 `plugin.json`：
