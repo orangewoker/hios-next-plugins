@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "id": "blender-mcp",
+  "name": "Blender MCP 建模",
+  "version": "0.1.0",
+  "description": "通过标准 MCP 让 HIOS 智能体创建、检查、修改、渲染并保存 Blender 模型。",
+  "author": "HIOS Next",
+  "permissions": [
+    "agent",
+    "filesystem",
+    "process"
+  ],
+  "capabilities": [
+    {
+      "id": "blender.model",
+      "title": "Blender MCP 建模",
+      "description": "独立插件提供 Blender 建模和 .blend 输出能力"
+    }
+  ],
+  "install": {
+    "npm": true,
+    "python": false
+  },
+  "contributes": {
+    "skills": [
+      {
+        "id": "blender-modeling",
+        "path": "skills/blender-modeling/SKILL.md",
+        "enabledByDefault": true
+      }
+    ],
+    "mcpServers": [
+      {
+        "id": "server",
+        "name": "Blender MCP",
+        "transport": "stdio",
+        "entry": "mcp/server.mjs",
+        "runtime": "node",
+        "enabledByDefault": true
+      }
+    ]
+  }
+}
