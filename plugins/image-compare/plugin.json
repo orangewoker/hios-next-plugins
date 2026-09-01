@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "image-compare",
   "name": "图片对比",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "完全独立的图片遮罩对比节点。两张图片固定叠放，滑杆只改变 A 图的可见范围。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare",

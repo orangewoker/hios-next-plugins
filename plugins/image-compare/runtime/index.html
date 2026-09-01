@@ -36,10 +36,10 @@
     .badge { position:absolute;z-index:5;top:9px;padding:4px 7px;color:#fff;background:rgba(14,18,23,.7);border:1px solid rgba(255,255,255,.16);border-radius:7px;backdrop-filter:blur(8px);font-size:8px;pointer-events:none; }
     .badge-a { left:9px; }.badge-b { right:9px; }
     .empty { position:absolute;z-index:6;inset:0;display:grid;place-content:center;justify-items:center;gap:7px;padding:20px;color:var(--text-3);background:color-mix(in srgb,var(--bg) 86%,transparent);text-align:center;pointer-events:none; }
+    .empty[hidden] { display:none !important; }
     .empty strong { color:var(--text-2);font-size:11px; }.empty span { max-width:280px;font-size:9px;line-height:1.55; }
-    .controls { display:grid;grid-template-columns:auto minmax(90px,1fr) auto;align-items:center;gap:9px;padding:9px 10px;border-top:1px solid var(--border);background:var(--surface); }
-    .value { min-width:38px;color:var(--text-2);font-variant-numeric:tabular-nums;font-size:9px;white-space:nowrap; }
-    input[type="range"] { width:100%;accent-color:var(--accent);cursor:ew-resize; }
+    .controls { display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;border-top:1px solid var(--border);background:var(--surface); }
+    .value { min-width:0;color:var(--text-2);font-variant-numeric:tabular-nums;font-size:9px;white-space:nowrap; }
     .output { min-height:28px;padding:0 10px;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:8px;font-size:9px;font-weight:700; }
     .output:hover { filter:brightness(1.07); }.output:disabled { opacity:.42;cursor:not-allowed; }
   </style>
@@ -58,9 +58,9 @@
       <div id="empty" class="empty"><strong>连接两张图片</strong><span>将左侧图片节点分别连接到“图片 A”和“图片 B”输入口，图片始终保持固定尺寸叠放。</span></div>
     </section>
     <footer class="controls">
-      <span id="value" class="value">A 50%</span>
-      <input id="slider" type="range" min="0" max="100" step="0.1" value="50" aria-label="图片对比滑杆" />
-      <button id="output" class="output" type="button" disabled>输出当前对比图</button>
+      <span id="value" class="value">拖动画面分割线 · A 50%</span>
+      <input id="slider" type="range" min="0" max="100" step="0.1" value="50" hidden aria-hidden="true" tabindex="-1" />
+      <button id="output" class="output" type="button" disabled>运行</button>
     </footer>
   </main>
   <script>
@@ -89,7 +89,7 @@
         slider.value = String(runtime.slider);
         layerA.style.clipPath = `inset(0 ${100 - runtime.slider}% 0 0)`;
         divider.style.left = `${runtime.slider}%`;
-        value.textContent = `A ${Math.round(runtime.slider)}%`;
+        value.textContent = `拖动画面分割线 · A ${Math.round(runtime.slider)}%`;
         if (emit) post('state', { state: { slider: runtime.slider } });
       }
       function sourceFrom(value) {
@@ -197,7 +197,7 @@
       });
       window.addEventListener('beforeunload', () => { revoke('imageA'); revoke('imageB'); });
       applySlider(50, false);
-      post('ready', { version:'0.3.1' });
+      post('ready', { version:'0.3.2' });
     })();
   </script>
 </body>

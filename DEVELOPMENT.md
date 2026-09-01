@@ -58,7 +58,7 @@
 
 - `browser-open`：传入 `src`、可选 `userAgent` 和 `{ top, right, bottom, left }` 边距。
 - `browser-close`：关闭宿主 WebView。
-- `browser-command`：传入唯一 `requestId` 及命令 `load-url`、`back`、`forward`、`reload`、`set-zoom`、`execute-js` 或 `state`。
+- `browser-command`：传入唯一 `requestId` 及命令 `load-url`、`back`、`forward`、`reload`、`set-zoom`、`execute-js`、`state`、`set-cookies` 或 `clear-cookies`。
 - `browser-result`：宿主按 `requestId` 返回 `result` 或 `error`。
 - `browser-event`：宿主推送 `dom-ready`、`did-stop-loading`、`did-fail-load`、`navigation`、`context-menu`。
 
@@ -81,7 +81,13 @@ parent.postMessage({
 }, '*');
 ```
 
-浏览器会话按 `pluginId` 隔离并持久保存。插件应在 `browser-result` 中匹配 `requestId`，用 `browser-event` 更新导航状态；需要采集网页元素时，可在 `context-menu` 后调用 `execute-js`。该协议不依赖具体插件 ID，插件可以独立更新 UI、解析与输出逻辑。
+浏览器会话按 `pluginId` 隔离并持久保存。插件应在 `browser-result` 中匹配 `requestId`，用 `browser-event` 更新导航状态；需要采集网页元素时，可在 `context-menu` 后调用 `execute-js`。用户点击宿主右键菜单“保存原图到画布”时，插件会收到 `{ event: 'context-action', action: 'save-original', params }`。`set-cookies` 接受目标 `url` 与 `name=value; name2=value2` 文本，`clear-cookies` 清空当前插件会话。该协议不依赖具体插件 ID，插件可以独立更新 UI、解析与输出逻辑。
+
+## 通用网络与画布直出
+
+声明 `network` 权限的插件可发送 `network-request`，在 `payload` 中提供唯一 `requestId`、HTTP(S) `url`、可选 `method`、`headers`、`body` 与 `proxy`。宿主通过 `network-result` 返回 `status`、`ok`、`headers`、文本 `body` 或 `error`。请求运行在按插件隔离的 Electron Session 中，适合需要 API Key、代理或规避浏览器 CORS 的素材 API。
+
+图片 `output` 项若带有 `metadata: { addToCanvas: true }`，宿主会保存原图、在插件节点右侧创建图片节点并自动连线。网页素材插件可把右下角批量输出按钮和 `context-action/save-original` 右键动作统一接到这套输出协议。
 
 ## 仓库工作流
 

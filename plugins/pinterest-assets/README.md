@@ -2,6 +2,13 @@
 
 在 HIOS Next 的独立插件节点中登录、搜索并浏览 Pinterest。对任意 Pin 图片点击右键，即可解析 `i.pinimg.com/originals/` 原图并从图片端口输出。
 
+## 0.3.0
+
+- 右下角新增“输出所选原图到画布”，可把当前右键选中的原图直接创建为画布图片节点。
+- 宿主级图片右键菜单新增“保存原图到画布”。
+- 设置面板支持粘贴 Cookie 登录和清除插件会话，同时保留 Pinterest 网页的正常登录流程。
+- 登录、选图、原图解析和输出均通过通用插件协议实现，不需要 Pinterest 专用宿主适配器。
+
 ## 0.2.1
 
 - 改用 HIOS 通用插件浏览器桥接协议，修复沙箱 iframe 内 Electron WebView API 无法激活的问题。
@@ -33,6 +40,4 @@
 在 HIOS Next 的“插件管理 → 安装插件”中粘贴：
 
 `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pinterest-assets`
-
-需要包含 Pinterest 宿主适配器的 HIOS Next 版本。
 
