@@ -8,23 +8,238 @@
 <footer class="footer"><span id="selectedLabel">尚未选择图片</span><button id="outputSelected" disabled>输出所选原图到画布</button></footer>
 <section id="settings" class="settings"><label>API 地址<input id="apiBase" placeholder="https://civitai.com/api/v1/images"></label><label>API Key<input id="apiKey" type="password" placeholder="可选，用于访问账号允许的更多内容"></label><label>网络代理<input id="proxy" placeholder="例如 http://127.0.0.1:7890"></label><small>代理由 HIOS 通用插件网络接口应用；API Key 仅保存在本机插件隔离存储中。</small><div class="settings-actions"><button id="clearSettings">恢复默认</button><button id="saveSettings" class="save">保存并重新载入</button></div></section>
 <div id="context" class="context"><button id="contextOutput">保存原图到画布</button></div>
-<script>(()=>{'use strict';
-const P='hios-plugin-node/v1',$=id=>document.getElementById(id),grid=$('grid');
-let nodeId='',pluginId='civitai-assets',page=1,loading=false,hasMore=true,lastInput='',items=[],selected=null,contextItem=null;
-const pending=new Map;
-const post=(type,payload={})=>parent.postMessage({protocol:P,nodeId,pluginId,type,payload},'*');
-const status=text=>$('message').textContent=text;
-const settings=()=>({apiBase:localStorage.getItem('civitai.apiBase')||'https://civitai.com/api/v1/images',apiKey:localStorage.getItem('civitai.apiKey')||'',proxy:localStorage.getItem('civitai.proxy')||''});
-const request=payload=>new Promise((resolve,reject)=>{const requestId=crypto.randomUUID();pending.set(requestId,{resolve,reject});post('network-request',{requestId,...payload});setTimeout(()=>{if(pending.delete(requestId))reject(Error('网络请求超时'))},30000)});
-const source=item=>item?.url||item?.meta?.url||'';
-const select=item=>{selected=item;document.querySelectorAll('.card').forEach(card=>card.classList.toggle('selected',card.dataset.id===String(item.id)));$('selectedLabel').textContent=`已选择：${item.username||item.modelName||'Civitai'} · ${item.width||'?'}×${item.height||'?'}`;$('outputSelected').disabled=false;post('state',{state:{query:$('query').value.trim(),page,sort:$('sort').value,selectedId:item.id}})};
-const emit=(item,addToCanvas=true)=>{if(!item)return;const url=source(item);post('output',{kind:'image',portId:'image',source:url,url,name:`civitai-${item.id||Date.now()}.jpg`,width:item.width,height:item.height,metadata:{id:item.id,username:item.username,nsfw:item.nsfw,addToCanvas}});status(addToCanvas?'已将所选原图输出到画布':'已输出选中图片')};
-const render=()=>{grid.innerHTML='';if(!items.length){grid.innerHTML='<div class="empty"><strong>没有找到图片</strong><span>尝试更换关键词、API Key 或内容设置</span></div>';return}items.forEach(item=>{const card=document.createElement('button');card.className='card';card.dataset.id=String(item.id);const img=document.createElement('img');img.loading='lazy';img.referrerPolicy='no-referrer';img.src=source(item);const copy=document.createElement('span');copy.textContent=(item.username||item.modelName||'Civitai')+' · '+(item.width||'?')+'×'+(item.height||'?');card.append(img,copy);card.onclick=()=>select(item);card.ondblclick=()=>{select(item);emit(item,true)};card.oncontextmenu=event=>{event.preventDefault();select(item);contextItem=item;const menu=$('context');menu.style.left=Math.min(event.clientX,innerWidth-150)+'px';menu.style.top=Math.min(event.clientY,innerHeight-45)+'px';menu.classList.add('open')};grid.append(card)});const more=document.createElement('button');more.id='loadMore';more.className='load-more';more.disabled=!hasMore;more.textContent=hasMore?'加载更多':'没有更多了';more.onclick=()=>load(false);grid.append(more);if(selected)select(selected)};
-const load=async(reset=true)=>{if(loading)return;loading=true;const targetPage=reset?1:page+1;const existingButton=$('loadMore');if(reset){grid.innerHTML='<div class="empty"><i></i><strong>正在载入 Civitai…</strong></div>';status('正在通过插件网络接口请求 Civitai API…')}else{if(existingButton){existingButton.disabled=true;existingButton.textContent='正在加载更多…'}status(`正在加载第 ${targetPage} 页…`)}try{const config=settings(),base=config.apiBase.trim()||'https://civitai.com/api/v1/images',url=new URL(/\/images\/?$/i.test(base)?base:base.replace(/\/+$/,'')+'/images');url.searchParams.set('limit','30');url.searchParams.set('page',String(targetPage));url.searchParams.set('sort',$('sort').value);url.searchParams.set('period','AllTime');url.searchParams.set('nsfw','None');const query=$('query').value.trim();if(query)url.searchParams.set('query',query);const headers={accept:'application/json'};if(config.apiKey)headers.Authorization='Bearer '+config.apiKey;const response=await request({url:url.toString(),headers,proxy:config.proxy});if(!response?.ok)throw Error('Civitai API '+(response?.status||'请求失败'));const json=JSON.parse(response.body||'{}'),incoming=(json.items||[]).filter(item=>source(item)),seen=new Set((reset?[]:items).map(item=>String(item.id||source(item))));items=reset?incoming:[...items,...incoming.filter(item=>!seen.has(String(item.id||source(item))))];page=targetPage;hasMore=Boolean(json.metadata?.nextPage)||incoming.length>=30;selected=items.find(item=>item.id===selected?.id)||null;render();$('page').textContent=`已加载 ${items.length} 张 · 第 ${page} 页`;status(hasMore?`已累计载入 ${items.length} 张图片，滚动到底部可继续加载`:`已载入全部 ${items.length} 张图片`);post('state',{state:{query,page,sort:$('sort').value}})}catch(error){if(reset)grid.innerHTML=`<div class="empty"><strong>载入失败</strong><span>${String(error.message||error)}</span></div>`;else if(existingButton){existingButton.disabled=false;existingButton.textContent='加载失败，点击重试'}status('请求失败，请检查 API、代理或网络设置')}finally{loading=false}};
-$('search').onclick=()=>load(true);$('query').onkeydown=event=>event.key==='Enter'&&load(true);$('outputSelected').onclick=()=>emit(selected,true);$('contextOutput').onclick=()=>{emit(contextItem,true);$('context').classList.remove('open')};addEventListener('pointerdown',event=>{if(!$('context').contains(event.target))$('context').classList.remove('open')});$('settingsTrigger').onclick=()=>$('settings').classList.toggle('open');
-const hydrateSettings=()=>{const config=settings();$('apiBase').value=config.apiBase;$('apiKey').value=config.apiKey;$('proxy').value=config.proxy};
-$('saveSettings').onclick=()=>{localStorage.setItem('civitai.apiBase',$('apiBase').value.trim());localStorage.setItem('civitai.apiKey',$('apiKey').value.trim());localStorage.setItem('civitai.proxy',$('proxy').value.trim());$('settings').classList.remove('open');load(true)};
-$('clearSettings').onclick=()=>{['civitai.apiBase','civitai.apiKey','civitai.proxy'].forEach(key=>localStorage.removeItem(key));hydrateSettings()};
-addEventListener('message',event=>{const message=event.data;if(!message||message.protocol!==P)return;if(message.type==='network-result'){const payload=message.payload||{},job=pending.get(payload.requestId);if(job){pending.delete(payload.requestId);payload.error?job.reject(Error(payload.error)):job.resolve(payload.result)}return}if(message.type==='init'){nodeId=message.nodeId||nodeId;pluginId=message.pluginId||pluginId;const state=message.payload?.state||{},input=String(message.payload?.inputs?.query||'');$('query').value=input||state.query||'';$('sort').value=state.sort||'Most Reactions';post('loaded',{ready:true});const signature=$('query').value+'|'+$('sort').value;if(signature!==lastInput){lastInput=signature;load(true)}}if(message.type==='run'){selected?emit(selected,false):load(true)}});
-hydrateSettings();post('ready',{version:'0.4.1'})})();</script>
+<script>
+(() => {
+  'use strict';
+  const P = 'hios-plugin-node/v1';
+  const $ = (id) => document.getElementById(id);
+  const grid = $('grid');
+  const pending = new Map();
+  let nodeId = '', pluginId = 'civitai-assets', page = 1, loading = false, hasMore = true;
+  let nextCursor = '', nextPageUrl = '', activeModelId = 0, activeModelName = '', lastInput = '';
+  let items = [], selected = null, contextItem = null;
+
+  const post = (type, payload = {}) => parent.postMessage({ protocol: P, nodeId, pluginId, type, payload }, '*');
+  const status = (value) => { $('message').textContent = value; };
+  const settings = () => ({
+    apiBase: localStorage.getItem('civitai.apiBase') || 'https://civitai.com/api/v1/images',
+    apiKey: localStorage.getItem('civitai.apiKey') || '',
+    proxy: localStorage.getItem('civitai.proxy') || '',
+  });
+  const endpoints = (value) => {
+    const raw = String(value || '').trim().replace(/\/+$/, '') || 'https://civitai.com/api/v1/images';
+    if (/\/images$/i.test(raw)) return { images: raw, models: raw.replace(/\/images$/i, '/models') };
+    if (/\/api\/v1$/i.test(raw)) return { images: raw + '/images', models: raw + '/models' };
+    return { images: raw + '/api/v1/images', models: raw + '/api/v1/models' };
+  };
+  const request = (payload) => new Promise((resolve, reject) => {
+    const requestId = crypto.randomUUID();
+    pending.set(requestId, { resolve, reject });
+    post('network-request', { requestId, ...payload });
+    setTimeout(() => { if (pending.delete(requestId)) reject(Error('网络请求超时')); }, 45000);
+  });
+  const requestJson = async (url, config) => {
+    const headers = { accept: 'application/json' };
+    if (config.apiKey) headers.Authorization = 'Bearer ' + config.apiKey;
+    const response = await request({ url: url.toString(), headers, proxy: config.proxy });
+    if (!response?.ok) throw Error('Civitai API ' + (response?.status || '请求失败'));
+    return JSON.parse(response.body || '{}');
+  };
+  const source = (item) => item?.url || item?.meta?.url || '';
+
+  const select = (item) => {
+    selected = item;
+    document.querySelectorAll('.card').forEach((card) => card.classList.toggle('selected', card.dataset.id === String(item.id)));
+    $('selectedLabel').textContent = '已选择：' + (item.username || item.modelName || 'Civitai') + ' · ' + (item.width || '?') + '×' + (item.height || '?');
+    $('outputSelected').disabled = false;
+    post('state', { state: { query: $('query').value.trim(), page, sort: $('sort').value, selectedId: item.id } });
+  };
+
+  const emit = (item, addToCanvas = true) => {
+    if (!item) return;
+    const url = source(item);
+    post('output', {
+      kind: 'image', portId: 'image', source: url, url,
+      name: 'civitai-' + (item.id || Date.now()) + '.jpg',
+      width: item.width, height: item.height,
+      metadata: { id: item.id, username: item.username, nsfw: item.nsfwLevel || item.nsfw, addToCanvas },
+    });
+    status(addToCanvas ? '已将所选原图输出到画布' : '已输出选中图片');
+  };
+
+  const render = () => {
+    grid.innerHTML = '';
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty"><strong>没有找到图片</strong><span>尝试更换关键词、API Key 或内容设置</span></div>';
+      return;
+    }
+    items.forEach((item) => {
+      const card = document.createElement('button');
+      card.className = 'card';
+      card.dataset.id = String(item.id);
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.referrerPolicy = 'no-referrer';
+      img.src = source(item);
+      const copy = document.createElement('span');
+      copy.textContent = (item.username || item.modelName || activeModelName || 'Civitai') + ' · ' + (item.width || '?') + '×' + (item.height || '?');
+      card.append(img, copy);
+      card.onclick = () => select(item);
+      card.ondblclick = () => { select(item); emit(item, true); };
+      card.oncontextmenu = (event) => {
+        event.preventDefault();
+        select(item);
+        contextItem = item;
+        const menu = $('context');
+        menu.style.left = Math.min(event.clientX, innerWidth - 150) + 'px';
+        menu.style.top = Math.min(event.clientY, innerHeight - 45) + 'px';
+        menu.classList.add('open');
+      };
+      grid.append(card);
+    });
+    const more = document.createElement('button');
+    more.id = 'loadMore';
+    more.className = 'load-more';
+    more.disabled = !hasMore;
+    more.textContent = hasMore ? '加载更多' : '没有更多了';
+    more.onclick = () => load(false);
+    grid.append(more);
+    if (selected) select(selected);
+  };
+
+  const buildImageUrl = (endpoint, append) => {
+    if (append && nextPageUrl && !nextCursor) return new URL(nextPageUrl);
+    const url = new URL(endpoint);
+    url.searchParams.set('limit', '30');
+    url.searchParams.set('sort', $('sort').value);
+    url.searchParams.set('period', 'AllTime');
+    url.searchParams.set('nsfw', 'None');
+    url.searchParams.set('withMeta', 'true');
+    if (activeModelId) url.searchParams.set('modelId', String(activeModelId));
+    if (append && nextCursor) url.searchParams.set('cursor', nextCursor);
+    return url;
+  };
+
+  const resolveModels = async (query, config, api) => {
+    if (!query) return [];
+    const url = new URL(api.models);
+    url.searchParams.set('limit', '8');
+    url.searchParams.set('query', query);
+    url.searchParams.set('sort', 'Highest Rated');
+    url.searchParams.set('period', 'AllTime');
+    const json = await requestJson(url, config);
+    return (json.items || []).filter((item) => Number(item.id || 0) > 0).slice(0, 5);
+  };
+
+  const load = async (reset = true) => {
+    if (loading) return;
+    loading = true;
+    const existingButton = $('loadMore');
+    if (reset) {
+      page = 1; nextCursor = ''; nextPageUrl = ''; activeModelId = 0; activeModelName = '';
+      items = []; selected = null; $('outputSelected').disabled = true; $('selectedLabel').textContent = '尚未选择图片';
+      grid.innerHTML = '<div class="empty"><i></i><strong>正在载入 Civitai…</strong></div>';
+      status('正在通过插件网络接口请求 Civitai API…');
+    } else {
+      if (existingButton) { existingButton.disabled = true; existingButton.textContent = '正在加载更多…'; }
+      status('正在加载第 ' + (page + 1) + ' 批图片…');
+    }
+
+    try {
+      const config = settings();
+      const api = endpoints(config.apiBase);
+      const query = $('query').value.trim();
+      let json = null;
+
+      if (reset && query) {
+        const candidates = await resolveModels(query, config, api);
+        if (!candidates.length) {
+          hasMore = false; render(); $('page').textContent = '没有搜索结果';
+          status('没有找到与“' + query + '”匹配的 Civitai 模型');
+          return;
+        }
+        for (const candidate of candidates) {
+          activeModelId = Number(candidate.id);
+          activeModelName = String(candidate.name || '');
+          const candidateJson = await requestJson(buildImageUrl(api.images, false), config);
+          json = candidateJson;
+          if ((candidateJson.items || []).some((item) => source(item))) break;
+        }
+      } else {
+        json = await requestJson(buildImageUrl(api.images, !reset), config);
+      }
+
+      const incoming = (json?.items || []).filter((item) => source(item)).map((item) => ({ ...item, modelName: item.modelName || activeModelName }));
+      const seen = new Set(items.map((item) => String(item.id || source(item))));
+      items = reset ? incoming : [...items, ...incoming.filter((item) => !seen.has(String(item.id || source(item))))];
+      if (!reset) page += 1;
+      nextCursor = String(json?.metadata?.nextCursor || json?.metadata?.next_cursor || '');
+      nextPageUrl = String(json?.metadata?.nextPage || json?.metadata?.next_page || '');
+      hasMore = Boolean(nextCursor || nextPageUrl);
+      selected = items.find((item) => item.id === selected?.id) || null;
+      render();
+      $('page').textContent = '已加载 ' + items.length + ' 张 · ' + page + ' 批';
+      const sourceName = query ? ('“' + query + '” · ' + (activeModelName || activeModelId)) : '公开图库';
+      status(hasMore ? sourceName + '：已载入 ' + items.length + ' 张，可继续加载' : '已载入全部 ' + items.length + ' 张图片');
+      post('state', { state: { query, page, sort: $('sort').value } });
+    } catch (error) {
+      if (reset) grid.innerHTML = '<div class="empty"><strong>载入失败</strong><span>' + String(error.message || error) + '</span></div>';
+      else if (existingButton) { existingButton.disabled = false; existingButton.textContent = '加载失败，点击重试'; }
+      status('请求失败，请检查 API Key、代理或网络设置');
+    } finally {
+      loading = false;
+    }
+  };
+
+  $('search').onclick = () => load(true);
+  $('query').onkeydown = (event) => { if (event.key === 'Enter') load(true); };
+  $('sort').onchange = () => load(true);
+  $('outputSelected').onclick = () => emit(selected, true);
+  $('contextOutput').onclick = () => { emit(contextItem, true); $('context').classList.remove('open'); };
+  addEventListener('pointerdown', (event) => { if (!$('context').contains(event.target)) $('context').classList.remove('open'); });
+  $('settingsTrigger').onclick = () => $('settings').classList.toggle('open');
+
+  const hydrateSettings = () => {
+    const config = settings();
+    $('apiBase').value = config.apiBase; $('apiKey').value = config.apiKey; $('proxy').value = config.proxy;
+  };
+  $('saveSettings').onclick = () => {
+    localStorage.setItem('civitai.apiBase', $('apiBase').value.trim());
+    localStorage.setItem('civitai.apiKey', $('apiKey').value.trim());
+    localStorage.setItem('civitai.proxy', $('proxy').value.trim());
+    $('settings').classList.remove('open');
+    load(true);
+  };
+  $('clearSettings').onclick = () => {
+    ['civitai.apiBase', 'civitai.apiKey', 'civitai.proxy'].forEach((key) => localStorage.removeItem(key));
+    hydrateSettings();
+  };
+
+  addEventListener('message', (event) => {
+    const message = event.data;
+    if (!message || message.protocol !== P) return;
+    if (message.type === 'network-result') {
+      const payload = message.payload || {};
+      const job = pending.get(payload.requestId);
+      if (job) { pending.delete(payload.requestId); payload.error ? job.reject(Error(payload.error)) : job.resolve(payload.result); }
+      return;
+    }
+    if (message.type === 'init') {
+      nodeId = message.nodeId || nodeId;
+      pluginId = message.pluginId || pluginId;
+      const state = message.payload?.state || {};
+      const input = String(message.payload?.inputs?.query || '');
+      $('query').value = input || state.query || '';
+      $('sort').value = state.sort || 'Most Reactions';
+      post('loaded', { ready: true });
+      const signature = $('query').value + '|' + $('sort').value;
+      if (signature !== lastInput) { lastInput = signature; load(true); }
+    }
+    if (message.type === 'run') selected ? emit(selected, false) : load(true);
+  });
+
+  hydrateSettings();
+  post('ready', { version: '0.4.2' });
+})();
+</script>
 </body></html>
