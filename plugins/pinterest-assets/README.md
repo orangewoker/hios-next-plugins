@@ -2,6 +2,11 @@
 
 在 HIOS Next 的独立插件节点中登录、搜索并浏览 Pinterest。对任意 Pin 图片点击右键，即可解析 `i.pinimg.com/originals/` 原图并从图片端口输出。
 
+## 0.3.2
+
+- 修复重复导入 Cookie 时覆盖已有 HttpOnly Cookie 导致的 `EXCLUDE_OVERWRITE_HTTP_ONLY` 错误。
+- 导入前仅清理 Pinterest 插件自己的独立会话，再写入新 Cookie 并刷新页面。
+
 ## 0.3.1
 
 - 修复 Cookie 设置面板被网页 WebView 原生层遮挡的问题。

@@ -2,6 +2,11 @@
 
 在 HIOS Next 独立插件节点中扫码登录、浏览并采集小红书图片素材。
 
+## 0.4.2
+
+- 修复重复导入 Cookie 时覆盖已有 HttpOnly Cookie 导致的 `EXCLUDE_OVERWRITE_HTTP_ONLY` 错误。
+- 导入前仅清理小红书插件自己的独立会话，再写入新 Cookie 并刷新页面。
+
 ## 0.4.1
 
 - 修复 Cookie 设置面板被网页 WebView 原生层遮挡的问题。
