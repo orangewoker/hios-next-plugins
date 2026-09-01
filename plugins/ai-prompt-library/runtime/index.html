@@ -194,7 +194,7 @@
         } catch (error) { categories=[]; renderCategories(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
         finally { setBusy(false); }
       }
-      async function randomPrompt() {
+      async function randomPrompt(forceOutput = false) {
         if (busy) return;
         if (!categories.length) { await loadCategories(true); if (!categories.length) return; }
         const ids = state.selectedCategoryIds.length ? state.selectedCategoryIds : categories.map((item)=>Number(item.id));
@@ -205,7 +205,7 @@
           const result=await request('/api/v1/random',{method:'POST',body:JSON.stringify({category_ids:ids,count:state.count,seed:state.seed})});
           const items=result && Array.isArray(result.items) ? result.items.filter((item)=>item && String(item.prompt || '').trim()) : [];
           if (!items.length) throw new Error('所选分类中没有可用提示词');
-          state.lastItems=items; state.selectedIndex=0; renderResults(); persist(); setStatus('抽取完成','ok'); showMessage(`已抽取 ${items.length} 条提示词。`,'info'); if(state.autoOutput) emitSelected();
+          state.lastItems=items; state.selectedIndex=0; renderResults(); persist(); setStatus('抽取完成','ok'); showMessage(`已抽取 ${items.length} 条提示词。`,'info'); if(forceOutput || state.autoOutput) emitSelected();
         } catch(error) { setStatus('抽取失败','error'); showMessage(error instanceof Error?error.message:String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
         finally { setBusy(false); renderResults(); }
       }
@@ -219,13 +219,31 @@
       els.settingsToggle.addEventListener('click',()=>els.panel.classList.toggle('open'));
       els.revealKey.addEventListener('click',()=>{ const reveal=els.apiKey.type==='password'; els.apiKey.type=reveal?'text':'password'; els.revealKey.textContent=reveal?'隐藏':'显示'; });
       els.clearKey.addEventListener('click',()=>{ els.apiKey.value=''; localStorage.removeItem(STORAGE_KEY); setStatus('密钥已清除'); showMessage('本机保存的访问密钥已清除。','info'); });
-      els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',randomPrompt); els.output.addEventListener('click',emitSelected);
+      els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',()=>randomPrompt(false)); els.output.addEventListener('click',emitSelected);
       els.serverUrl.addEventListener('change',saveConnection); els.apiKey.addEventListener('change',saveConnection);
       els.count.addEventListener('change',()=>{ state.count=safeNumber(els.count.value,1,20,1); els.count.value=String(state.count); persist(); });
       els.seed.addEventListener('change',()=>{ state.seed=safeNumber(els.seed.value,0,2147483647,0); els.seed.value=String(state.seed); persist(); });
       els.autoOutput.addEventListener('change',()=>{ state.autoOutput=els.autoOutput.checked; persist(); });
-      window.addEventListener('message',(event)=>{ const message=event.data; if(!message||message.protocol!==PROTOCOL||message.type!=='init')return; nodeId=String(message.nodeId||message.payload?.nodeId||nodeId); pluginId=String(message.pluginId||message.payload?.pluginId||pluginId); hydrate(message.payload||{}); post('loaded',{}); });
-      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; renderResults(); post('ready',{});
+      window.addEventListener('message',(event)=>{
+        const message=event.data;
+        if(!message||message.protocol!==PROTOCOL)return;
+        nodeId=String(message.nodeId||message.payload?.nodeId||nodeId);
+        pluginId=String(message.pluginId||message.payload?.pluginId||pluginId);
+        if(message.type==='init'){
+          hydrate(message.payload||{});
+          post('loaded',{});
+          return;
+        }
+        if(message.type==='run'){
+          // A downstream run asks every runnable upstream plugin for a fresh
+          // output. Rehydrate the host's latest state, draw a new random item,
+          // and always emit the selected prompt even when manual auto-output
+          // is disabled. The output settles the host run promise immediately.
+          hydrate(message.payload||{});
+          void randomPrompt(true);
+        }
+      });
+      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; renderResults(); post('ready',{version:'0.1.1'});
     })();
   </script>
 </body>
