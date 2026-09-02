@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "civitai-assets",
   "name": "Civitai 素材库",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "搜索、预览、下载 Civitai 图片并拖入画布，支持 API Key 与代理设置。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/civitai-assets",
