@@ -38,3 +38,9 @@
 安装 URL：`https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets`
 
 登录状态与采集素材仅保存在 HIOS 本机数据目录，不写入插件文件。
+
+## 0.6.0
+
+- 右键采集兼容图片、`picture/source`、背景图和 Live Photo 的 `video/poster`。
+- 自动从小红书 CDN 的压缩地址推导原图候选地址，并在网页会话中探测可用的最高质量图片。
+- 采集结果保留 Live Photo 视频地址元数据，但输出到画布仍为静态原图。

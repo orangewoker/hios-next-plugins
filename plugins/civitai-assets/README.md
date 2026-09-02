@@ -21,3 +21,7 @@
 - 不再依赖主程序中的 `civitai-assets` 专用渲染分支。
 
 安装 URL：`https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/civitai-assets`
+## 0.5.0
+
+- 缩略图改为等比完整显示，默认不裁切、不拉伸图片。
+- “加载更多”固定按每批 30 张追加到当前列表，并兼容 API 返回的 nextPage 地址。

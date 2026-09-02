@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "xiaohongshu-assets",
   "name": "小红书素材库",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "扫码登录并持久保存小红书会话，也可免登录解析公开笔记链接并将高清图片加入画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets",
