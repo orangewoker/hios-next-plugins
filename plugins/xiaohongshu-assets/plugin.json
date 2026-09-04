@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "xiaohongshu-assets",
   "name": "小红书素材库",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "扫码登录并持久保存小红书会话，也可免登录解析公开笔记链接并将高清图片加入画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/xiaohongshu-assets",
@@ -11,7 +11,7 @@
   "nodes": [{
     "id": "xiaohongshu.browser",
     "title": "小红书素材库",
-    "description": "独立浏览小红书，右键图片解析高清地址并从 image 端口输出。",
+    "description": "独立浏览小红书，点击图片右上角按钮解析高清地址并从 image 端口输出。",
     "rendererEntry": "runtime/index.html",
     "inputs": [{ "id": "query", "title": "搜索词", "type": "text" }],
     "outputs": [{ "id": "image", "title": "采集原图", "type": "image" }],
