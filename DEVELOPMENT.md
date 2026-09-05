@@ -42,6 +42,11 @@
   "author": "作者",
   "homepage": "https://github.com/owner/repo/tree/main/plugins/my-plugin",
   "permissions": ["canvas"],
+  "contributes": {
+    "apps": [
+      { "id": "my-app", "title": "我的插件应用", "entry": "app/index.html", "category": "design" }
+    ]
+  },
   "capabilities": [
     { "id": "my.capability", "title": "我的能力", "description": "能力说明", "settings": true }
   ],
@@ -59,6 +64,7 @@
 - `nodes`：安装后注册到无限画布节点菜单。
 - `builtin`：仅供 HIOS 主程序内置能力使用，第三方插件不得声明，内置能力也不会出现在插件管理页。
 - `rendererEntry`：第三方画布插件的正式入口。界面与业务逻辑应提交到插件目录，主程序只提供稳定协议。
+- `contributes.apps[]`：在 HIOS 应用板块贡献完整插件应用。`entry` 必须是插件目录内的 HTML；页面运行在 sandboxed iframe 中，使用 `hios-plugin-app/v1` 的 `ready`、`init`、`state`、`output` 和 `close` 消息。
 - 声明 `filesystem` 权限后，renderer 可发送 `request-directory`，用通用目录接口运行本地静态站点。
 - 声明 `network` 权限后，renderer 可使用宿主的通用插件浏览器接口。sandbox iframe 内不要直接创建 Electron `<webview>`。
 
