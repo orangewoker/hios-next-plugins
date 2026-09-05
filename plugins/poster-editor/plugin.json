@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "poster-editor",
   "name": "海报编辑器",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "轻量级图层海报编辑器，支持多图、文字排版、裁剪和常用画布预设。",
   "author": "HIOS Next",
   "permissions": ["canvas", "filesystem"],
