@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "puzzle-grid",
   "name": "拼图",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "将 2、4、6 或 9 张图片合成为宫格拼图，支持间隔和文字水印。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid",
