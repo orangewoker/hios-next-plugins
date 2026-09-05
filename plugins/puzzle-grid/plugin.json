@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "puzzle-grid",
+  "name": "拼图",
+  "version": "0.1.0",
+  "description": "将 2、4、6 或 9 张图片合成为宫格拼图，支持间隔和文字水印。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid",
+  "permissions": ["canvas"],
+  "capabilities": [
+    {
+      "id": "image.puzzle-grid",
+      "title": "图片拼图",
+      "description": "把多张图片合成为双图、四宫格、六宫格或九宫格拼图。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "image.puzzle-grid",
+      "title": "拼图",
+      "description": "连接图片并选择宫格布局，设置间隔与文字水印后输出 PNG。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        { "id": "image1", "title": "图片 1", "type": "image", "required": true },
+        { "id": "image2", "title": "图片 2", "type": "image", "required": true },
+        { "id": "image3", "title": "图片 3", "type": "image" },
+        { "id": "image4", "title": "图片 4", "type": "image" },
+        { "id": "image5", "title": "图片 5", "type": "image" },
+        { "id": "image6", "title": "图片 6", "type": "image" },
+        { "id": "image7", "title": "图片 7", "type": "image" },
+        { "id": "image8", "title": "图片 8", "type": "image" },
+        { "id": "image9", "title": "图片 9", "type": "image" }
+      ],
+      "outputs": [
+        { "id": "image", "title": "拼图结果", "type": "image" }
+      ],
+      "defaultSize": { "width": 560, "height": 650 },
+      "defaultData": {
+        "layout": 4,
+        "gap": 1,
+        "gapColor": "#ffffff",
+        "watermarkEnabled": false,
+        "watermarkScope": "final",
+        "watermarkText": "HIOS Next",
+        "watermarkPosition": "bottom-right",
+        "watermarkColor": "#ffffff",
+        "watermarkOpacity": 60,
+        "watermarkSize": 24
+      }
+    }
+  ]
+}
