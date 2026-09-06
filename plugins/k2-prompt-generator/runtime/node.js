@@ -111,7 +111,10 @@
       pluginId = String(payload.pluginId || event.data.pluginId || pluginId);
       applyState(payload.state); $('status').textContent = '已初始化'; post('loaded');
     }
-    if (event.data.type === 'run') { applyState(payload.state); window.randomizeAll(); refreshCompact(); emitOutput(); emitState(); }
+    if (event.data.type === 'run') {
+      try { applyState(payload.state); window.randomizeAll(); refreshCompact(); emitOutput(); emitState(); }
+      catch (error) { $('status').textContent = `运行失败：${error?.message || error}`; post('error', { message: String(error?.message || error) }); }
+    }
   });
   refreshCompact();
   $('preview').textContent = $('promptBox').textContent || '选择参数后点击生成';
