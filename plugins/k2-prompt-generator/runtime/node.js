@@ -87,6 +87,9 @@
     const wait = () => {
       syncFromApp();
       if (snapshot?.commandId === command.id) {
+        // Randomization also produces the node output so connected nodes stay
+        // in sync without requiring a second click on “运行并输出”.
+        runAndOutput();
         $('status').textContent = '已随机并同步应用输出';
         return;
       }
