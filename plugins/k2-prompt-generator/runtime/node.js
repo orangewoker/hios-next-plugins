@@ -81,7 +81,9 @@
     const command = { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, action: 'randomize', at: Date.now() };
     try { localStorage.setItem(commandKey, JSON.stringify(command)); } catch (_) { /* app open message remains available */ }
     $('status').textContent = '正在请求应用随机…';
-    post('open-app', { appId: 'k2-prompt-generator', payload: { command } });
+    // Ask HIOS to run the full application in a hidden background iframe;
+    // unlike open-app this does not navigate away from the canvas.
+    post('app-command', { appId: 'k2-prompt-generator', payload: { command } });
     const started = Date.now();
     const wait = () => {
       syncFromApp();
