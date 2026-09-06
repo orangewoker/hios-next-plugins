@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "id": "blender-mcp",
   "name": "Blender MCP 建模",
-  "version": "0.1.0",
-  "description": "通过标准 MCP 让 HIOS 智能体创建、检查、修改、渲染并保存 Blender 模型。",
+  "version": "0.2.0",
+  "description": "通过标准 MCP 让 HIOS 智能体安全地创建、检查、迭代、视觉验收并导出 Blender 模型。",
   "author": "HIOS Next",
   "permissions": [
     "agent",

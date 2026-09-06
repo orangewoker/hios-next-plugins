@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { execFile } from 'node:child_process';
 import { dirname, relative, resolve } from 'node:path';
 import { promisify } from 'node:util';
@@ -30,11 +30,14 @@ const server = new McpServer({ name: 'hios-blender-mcp', version: '0.1.0' });
 
 server.registerTool('status', {
   description: 'Check the configured Blender executable and workspace.', inputSchema: {},
+  annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
 }, async () => ({ content: [{ type: 'text', text: JSON.stringify({ ok: existsSync(blender), blender, workspace }, null, 2) }], isError: !existsSync(blender) }));
 
 server.registerTool('execute_script', {
   description: 'Execute complete Blender Python, validate non-empty geometry, save a real .blend, and optionally render a preview.',
   inputSchema: { script: z.string().min(20), outputDirectory: z.string().optional(), fileName: z.string().optional(), renderPreview: z.boolean().default(true) },
+  annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false },
+  _meta: { 'hios/riskLevel': 'system' },
 }, async ({ script, outputDirectory, fileName, renderPreview }) => {
   const dir = safePath(outputDirectory, resolve(workspace, 'tasks', Date.now().toString()));
   mkdirSync(dir, { recursive: true });
@@ -70,6 +73,7 @@ server.registerTool('execute_script', {
 
 server.registerTool('inspect_scene', {
   description: 'Inspect objects, materials, dimensions, and positions in an existing .blend.', inputSchema: { blendPath: z.string() },
+  annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
 }, async ({ blendPath }) => {
   const source = resolve(blendPath); if (!existsSync(source)) throw new Error('模型不存在');
   const dir = safePath(resolve(workspace, 'inspect', Date.now().toString()), resolve(workspace, 'inspect'));
@@ -82,6 +86,8 @@ server.registerTool('inspect_scene', {
 
 server.registerTool('render_preview', {
   description: 'Render a preview PNG from an existing .blend file.', inputSchema: { blendPath: z.string(), outputPath: z.string().optional() },
+  annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  _meta: { 'hios/riskLevel': 'safe-write' },
 }, async ({ blendPath, outputPath }) => {
   const source = resolve(blendPath); if (!existsSync(source)) throw new Error('模型不存在');
   const target = safePath(outputPath, resolve(workspace, 'renders', Date.now() + '.png')); mkdirSync(dirname(target), { recursive: true });
@@ -89,6 +95,45 @@ server.registerTool('render_preview', {
   const code = ["import bpy,math", "if not bpy.context.scene.camera:", "    bpy.ops.object.camera_add(location=(4,-4,3),rotation=(math.radians(67),0,math.radians(43))); bpy.context.scene.camera=bpy.context.object", "bpy.context.scene.render.engine='BLENDER_EEVEE'", "bpy.context.scene.render.resolution_x=768; bpy.context.scene.render.resolution_y=768; bpy.context.scene.render.resolution_percentage=100", "bpy.context.scene.render.filepath=r'''" + pythonPath(target) + "'''", "bpy.ops.render.render(write_still=True)"].join('\n');
   writeFileSync(path, code, 'utf8'); await run([source, '--background', '--python', path]);
   return { content: [{ type: 'text', text: JSON.stringify({ success: existsSync(target), previewPath: target }) }] };
+});
+
+server.registerTool('checkpoint_scene', {
+  description: 'Create a versioned copy of an existing .blend before a broad mutation.', inputSchema: { blendPath: z.string(), label: z.string().optional() },
+  annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  _meta: { 'hios/riskLevel': 'safe-write' },
+}, async ({ blendPath, label }) => {
+  const source = safePath(blendPath, blendPath);
+  if (!existsSync(source)) throw new Error('模型不存在');
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const clean = String(label || 'checkpoint').replace(/[^a-zA-Z0-9._\u4e00-\u9fa5-]/g, '_');
+  const target = safePath(resolve(workspace, 'checkpoints', `${stamp}-${clean}.blend`), resolve(workspace, 'checkpoints', `${stamp}-${clean}.blend`));
+  mkdirSync(dirname(target), { recursive: true }); copyFileSync(source, target);
+  return { content: [{ type: 'text', text: JSON.stringify({ success: true, checkpointPath: target }) }] };
+});
+
+server.registerTool('export_model', {
+  description: 'Export a validated Blender scene to a portable model format, defaulting to GLB.', inputSchema: { blendPath: z.string(), outputPath: z.string().optional(), format: z.enum(['glb', 'fbx', 'obj', 'stl']).default('glb') },
+  annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  _meta: { 'hios/riskLevel': 'safe-write' },
+}, async ({ blendPath, outputPath, format }) => {
+  const source = safePath(blendPath, blendPath);
+  if (!existsSync(source)) throw new Error('模型不存在');
+  const ext = format === 'glb' ? '.glb' : `.${format}`;
+  const fallback = resolve(workspace, 'exports', `${Date.now()}${ext}`);
+  const target = safePath(outputPath, fallback);
+  mkdirSync(dirname(target), { recursive: true });
+  const path = resolve(dirname(target), 'export_model.py');
+  const p = pythonPath(target);
+  const code = format === 'glb'
+    ? `import bpy\nbpy.ops.export_scene.gltf(filepath=r'''${p}''', export_format='GLB', use_selection=False)\n`
+    : format === 'fbx'
+      ? `import bpy\nbpy.ops.export_scene.fbx(filepath=r'''${p}''', use_selection=False)\n`
+      : format === 'obj'
+        ? `import bpy\nbpy.ops.wm.obj_export(filepath=r'''${p}''', export_materials=True)\n`
+        : `import bpy\nbpy.ops.wm.stl_export(filepath=r'''${p}''', export_selected_objects=False)\n`;
+  writeFileSync(path, code, 'utf8'); await run([source, '--background', '--python', path], 180000);
+  if (!existsSync(target)) throw new Error(`导出结束但没有生成 ${format.toUpperCase()} 文件`);
+  return { content: [{ type: 'text', text: JSON.stringify({ success: true, format, exportPath: target }) }] };
 });
 
 await server.connect(new StdioServerTransport());
