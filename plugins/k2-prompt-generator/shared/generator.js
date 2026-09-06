@@ -1044,7 +1044,7 @@ function optT(list,val){if(!list) return val; for(var i=0;i<list.length;i++){if(
 function seg(x){ return (x && x!=='不使用') ? x : ''; }
 /* 取某字段的描述文案，遇「不使用」/空值返回空串 */
 function optSeg(list,id){ return seg(optT(list, v(id))); }
-function flatClothItems(cat){return CLOTH[cat].map(function(x){return {v:cat+'｜'+x[0], t:x[1]};});}
+function flatClothItems(cat){return (CLOTH[cat] || []).map(function(x){return {v:cat+'｜'+x[0], t:x[1]};});}
 function randOf(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
 /* 用户手动选过的字段记录；未选过的字段每次生成都会重新随机 */
@@ -1203,8 +1203,7 @@ function populateClothItems(cat){
 }
 
 function populatePoseItems(cat){
-  if(!cat || !POSES[cat]) return;
-  var arr=POSES[cat].map(function(x){return {v:x[0], t:x[1], risk:x[2]};});
+  var arr=(POSES[cat] || []).map(function(x){return {v:x[0], t:x[1], risk:x[2]};});
   var sp=$('pose'); if(sp){ fillSelect(sp, arr, true); }
 }
 

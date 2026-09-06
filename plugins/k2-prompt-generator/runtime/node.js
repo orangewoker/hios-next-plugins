@@ -63,7 +63,6 @@
     const result = reportData();
     if (!result.prompt || result.prompt.indexOf('请在左侧选择选项') === 0) return;
     post('output', { output: { kind: 'text', portId: 'prompt', value: result.prompt, text: result.prompt, name: 'K2 人像提示词' } });
-    post('output', { output: { kind: 'json', portId: 'report', value: result, name: 'K2 自检报告' } });
     $('preview').textContent = result.prompt; $('report').textContent = `${result.mode} · ${result.chars} 字 · ${result.selfcheck.replace(/\s+/g, ' ').slice(0, 180)}`;
     $('status').textContent = '已生成，可连接下游节点';
   }
@@ -112,7 +111,7 @@
       pluginId = String(payload.pluginId || event.data.pluginId || pluginId);
       applyState(payload.state); $('status').textContent = '已初始化'; post('loaded');
     }
-    if (event.data.type === 'run') { applyState(payload.state); generate(); }
+    if (event.data.type === 'run') { applyState(payload.state); window.randomizeAll(); refreshCompact(); emitOutput(); emitState(); }
   });
   refreshCompact();
   $('preview').textContent = $('promptBox').textContent || '选择参数后点击生成';

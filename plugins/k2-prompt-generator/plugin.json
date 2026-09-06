@@ -34,8 +34,7 @@
       "rendererEntry": "runtime/index.html",
       "inputs": [],
       "outputs": [
-        { "id": "prompt", "title": "提示词", "type": "text" },
-        { "id": "report", "title": "自检报告", "type": "json" }
+        { "id": "prompt", "title": "提示词", "type": "text" }
       ],
       "hidePortLabels": true,
       "defaultSize": { "width": 560, "height": 620 },
