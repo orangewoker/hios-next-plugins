@@ -38,6 +38,7 @@
       version: 2,
       source: 'app',
       updatedAt: Date.now(),
+      ...(lastCommandId ? { commandId: lastCommandId } : {}),
       state: serializeState(),
       prompt,
       selfcheck: (document.getElementById('selfcheck')?.textContent || '').trim(),

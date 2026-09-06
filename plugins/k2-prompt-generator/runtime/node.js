@@ -77,7 +77,6 @@
   }
 
   function requestAppRandom() {
-    const previousUpdatedAt = Number(snapshot?.updatedAt || 0);
     const command = { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, action: 'randomize', at: Date.now() };
     try { localStorage.setItem(commandKey, JSON.stringify(command)); } catch (_) { /* app open message remains available */ }
     $('status').textContent = '正在请求应用随机…';
@@ -87,7 +86,7 @@
     const started = Date.now();
     const wait = () => {
       syncFromApp();
-      if (Number(snapshot?.updatedAt || 0) > previousUpdatedAt) {
+      if (snapshot?.commandId === command.id) {
         $('status').textContent = '已随机并同步应用输出';
         return;
       }
