@@ -7,50 +7,33 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="node-shell">
-    <header class="node-header">
-      <div><strong>K2 人像提示词</strong><span id="status">等待初始化</span></div>
-      <div class="toolbar">
-        <button id="modeSfw" class="mode active">SFW</button>
-        <button id="modeNsfw" class="mode" hidden>NSFW</button>
-        <button id="intlBtn" class="mode">国际版</button>
-        <button id="randomBtn" class="secondary">随机</button>
-        <button id="generateBtn" class="primary">生成</button><button id="runBtn" class="run">运行</button>
+  <main class="node-shell">
+    <header>
+      <div>
+        <strong>K2 人像提示词</strong>
+        <span id="status">正在读取应用设置…</span>
       </div>
+      <span id="mode" class="mode">未同步</span>
     </header>
-    <section class="compact-grid" aria-label="常用参数">
-      <label>镜头<select id="c-lens"></select></label>
-      <label>视角<select id="c-viewpoint"></select></label>
-      <label>景别<select id="c-shotSize"></select></label>
-      <label>主光<select id="c-mainLight"></select></label>
-      <label>色调<select id="c-colorTone"></select></label>
-      <label>气质<select id="c-temperament"></select></label>
-      <label>年龄<select id="c-age"></select></label>
-      <label>身份<select id="c-identity"></select></label>
-      <label>服装<select id="c-clothCat"></select></label>
-      <label>服装主件<select id="c-clothItem"></select></label>
-      <label>姿态类别<select id="c-poseCat"></select></label>
-      <label>姿态<select id="c-pose"></select></label>
-      <label>场景<select id="c-scene"></select></label>
-      <label>构图<select id="c-comp"></select></label>
+
+    <section class="info-card">
+      <div class="info-title">应用设置</div>
+      <div id="summary" class="summary">请先打开应用，选择参数并生成提示词。</div>
+      <div class="actions">
+        <button id="openApp" class="secondary">打开应用设置</button>
+        <button id="syncBtn" class="secondary">同步设置</button>
+        <button id="runBtn" class="primary">运行并输出</button>
+      </div>
     </section>
+
     <section class="result-card">
-      <div class="result-title"><strong>提示词预览</strong><button id="copyBtn" class="secondary">复制</button></div>
-      <pre id="preview">正在初始化…</pre>
-      <div id="report" class="report"></div>
+      <div class="result-title">
+        <strong>输出预览</strong>
+        <button id="copyBtn" class="secondary" disabled>复制</button>
+      </div>
+      <pre id="preview">等待应用生成提示词…</pre>
     </section>
-    <button id="openApp" class="open-app">打开完整编辑器</button>
-    <div id="form" class="hidden-form"></div>
-    <div class="host-controls" aria-hidden="true">
-      <button id="mSFW"></button><button id="mNSFW"></button>
-      <input id="restrictLock" type="checkbox" checked><input id="intlMode" type="checkbox">
-      <button id="clearBtn"></button><button id="randAll"></button><button id="genBtn"></button>
-      <input id="autoTrim" type="checkbox" checked>
-      <div id="promptBox"></div><div id="meta"></div><div id="selfcheck"></div><div id="nsfwNote"></div>
-    </div>
-  </div>
-  <script src="../shared/generator.js"></script>
+  </main>
   <script src="node.js"></script>
 </body>
 </html>
-

@@ -1,5 +1,7 @@
 (function () {
   const protocol = 'hios-plugin-app/v1';
+  const sharedKey = 'hios.k2-prompt-generator.shared.v2';
+  const placeholder = '请在左侧选择选项';
   const post = (type, payload) => parent.postMessage({ protocol, type, payload: payload || {} }, '*');
 
   function values() {
@@ -13,7 +15,7 @@
 
   function serializeState() {
     return {
-      version: 1,
+      version: 2,
       mode: window.MODE || 'SFW',
       intlMode: !!window.intlMode,
       restrictLock: !!window.restrictLock,
@@ -23,21 +25,66 @@
     };
   }
 
-  function emitState() { post('state', { state: serializeState() }); }
+  function currentPrompt() {
+    const prompt = (document.getElementById('promptBox')?.textContent || '').trim();
+    return !prompt || prompt.indexOf(placeholder) === 0 ? '' : prompt;
+  }
+
+  function saveSharedSnapshot() {
+    const prompt = currentPrompt();
+    const snapshot = {
+      version: 2,
+      source: 'app',
+      updatedAt: Date.now(),
+      state: serializeState(),
+      prompt,
+      selfcheck: (document.getElementById('selfcheck')?.textContent || '').trim(),
+      chars: prompt ? (window.countChars ? window.countChars(prompt) : prompt.length) : 0,
+    };
+    try { localStorage.setItem(sharedKey, JSON.stringify(snapshot)); } catch (_) { /* host state still works */ }
+    return snapshot;
+  }
+
+  function readSharedState() {
+    try {
+      const snapshot = JSON.parse(localStorage.getItem(sharedKey) || 'null');
+      return snapshot && typeof snapshot.state === 'object' ? snapshot.state : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function emitState() {
+    const snapshot = saveSharedSnapshot();
+    post('state', { state: snapshot.state });
+  }
 
   function emitOutput() {
-    const prompt = document.getElementById('promptBox')?.textContent || '';
-    if (!prompt || prompt.indexOf('请在左侧选择选项') === 0) return;
+    const snapshot = saveSharedSnapshot();
+    if (!snapshot.prompt) {
+      post('state', { state: snapshot.state });
+      return;
+    }
     post('output', {
       output: {
         kind: 'text',
-        value: prompt,
-        text: prompt,
+        value: snapshot.prompt,
+        text: snapshot.prompt,
         name: 'K2 人像提示词',
-        metadata: { mode: window.MODE || 'SFW' },
+        metadata: { mode: snapshot.state.mode, updatedAt: snapshot.updatedAt },
       },
     });
-    emitState();
+    post('state', { state: snapshot.state });
+  }
+
+  function generateAndSync(emitAsOutput) {
+    try {
+      if (typeof window.generate === 'function') window.generate();
+      if (emitAsOutput) emitOutput();
+      else emitState();
+    } catch (error) {
+      post('error', { message: String(error?.message || error) });
+    }
   }
 
   function applyState(input) {
@@ -79,17 +126,33 @@
     });
     if (typeof window.applyAgeBody === 'function') window.applyAgeBody();
     if (typeof window.autoIdentity === 'function' && !inputValues.identity) window.autoIdentity();
-    if (typeof window.generate === 'function') window.generate();
+    generateAndSync(false);
   }
 
-  document.addEventListener('change', () => setTimeout(emitState, 0), true);
-  ['genBtn', 'randAll', 'clearBtn'].forEach((id) => {
-    document.getElementById(id)?.addEventListener('click', () => setTimeout(emitOutput, 0));
+  let changeTimer = 0;
+  document.addEventListener('change', () => {
+    clearTimeout(changeTimer);
+    changeTimer = setTimeout(() => generateAndSync(false), 0);
+  }, true);
+
+  ['genBtn', 'randAll'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(true), 0));
   });
+  document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
+  ['mSFW', 'mNSFW'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
+  });
+  document.addEventListener('click', (event) => {
+    if (event.target?.id?.startsWith('lock_')) setTimeout(() => generateAndSync(false), 0);
+  }, true);
+
   window.addEventListener('message', (event) => {
     if (!event.data || event.data.protocol !== protocol) return;
     const payload = event.data.payload && typeof event.data.payload === 'object' ? event.data.payload : {};
-    if (event.data.type === 'init') applyState(payload.state);
+    if (event.data.type === 'init') {
+      const hostState = payload.state && typeof payload.state === 'object' && Object.keys(payload.state).length ? payload.state : null;
+      applyState(hostState || readSharedState() || {});
+    }
   });
 
   post('ready');
