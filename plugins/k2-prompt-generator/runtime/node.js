@@ -1,6 +1,7 @@
 (function () {
   const protocol = 'hios-plugin-node/v1';
   const sharedKey = 'hios.k2-prompt-generator.shared.v2';
+  const commandKey = 'hios.k2-prompt-generator.command.v1';
   let nodeId = new URLSearchParams(location.search).get('nodeId') || '';
   let pluginId = 'k2-prompt-generator';
   let snapshot = null;
@@ -75,8 +76,28 @@
     $('status').textContent = '已运行并输出到下一节点';
   }
 
+  function requestAppRandom() {
+    const previousUpdatedAt = Number(snapshot?.updatedAt || 0);
+    const command = { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, action: 'randomize', at: Date.now() };
+    try { localStorage.setItem(commandKey, JSON.stringify(command)); } catch (_) { /* app open message remains available */ }
+    $('status').textContent = '正在请求应用随机…';
+    post('open-app', { appId: 'k2-prompt-generator', payload: { command } });
+    const started = Date.now();
+    const wait = () => {
+      syncFromApp();
+      if (Number(snapshot?.updatedAt || 0) > previousUpdatedAt) {
+        $('status').textContent = '已随机并同步应用输出';
+        return;
+      }
+      if (Date.now() - started < 5000) window.setTimeout(wait, 200);
+      else $('status').textContent = '应用未完成随机，请打开应用后重试';
+    };
+    window.setTimeout(wait, 250);
+  }
+
   $('openApp').addEventListener('click', () => post('open-app', { appId: 'k2-prompt-generator', payload: {} }));
   $('syncBtn').addEventListener('click', syncFromApp);
+  $('randomBtn').addEventListener('click', requestAppRandom);
   $('runBtn').addEventListener('click', runAndOutput);
   $('copyBtn').addEventListener('click', async () => {
     const prompt = typeof snapshot?.prompt === 'string' ? snapshot.prompt.trim() : '';

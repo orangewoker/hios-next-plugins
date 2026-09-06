@@ -1,7 +1,9 @@
 (function () {
   const protocol = 'hios-plugin-app/v1';
   const sharedKey = 'hios.k2-prompt-generator.shared.v2';
+  const commandKey = 'hios.k2-prompt-generator.command.v1';
   const placeholder = '请在左侧选择选项';
+  let lastCommandId = '';
   const post = (type, payload) => parent.postMessage({ protocol, type, payload: payload || {} }, '*');
 
   function values() {
@@ -87,6 +89,19 @@
     }
   }
 
+  function handleCommand(command) {
+    if (!command || typeof command !== 'object' || !command.id || command.id === lastCommandId) return;
+    lastCommandId = String(command.id);
+    if (command.action === 'randomize' && typeof window.randomizeAll === 'function') {
+      window.randomizeAll();
+      setTimeout(() => generateAndSync(true), 0);
+    }
+  }
+
+  function readPendingCommand() {
+    try { return JSON.parse(localStorage.getItem(commandKey) || 'null'); } catch (_) { return null; }
+  }
+
   function applyState(input) {
     const state = input && typeof input === 'object' ? input : {};
     if (typeof state.restrictLock === 'boolean') {
@@ -152,7 +167,14 @@
     if (event.data.type === 'init') {
       const hostState = payload.state && typeof payload.state === 'object' && Object.keys(payload.state).length ? payload.state : null;
       applyState(hostState || readSharedState() || {});
+      handleCommand(payload.command);
+      handleCommand(readPendingCommand());
     }
+  });
+
+  window.addEventListener('storage', (event) => {
+    if (event.key !== commandKey || !event.newValue) return;
+    try { handleCommand(JSON.parse(event.newValue)); } catch (_) { /* ignore malformed command */ }
   });
 
   post('ready');
