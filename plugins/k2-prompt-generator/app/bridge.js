@@ -94,7 +94,22 @@
     if (!command || typeof command !== 'object' || !command.id || command.id === lastCommandId) return;
     lastCommandId = String(command.id);
     if (command.action === 'randomize' && typeof window.randomizeAll === 'function') {
+      // 画布“应用随机”只代理应用的“全部随机”按钮；模式、国际版和限制锁定
+      // 属于用户设置，不能因为随机字段而被改写。
+      const settings = {
+        mode: window.MODE,
+        intlMode: !!window.intlMode,
+        restrictLock: !!window.restrictLock,
+      };
       window.randomizeAll();
+      window.MODE = settings.mode;
+      window.intlMode = settings.intlMode;
+      window.restrictLock = settings.restrictLock;
+      const intl = document.getElementById('intlMode');
+      const restrict = document.getElementById('restrictLock');
+      if (intl) intl.checked = settings.intlMode;
+      if (restrict) restrict.checked = settings.restrictLock;
+      if (typeof window.updateModeUI === 'function') window.updateModeUI(true);
       setTimeout(() => generateAndSync(true), 0);
     }
   }
