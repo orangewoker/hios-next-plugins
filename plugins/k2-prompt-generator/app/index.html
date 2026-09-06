@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="CMCpiXIBKV6eGsAnUUNy83">
+<head data-page-node-id="WFpr2EfdH3sD1QY8gsNRx4">
+<meta charset="UTF-8" data-page-node-id="CIGFp7KY8tv93EC2xXAl7p">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Pl6s2ORFeXDHeCDdBwDsQO">
+<title>K2 人像提示词生成器-增强版 v2.0</title>
+<style>
+  :root{
+    --bg:#121216; --card:#1c1c24; --card2:#23232e; --line:#33333f;
+    --txt:#ececf2; --sub:#a6a6b8; --gold:#d9b36c; --gold2:#f0d9a8;
+    --ok:#7ec98b; --warn:#e0a458; --bad:#e07070; --pink:#d98ca0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg); color:var(--txt);
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif; font-size:15px;}
+  .wrap{max-width:1280px; margin:0 auto; padding:18px 18px 60px;}
+  header{display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+    padding:18px 4px 14px; border-bottom:1px solid var(--line);}
+  header h1{font-size:22px; letter-spacing:1px; color:var(--gold2);}
+  header h1 .ver{font-size:13px; color:var(--gold); border:1px solid var(--line);
+    border-radius:6px; padding:2px 7px; margin-left:6px; letter-spacing:.5px;
+    vertical-align:2px; font-weight:400; background:rgba(217,179,108,.10);}
+  header .sub{width:100%; color:var(--sub); font-size:13px;}
+  .notice{width:100%; font-size:12px; color:var(--sub);
+    background:rgba(217,179,108,.08); border:1px solid rgba(217,179,108,.25);
+    border-radius:8px; padding:7px 12px; line-height:1.6;}
+  .tools{margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .mode{display:flex; border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .mode button{border:none; background:transparent; color:var(--sub); padding:8px 18px;
+    cursor:pointer; font-size:14px;}
+  .mode button.on{background:var(--gold); color:#241a05; font-weight:700;}
+  .mode button.nsfw.on{background:var(--pink); color:#2a0d16;}
+  .mode button.nsfw.locked{opacity:.45; cursor:not-allowed; filter:grayscale(.4);}
+  .restrict{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--sub);
+    border:1px solid var(--line); border-radius:10px; padding:7px 12px; cursor:pointer; user-select:none;}
+  .restrict input{accent-color:var(--gold); cursor:pointer;}
+  .restrict.intl{accent-color:initial; border-color:#5b8def; color:#3a5fb0;}
+  .restrict.intl input{accent-color:#5b8def;}
+  .btn{border:1px solid var(--gold); background:transparent; color:var(--gold2);
+    padding:8px 16px; border-radius:10px; cursor:pointer; font-size:14px;}
+  .btn:hover{background:rgba(217,179,108,.12);}
+  .btn.primary{background:var(--gold); color:#241a05; font-weight:700; border-color:var(--gold);}
+  .btn.primary:hover{background:var(--gold2);}
+  main{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,430px); gap:18px; margin-top:18px;}
+  @media (max-width:980px){ main{grid-template-columns:1fr;} }
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:14px 16px; margin-bottom:12px;}
+  .sec-head{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .sec-actions{margin-left:auto; display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end;}
+  .sec-head .t{font-weight:700; color:var(--gold2); letter-spacing:.5px;}
+  .mini{border:1px solid var(--line); background:var(--card2); color:var(--sub);
+    border-radius:8px; padding:3px 10px; font-size:12px; cursor:pointer;}
+  .mini:hover{color:var(--gold2); border-color:var(--gold);}
+  .fields{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:9px;}
+  .field{display:flex; flex-direction:column; gap:4px;}
+  .field .lab{font-size:12px; color:var(--sub);}
+  .field select{width:100%; background:var(--card2); color:var(--txt);
+    border:1px solid var(--line); border-radius:8px; padding:7px 8px; font-size:13px;
+    appearance:auto;}
+  .field select:focus{outline:1px solid var(--gold);}
+  .fgroup{border:1px dashed var(--line); border-radius:10px; padding:10px 12px; margin-top:8px;}
+  .fgroup .gtitle{font-size:12px; color:var(--gold); margin-bottom:8px;}
+  .hint{font-size:12px; color:var(--sub); margin-top:8px; line-height:1.6;}
+  .out-card{position:sticky; top:14px; background:var(--card); border:1px solid var(--line);
+    border-radius:14px; padding:16px;}
+  .out-card h2{font-size:16px; color:var(--gold2); margin-bottom:10px;}
+  #promptBox{background:#0d0d12; border:1px solid var(--line); border-radius:10px;
+    padding:14px; min-height:220px; max-height:430px; overflow:auto; line-height:1.9;
+    white-space:pre-wrap; font-size:14px;}
+  .btnrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+  .meta{font-size:12px; color:var(--sub); margin-top:10px; line-height:1.7;}
+  .meta b{color:var(--gold2); font-weight:600;}
+  #selfcheck{margin-top:12px; border-top:1px solid var(--line); padding-top:10px;}
+  .sc-line{font-size:13px; line-height:1.8; margin-bottom:6px;}
+  .sc-detail{font-size:12px; color:var(--sub); max-height:240px; overflow:auto;
+    border:1px solid var(--line); border-radius:8px; padding:8px 10px; display:none;}
+  .ok{color:var(--ok);} .no{color:var(--bad);} .wa{color:var(--warn);}
+  .tip{font-size:12px; color:var(--sub); margin-top:10px; line-height:1.7;
+    background:rgba(126,201,139,.07); border:1px solid rgba(126,201,139,.2);
+    border-radius:8px; padding:8px 12px;}
+  .tip b{color:var(--ok);}
+  .nsfw-note{display:none; margin-top:8px; font-size:12px; color:var(--pink);
+    border:1px solid rgba(217,140,160,.35); border-radius:8px; padding:7px 12px;}
+  .hidden{display:none !important;}
+  details.sec{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    margin-bottom:10px; overflow:hidden;}
+  details.sec summary{cursor:pointer; padding:12px 16px; font-weight:700; color:var(--gold2);
+    list-style:none; display:flex; align-items:center; justify-content:space-between;}
+  details.sec summary::-webkit-details-marker{display:none;}
+  details.sec summary .chev{color:var(--sub); font-size:12px; font-weight:400;}
+  details.sec[open] summary{border-bottom:1px solid var(--line);}
+  details.sec .body{padding:12px 16px 14px;}
+  .dice{margin-left:8px;}
+  .lock-btn{border:1px solid var(--line);background:var(--card2);color:var(--sub);
+    border-radius:6px;padding:2px 6px;font-size:12px;cursor:pointer;margin-left:5px;}
+  .lock-btn.on{color:var(--gold);border-color:var(--gold);background:rgba(217,179,108,.12);}
+  .field-head{display:flex;align-items:center;justify-content:space-between;}
+</style>
+<style>html,body{margin:0;min-height:100%;}body{overflow:auto;}@media(max-width:980px){main{grid-template-columns:1fr;}.out-card{position:static;}}</style></head>
+<body data-page-node-id="KnJAC5plVr0EN5xIoIxEEC">
+<div class="wrap" data-page-node-id="D0F6FLWdSZIlCQtFHMWbTP">
+  <header data-page-node-id="g4ClF7EzPg7GF1Tp9s4dsO">
+    <h1 data-page-node-id="9lcdD07FQEnJBPsOeZWp7f">K2 人像提示词生成器-增强版 <span class="ver" data-page-node-id="y6pZDCJSu0gZdce7N36wJ6">v2.0</span></h1>
+    <div class="tools" data-page-node-id="YDm1qyUUu5AYa7kGQ8K7Fa">
+      <div class="mode" id="modeBox" data-page-node-id="GGEuFez6RFBDB3MqKIQ5cH">
+        <button id="mSFW" class="on" data-page-node-id="b3nscWeNn6vyK9M8vjpZTq">SFW · 含蓄</button>
+        <button id="mNSFW" class="nsfw" style="display:none" data-page-node-id="g0EtMeqr05ff4eULuqH83p">NSFW · 露骨</button>
+      </div>
+      <label class="restrict" title="开启后，未满 18 岁的角色禁止进入 NSFW 模式；取消勾选则解除该限制" data-page-node-id="3WrYtLIj1uxOhm1IKTSY6t">
+        <input type="checkbox" id="restrictLock" checked data-page-node-id="jHeqBZ6eLvqIp2Jm384hCd"> 限制锁定
+      </label>
+      <label class="restrict intl" title="开启「国际版」后显示 NSFW·露骨 选项；默认关闭，仅提供 SFW 含蓄模式" data-page-node-id="E8PPZIyt5f5L3qJ6SA6eh1">
+        <input type="checkbox" id="intlMode" data-page-node-id="lo2NYWYsVPVU6UEtQ3A7pY"> 国际版
+      </label>
+      <button class="btn" id="clearBtn" data-page-node-id="XGxsFiCZSUjjFfEKmGUsQ7">清空选项</button>
+      <button class="btn" id="randAll" data-page-node-id="z4wNJqWI4x6HDhFzdk3uCt">全部随机</button>
+      <button class="btn primary" id="genBtn" data-page-node-id="LIcCJnmrgKh3DTSO9822dU">生成提示词</button>
+    </div>
+    <div class="sub" data-page-node-id="QXLiJCAdDqudaRQdixPjb3">按 K2 引擎 10 段装配规则，从你的选择组装一条自然语言提示词，附自检行与画幅建议。</div>
+    <div class="notice" data-page-node-id="EvmJYvX08ADo0bBp1042s5">⚠ 全部为虚构角色。「限制锁定」默认开启：未满 18 岁的角色自动禁止 NSFW 模式；如要解除，请取消顶部「限制锁定」勾选，由此产生的使用后果由使用者自行负责并遵守所在平台与当地法律法规。</div>
+    <div class="nsfw-note" id="nsfwNote" data-page-node-id="8fuTnnSKJ7DRUVRXbOWpOD">🔞 NSFW 模式仅用于成年人之间的虚构艺术 / 图像创作，请确保符合你所在平台的内容政策。</div>
+  </header>
+
+  <main data-page-node-id="beJZy3MFJ5VXtDg5Zs0GJY">
+    <section id="form" data-page-node-id="8NE6ZG8uyr9dtLbprSemxD"></section>
+
+    <section class="out-card" data-page-node-id="snp5SCpdn4Qlj9xawCLGEw">
+      <h2 data-page-node-id="8QHQpcebN4G9ICpw0k2HWf">生成结果</h2>
+      <div id="promptBox" data-page-node-id="gPISNaf0dyRS3trRtnE1mg"></div>
+  <div class="btnrow" data-page-node-id="0CGgRP5UDjEslAaAEng9yM">
+    <button class="btn primary" id="copyBtn" data-page-node-id="nu1vADz1Cdm2wsTYTvdiNN">复制提示词</button>
+    <button class="btn" id="copyAllBtn" data-page-node-id="zjTQ9jzkBKjrjR0iZgsQ6F">复制提示词＋自检</button>
+  </div>
+  <label style="display:flex; align-items:center; gap:6px; margin-top:10px; font-size:13px; color:var(--sub); cursor:pointer;" data-page-node-id="i5M5LKOfnw2HbjAleu8oCy">
+    <input type="checkbox" id="autoTrim" checked style="accent-color:var(--gold);" data-page-node-id="q8UFtVeWj6Gw4012IWKLYz"> 超过 600 字时自动精简次要选项
+  </label>
+  <div class="meta" id="meta" data-page-node-id="AEpScfWYxDUAFGL9BBbJDy"></div>
+      <div id="selfcheck" data-page-node-id="W1GxyaWkztJ90imn6qBvTK"></div>
+      <div class="tip" data-page-node-id="PL0vOTrbXhXtAvlWCFe8iu"><b data-page-node-id="T79OQnW8brjKUN9bkyA6cM">K2 使用提示：</b>建议竖构图 <b data-page-node-id="PKDVa4oKFZeNECAzASQrWi">3:4</b> 或 <b data-page-node-id="dZOoGTbCCg9QGWs3BP6FcV">2:3</b>；粘贴时只复制提示词正文，自检行与分隔线不要粘进 K2，避免污染出图。</div>
+    </section>
+  </main>
+</div>
+
+<script src="../shared/generator.js"></script><script src="bridge.js"></script></body></html>
