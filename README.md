@@ -14,7 +14,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | AI 提示词库 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |
 | 静态网页 | 0.2.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/static-site-runner` |
 | Blender MCP 建模 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/blender-mcp` |
-| K2 人像提示词生成器 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator` |
+| K2 人像提示词生成器 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator` |
 
 在 HIOS Next 的“插件管理 → 安装插件”中粘贴对应 URL。安装后插件默认激活；插件管理保留仓库来源，可从同一地址检查更新。
 
@@ -47,4 +47,5 @@ plugins/
 | --- | --- | --- |
 | 夏日晴空 | 1.0.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/themes/summer-breeze` |
 | iOS 26 Liquid Glass | 1.0.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/themes/ios26-liquid-glass` |
+
 

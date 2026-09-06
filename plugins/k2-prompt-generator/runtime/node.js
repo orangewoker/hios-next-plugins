@@ -117,3 +117,4 @@
   $('preview').textContent = $('promptBox').textContent || '选择参数后点击生成';
   post('ready');
 })();
+
