@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>算力云</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="../assets/icon.svg" alt="" /><div><strong>算力云</strong><span>AutoDL · ComfyUI Workflow Cloud</span></div></div>
+    <div class="top-status"><i id="connectionDot"></i><span id="connectionText">等待配置</span></div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <nav aria-label="算力云导航">
+        <button class="nav-button active" data-page="run"><span>◈</span>运行工作流</button>
+        <button class="nav-button" data-page="workflows"><span>⌘</span>工作流管理</button>
+        <button class="nav-button" data-page="tasks"><span>◷</span>任务记录</button>
+        <button class="nav-button" data-page="settings"><span>⚙</span>连接设置</button>
+      </nav>
+      <section class="sidebar-summary">
+        <small>已配置工作流</small>
+        <strong id="workflowCount">0</strong>
+        <span>画布节点会自动读取这里的配置</span>
+      </section>
+    </aside>
+
+    <section class="content">
+      <section class="page active" id="page-run">
+        <div class="page-heading"><div><small>CREATE</small><h1>运行工作流</h1><p>选择工作流并填写参数，结果会在任务完成后自动显示。</p></div><button class="ghost-button" id="refreshSelected">刷新参数</button></div>
+        <div class="run-grid">
+          <section class="panel form-panel">
+            <label class="field"><span>工作流</span><select id="runWorkflow"></select></label>
+            <div id="runWorkflowInfo" class="workflow-info empty">请先添加工作流</div>
+            <form id="dynamicForm" class="dynamic-form"></form>
+            <div class="actions sticky-actions">
+              <button class="primary-button" id="runButton" type="button">开始生成</button>
+              <button class="soft-button" id="stopButton" type="button" disabled>停止等待</button>
+            </div>
+          </section>
+          <section class="panel result-panel">
+            <header><div><small>OUTPUT</small><h2>生成结果</h2></div><span class="status-pill" id="runStatus">尚未运行</span></header>
+            <div id="runProgress" class="progress-card hidden"><div><strong id="runStage">正在提交</strong><span id="runElapsed">0 秒</span></div><div class="progress-track"><i></i></div><code id="activeTaskId"></code></div>
+            <div id="resultEmpty" class="result-empty"><div class="empty-icon">◇</div><strong>作品将在这里出现</strong><span>图片、视频、音频和文件都会自动识别。</span></div>
+            <div id="resultList" class="result-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="page" id="page-workflows">
+        <div class="page-heading"><div><small>WORKFLOWS</small><h1>工作流管理</h1><p>输入 AutoDL 工作流 ID，插件会自动同步输入参数。</p></div></div>
+        <section class="panel add-workflow-panel">
+          <label class="field grow"><span>工作流 ID</span><input id="workflowIdInput" autocomplete="off" placeholder="例如 minimax_h3_lightx2v_v5" /></label>
+          <button class="primary-button" id="addWorkflow">同步工作流</button>
+          <button class="soft-button" id="addDefaultWorkflow">添加默认 H3</button>
+        </section>
+        <p class="inline-message" id="workflowMessage"></p>
+        <div id="workflowList" class="workflow-list"></div>
+      </section>
+
+      <section class="page" id="page-tasks">
+        <div class="page-heading"><div><small>HISTORY</small><h1>任务记录</h1><p>未完成任务可继续查询；结果 URL 有效期较短，请及时下载。</p></div><button class="ghost-button" id="clearFinished">清理已完成</button></div>
+        <div id="taskList" class="task-list"></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-heading"><div><small>CONNECTION</small><h1>连接设置</h1><p>Token 不会写入插件文件或画布数据。</p></div></div>
+        <section class="panel settings-panel">
+          <label class="field"><span>服务地址</span><input id="baseUrl" type="url" placeholder="https://autodl.art" /></label>
+          <label class="field"><span>ComfyUI Token</span><div class="password-row"><input id="token" type="password" autocomplete="off" placeholder="从 AutoDL.Art 令牌管理获取" /><button id="toggleToken" type="button">显示</button></div></label>
+          <label class="check-field"><input id="rememberToken" type="checkbox" /><span><strong>在此设备记住 Token</strong><small>关闭时只保留在当前 HIOS 会话。</small></span></label>
+          <div class="settings-grid">
+            <label class="field"><span>轮询间隔（秒）</span><input id="pollInterval" type="number" min="1" max="15" step="0.5" /></label>
+            <label class="field"><span>最长等待（分钟）</span><input id="maxWait" type="number" min="1" max="180" /></label>
+          </div>
+          <div class="actions"><button class="primary-button" id="saveSettings">保存设置</button><button class="soft-button" id="checkConnection">检查连接</button><button class="text-button danger" id="clearToken">清除 Token</button></div>
+          <p class="inline-message" id="settingsMessage"></p>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

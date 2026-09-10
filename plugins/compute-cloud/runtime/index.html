@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>算力云工作流</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="node-header">
+    <div class="brand"><img src="../assets/icon.svg" alt="" /><div><strong>算力云工作流</strong><span id="subtitle">AutoDL · ComfyUI API</span></div></div>
+    <button id="openApp" type="button" title="打开算力云应用">⚙</button>
+  </header>
+  <main>
+    <section class="config-card">
+      <label><span>工作流</span><select id="workflowSelect"></select></label>
+      <div id="workflowDescription" class="description">正在读取配置…</div>
+    </section>
+    <section class="input-card">
+      <div class="section-heading"><strong>运行参数</strong><span id="inputSummary">等待画布输入</span></div>
+      <div id="fields" class="fields"></div>
+    </section>
+    <section class="task-card">
+      <div class="task-line"><i id="statusDot"></i><div><strong id="statusText">准备就绪</strong><code id="taskId"></code></div><span id="elapsed"></span></div>
+      <div id="activity" class="activity hidden"><i></i></div>
+      <p id="error" class="error hidden"></p>
+      <div id="preview" class="preview empty"><span>运行后在这里预览结果</span></div>
+      <div class="task-actions"><button id="resume" type="button" disabled>继续查询</button><button id="stop" type="button" disabled>停止等待</button></div>
+    </section>
+  </main>
+  <script type="module" src="./node.js"></script>
+</body>
+</html>
