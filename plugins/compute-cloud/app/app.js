@@ -83,31 +83,42 @@ async function syncWorkflow(id, quiet = false) {
   if (!quiet) setMessage($('workflowMessage'), '正在读取工作流参数…');
   const workflow = await fetchWorkflowMetadata(config.baseUrl, workflowId);
   const next = [workflow, ...workflows.filter((item) => item.id !== workflow.id)];
-  saveWorkflowCollection(next, config.defaultWorkflowId && next.some((item) => item.id === config.defaultWorkflowId) ? config.defaultWorkflowId : workflow.id);
   selectedWorkflowId = workflow.id;
-  $('runWorkflow').value = workflow.id;
+  saveWorkflowCollection(next, config.defaultWorkflowId && next.some((item) => item.id === config.defaultWorkflowId) ? config.defaultWorkflowId : workflow.id);
   renderRunForm(true);
   if (!quiet) setMessage($('workflowMessage'), `已同步“${workflow.name}”，共 ${workflow.fields.length} 个参数`);
   return workflow;
 }
 
 function renderWorkflowOptions() {
-  const select = $('runWorkflow');
-  select.replaceChildren();
+  const picker = $('runWorkflowPicker');
+  const trigger = $('runWorkflowTrigger');
+  const label = trigger.querySelector('span');
+  const menu = $('runWorkflowMenu');
+  menu.replaceChildren();
+  picker.classList.remove('is-open');
+  trigger.setAttribute('aria-expanded', 'false');
   if (!workflows.length) {
-    const option = document.createElement('option');
-    option.textContent = '请先添加工作流';
-    option.value = '';
-    select.append(option);
-    select.disabled = true;
+    label.textContent = '请先添加工作流';
+    trigger.disabled = true;
+    menu.classList.add('hidden');
   } else {
-    select.disabled = false;
+    trigger.disabled = false;
+    const current = currentWorkflow();
+    label.textContent = current?.name || '选择工作流';
     workflows.forEach((workflow) => {
-      const option = document.createElement('option');
-      option.value = workflow.id;
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', String(workflow.id === current?.id));
+      option.className = workflow.id === current?.id ? 'active' : '';
       option.textContent = workflow.name;
-      option.selected = workflow.id === selectedWorkflowId;
-      select.append(option);
+      option.onclick = () => {
+        selectedWorkflowId = workflow.id;
+        renderWorkflowOptions();
+        renderRunForm(true);
+      };
+      menu.append(option);
     });
   }
 }
@@ -506,7 +517,26 @@ async function initialize() {
 }
 
 document.querySelectorAll('.nav-button').forEach((button) => button.onclick = () => showPage(button.dataset.page));
-$('runWorkflow').onchange = () => { selectedWorkflowId = $('runWorkflow').value; renderRunForm(true); };
+$('runWorkflowTrigger').onclick = (event) => {
+  event.stopPropagation();
+  if ($('runWorkflowTrigger').disabled) return;
+  const open = !$('runWorkflowPicker').classList.contains('is-open');
+  $('runWorkflowPicker').classList.toggle('is-open', open);
+  $('runWorkflowMenu').classList.toggle('hidden', !open);
+  $('runWorkflowTrigger').setAttribute('aria-expanded', String(open));
+};
+document.addEventListener('click', (event) => {
+  if ($('runWorkflowPicker').contains(event.target)) return;
+  $('runWorkflowPicker').classList.remove('is-open');
+  $('runWorkflowMenu').classList.add('hidden');
+  $('runWorkflowTrigger').setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  $('runWorkflowPicker').classList.remove('is-open');
+  $('runWorkflowMenu').classList.add('hidden');
+  $('runWorkflowTrigger').setAttribute('aria-expanded', 'false');
+});
 $('runButton').onclick = () => void runSelectedWorkflow();
 $('stopButton').onclick = () => { activeRun?.controller.abort(); setRunState('CANCELLED', $('activeTaskId').textContent, '已停止本地等待'); toast('已停止本地轮询，云端任务可能仍在运行'); };
 $('refreshSelected').onclick = () => { const workflow = currentWorkflow(); if (workflow) void syncWorkflow(workflow.id).catch((error) => toast(error.message)); };

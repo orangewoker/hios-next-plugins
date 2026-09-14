@@ -32,7 +32,7 @@
         <div class="page-heading"><div><small>CREATE</small><h1>运行工作流</h1><p>选择工作流并填写参数，结果会在任务完成后自动显示。</p></div><button class="ghost-button" id="refreshSelected">刷新参数</button></div>
         <div class="run-grid">
           <section class="panel form-panel">
-            <label class="field"><span>工作流</span><select id="runWorkflow"></select></label>
+            <div class="field"><span>工作流</span><div class="workflow-select" id="runWorkflowPicker"><button type="button" class="workflow-select-trigger" id="runWorkflowTrigger" aria-haspopup="listbox" aria-expanded="false"><span>请先添加工作流</span><i aria-hidden="true">⌄</i></button><div class="workflow-select-menu hidden" id="runWorkflowMenu" role="listbox" aria-label="选择工作流"></div></div></div>
             <div id="runWorkflowInfo" class="workflow-info empty">请先添加工作流</div>
             <form id="dynamicForm" class="dynamic-form"></form>
             <div class="actions sticky-actions">

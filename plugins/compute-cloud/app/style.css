@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg: #edf2f6;
   --surface: rgba(255, 255, 255, .92);
   --muted: #f3f6f9;
@@ -14,6 +14,8 @@
   --shadow: 0 18px 48px rgba(39, 59, 83, .09);
   font-family: Inter, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); }
 button, input, textarea, select { font: inherit; }
@@ -57,6 +59,16 @@ input, textarea, select { width: 100%; color: var(--text); background: var(--mut
 input, select { height: 39px; padding: 0 11px; }
 textarea { min-height: 92px; padding: 10px 11px; resize: vertical; line-height: 1.55; }
 input:focus, textarea:focus, select:focus { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 11%, transparent); }
+.workflow-select { position: relative; min-width: 0; }
+.workflow-select-trigger { width: 100%; height: 39px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 11px; color: var(--text); background: var(--muted); border: 1px solid var(--border); border-radius: 10px; text-align: left; }
+.workflow-select-trigger > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-select-trigger > i { flex: 0 0 auto; color: var(--text-2); font-size: 14px; font-style: normal; transition: transform .16s ease; }
+.workflow-select.is-open .workflow-select-trigger { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 11%, transparent); }
+.workflow-select.is-open .workflow-select-trigger > i { transform: rotate(180deg); }
+.workflow-select-menu { position: absolute; z-index: 80; top: calc(100% + 6px); right: 0; left: 0; max-height: 240px; overflow: auto; padding: 5px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 16px 36px color-mix(in srgb, var(--text) 18%, transparent); }
+.workflow-select-menu > button { width: 100%; min-height: 34px; display: flex; align-items: center; padding: 7px 9px; color: var(--text-2); background: transparent; border: 0; border-radius: 7px; text-align: left; }
+.workflow-select-menu > button:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.workflow-select-menu > button.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--surface)); font-weight: 700; }
 .workflow-info { margin: 12px 0 18px; padding: 11px 12px; color: var(--text-2); background: var(--muted); border-radius: 10px; font-size: 11px; line-height: 1.55; }
 .workflow-info strong { display: block; color: var(--text); font-size: 12px; }
 .dynamic-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
