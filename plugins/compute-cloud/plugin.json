@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "compute-cloud",
   "name": "算力云",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "连接 AutoDL.Art ComfyUI API，管理多个云端工作流，并在应用或画布节点中生成图片、视频与音频。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/compute-cloud",
@@ -25,31 +25,15 @@
         "icon": "assets/icon.svg",
         "category": "creative"
       }
+    ],
+    "applicationWorkflows": [
+      {
+        "id": "workflow",
+        "appId": "compute-cloud",
+        "title": "算力云工作流",
+        "description": "调用算力云应用中已经配置并验证过的 AutoDL ComfyUI 工作流。",
+        "capabilities": ["image", "video", "audio", "file"]
+      }
     ]
-  },
-  "nodes": [
-    {
-      "id": "workflow",
-      "title": "算力云工作流",
-      "description": "选择一个 AutoDL ComfyUI 工作流，连接参考素材并异步输出生成结果。",
-      "rendererEntry": "runtime/index.html",
-      "inputs": [
-        { "id": "prompt", "title": "提示词", "type": "text" },
-        { "id": "images", "title": "参考图片", "type": "image", "multiple": true },
-        { "id": "videos", "title": "参考视频", "type": "video", "multiple": true },
-        { "id": "audios", "title": "参考音频", "type": "audio", "multiple": true },
-        { "id": "files", "title": "文件", "type": "file", "multiple": true }
-      ],
-      "outputs": [
-        { "id": "image", "title": "图片", "type": "image" },
-        { "id": "video", "title": "视频", "type": "video" },
-        { "id": "audio", "title": "音频", "type": "audio" },
-        { "id": "file", "title": "文件", "type": "file" },
-        { "id": "task", "title": "任务", "type": "json" }
-      ],
-      "hidePortLabels": true,
-      "defaultSize": { "width": 560, "height": 620 },
-      "defaultData": {}
-    }
-  ]
+  }
 }

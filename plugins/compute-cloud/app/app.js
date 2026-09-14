@@ -10,7 +10,7 @@ import {
   taskLabel,
   validateAndBuildBody,
 } from '../shared/core.js';
-import { createTask, downloadResult, fetchWorkflowMetadata, queryTask, readFileAsDataUrl } from '../shared/client.js';
+import { createTask, downloadResult, fetchWorkflowMetadata, queryTask, readFileAsDataUrl, sourceAsApiValue } from '../shared/client.js';
 import { clearFinishedTasks, clearToken, loadConfig, loadTasks, loadToken, removeTask, saveConfig, saveTask, saveToken, watchStorage } from '../shared/storage.js';
 
 const APP_PROTOCOL = 'hios-plugin-app/v1';
@@ -21,6 +21,7 @@ let formValues = {};
 let formMediaSizes = {};
 let selectedWorkflowId = config.defaultWorkflowId;
 let activeRun = null;
+const applicationWorkflowRuns = new Map();
 let elapsedTimer = 0;
 let toastTimer = 0;
 
@@ -73,6 +74,7 @@ function saveWorkflowCollection(next, defaultWorkflowId = config.defaultWorkflow
   renderWorkflowOptions();
   renderWorkflowList();
   refreshConnectionStatus();
+  post('application-workflow-catalog-changed', { workflowCount: workflows.length });
 }
 
 async function syncWorkflow(id, quiet = false) {
@@ -278,6 +280,119 @@ function delay(ms, signal) {
   });
 }
 
+function applicationWorkflowResponse(requestId, ok, result, error) {
+  post('application-workflow-response', { requestId, ok, ...(ok ? { result } : { error: { message: String(error?.message || error || '应用工作流执行失败') } }) });
+}
+
+function applicationWorkflowProgress(requestId, data) {
+  post('application-workflow-event', { requestId, event: 'progress', data });
+}
+
+async function configuredApplicationWorkflows() {
+  config = loadConfig();
+  workflows = config.workflows;
+  if (!workflows.length) {
+    const workflow = await fetchWorkflowMetadata(config.baseUrl, DEFAULT_WORKFLOW_ID);
+    workflows = [workflow];
+    config = saveConfig({ ...config, workflows, defaultWorkflowId: workflow.id });
+  }
+  return workflows.map((workflow) => ({
+    workflowId: workflow.id,
+    workflowName: workflow.name,
+    description: workflow.description,
+    coverUrl: workflow.coverUrl,
+    fields: workflow.fields,
+    capabilities: workflow.outputKinds,
+    runnable: true,
+  }));
+}
+
+function localMediaBytes(workflow, body) {
+  return workflow.fields.filter(isMediaField).reduce((total, field) => {
+    const value = String(body[field.name] || '');
+    if (!value.startsWith('data:')) return total;
+    const comma = value.indexOf(',');
+    if (comma < 0) return total;
+    const payload = value.slice(comma + 1);
+    return total + (/;base64/i.test(value.slice(0, comma)) ? Math.floor(payload.length * 3 / 4) : new TextEncoder().encode(decodeURIComponent(payload)).byteLength);
+  }, 0);
+}
+
+async function applicationWorkflowBody(workflow, values) {
+  const body = validateAndBuildBody(workflow, values);
+  for (const field of workflow.fields.filter(isMediaField)) if (body[field.name]) body[field.name] = await sourceAsApiValue(body[field.name]);
+  if (localMediaBytes(workflow, body) > MAX_MEDIA_BYTES) throw new Error('所有本地媒体文件总和不能超过 50MB');
+  return body;
+}
+
+async function runApplicationWorkflowRequest(requestId, payload) {
+  config = loadConfig();
+  workflows = config.workflows;
+  const workflowId = String(payload.workflowId || '');
+  const workflow = workflows.find((item) => item.id === workflowId);
+  if (!workflow) throw new Error('所选工作流不存在，请先在算力云应用中完成配置');
+  const token = loadToken();
+  if (!token) throw new Error('请先在算力云应用中配置 AutoDL ComfyUI Token');
+  const controller = new AbortController();
+  applicationWorkflowRuns.set(requestId, controller);
+  const startedAt = Date.now();
+  try {
+    applicationWorkflowProgress(requestId, { status: 'PREPARING', progress: 2, message: '正在准备工作流参数' });
+    const body = await applicationWorkflowBody(workflow, payload.values && typeof payload.values === 'object' ? payload.values : {});
+    applicationWorkflowProgress(requestId, { status: 'QUEUED', progress: 5, message: '正在提交算力云任务' });
+    const submitted = await createTask(config.baseUrl, workflow.id, body, token, controller.signal);
+    let task = { ...submitted, workflowId: workflow.id, workflowName: workflow.name, baseUrl: config.baseUrl, parameterNames: Object.keys(body), terminal: false, success: false, results: [] };
+    saveTask(task);
+    applicationWorkflowProgress(requestId, { taskId: task.taskId, status: task.status, progress: 8, message: task.message || '任务已提交' });
+    const deadline = startedAt + config.maxWaitMinutes * 60_000;
+    while (!controller.signal.aborted && Date.now() < deadline) {
+      await delay(config.pollIntervalMs, controller.signal);
+      const snapshot = await queryTask(task.baseUrl, task.taskId, token, controller.signal);
+      task = { ...task, ...snapshot, workflowId: workflow.id, workflowName: workflow.name, baseUrl: task.baseUrl };
+      saveTask(task);
+      const elapsed = Math.max(0, Date.now() - startedAt);
+      const progress = snapshot.terminal ? 100 : Math.min(94, 10 + Math.round(elapsed / Math.max(1, config.maxWaitMinutes * 60_000) * 84));
+      applicationWorkflowProgress(requestId, { taskId: task.taskId, status: snapshot.status, progress, message: snapshot.message || '算力云正在生成' });
+      if (!snapshot.terminal) continue;
+      if (!snapshot.success) throw new Error(snapshot.message || '算力云工作流执行失败');
+      return {
+        taskId: task.taskId,
+        workflowId: workflow.id,
+        workflowName: workflow.name,
+        outputs: snapshot.results.map((result, index) => ({
+          kind: ['image', 'video', 'audio'].includes(result.kind) ? result.kind : 'file',
+          url: result.url,
+          mime: mimeForKind(result.kind, result.fileType),
+          name: fileNameForResult(workflow, result, index),
+          metadata: { taskId: task.taskId, workflowId: workflow.id, workflowName: workflow.name },
+        })),
+      };
+    }
+    if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    throw new Error(`等待超过 ${config.maxWaitMinutes} 分钟，可稍后在算力云任务记录中继续查询`);
+  } finally {
+    applicationWorkflowRuns.delete(requestId);
+  }
+}
+
+async function handleApplicationWorkflowRequest(payload) {
+  const requestId = String(payload?.requestId || '');
+  if (!requestId) return;
+  const method = String(payload.method || '');
+  if (method === 'cancel-workflow') {
+    applicationWorkflowRuns.get(String(payload.targetRequestId || ''))?.abort();
+    applicationWorkflowResponse(requestId, true, { cancelled: true });
+    return;
+  }
+  try {
+    if (method === 'list-workflows') applicationWorkflowResponse(requestId, true, await configuredApplicationWorkflows());
+    else if (method === 'run-workflow') applicationWorkflowResponse(requestId, true, await runApplicationWorkflowRequest(requestId, payload));
+    else throw new Error(`算力云不支持应用工作流方法：${method || '空方法'}`);
+  } catch (error) {
+    applicationWorkflowResponse(requestId, false, null, error?.name === 'AbortError' ? new Error('已停止本地等待，云端任务可能仍在运行') : error);
+  }
+}
+
 async function pollTask(task, workflow, controller, startedAt = Date.now()) {
   const deadline = startedAt + config.maxWaitMinutes * 60_000;
   while (!controller.signal.aborted && Date.now() < deadline) {
@@ -408,7 +523,7 @@ $('toggleToken').onclick = () => { const visible = $('token').type === 'text'; $
 $('clearToken').onclick = () => { clearToken(); $('token').value = ''; refreshConnectionStatus(); setMessage($('settingsMessage'), 'Token 已清除。'); };
 $('clearFinished').onclick = () => { clearFinishedTasks(); renderTasks(); toast('已清理完成和失败的任务'); };
 watchStorage(() => { config = loadConfig(); workflows = config.workflows; refreshConnectionStatus(); });
-window.addEventListener('message', (event) => { const message = event.data; if (!message || message.protocol !== APP_PROTOCOL) return; if (message.type === 'init') applyTheme(message.payload?.theme); });
+window.addEventListener('message', (event) => { const message = event.data; if (!message || message.protocol !== APP_PROTOCOL) return; if (message.type === 'init') applyTheme(message.payload?.theme); else if (message.type === 'application-workflow-request') void handleApplicationWorkflowRequest(message.payload || {}); });
 
-post('ready', { version: '0.1.0' });
+post('ready', { version: '0.2.1' });
 void initialize();
