@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "hunyuan-3d",
   "name": "混元3D",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "调用腾讯混元生3D API，通过文本、单图或多视图生成、预览和导出3D模型。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d",

@@ -19,7 +19,7 @@ async function hmac(key: ArrayBuffer | Uint8Array, value: string) {
 function jsonError(payload: Json, status: number) {
   const response = payload?.Response || payload;
   const error = response?.Error || payload?.error;
-  return String(error?.Message || error?.message || response?.ErrorMessage || payload?.message || `HTTP ${status}`);
+  return String(error?.Message || error?.message || response?.ErrorMessage || payload?.Msg || payload?.message || `HTTP ${status}`);
 }
 
 async function requestJson(config: ApiConfig, url: string, headers: Record<string, string>, body: string) {
@@ -36,7 +36,7 @@ function nativeInput(params: GenerateParams) {
   else if (params.inputMode === 'image' && params.image) {
     if (isUrl(params.image)) body.ImageUrl = params.image;
     else body.ImageBase64 = rawBase64(params.image);
-    if (params.prompt.trim()) body.Prompt = params.prompt.trim();
+    if (params.engine === 'pro' && params.generateType === 'Sketch' && params.prompt.trim()) body.Prompt = params.prompt.trim();
   } else if (params.inputMode === 'multiview') {
     const front = params.multiViewImages.find((item) => item.viewType === 'front') || params.multiViewImages[0];
     const additionalViews = params.multiViewImages.filter((item) => item !== front);
@@ -45,7 +45,7 @@ function nativeInput(params: GenerateParams) {
     body.MultiViewImages = additionalViews.map((item) => isUrl(item.data)
       ? { ViewType: item.viewType, ViewImageUrl: item.data }
       : { ViewType: item.viewType, ViewImageBase64: rawBase64(item.data) });
-    if (params.prompt.trim()) body.Prompt = params.prompt.trim();
+    if (params.engine === 'pro' && params.generateType === 'Sketch' && params.prompt.trim()) body.Prompt = params.prompt.trim();
   }
   if (params.engine === 'pro') {
     body.EnablePBR = params.enablePBR;
@@ -64,11 +64,8 @@ function nativeInput(params: GenerateParams) {
 function compatibleInput(params: GenerateParams) {
   const body = nativeInput(params);
   if (body.ImageUrl && typeof body.ImageUrl === 'string') body.ImageUrl = { Url: body.ImageUrl };
-  if (body.ImageBase64) {
-    const image = params.inputMode === 'image' ? params.image : params.multiViewImages.find((item) => item.viewType === 'front')?.data;
-    body.ImageUrl = { Url: image?.startsWith('data:') ? image : `data:image/jpeg;base64,${body.ImageBase64}` };
-    delete body.ImageBase64;
-  }
+  // The compatible submit endpoint accepts raw ImageBase64 for uploaded files.
+  // Sending the same bytes as a data URL in ImageUrl.Url returns Code 1001.
   return body;
 }
 

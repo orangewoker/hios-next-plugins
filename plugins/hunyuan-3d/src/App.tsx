@@ -8,6 +8,7 @@ import { preparePreview } from './preview';
 import { loadConfig, loadJobs, saveConfig, saveJobs } from './storage';
 import { DEFAULT_PARAMS, type ApiConfig, type GenerateParams, type JobRecord, type ResultFile } from './types';
 import './styles.css';
+import './theme.css';
 
 const previewTypes = new Set(['GLB', 'GLTF', 'OBJ', 'FBX', 'STL']);
 const terminal = new Set(['DONE', 'FAIL']);
@@ -104,14 +105,22 @@ export default function App() {
   }, [cacheCompletedJob, updateJobs]);
 
   useEffect(() => {
+    const adaptViewerBackground = (theme?: HostTheme) => {
+      const background = theme?.mode === 'light' ? '#edf2f7' : '#0d1118';
+      setViewer((current) => ['#0d1118', '#edf2f7'].includes(current.background) ? { ...current, background } : current);
+    };
+    const onTheme = (event: Event) => adaptViewerBackground((event as CustomEvent<HostTheme>).detail);
+    window.addEventListener('hios:plugin-theme', onTheme);
     ready((payload) => {
-      applyTheme(payload.theme as HostTheme | undefined);
+      const theme = payload.theme as HostTheme | undefined;
+      applyTheme(theme);
+      adaptViewerBackground(theme);
       const saved = payload.state as Record<string, unknown> | undefined;
       if (typeof saved?.historyOpen === 'boolean') setHistoryOpen(saved.historyOpen);
       if (typeof saved?.advancedOpen === 'boolean') setAdvancedOpen(saved.advancedOpen);
     });
     jobsRef.current.filter((job) => !terminal.has(job.status)).forEach((job) => void poll(job.id));
-    return () => { pollers.current.forEach((timer) => clearTimeout(timer)); previewRelease.current?.(); };
+    return () => { window.removeEventListener('hios:plugin-theme', onTheme); pollers.current.forEach((timer) => clearTimeout(timer)); previewRelease.current?.(); };
   }, [poll]);
 
   useEffect(() => { saveHostState({ historyOpen, advancedOpen, selectedJobId }); }, [advancedOpen, historyOpen, selectedJobId]);
@@ -177,6 +186,7 @@ export default function App() {
   };
 
   const outputOptions = params.engine === 'rapid' ? ['', 'OBJ', 'GLB', 'STL', 'USDZ', 'FBX', 'MP4'] : ['', 'STL', 'USDZ', 'FBX'];
+  const showPrompt = params.inputMode === 'text' || (params.engine === 'pro' && params.generateType === 'Sketch');
 
   return <div className="app-shell">
     <header className="topbar">
@@ -201,7 +211,7 @@ export default function App() {
           })}</div>}
         </div>}
 
-        <label className="field prompt-field"><span>{params.inputMode === 'text' ? '提示词' : '补充描述'}<em>{params.prompt.length}/1024</em></span><textarea value={params.prompt} maxLength={1024} placeholder={params.inputMode === 'text' ? '例如：一只穿着宇航服的柯基，卡通风格，完整全身…' : '可选：补充形状、材质或风格要求'} onChange={(event) => setParams((current) => ({ ...current, prompt: event.target.value }))}/></label>
+        {showPrompt && <label className="field prompt-field"><span>{params.inputMode === 'text' ? '提示词' : '草图补充描述'}<em>{params.prompt.length}/1024</em></span><textarea value={params.prompt} maxLength={1024} placeholder={params.inputMode === 'text' ? '例如：一只穿着宇航服的柯基，卡通风格，完整全身…' : '可选：补充草图的形状、材质或风格要求'} onChange={(event) => setParams((current) => ({ ...current, prompt: event.target.value }))}/></label>}
 
         <div className="field-row"><label className="field"><span>服务模式</span><select value={params.engine} onChange={(event) => setParams((current) => ({ ...current, engine: event.target.value as GenerateParams['engine'] }))}><option value="pro">专业版</option><option value="rapid">极速版</option></select></label><label className="field"><span>模型版本</span><select value={params.model} onChange={(event) => setParams((current) => ({ ...current, model: event.target.value as GenerateParams['model'], multiViewImages: event.target.value === '3.0' ? current.multiViewImages.filter((item) => ['front','left','right','back'].includes(item.viewType)) : current.multiViewImages, generateType: event.target.value === '3.1' && ['LowPoly','Sketch'].includes(current.generateType) ? 'Normal' : current.generateType }))}><option value="3.0">Hunyuan 3.0</option><option value="3.1">Hunyuan 3.1</option></select></label></div>
 

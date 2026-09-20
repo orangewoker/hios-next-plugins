@@ -34,6 +34,10 @@ window.addEventListener('message', (event) => {
   const message = event.data;
   if (!message || message.protocol !== protocol) return;
   if (message.type === 'init') initHandler?.(message.payload || {});
+  if (message.type === 'theme') {
+    applyTheme(message.payload?.theme as HostTheme | undefined);
+    window.dispatchEvent(new CustomEvent('hios:plugin-theme', { detail: message.payload?.theme }));
+  }
   if (message.type === 'network-result') {
     const payload = message.payload || {};
     const request = pending.get(String(payload.requestId || ''));
@@ -46,8 +50,9 @@ window.addEventListener('message', (event) => {
 });
 
 export function applyTheme(theme?: HostTheme) {
-  if (!theme?.tokens) return;
   const root = document.documentElement;
+  root.dataset.theme = theme?.mode || 'dark';
+  if (!theme?.tokens) return;
   const mapping: Record<string, string> = {
     background: '--host-bg', surface: '--host-surface', muted: '--host-muted', control: '--host-control',
     text: '--host-text', textSecondary: '--host-text-2', border: '--host-border', accent: '--host-accent',
@@ -56,5 +61,4 @@ export function applyTheme(theme?: HostTheme) {
     const value = theme.tokens?.[key];
     if (value) root.style.setProperty(variable, value);
   });
-  root.dataset.theme = theme.mode || 'dark';
 }

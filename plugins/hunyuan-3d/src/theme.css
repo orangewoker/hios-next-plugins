@@ -1,0 +1,206 @@
+/* The host sends its current palette on open and whenever HIOS changes theme. */
+.viewer-canvas { position: absolute; inset: 0; }
+:root {
+  --plugin-accent: var(--host-accent, #5a78ff);
+}
+
+:root[data-theme='dark'] .segmented button.active,
+:root[data-theme='dark'] .viewer-modes button.active,
+:root[data-theme='dark'] .viewer-actions button.active,
+:root[data-theme='dark'] .provider-tabs button.active {
+  border-color: var(--plugin-accent);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --surface: #fff;
+  --surface-2: #f3f6fa;
+  --surface-3: #e8eef6;
+  --text: #1c2a3d;
+  --text-2: #53647a;
+  --border: #d7e0ea;
+  --accent: var(--host-accent, #4a67df);
+}
+
+:root[data-theme='light'] body,
+:root[data-theme='light'] .app-shell {
+  color: var(--host-text, var(--text));
+  background: var(--host-bg, var(--bg));
+}
+
+:root[data-theme='light'] .topbar,
+:root[data-theme='light'] .generation-panel,
+:root[data-theme='light'] .history-panel {
+  background: var(--host-surface, #fff);
+  border-color: var(--host-border, var(--border));
+}
+
+:root[data-theme='light'] .brand small,
+:root[data-theme='light'] .eyebrow,
+:root[data-theme='light'] .field > span,
+:root[data-theme='light'] .range-field > span,
+:root[data-theme='light'] .section-toggle,
+:root[data-theme='light'] .remember-row,
+:root[data-theme='light'] .job-main > small,
+:root[data-theme='light'] .job-files,
+:root[data-theme='light'] .display-card label > span {
+  color: var(--host-text-2, var(--text-2));
+}
+
+:root[data-theme='light'] .connection,
+:root[data-theme='light'] .running-pill,
+:root[data-theme='light'] .icon-button,
+:root[data-theme='light'] .settings-button,
+:root[data-theme='light'] .soft-button,
+:root[data-theme='light'] .segmented,
+:root[data-theme='light'] .provider-tabs,
+:root[data-theme='light'] .job-card,
+:root[data-theme='light'] .job-files > div,
+:root[data-theme='light'] .viewer-modes,
+:root[data-theme='light'] .viewer-actions,
+:root[data-theme='light'] .viewer-footer,
+:root[data-theme='light'] .display-card {
+  color: var(--host-text, var(--text));
+  background: var(--host-muted, var(--surface-2));
+  border-color: var(--host-border, var(--border));
+  box-shadow: none;
+}
+
+:root[data-theme='light'] .segmented button,
+:root[data-theme='light'] .provider-tabs button,
+:root[data-theme='light'] .viewer-modes button,
+:root[data-theme='light'] .viewer-actions button,
+:root[data-theme='light'] .job-files button {
+  color: var(--host-text-2, var(--text-2));
+}
+
+:root[data-theme='light'] .segmented button:hover:not(:disabled),
+:root[data-theme='light'] .provider-tabs button:hover,
+:root[data-theme='light'] .icon-button:hover,
+:root[data-theme='light'] .settings-button:hover,
+:root[data-theme='light'] .soft-button:hover,
+:root[data-theme='light'] .job-files button:hover {
+  color: var(--host-text, var(--text));
+  background: var(--host-control, var(--surface-3));
+}
+
+:root[data-theme='light'] .segmented button.active,
+:root[data-theme='light'] .provider-tabs button.active,
+:root[data-theme='light'] .viewer-modes button.active,
+:root[data-theme='light'] .viewer-actions button.active {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, white);
+  box-shadow: none;
+}
+
+:root[data-theme='light'] .upload-zone,
+:root[data-theme='light'] .view-slot,
+:root[data-theme='light'] .field textarea,
+:root[data-theme='light'] .field input,
+:root[data-theme='light'] .field select,
+:root[data-theme='light'] .display-card input[type='color'] {
+  color: var(--host-text, var(--text));
+  background: var(--host-control, var(--surface-2));
+  border-color: var(--host-border, var(--border));
+}
+
+:root[data-theme='light'] .upload-zone:hover,
+:root[data-theme='light'] .job-card:hover {
+  background: var(--host-muted, var(--surface-2));
+}
+
+:root[data-theme='light'] .upload-zone strong,
+:root[data-theme='light'] .upload-zone span,
+:root[data-theme='light'] .job-main > strong,
+:root[data-theme='light'] .display-card strong,
+:root[data-theme='light'] .empty-history strong {
+  color: var(--host-text, var(--text));
+}
+
+:root[data-theme='light'] .field em,
+:root[data-theme='light'] .range-field > div,
+:root[data-theme='light'] .viewer-empty,
+:root[data-theme='light'] .viewer-empty small,
+:root[data-theme='light'] .viewer-footer,
+:root[data-theme='light'] .display-card em,
+:root[data-theme='light'] .empty-history {
+  color: var(--host-text-2, var(--text-2));
+}
+
+:root[data-theme='light'] .section-toggle,
+:root[data-theme='light'] .settings-modal > header,
+:root[data-theme='light'] .settings-modal footer {
+  border-color: var(--host-border, var(--border));
+}
+
+:root[data-theme='light'] .viewer-panel {
+  background: #edf2f7;
+}
+
+:root[data-theme='light'] .viewer-cube {
+  border-color: #a6b4c6;
+  background: linear-gradient(135deg, #dce5f0, #f8fafd);
+  box-shadow: inset -12px -12px 20px #d7e1ec;
+}
+
+:root[data-theme='light'] .job-cover {
+  background: var(--host-control, var(--surface-3));
+  color: var(--host-text-2, var(--text-2));
+}
+
+:root[data-theme='light'] .job-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+:root[data-theme='light'] .job-files > div,
+:root[data-theme='light'] .history-heading h2 b {
+  color: var(--host-text-2, var(--text-2));
+  background: var(--host-control, var(--surface-3));
+}
+
+:root[data-theme='light'] .modal-backdrop {
+  background: rgba(25, 40, 60, .32);
+}
+
+:root[data-theme='light'] .settings-modal {
+  color: var(--host-text, var(--text));
+  background: var(--host-surface, #fff);
+  border-color: var(--host-border, var(--border));
+  box-shadow: 0 28px 80px rgba(29, 47, 75, .22);
+}
+
+:root[data-theme='light'] .connection-result {
+  color: var(--host-text-2, var(--text-2));
+}
+
+:root[data-theme='light'] .model-loading {
+  color: var(--host-text, var(--text));
+  background: rgba(242, 246, 251, .76);
+}
+
+:root[data-theme='light'] .toast {
+  color: #145b43;
+  background: #e6f7ef;
+  border-color: #9adbbb;
+}
+
+:root[data-theme='light'] .toast.error {
+  color: #9d2945;
+  background: #fff0f3;
+  border-color: #ecadba;
+}
+
+:root[data-theme='light'] .generate-button,
+:root[data-theme='light'] .primary-button {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+:root[data-theme='light'] .field input[type='range'],
+:root[data-theme='light'] .display-card input[type='range'],
+:root[data-theme='light'] .remember-row input {
+  accent-color: var(--accent);
+}

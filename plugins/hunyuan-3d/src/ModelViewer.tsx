@@ -83,8 +83,22 @@ export function ModelViewer({ source, type, options, resources, materialText, on
     runtimeRef.current = runtime;
     const animate = () => { runtime.frame = requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); };
     animate();
-    return () => { observer.disconnect(); cancelAnimationFrame(runtime.frame); controls.dispose(); disposeObject(runtime.object); renderer.dispose(); renderer.domElement.remove(); runtimeRef.current = undefined; };
+    return () => { observer.disconnect(); cancelAnimationFrame(runtime.frame); controls.dispose(); disposeObject(runtime.object); runtime.grid.geometry.dispose(); (runtime.grid.material as THREE.Material).dispose(); renderer.dispose(); renderer.domElement.remove(); runtimeRef.current = undefined; };
   }, []);
+
+  useEffect(() => {
+    const runtime = runtimeRef.current;
+    if (!runtime) return;
+    const color = new THREE.Color(options.background);
+    const light = color.r * .2126 + color.g * .7152 + color.b * .0722 > .55;
+    const grid = new THREE.GridHelper(20, 40, light ? '#a4b3c6' : '#4d5f76', light ? '#d3dce7' : '#263346');
+    grid.visible = optionsRef.current.grid;
+    runtime.scene.remove(runtime.grid);
+    runtime.grid.geometry.dispose();
+    (runtime.grid.material as THREE.Material).dispose();
+    runtime.grid = grid;
+    runtime.scene.add(grid);
+  }, [options.background]);
 
   useEffect(() => {
     const runtime = runtimeRef.current;
@@ -136,5 +150,5 @@ export function ModelViewer({ source, type, options, resources, materialText, on
     return () => { canceled = true; };
   }, [materialText, onStats, options.whiteModel, resources, source, type]);
 
-  return <div className="viewer-stage" ref={containerRef}>{message && <div className="viewer-empty"><span className="viewer-cube" /> <p>{message}</p><small>支持 GLB、GLTF、OBJ、FBX 和 STL</small></div>}</div>;
+  return <div className="viewer-stage"><div className="viewer-canvas" ref={containerRef}/>{message && <div className="viewer-empty"><span className="viewer-cube" /> <p>{message}</p><small>支持 GLB、GLTF、OBJ、FBX 和 STL</small></div>}</div>;
 }

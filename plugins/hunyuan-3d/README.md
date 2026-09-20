@@ -8,6 +8,7 @@ HIOS NEXT 独立应用插件，支持腾讯混元生3D OpenAI 兼容接口和腾
 - 3.0 / 3.1 模型、PBR、面数、LowPoly / Geometry / Sketch
 - 任务状态轮询与本地历史
 - GLB / GLTF / OBJ / FBX / STL 三维预览，支持 ZIP 模型包中的纹理资源
+- 自动跟随 HIOS NEXT 的亮色、暗色主题，并在切换主题时实时更新
 - 线框、网格、坐标轴、灯光与材质调节
 - 模型下载与本地缓存（优先使用缓存，避免任务链接到期后无法下载）
 
@@ -22,6 +23,8 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d
 HIOS NEXT 需要包含插件应用 `network-request` 协议的主程序。目前该支持已提交到 HIOS NEXT 的 `Tauri` 分支；旧版主程序无法通过插件单独补齐此能力。
 
 安装后从应用页打开“混元3D”，在右上角“API 设置”中填写自己的密钥。OpenAI 兼容接口仅支持专业版；腾讯云 API 3.0 支持专业版和极速版。此插件不附带 API Key，生成费用由所配置的账号承担。
+
+图片模式下，普通生成仅发送图片，不同时发送提示词；使用 3.0 Sketch 模式时才可补充提示词。上传的图片以原始 Base64 提交，避免兼容接口对 `ImageUrl.Url` 数据 URL 返回 `Invalid param`。
 
 ## API 配置
 
