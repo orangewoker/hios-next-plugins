@@ -12,6 +12,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | Blender MCP 建模 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/blender-mcp` |
 | K2 人像提示词生成器 | 0.2.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator` |
 | 算力云 | 0.2.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/compute-cloud` |
+| 混元3D | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d` |
 
 在 HIOS Next 的“插件管理 → 安装插件”中粘贴对应 URL。安装后插件默认激活；插件管理保留仓库来源，可从同一地址检查更新。
 
