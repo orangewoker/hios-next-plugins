@@ -55,26 +55,34 @@ export default function App() {
   const activeCount = jobs.filter((job) => !terminal.has(job.status)).length;
 
   const updateJobs = useCallback((mutate: (current: JobRecord[]) => JobRecord[]) => {
-    setJobs((current) => { const next = mutate(current); jobsRef.current = next; saveJobs(next); return next; });
+    const next = mutate(jobsRef.current);
+    jobsRef.current = next;
+    setJobs(next);
+    saveJobs(next);
   }, []);
 
   const message = useCallback((text: string, error = false) => {
     setNotice({ text, error }); window.setTimeout(() => setNotice((current) => current?.text === text ? null : current), 3600);
   }, []);
 
-  const cacheCompletedJob = useCallback(async (jobId: string, files: ResultFile[]) => {
-    if (cachePending.current.has(jobId)) return;
-    cachePending.current.add(jobId);
+  const cacheCompletedJob = useCallback(async (localId: string, files: ResultFile[]) => {
+    if (cachePending.current.has(localId)) return;
+    cachePending.current.add(localId);
     try {
       for (let index = 0; index < files.length; index++) {
-        if (files[index].cached || await readCachedFile(jobId, index)) continue;
+        if (files[index].cached) continue;
+        const existing = await readCachedFile(localId, index);
+        if (existing) {
+          updateJobs((current) => current.map((item) => item.id === localId ? { ...item, files: item.files.map((file, fileIndex) => fileIndex === index ? { ...file, cached: true, size: existing.size } : file) } : item));
+          continue;
+        }
         try {
           const blob = await downloadBinary(configRef.current, files[index].url);
-          await cacheFile(jobId, index, blob);
-          updateJobs((current) => current.map((item) => item.jobId === jobId ? { ...item, files: item.files.map((file, fileIndex) => fileIndex === index ? { ...file, cached: true, size: blob.size } : file) } : item));
+          await cacheFile(localId, index, blob);
+          updateJobs((current) => current.map((item) => item.id === localId ? { ...item, files: item.files.map((file, fileIndex) => fileIndex === index ? { ...file, cached: true, size: blob.size } : file) } : item));
         } catch { /* Keep the expiring remote link available for manual retry. */ }
       }
-    } finally { cachePending.current.delete(jobId); }
+    } finally { cachePending.current.delete(localId); }
   }, [updateJobs]);
 
   const poll = useCallback(async (localId: string) => {
@@ -83,7 +91,7 @@ export default function App() {
     try {
       const result = await queryJob(configRef.current, job.jobId, job.params.engine);
       updateJobs((current) => current.map((item) => item.id === localId ? { ...item, ...result, updatedAt: Date.now() } : item));
-      if (result.status === 'DONE') void cacheCompletedJob(job.jobId, result.files);
+      if (result.status === 'DONE') void cacheCompletedJob(localId, result.files);
       if (!terminal.has(result.status)) {
         const timer = window.setTimeout(() => void poll(localId), Math.max(2, configRef.current.pollSeconds) * 1000);
         pollers.current.set(localId, timer);
@@ -114,7 +122,7 @@ export default function App() {
       saveConfig(config);
       const jobId = await submitJob(config, params);
       const record: JobRecord = { id: crypto.randomUUID(), jobId, provider: config.provider, status: 'WAIT', createdAt: Date.now(), updatedAt: Date.now(), params: structuredClone(params), files: [] };
-      updateJobs((current) => [record, ...current]); setSelectedJobId(record.id); message(`任务已提交：${jobId}`); void poll(record.id);
+      updateJobs((current) => [record, ...current]); setSelectedJobId(record.id); setViewerSource(''); setViewerType(''); setViewerStats({ triangles: 0, objects: 0 }); message(`任务已提交：${jobId}`); void poll(record.id);
     } catch (error) { message(error instanceof Error ? error.message : String(error), true); }
     finally { setBusy(false); }
   };
@@ -127,7 +135,7 @@ export default function App() {
 
   const getResultBlob = async (job: JobRecord, file: ResultFile) => {
     const index = job.files.findIndex((candidate) => candidate.url === file.url);
-    return (index >= 0 ? await readCachedFile(job.jobId, index) : null) || downloadBinary(configRef.current, file.url);
+    return (index >= 0 ? await readCachedFile(job.id, index) : null) || downloadBinary(configRef.current, file.url);
   };
 
   const openModel = async (job: JobRecord, file: ResultFile) => {
@@ -222,7 +230,7 @@ export default function App() {
           <div className="job-main"><strong>{job.params.prompt || job.params.imageName || '图片生成任务'}</strong><small>{timeLabel(job.createdAt)} · {job.params.model} · {job.params.engine === 'pro' ? '专业版' : '极速版'}</small>{job.errorMessage && <p className="job-error">{job.errorMessage}</p>}
             {job.status === 'DONE' && <div className="job-files">{job.files.map((file, index) => <div key={`${file.url}-${index}`}><span>{file.type || fileExtension(file).toUpperCase()}{file.cached ? ' · 本地' : ''}</span>{(previewTypes.has(file.type.toUpperCase()) || fileExtension(file) === 'zip') && <button title="预览" onClick={(event) => { event.stopPropagation(); void openModel(job, file); }}><Eye size={14}/></button>}<button title="下载" onClick={(event) => { event.stopPropagation(); void download(job, file); }}><Download size={14}/></button></div>)}</div>}
           </div>
-          <button className="job-delete" title="删除记录" onClick={(event) => { event.stopPropagation(); void removeCachedJob(job.jobId, job.files.length); updateJobs((current) => current.filter((item) => item.id !== job.id)); if (selectedJobId === job.id) setSelectedJobId(''); }}><Trash2 size={13}/></button>
+          <button className="job-delete" title="删除记录" onClick={(event) => { event.stopPropagation(); void removeCachedJob(job.id, job.files.length); updateJobs((current) => current.filter((item) => item.id !== job.id)); if (selectedJobId === job.id) setSelectedJobId(''); }}><Trash2 size={13}/></button>
         </article>)}</div>}
       </aside>}
     </main>
