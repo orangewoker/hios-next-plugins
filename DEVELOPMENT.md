@@ -87,9 +87,13 @@
 
 仅当目录存在 `package.json` / `requirements.txt` 时才会安装对应依赖。
 
-## 通用插件浏览器接口
+## 通用插件浏览器接口（Electron 兼容层）
 
-网页素材类插件通过 `hios-plugin-node/v1` 消息协议使用宿主 WebView：
+> Tauri/WebView2 版本不提供 Electron `<webview>`。新插件不得把
+> `browser-open` / `browser-command` 作为唯一运行路径；读取公开网页应优先使用下方
+> `network-request` 协议，再在插件沙箱中生成阅读视图。旧接口仅供 Electron 兼容构建使用。
+
+旧版网页素材类插件可通过 `hios-plugin-node/v1` 消息协议使用 Electron 宿主 WebView：
 
 - `browser-open`：传入 `src`、可选 `userAgent` 和 `{ top, right, bottom, left }` 边距。
 - `browser-close`：关闭宿主 WebView。
@@ -132,6 +136,14 @@ parent.postMessage({
 4. 在本地 HIOS 中通过 GitHub 子目录 URL 安装验证。
 5. 验证启用、停用、更新、卸载、深浅主题和重启后的状态。
 6. 合并到 `main` 后，用户可通过插件管理的更新按钮获取新版。
+
+提交前运行仓库校验器：
+
+```powershell
+node scripts/validate-plugins.mjs
+```
+
+校验器会检查清单 ID、SemVer、渲染入口、内联脚本语法，并阻止 Tauri 版网页类插件重新依赖 Electron `<webview>`。
 
 ## 兼容性
 

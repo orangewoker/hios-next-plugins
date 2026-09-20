@@ -2,24 +2,23 @@
   "schemaVersion": 1,
   "id": "pinterest-assets",
   "name": "Pinterest 素材库",
-  "version": "0.3.2",
-  "description": "登录并浏览 Pinterest，右键任意 Pin 图片即可解析 originals 原图并直接导入 HIOS 画布。",
+  "version": "0.4.0",
+  "description": "面向 Tauri 重构的 Pinterest 公开素材采集器，解析分享链接中的 originals 原图并导入画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/pinterest-assets",
-  "permissions": ["network", "filesystem", "canvas", "agent"],
+  "permissions": ["network", "canvas"],
   "capabilities": [
     {
       "id": "pinterest.assets",
       "title": "Pinterest 素材库",
-      "description": "搜索 Pinterest 设计灵感，解析 pinimg originals 原图并导入画布。",
-      "settings": true
+      "description": "解析 Pinterest 公开链接中的 pinimg originals 原图并导入画布。"
     }
   ],
   "nodes": [
     {
       "id": "pinterest.browser",
       "title": "Pinterest 素材库",
-      "description": "独立浏览 Pinterest，右键 Pin 图片解析 originals 原图并从 image 端口输出。",
+      "description": "粘贴 Pin、图板、pin.it 或 pinimg 链接，解析 originals 原图并从 image 端口输出。",
       "rendererEntry": "runtime/index.html",
       "inputs": [{ "id": "query", "title": "搜索词", "type": "text" }],
       "outputs": [{ "id": "image", "title": "采集原图", "type": "image" }],
