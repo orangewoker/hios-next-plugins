@@ -39,8 +39,8 @@
     .empty strong { color:var(--text-2);font-size:11px; }.empty span { max-width:280px;font-size:9px;line-height:1.55; }
     .controls { display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;border-top:1px solid var(--border);background:var(--surface); }
     .value { min-width:0;color:var(--text-2);font-variant-numeric:tabular-nums;font-size:9px;white-space:nowrap; }
-    .output { min-height:28px;padding:0 10px;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:8px;font-size:9px;font-weight:700; }
-    .output:hover { filter:brightness(1.07); }.output:disabled { opacity:.42;cursor:not-allowed; }
+    /* Execution is controlled by the canvas shell standard 运行 button. */
+    .output { display:none !important; }
   </style>
 </head>
 <body>
@@ -59,7 +59,7 @@
     <footer class="controls">
       <span id="value" class="value">拖动画面分割线 · A 50%</span>
       <input id="slider" type="range" min="0" max="100" step="0.1" value="50" hidden aria-hidden="true" tabindex="-1" />
-      <button id="output" class="output" type="button" disabled>运行</button>
+      <button id="output" class="output plugin-run" type="button" disabled aria-label="运行"><svg class="run-icon" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span>运行</span></button>
     </footer>
   </main>
   <script>
@@ -76,7 +76,7 @@
       const empty = $('empty');
       const outputButton = $('output');
       const images = { imageA: $('imageA'), imageB: $('imageB') };
-      const runtime = { nodeId: '', pluginId: 'image-compare', slider: 50, inputs: {}, sources: { imageA: '', imageB: '' }, objectUrls: { imageA: '', imageB: '' } };
+      const runtime = { nodeId: '', pluginId: 'image-compare', slider: 50, inputs: {}, sources: { imageA: '', imageB: '' }, objectUrls: { imageA: '', imageB: '' }, activePointerId: null, pointerFrame: 0, pendingPointerX: 0 };
 
       function post(type, payload = {}) {
         parent.postMessage({ protocol: PROTOCOL, nodeId: runtime.nodeId, pluginId: runtime.pluginId, type, payload }, '*');
@@ -142,10 +142,26 @@
         const names = { background:'--bg',surface:'--surface',muted:'--muted',control:'--control',text:'--text',textSecondary:'--text-2',textMuted:'--text-3',border:'--border',accent:'--accent',accentSoft:'--accent-soft',positive:'--positive',negative:'--negative' };
         Object.entries(names).forEach(([key, css]) => { if (typeof tokens[key] === 'string' && tokens[key]) document.documentElement.style.setProperty(css, tokens[key]); });
       }
-      function setSliderFromPointer(event) {
+      function setSliderFromPointerX(clientX, emit = false) {
         const rect = stage.getBoundingClientRect();
         if (!rect.width) return;
-        applySlider(((event.clientX - rect.left) / rect.width) * 100, true);
+        applySlider(((clientX - rect.left) / rect.width) * 100, emit);
+      }
+      function queueSliderFromPointer(event) {
+        runtime.pendingPointerX = event.clientX;
+        if (runtime.pointerFrame) return;
+        runtime.pointerFrame = requestAnimationFrame(() => {
+          runtime.pointerFrame = 0;
+          setSliderFromPointerX(runtime.pendingPointerX, false);
+        });
+      }
+      function finishPointer(event) {
+        if (runtime.activePointerId !== event.pointerId) return;
+        if (runtime.pointerFrame) { cancelAnimationFrame(runtime.pointerFrame); runtime.pointerFrame = 0; }
+        setSliderFromPointerX(event.clientX, false);
+        runtime.activePointerId = null;
+        try { if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId); } catch {}
+        post('state', { state: { slider: runtime.slider } });
       }
       async function ensureLoaded(image) {
         if (image.complete && image.naturalWidth) return;
@@ -185,8 +201,25 @@
       }
 
       slider.addEventListener('input', () => applySlider(slider.value, true));
-      stage.addEventListener('pointerdown', (event) => { stage.setPointerCapture(event.pointerId); setSliderFromPointer(event); });
-      stage.addEventListener('pointermove', (event) => { if (stage.hasPointerCapture(event.pointerId)) setSliderFromPointer(event); });
+      stage.addEventListener('pointerdown', (event) => {
+        if (runtime.activePointerId !== null) return;
+        event.preventDefault();
+        runtime.activePointerId = event.pointerId;
+        try { stage.setPointerCapture(event.pointerId); } catch {}
+        setSliderFromPointerX(event.clientX, false);
+      });
+      stage.addEventListener('pointermove', (event) => {
+        if (runtime.activePointerId !== event.pointerId) return;
+        event.preventDefault();
+        queueSliderFromPointer(event);
+      });
+      stage.addEventListener('pointerup', finishPointer);
+      stage.addEventListener('pointercancel', finishPointer);
+      stage.addEventListener('lostpointercapture', (event) => {
+        if (runtime.activePointerId !== event.pointerId) return;
+        runtime.activePointerId = null;
+        post('state', { state: { slider: runtime.slider } });
+      });
       outputButton.addEventListener('click', run);
       window.addEventListener('message', (event) => {
         const message = event.data;
@@ -196,7 +229,7 @@
       });
       window.addEventListener('beforeunload', () => { revoke('imageA'); revoke('imageB'); });
       applySlider(50, false);
-      post('ready', { version:'0.3.3' });
+      post('ready', { version:'0.3.4' });
     })();
   </script>
 </body>
