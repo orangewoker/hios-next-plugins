@@ -26,6 +26,6 @@ export function loadJobs(): JobRecord[] {
 }
 
 export function saveJobs(jobs: JobRecord[]) {
-  const light = jobs.slice(0, 80).map((job) => ({ ...job, params: { ...job.params, image: undefined, multiViewImages: (job.params.multiViewImages || []).map((item) => ({ ...item, data: '' })) }, files: job.files.map(({ cachedDataUrl: _cached, ...file }) => file) }));
+  const light = jobs.slice(0, 80).map((job) => ({ ...job, params: { ...job.params, image: undefined, multiViewImages: (job.params.multiViewImages || []).map((item) => ({ ...item, data: '' })) } }));
   localStorage.setItem(JOBS_KEY, JSON.stringify(light));
 }

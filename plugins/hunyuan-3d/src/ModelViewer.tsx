@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
@@ -20,10 +21,22 @@ function disposeObject(object?: THREE.Object3D | null) {
   });
 }
 
-async function loadObject(source: string, type: string) {
+async function loadObject(source: string, type: string, resources?: Record<string, string>, materialText?: string) {
   const extension = type.toUpperCase();
-  if (['GLB', 'GLTF'].includes(extension)) return (await new GLTFLoader().loadAsync(source)).scene;
-  if (extension === 'OBJ') return new OBJLoader().loadAsync(source);
+  const manager = new THREE.LoadingManager();
+  if (resources) manager.setURLModifier((requested) => {
+    const cleaned = decodeURIComponent(requested).replaceAll('\\', '/').replace(/^\.\//, '');
+    return resources[cleaned] || Object.entries(resources).find(([name]) => name.endsWith(`/${cleaned}`) || name.split('/').at(-1) === cleaned)?.[1] || requested;
+  });
+  if (['GLB', 'GLTF'].includes(extension)) return (await new GLTFLoader(manager).loadAsync(source)).scene;
+  if (extension === 'OBJ') {
+    const loader = new OBJLoader(manager);
+    if (materialText) {
+      const materials = new MTLLoader(manager).parse(materialText, './');
+      materials.preload(); loader.setMaterials(materials);
+    }
+    return loader.loadAsync(source);
+  }
   if (extension === 'FBX') return new FBXLoader().loadAsync(source);
   if (extension === 'STL') {
     const geometry = await new STLLoader().loadAsync(source);
@@ -32,10 +45,11 @@ async function loadObject(source: string, type: string) {
   throw new Error(`当前预览器不支持 ${extension || '该'} 格式`);
 }
 
-export function ModelViewer({ source, type, options, onStats }: { source: string; type: string; options: ViewerOptions; onStats?: (stats: { triangles: number; objects: number }) => void }) {
+export function ModelViewer({ source, type, options, resources, materialText, onStats }: { source: string; type: string; options: ViewerOptions; resources?: Record<string, string>; materialText?: string; onStats?: (stats: { triangles: number; objects: number }) => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   type ViewerRuntime = { renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.PerspectiveCamera; controls: OrbitControls; object?: THREE.Object3D; grid: THREE.GridHelper; axes: THREE.AxesHelper; frame: number };
   const runtimeRef = useRef<ViewerRuntime | undefined>(undefined);
+  const optionsRef = useRef(options); optionsRef.current = options;
   const [message, setMessage] = useState(source ? '正在读取模型…' : '生成完成后，模型将显示在这里');
 
   useEffect(() => {
@@ -96,7 +110,7 @@ export function ModelViewer({ source, type, options, onStats }: { source: string
     if (runtime.object) { runtime.scene.remove(runtime.object); disposeObject(runtime.object); runtime.object = undefined; }
     if (!source) { setMessage('生成完成后，模型将显示在这里'); return; }
     setMessage('正在解析模型…');
-    void loadObject(source, type).then((object) => {
+    void loadObject(source, type, resources, materialText).then((object) => {
       if (canceled) { disposeObject(object); return; }
       const box = new THREE.Box3().setFromObject(object);
       const size = box.getSize(new THREE.Vector3());
@@ -112,7 +126,7 @@ export function ModelViewer({ source, type, options, onStats }: { source: string
         objects += 1;
         const geometry = child.geometry;
         triangles += geometry.index ? geometry.index.count / 3 : (geometry.attributes.position?.count || 0) / 3;
-        if (options.whiteModel) child.material = new THREE.MeshStandardMaterial({ color: '#d7dde7', metalness: options.metalness, roughness: options.roughness, wireframe: options.wireframe });
+        if (optionsRef.current.whiteModel) child.material = new THREE.MeshStandardMaterial({ color: '#d7dde7', metalness: optionsRef.current.metalness, roughness: optionsRef.current.roughness, wireframe: optionsRef.current.wireframe });
       });
       runtime.object = object; runtime.scene.add(object);
       runtime.controls.target.set(0, 1.1, 0); runtime.camera.position.set(3.1, 2.35, 3.7); runtime.controls.update();
@@ -120,7 +134,7 @@ export function ModelViewer({ source, type, options, onStats }: { source: string
       setMessage('');
     }).catch((error) => setMessage(error instanceof Error ? error.message : String(error)));
     return () => { canceled = true; };
-  }, [onStats, options.metalness, options.roughness, options.whiteModel, options.wireframe, source, type]);
+  }, [materialText, onStats, options.whiteModel, resources, source, type]);
 
   return <div className="viewer-stage" ref={containerRef}>{message && <div className="viewer-empty"><span className="viewer-cube" /> <p>{message}</p><small>支持 GLB、GLTF、OBJ、FBX 和 STL</small></div>}</div>;
 }

@@ -31,14 +31,18 @@ async function requestJson(config: ApiConfig, url: string, headers: Record<strin
 }
 
 function nativeInput(params: GenerateParams) {
-  const body: Json = { Model: params.model };
+  const body: Json = params.engine === 'pro' ? { Model: params.model } : {};
   if (params.inputMode === 'text') body.Prompt = params.prompt.trim();
   else if (params.inputMode === 'image' && params.image) {
     if (isUrl(params.image)) body.ImageUrl = params.image;
     else body.ImageBase64 = rawBase64(params.image);
     if (params.prompt.trim()) body.Prompt = params.prompt.trim();
   } else if (params.inputMode === 'multiview') {
-    body.MultiViewImages = params.multiViewImages.map((item) => isUrl(item.data)
+    const front = params.multiViewImages.find((item) => item.viewType === 'front') || params.multiViewImages[0];
+    const additionalViews = params.multiViewImages.filter((item) => item !== front);
+    if (isUrl(front.data)) body.ImageUrl = front.data;
+    else body.ImageBase64 = rawBase64(front.data);
+    body.MultiViewImages = additionalViews.map((item) => isUrl(item.data)
       ? { ViewType: item.viewType, ViewImageUrl: item.data }
       : { ViewType: item.viewType, ViewImageBase64: rawBase64(item.data) });
     if (params.prompt.trim()) body.Prompt = params.prompt.trim();
@@ -60,7 +64,11 @@ function nativeInput(params: GenerateParams) {
 function compatibleInput(params: GenerateParams) {
   const body = nativeInput(params);
   if (body.ImageUrl && typeof body.ImageUrl === 'string') body.ImageUrl = { Url: body.ImageUrl };
-  if (body.ImageBase64) { body.ImageUrl = { Url: `data:image/jpeg;base64,${body.ImageBase64}` }; delete body.ImageBase64; }
+  if (body.ImageBase64) {
+    const image = params.inputMode === 'image' ? params.image : params.multiViewImages.find((item) => item.viewType === 'front')?.data;
+    body.ImageUrl = { Url: image?.startsWith('data:') ? image : `data:image/jpeg;base64,${body.ImageBase64}` };
+    delete body.ImageBase64;
+  }
   return body;
 }
 
@@ -111,11 +119,15 @@ export function validateParams(params: GenerateParams) {
   if (params.inputMode === 'text' && !params.prompt.trim()) throw new Error('请输入提示词');
   if (params.inputMode === 'image' && !params.image) throw new Error('请选择或输入参考图');
   if (params.inputMode === 'multiview' && !params.multiViewImages.length) throw new Error('请至少添加一张多视图');
+  if (params.inputMode === 'multiview' && !params.multiViewImages.some((item) => item.viewType === 'front')) throw new Error('请先添加正面主图');
+  if (params.inputMode === 'multiview' && params.model === '3.0' && params.multiViewImages.some((item) => !['front', 'left', 'right', 'back'].includes(item.viewType))) throw new Error('3.0 模型仅支持正面、左、右、后视图；请切换到 3.1');
+  if (params.engine === 'rapid' && params.inputMode === 'multiview') throw new Error('极速版暂不支持多视图输入');
   if (params.model === '3.1' && ['LowPoly', 'Sketch'].includes(params.generateType)) throw new Error('3.1 模型不支持 LowPoly 或 Sketch');
 }
 
 export async function submitJob(config: ApiConfig, params: GenerateParams) {
   validateConfiguration(config); validateParams(params);
+  if (config.provider === 'openai' && params.engine === 'rapid') throw new Error('OpenAI 兼容接口仅支持专业版，请切换服务模式或使用腾讯云 API 3.0');
   const payload = config.provider === 'openai'
     ? await compatibleCall(config, '/v1/ai3d/submit', compatibleInput(params))
     : await nativeCall(config, params.engine === 'rapid' ? 'SubmitHunyuanTo3DRapidJob' : 'SubmitHunyuanTo3DProJob', nativeInput(params));

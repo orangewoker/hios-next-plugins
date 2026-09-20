@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Check, ChevronDown, CircleAlert, Clock3, Download, Eye, FileBox, Grid3X3, ImagePlus, LoaderCircle, Maximize2, Play, RefreshCw, RotateCcw, Settings, SlidersHorizontal, Sparkles, Trash2, Upload, WandSparkles, X } from 'lucide-react';
 import { downloadBinary, probeConnection, queryJob, submitJob } from './api';
 import { applyTheme, ready, saveHostState, type HostTheme } from './bridge';
+import { cacheFile, readCachedFile, removeCachedJob } from './cache';
 import { ModelViewer, type ViewerOptions } from './ModelViewer';
+import { preparePreview } from './preview';
 import { loadConfig, loadJobs, saveConfig, saveJobs } from './storage';
 import { DEFAULT_PARAMS, type ApiConfig, type GenerateParams, type JobRecord, type ResultFile } from './types';
 import './styles.css';
@@ -41,9 +43,12 @@ export default function App() {
   const [viewer, setViewer] = useState<ViewerOptions>({ wireframe: false, grid: true, axes: false, whiteModel: false, metalness: .15, roughness: .48, background: '#0d1118' });
   const [viewerSource, setViewerSource] = useState('');
   const [viewerType, setViewerType] = useState('');
+  const [viewerResources, setViewerResources] = useState<Record<string, string> | undefined>(undefined);
+  const [viewerMaterialText, setViewerMaterialText] = useState<string | undefined>(undefined);
   const [viewerStats, setViewerStats] = useState({ triangles: 0, objects: 0 });
   const [loadingModel, setLoadingModel] = useState(false);
-  const objectUrls = useRef<string[]>([]);
+  const previewRelease = useRef<(() => void) | null>(null);
+  const cachePending = useRef(new Set<string>());
   const pollers = useRef(new Map<string, number>());
 
   const selectedJob = jobs.find((job) => job.id === selectedJobId) || null;
@@ -57,12 +62,28 @@ export default function App() {
     setNotice({ text, error }); window.setTimeout(() => setNotice((current) => current?.text === text ? null : current), 3600);
   }, []);
 
+  const cacheCompletedJob = useCallback(async (jobId: string, files: ResultFile[]) => {
+    if (cachePending.current.has(jobId)) return;
+    cachePending.current.add(jobId);
+    try {
+      for (let index = 0; index < files.length; index++) {
+        if (files[index].cached || await readCachedFile(jobId, index)) continue;
+        try {
+          const blob = await downloadBinary(configRef.current, files[index].url);
+          await cacheFile(jobId, index, blob);
+          updateJobs((current) => current.map((item) => item.jobId === jobId ? { ...item, files: item.files.map((file, fileIndex) => fileIndex === index ? { ...file, cached: true, size: blob.size } : file) } : item));
+        } catch { /* Keep the expiring remote link available for manual retry. */ }
+      }
+    } finally { cachePending.current.delete(jobId); }
+  }, [updateJobs]);
+
   const poll = useCallback(async (localId: string) => {
     const job = jobsRef.current.find((item) => item.id === localId);
     if (!job || terminal.has(job.status)) return;
     try {
       const result = await queryJob(configRef.current, job.jobId, job.params.engine);
       updateJobs((current) => current.map((item) => item.id === localId ? { ...item, ...result, updatedAt: Date.now() } : item));
+      if (result.status === 'DONE') void cacheCompletedJob(job.jobId, result.files);
       if (!terminal.has(result.status)) {
         const timer = window.setTimeout(() => void poll(localId), Math.max(2, configRef.current.pollSeconds) * 1000);
         pollers.current.set(localId, timer);
@@ -72,7 +93,7 @@ export default function App() {
       const timer = window.setTimeout(() => void poll(localId), Math.max(5, configRef.current.pollSeconds * 2) * 1000);
       pollers.current.set(localId, timer);
     }
-  }, [updateJobs]);
+  }, [cacheCompletedJob, updateJobs]);
 
   useEffect(() => {
     ready((payload) => {
@@ -82,7 +103,7 @@ export default function App() {
       if (typeof saved?.advancedOpen === 'boolean') setAdvancedOpen(saved.advancedOpen);
     });
     jobsRef.current.filter((job) => !terminal.has(job.status)).forEach((job) => void poll(job.id));
-    return () => { pollers.current.forEach((timer) => clearTimeout(timer)); objectUrls.current.forEach(URL.revokeObjectURL); };
+    return () => { pollers.current.forEach((timer) => clearTimeout(timer)); previewRelease.current?.(); };
   }, [poll]);
 
   useEffect(() => { saveHostState({ historyOpen, advancedOpen, selectedJobId }); }, [advancedOpen, historyOpen, selectedJobId]);
@@ -104,30 +125,36 @@ export default function App() {
     catch (error) { setConnectionState('error'); message(error instanceof Error ? error.message : String(error), true); }
   };
 
-  const openModel = async (file: ResultFile) => {
-    if (!previewTypes.has(file.type.toUpperCase()) || fileExtension(file) === 'zip') { message('该结果是压缩包或非预览格式，请下载后使用'); return; }
+  const getResultBlob = async (job: JobRecord, file: ResultFile) => {
+    const index = job.files.findIndex((candidate) => candidate.url === file.url);
+    return (index >= 0 ? await readCachedFile(job.jobId, index) : null) || downloadBinary(configRef.current, file.url);
+  };
+
+  const openModel = async (job: JobRecord, file: ResultFile) => {
+    if (!previewTypes.has(file.type.toUpperCase()) && fileExtension(file) !== 'zip') { message('该格式暂不支持直接预览，请下载后使用'); return; }
     setLoadingModel(true);
     try {
-      const blob = await downloadBinary(config, file.url);
-      const source = URL.createObjectURL(blob); objectUrls.current.push(source);
-      setViewerSource(source); setViewerType(file.type || fileExtension(file));
-      message(`已载入 ${file.type || '模型'}`);
+      const blob = await getResultBlob(job, file);
+      const prepared = await preparePreview(blob, file.url, file.type);
+      previewRelease.current?.(); previewRelease.current = prepared.release;
+      setViewerSource(prepared.url); setViewerType(prepared.type); setViewerResources(prepared.resources); setViewerMaterialText(prepared.materialText);
+      message(`已载入 ${prepared.type} 模型`);
     } catch (error) { message(error instanceof Error ? error.message : String(error), true); }
     finally { setLoadingModel(false); }
   };
 
   useEffect(() => {
     if (selectedJob?.status !== 'DONE' || viewerSource) return;
-    const candidate = selectedJob.files.find((file) => file.type.toUpperCase() === 'GLB' && fileExtension(file) !== 'zip')
-      || selectedJob.files.find((file) => previewTypes.has(file.type.toUpperCase()) && fileExtension(file) !== 'zip');
-    if (candidate) void openModel(candidate);
+    const candidate = selectedJob.files.find((file) => file.type.toUpperCase() === 'GLB')
+      || selectedJob.files.find((file) => previewTypes.has(file.type.toUpperCase()) || fileExtension(file) === 'zip');
+    if (candidate) void openModel(selectedJob, candidate);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedJob?.id, selectedJob?.status]);
 
-  const download = async (file: ResultFile) => {
+  const download = async (job: JobRecord, file: ResultFile) => {
     try {
-      const blob = await downloadBinary(config, file.url); const source = URL.createObjectURL(blob);
-      const anchor = document.createElement('a'); anchor.href = source; anchor.download = `hunyuan-${selectedJob?.jobId || 'model'}.${fileExtension(file) || file.type.toLowerCase() || 'bin'}`; anchor.click();
+      const blob = await getResultBlob(job, file); const source = URL.createObjectURL(blob);
+      const anchor = document.createElement('a'); anchor.href = source; anchor.download = `hunyuan-${job.jobId}.${fileExtension(file) || file.type.toLowerCase() || 'bin'}`; anchor.click();
       window.setTimeout(() => URL.revokeObjectURL(source), 30_000);
     } catch (error) { message(error instanceof Error ? error.message : String(error), true); }
   };
@@ -160,15 +187,15 @@ export default function App() {
           {params.inputMode === 'image' ? <label className={`upload-zone ${params.image ? 'has-image' : ''}`}>
             {params.image ? <><img src={params.image}/><span>{params.imageName || '参考图'}<b>点击替换</b></span></> : <><ImagePlus size={25}/><strong>上传参考图</strong><small>JPG / PNG / WEBP · 最大 6 MB</small></>}
             <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void pickImage(event.target.files?.[0])}/>
-          </label> : <div className="multiview-grid">{['left', 'right', 'back', 'top', 'bottom', 'left_front', 'right_front'].map((viewType) => {
+          </label> : <div className="multiview-grid">{(params.model === '3.0' ? ['front', 'left', 'right', 'back'] : ['front', 'left', 'right', 'back', 'top', 'bottom', 'left_front', 'right_front']).map((viewType) => {
             const current = params.multiViewImages.find((item) => item.viewType === viewType);
-            return <label className={`view-slot ${current ? 'filled' : ''}`} key={viewType}>{current ? <img src={current.data}/> : <Upload size={16}/>}<span>{({left:'左',right:'右',back:'后',top:'上',bottom:'下',left_front:'左前',right_front:'右前'} as Record<string,string>)[viewType]}</span><input type="file" accept="image/jpeg,image/png" onChange={(event) => void pickImage(event.target.files?.[0], true, viewType)}/></label>;
+            return <label className={`view-slot ${current ? 'filled' : ''}`} key={viewType}>{current ? <img src={current.data}/> : <Upload size={16}/>}<span>{({front:'正面',left:'左',right:'右',back:'后',top:'上',bottom:'下',left_front:'左前',right_front:'右前'} as Record<string,string>)[viewType]}</span><input type="file" accept="image/jpeg,image/png" onChange={(event) => void pickImage(event.target.files?.[0], true, viewType)}/></label>;
           })}</div>}
         </div>}
 
         <label className="field prompt-field"><span>{params.inputMode === 'text' ? '提示词' : '补充描述'}<em>{params.prompt.length}/1024</em></span><textarea value={params.prompt} maxLength={1024} placeholder={params.inputMode === 'text' ? '例如：一只穿着宇航服的柯基，卡通风格，完整全身…' : '可选：补充形状、材质或风格要求'} onChange={(event) => setParams((current) => ({ ...current, prompt: event.target.value }))}/></label>
 
-        <div className="field-row"><label className="field"><span>服务模式</span><select value={params.engine} onChange={(event) => setParams((current) => ({ ...current, engine: event.target.value as GenerateParams['engine'] }))}><option value="pro">专业版</option><option value="rapid">极速版</option></select></label><label className="field"><span>模型版本</span><select value={params.model} onChange={(event) => setParams((current) => ({ ...current, model: event.target.value as GenerateParams['model'], generateType: event.target.value === '3.1' && ['LowPoly','Sketch'].includes(current.generateType) ? 'Normal' : current.generateType }))}><option value="3.0">Hunyuan 3.0</option><option value="3.1">Hunyuan 3.1</option></select></label></div>
+        <div className="field-row"><label className="field"><span>服务模式</span><select value={params.engine} onChange={(event) => setParams((current) => ({ ...current, engine: event.target.value as GenerateParams['engine'] }))}><option value="pro">专业版</option><option value="rapid">极速版</option></select></label><label className="field"><span>模型版本</span><select value={params.model} onChange={(event) => setParams((current) => ({ ...current, model: event.target.value as GenerateParams['model'], multiViewImages: event.target.value === '3.0' ? current.multiViewImages.filter((item) => ['front','left','right','back'].includes(item.viewType)) : current.multiViewImages, generateType: event.target.value === '3.1' && ['LowPoly','Sketch'].includes(current.generateType) ? 'Normal' : current.generateType }))}><option value="3.0">Hunyuan 3.0</option><option value="3.1">Hunyuan 3.1</option></select></label></div>
 
         <button className="section-toggle" onClick={() => setAdvancedOpen((value) => !value)}><span><SlidersHorizontal size={15}/>生成参数</span><ChevronDown size={15} className={advancedOpen ? 'rotated' : ''}/></button>
         {advancedOpen && <div className="advanced-fields">
@@ -183,7 +210,7 @@ export default function App() {
 
       <section className="viewer-panel">
         <div className="viewer-toolbar"><div className="viewer-modes"><button className={!viewer.whiteModel && !viewer.wireframe ? 'active' : ''} onClick={() => setViewer((value) => ({ ...value, whiteModel: false, wireframe: false }))}>材质</button><button className={viewer.whiteModel ? 'active' : ''} onClick={() => setViewer((value) => ({ ...value, whiteModel: !value.whiteModel, wireframe: false }))}>白模</button><button className={viewer.wireframe ? 'active' : ''} onClick={() => setViewer((value) => ({ ...value, wireframe: !value.wireframe }))}>线框</button></div><div className="viewer-actions"><button className={viewer.grid ? 'active' : ''} title="网格" onClick={() => setViewer((value) => ({ ...value, grid: !value.grid }))}><Grid3X3 size={16}/></button><button title="重置预览" onClick={() => { setViewerSource(''); setViewerType(''); }}><RotateCcw size={16}/></button><button title="全屏" onClick={() => document.documentElement.requestFullscreen?.()}><Maximize2 size={16}/></button></div></div>
-        <ModelViewer source={viewerSource} type={viewerType} options={viewer} onStats={setViewerStats}/>
+        <ModelViewer source={viewerSource} type={viewerType} resources={viewerResources} materialText={viewerMaterialText} options={viewer} onStats={setViewerStats}/>
         {loadingModel && <div className="model-loading"><LoaderCircle className="spin"/><span>正在下载模型…</span></div>}
         <div className="viewer-footer"><span>{viewerSource ? `${viewerType} 模型` : '无模型'}</span>{viewerStats.triangles > 0 && <><i/><span>{formatNumber(viewerStats.triangles)} 三角面</span><i/><span>{viewerStats.objects} 个网格</span></>}</div>
         <div className="display-card"><strong>显示设置</strong><label><span>背景</span><input type="color" value={viewer.background} onChange={(event) => setViewer((value) => ({ ...value, background: event.target.value }))}/></label><label><span>金属度 <em>{viewer.metalness.toFixed(2)}</em></span><input type="range" min="0" max="1" step="0.01" value={viewer.metalness} onChange={(event) => setViewer((value) => ({ ...value, metalness: Number(event.target.value) }))}/></label><label><span>粗糙度 <em>{viewer.roughness.toFixed(2)}</em></span><input type="range" min="0" max="1" step="0.01" value={viewer.roughness} onChange={(event) => setViewer((value) => ({ ...value, roughness: Number(event.target.value) }))}/></label></div>
@@ -193,9 +220,9 @@ export default function App() {
         {!jobs.length ? <div className="empty-history"><FileBox size={31}/><strong>暂无生成记录</strong><p>提交的任务会显示在这里</p></div> : <div className="job-list">{jobs.map((job) => <article key={job.id} className={`job-card ${selectedJobId === job.id ? 'selected' : ''}`} onClick={() => { setSelectedJobId(job.id); setViewerSource(''); setViewerType(''); }}>
           <div className="job-cover">{job.files[0]?.previewImageUrl ? <img src={job.files[0].previewImageUrl}/> : job.params.image ? <img src={job.params.image}/> : <Box size={22}/>}<span className={`job-status ${job.status.toLowerCase()}`}>{job.status === 'RUN' && <LoaderCircle className="spin" size={11}/>} {statusLabel(job.status)}</span></div>
           <div className="job-main"><strong>{job.params.prompt || job.params.imageName || '图片生成任务'}</strong><small>{timeLabel(job.createdAt)} · {job.params.model} · {job.params.engine === 'pro' ? '专业版' : '极速版'}</small>{job.errorMessage && <p className="job-error">{job.errorMessage}</p>}
-            {job.status === 'DONE' && <div className="job-files">{job.files.map((file, index) => <div key={`${file.url}-${index}`}><span>{file.type || fileExtension(file).toUpperCase()}</span>{previewTypes.has(file.type.toUpperCase()) && fileExtension(file) !== 'zip' && <button title="预览" onClick={(event) => { event.stopPropagation(); void openModel(file); }}><Eye size={14}/></button>}<button title="下载" onClick={(event) => { event.stopPropagation(); void download(file); }}><Download size={14}/></button></div>)}</div>}
+            {job.status === 'DONE' && <div className="job-files">{job.files.map((file, index) => <div key={`${file.url}-${index}`}><span>{file.type || fileExtension(file).toUpperCase()}{file.cached ? ' · 本地' : ''}</span>{(previewTypes.has(file.type.toUpperCase()) || fileExtension(file) === 'zip') && <button title="预览" onClick={(event) => { event.stopPropagation(); void openModel(job, file); }}><Eye size={14}/></button>}<button title="下载" onClick={(event) => { event.stopPropagation(); void download(job, file); }}><Download size={14}/></button></div>)}</div>}
           </div>
-          <button className="job-delete" title="删除记录" onClick={(event) => { event.stopPropagation(); updateJobs((current) => current.filter((item) => item.id !== job.id)); if (selectedJobId === job.id) setSelectedJobId(''); }}><Trash2 size={13}/></button>
+          <button className="job-delete" title="删除记录" onClick={(event) => { event.stopPropagation(); void removeCachedJob(job.jobId, job.files.length); updateJobs((current) => current.filter((item) => item.id !== job.id)); if (selectedJobId === job.id) setSelectedJobId(''); }}><Trash2 size={13}/></button>
         </article>)}</div>}
       </aside>}
     </main>

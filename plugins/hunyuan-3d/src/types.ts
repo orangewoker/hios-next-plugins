@@ -30,7 +30,7 @@ export type GenerateParams = {
   resultFormat: '' | 'OBJ' | 'GLB' | 'STL' | 'USDZ' | 'FBX' | 'MP4';
 };
 
-export type ResultFile = { type: string; url: string; previewImageUrl?: string; cachedDataUrl?: string; size?: number };
+export type ResultFile = { type: string; url: string; previewImageUrl?: string; cached?: boolean; size?: number };
 
 export type JobRecord = {
   id: string;
