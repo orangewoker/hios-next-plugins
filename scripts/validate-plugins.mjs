@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pluginsRoot = join(root, 'plugins');
-const portableBrowserPlugins = new Set(['web-browser', 'xiaohongshu-assets', 'pinterest-assets']);
+const portableBrowserPlugins = new Set(['xiaohongshu-assets', 'pinterest-assets']);
 
 for (const entry of readdirSync(pluginsRoot, { withFileTypes: true }).filter((item) => item.isDirectory())) {
   const pluginRoot = join(pluginsRoot, entry.name);
