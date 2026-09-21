@@ -1,12 +1,18 @@
 export type HostTheme = { mode?: 'light' | 'dark'; tokens?: Record<string, string> };
 export type NetworkResult = { status: number; ok: boolean; url?: string; headers: Record<string, string>; body: string; encoding?: 'utf8' | 'base64' };
 
-const protocol = 'hios-plugin-app/v1';
+let protocol = 'hios-plugin-app/v1';
+let nodeId = '';
 const pending = new Map<string, { resolve: (value: NetworkResult) => void; reject: (reason: Error) => void; timer: number }>();
 let initHandler: ((payload: Record<string, unknown>) => void) | undefined;
 
 export function post(type: string, payload: Record<string, unknown> = {}) {
-  parent.postMessage({ protocol, pluginId: 'hunyuan-3d', appId: 'hunyuan-3d', type, payload }, '*');
+  parent.postMessage({ protocol, pluginId: 'hunyuan-3d', appId: 'hunyuan-3d', ...(nodeId ? { nodeId } : {}), type, payload }, '*');
+}
+
+export function configureNodeBridge(id: string) {
+  protocol = 'hios-plugin-node/v1';
+  nodeId = id;
 }
 
 export function ready(handler: (payload: Record<string, unknown>) => void) {

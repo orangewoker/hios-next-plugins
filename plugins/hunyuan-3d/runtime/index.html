@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>混元3D画布节点</title>  <script type="module" crossorigin src="./assets/index-CU0FGllK.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-ColKBH9K.css">
+</head>
+<body><main>
+  <header><strong>混元3D</strong><span id="status">等待连接</span></header>
+  <p id="inputSummary">连接文字、单图或多视图图片节点</p>
+  <label>服务模式 <select id="provider"><option value="openai">OpenAI 兼容接口</option><option value="tencent">腾讯云 API 3.0</option></select></label>
+  <label>模型版本 <select id="model"><option value="3.0">Hunyuan 3.0</option><option value="3.1">Hunyuan 3.1</option></select></label>
+  <label>Base URL <input id="baseUrl" type="url" spellcheck="false"></label>
+  <label id="apiKeyRow">API Key <input id="apiKey" type="password" autocomplete="off" placeholder="可在混元3D应用中保存，或在此临时填写"></label>
+  <label id="secretIdRow">SecretId <input id="secretId" type="password" autocomplete="off"></label>
+  <label id="secretKeyRow">SecretKey <input id="secretKey" type="password" autocomplete="off"></label>
+  <label>提示词（无文字连线时使用）<textarea id="prompt" rows="3" placeholder="描述要生成的模型"></textarea></label>
+  <div class="row"><label>生成类型 <select id="generateType"><option value="Normal">Normal</option><option value="Geometry">Geometry</option><option value="LowPoly">LowPoly</option><option value="Sketch">Sketch</option></select></label><label>格式 <select id="resultFormat"><option value="">默认</option><option value="GLB">GLB</option><option value="OBJ">OBJ</option><option value="STL">STL</option><option value="FBX">FBX</option></select></label></div>
+  <label class="check"><input id="enablePBR" type="checkbox" checked>PBR 材质</label>
+  <p class="hint">多视图按连接顺序作为正面、左侧、右侧、背面；优先使用多视图，其次单图，最后文字。图片仅支持 JPG、PNG、WEBP，最大 6 MB。</p>
+  <div class="actions"><button id="openApp" type="button">打开混元3D应用</button><button id="runBtn" type="button">生成模型</button></div>
+  <p id="job"></p>
+  <div id="result"></div>
+</main></body></html>
