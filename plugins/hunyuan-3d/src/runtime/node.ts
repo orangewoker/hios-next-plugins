@@ -84,7 +84,7 @@ function renderResult(file: ResultFile, preview: string) {
 }
 async function run() {
   if (running) return;
-  running = true; ($<HTMLButtonElement>('runBtn')).disabled = true;
+  running = true;
   try {
     const config = configFromForm();
     const params = await paramsFromInputs();
@@ -116,7 +116,7 @@ async function run() {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     status(message); post('error', { message });
-  } finally { running = false; ($<HTMLButtonElement>('runBtn')).disabled = false; }
+  } finally { running = false; }
 }
 
 values.forEach((key) => field(key).addEventListener('change', () => {
@@ -128,7 +128,6 @@ values.forEach((key) => field(key).addEventListener('change', () => {
   saveState();
 }));
 $('openApp').addEventListener('click', () => post('open-app', { appId: 'hunyuan-3d' }));
-$('runBtn').addEventListener('click', () => void run());
 window.addEventListener('message', (event: MessageEvent) => {
   const message = event.data;
   if (!message || message.protocol !== 'hios-plugin-node/v1' || (nodeId && message.nodeId !== nodeId)) return;
