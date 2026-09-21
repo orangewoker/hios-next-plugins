@@ -25,3 +25,9 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/watermark-mas
 - 内置 Anton 字体。
 - 预览区始终完整显示缩略图。
 - 通过 HIOS `asset-read` 读取画布资源，修复运行无输出。
+
+## 0.1.2
+
+- 纵向图片按原比例完整显示预览，不再横向裁切。
+- 选择图片水印的文件选择器可正常打开。
+- 点击运行后自动在画布右侧生成水印结果图片节点。

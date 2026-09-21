@@ -2,12 +2,13 @@
   "schemaVersion": 1,
   "id": "watermark-master",
   "name": "水印大师",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "在画布中为图片添加可配置的文字或图片水印，支持九宫格定位、旋转、透明度和平铺。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/watermark-master",
   "permissions": [
-    "canvas"
+    "canvas",
+    "filesystem"
   ],
   "capabilities": [
     {
