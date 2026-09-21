@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "web-browser",
+  "versions": [
+    {
+      "version": "0.2.1",
+      "ref": "web-browser-v0.2.1",
+      "releasedAt": "2026-09-21",
+      "notes": ["按反馈恢复 0.1.1 稳定版交互", "恢复轻量网页阅读与原图库，不再使用 0.2.0 的页面重构"]
+    },
+    {
+      "version": "0.2.0",
+      "ref": "web-browser-v0.2.0",
+      "releasedAt": "2026-09-21",
+      "notes": ["加入页面快照与小红书、Pinterest 原图发现实验", "该版本界面改动较大，可随时回退"]
+    },
+    {
+      "version": "0.1.1",
+      "ref": "web-browser-v0.1.1",
+      "releasedAt": "2026-09-21",
+      "notes": ["改善原图地址提取", "加入右键保存原图到画布"]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "web-browser-v0.1.0",
+      "releasedAt": "2026-09-21",
+      "notes": ["首个版本", "支持画布内网页阅读、原图库和图片拖入画布"]
+    }
+  ]
+}
