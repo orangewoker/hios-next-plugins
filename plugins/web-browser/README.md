@@ -22,3 +22,8 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser
 
 插件面向无需登录的公开网页。需要账号登录、验证码或强反爬的网站可能无法读取；原图服务器拒绝无 Referer 下载时，可先在系统浏览器打开。
 
+
+## 0.1.1
+
+- 增强 Bing 等搜索页的原图地址提取。
+- 图片右键菜单新增“保存原图到画布”。

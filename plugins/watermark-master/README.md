@@ -19,3 +19,9 @@ HIOS Next 第三方画布插件。在本地为图片添加文字水印或图片�
 https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/watermark-master
 ```
 
+
+## 0.1.1
+
+- 内置 Anton 字体。
+- 预览区始终完整显示缩略图。
+- 通过 HIOS `asset-read` 读取画布资源，修复运行无输出。

@@ -2,11 +2,14 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.1.0",
-  "description": "画布内的轻量网页阅读和原图采集节点，可浏览公开网页并把原图加入画布。",
+  "version": "0.1.1",
+  "description": "画布内的轻量网页阅读和原图采集节点，支持提取搜索页原图并通过拖动、按钮或右键菜单加入画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",
-  "permissions": ["canvas", "network"],
+  "permissions": [
+    "canvas",
+    "network"
+  ],
   "capabilities": [
     {
       "id": "web.browser",
@@ -22,10 +25,17 @@
       "rendererEntry": "runtime/index.html",
       "inputs": [],
       "outputs": [
-        { "id": "image", "title": "当前原图", "type": "image" }
+        {
+          "id": "image",
+          "title": "当前原图",
+          "type": "image"
+        }
       ],
       "hidePortLabels": true,
-      "defaultSize": { "width": 760, "height": 620 },
+      "defaultSize": {
+        "width": 760,
+        "height": 620
+      },
       "defaultData": {
         "url": "https://www.bing.com/images",
         "tab": "page",
