@@ -3,6 +3,16 @@
   "pluginId": "web-browser",
   "versions": [
     {
+      "version": "0.2.3",
+      "ref": "web-browser-v0.2.3",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "小红书文章链接使用 HIOS 内嵌真实网页加载，自动关闭登录弹窗",
+        "从 DOM、页面资源和 __INITIAL_STATE__ 提取公开文章的高分辨率原图",
+        "过滤 Logo、头像和小图标，按原始图片对象去重"
+      ]
+    },
+    {
       "version": "0.2.2",
       "ref": "web-browser-v0.2.2",
       "releasedAt": "2026-09-21",
