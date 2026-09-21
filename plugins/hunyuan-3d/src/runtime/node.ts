@@ -4,7 +4,7 @@ import { loadConfig } from '../storage';
 import { DEFAULT_PARAMS, type ApiConfig, type GenerateParams, type ResultFile } from '../types';
 import './node.css';
 
-type NodeInput = { text?: unknown; image?: unknown; multiview?: unknown };
+type NodeInput = { input?: unknown };
 type NodeState = Record<string, unknown>;
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const field = (id: string) => $<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(id);
@@ -19,6 +19,12 @@ const assetPending = new Map<string, { resolve: (value: string) => void; reject:
 
 function status(message: string) { $('status').textContent = message; $('job').textContent = message; }
 function asString(value: unknown) { return typeof value === 'string' ? value.trim() : ''; }
+function connectedValues() { return (Array.isArray(inputs.input) ? inputs.input : [inputs.input]).map(asString).filter(Boolean); }
+function looksLikeImage(value: string) { return /^(?:data:image\/|hios-asset:|https?:\/\/)/i.test(value); }
+function classifiedInputs() {
+  const connected = connectedValues();
+  return { images: connected.filter(looksLikeImage), texts: connected.filter((value) => !looksLikeImage(value)) };
+}
 function saveState() {
   state = Object.fromEntries(values.map((key) => [key, key === 'enablePBR' ? (field(key) as HTMLInputElement).checked : field(key).value]));
   post('state', { state });
@@ -30,8 +36,8 @@ function updateProvider() {
   $('secretKeyRow').hidden = !native;
 }
 function showInputs() {
-  const count = Array.isArray(inputs.multiview) ? inputs.multiview.length : 0;
-  $('inputSummary').textContent = count ? `已连接 ${count} 张多视图图片（正面、左侧、右侧、背面）` : asString(inputs.image) ? '已连接单张参考图' : asString(inputs.text) ? '已连接文字提示词' : '可在下方输入提示词，或连接上游节点';
+  const { images, texts } = classifiedInputs();
+  $('inputSummary').textContent = images.length > 1 ? `已识别 ${images.length} 张图片：多视图生模型${texts.length ? ` · ${texts.length} 条辅助文字` : ''}` : images.length === 1 ? `已识别 1 张图片：单图生模型${texts.length ? ` · ${texts.length} 条辅助文字` : ''}` : texts.length ? `已识别 ${texts.length} 条文字：文生模型` : '可在下方输入提示词，或连接任意文字/图片节点';
 }
 function applyState() {
   const config = loadConfig();
@@ -66,13 +72,12 @@ async function normalizedImage(source: string) {
   return source;
 }
 async function paramsFromInputs(): Promise<GenerateParams> {
-  const prompt = asString(inputs.text) || field('prompt').value.trim();
-  const multi = Array.isArray(inputs.multiview) ? inputs.multiview.map(asString).filter(Boolean) : [];
-  const image = asString(inputs.image);
-  const params: GenerateParams = { ...DEFAULT_PARAMS, model: field('model').value as GenerateParams['model'], prompt, generateType: field('generateType').value as GenerateParams['generateType'], resultFormat: field('resultFormat').value as GenerateParams['resultFormat'], enablePBR: (field('enablePBR') as HTMLInputElement).checked, multiViewImages: [], inputMode: multi.length ? 'multiview' : image ? 'image' : 'text' };
-  if (multi.length > 4) throw new Error('多视图最多连接 4 张图片');
-  if (multi.length) params.multiViewImages = await Promise.all(multi.map(async (source, index) => ({ viewType: ['front', 'left', 'right', 'back'][index], data: await normalizedImage(source), name: `视图 ${index + 1}` })));
-  else if (image) params.image = await normalizedImage(image);
+  const { images, texts } = classifiedInputs();
+  const prompt = texts.join('\n\n') || field('prompt').value.trim();
+  const params: GenerateParams = { ...DEFAULT_PARAMS, model: field('model').value as GenerateParams['model'], prompt, generateType: field('generateType').value as GenerateParams['generateType'], resultFormat: field('resultFormat').value as GenerateParams['resultFormat'], enablePBR: (field('enablePBR') as HTMLInputElement).checked, multiViewImages: [], inputMode: images.length > 1 ? 'multiview' : images.length === 1 ? 'image' : 'text' };
+  if (images.length > 4) throw new Error('多视图最多连接 4 张图片');
+  if (images.length > 1) params.multiViewImages = await Promise.all(images.map(async (source, index) => ({ viewType: ['front', 'left', 'right', 'back'][index], data: await normalizedImage(source), name: `视图 ${index + 1}` })));
+  else if (images.length === 1) params.image = await normalizedImage(images[0]);
   return params;
 }
 function modelFile(files: ResultFile[]) { return files.find((file) => file.type === 'GLB') || files.find((file) => /\.(?:glb|obj|fbx|stl|usdz)(?:\?|$)/i.test(file.url)) || files[0]; }
@@ -103,10 +108,8 @@ async function run() {
       const file = modelFile(response.files);
       if (!file?.url) throw new Error('任务完成，但接口未返回模型文件');
       const preview = response.files.find((item) => item.previewImageUrl)?.previewImageUrl || '';
-      const output = { jobId: latestJob, status: response.status, provider: config.provider, model: params.model, inputMode: params.inputMode, files: response.files, creditConsumed: response.creditConsumed, creditDetails: response.creditDetails };
-      post('output', { output: { kind: 'file', portId: 'file', source: file.url, url: file.url, name: fileName(file), mime: file.type === 'GLB' ? 'model/gltf-binary' : 'application/octet-stream', metadata: { jobId: latestJob, format: file.type } } });
-      if (preview) post('output', { output: { kind: 'image', portId: 'preview', source: preview, url: preview, name: `混元3D-${latestJob}-预览.png`, metadata: { jobId: latestJob } } });
-      post('output', { output: { kind: 'json', portId: 'result', value: output } });
+      const resultJson = { jobId: latestJob, status: response.status, provider: config.provider, model: params.model, inputMode: params.inputMode, files: response.files, previewImageUrl: preview, creditConsumed: response.creditConsumed, creditDetails: response.creditDetails };
+      post('output', { output: { kind: 'file', portId: 'result', source: file.url, url: file.url, name: fileName(file), mime: file.type === 'GLB' ? 'model/gltf-binary' : 'application/octet-stream', metadata: { jobId: latestJob, format: file.type, previewImageUrl: preview, resultJson } } });
       post('run-complete', {});
       renderResult(file, preview);
       status(`生成完成 · ${latestJob}`);

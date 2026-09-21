@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>混元3D画布节点</title></head>
 <body><main>
   <header><strong>混元3D</strong><span id="status">等待连接</span></header>
-  <p id="inputSummary">连接文字、单图或多视图图片节点</p>
+  <p id="inputSummary">连接提示词或图片，节点会自动判断生成方式</p>
   <label>服务模式 <select id="provider"><option value="openai">OpenAI 兼容接口</option><option value="tencent">腾讯云 API 3.0</option></select></label>
   <label>模型版本 <select id="model"><option value="3.0">Hunyuan 3.0</option><option value="3.1">Hunyuan 3.1</option></select></label>
   <label>Base URL <input id="baseUrl" type="url" spellcheck="false"></label>
@@ -12,7 +12,7 @@
   <label>提示词（无文字连线时使用）<textarea id="prompt" rows="3" placeholder="描述要生成的模型"></textarea></label>
   <div class="row"><label>生成类型 <select id="generateType"><option value="Normal">Normal</option><option value="Geometry">Geometry</option><option value="LowPoly">LowPoly</option><option value="Sketch">Sketch</option></select></label><label>格式 <select id="resultFormat"><option value="">默认</option><option value="GLB">GLB</option><option value="OBJ">OBJ</option><option value="STL">STL</option><option value="FBX">FBX</option></select></label></div>
   <label class="check"><input id="enablePBR" type="checkbox" checked>PBR 材质</label>
-  <p class="hint">多视图按连接顺序作为正面、左侧、右侧、背面；优先使用多视图，其次单图，最后文字。图片仅支持 JPG、PNG、WEBP，最大 6 MB。</p>
+  <p class="hint">纯文字为文生模型；1 张图为图生模型；2–4 张图为多视图。若同时连接文字和图片，文字会作为可用的辅助提示词。多视图按连接顺序作为正面、左侧、右侧、背面。</p>
   <div class="actions"><button id="openApp" type="button">打开混元3D应用</button><span class="hint">使用画布节点底部“运行”按钮开始生成</span></div>
   <p id="job"></p>
   <div id="result"></div>
