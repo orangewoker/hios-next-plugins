@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.2.1",
-  "description": "画布内的轻量网页浏览与原图采集节点，恢复稳定的网页阅读和原图库交互。",
+  "version": "0.2.2",
+  "description": "画布内的轻量网页浏览与原图采集节点，可识别 CDN 缩略参数和 WordPress 派生尺寸并还原原始文件。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",
   "permissions": [
@@ -14,7 +14,7 @@
     {
       "id": "web.browser",
       "title": "网页浏览与原图采集",
-      "description": "读取公开网页、提取原图并输出到画布。"
+      "description": "读取公开网页、探测 CDN 与 WordPress 原始图片并输出到画布。"
     }
   ],
   "nodes": [

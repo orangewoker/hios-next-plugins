@@ -6,7 +6,9 @@ HIOS Next 第三方画布插件。通过宿主通用网络协议读取公开网�
 
 - 地址栏、后退、前进、刷新
 - 网页阅读视图与原图库视图
-- 自动识别 `img`、`srcset`、懒加载属性与 Open Graph 图片
+- 自动识别 `img`、`srcset`、懒加载属性、JSON-LD 与 Open Graph 图片
+- 自动去除 OSS 图片处理参数，并将 WordPress 的 `-960x640` 等派生文件名还原为原始上传文件
+- 原始地址无法加载时自动回退到网页提供的图片地址
 - 拖动原图或点击“加入画布”，自动生成图片节点并保存到资源库
 - 复制原图链接、在系统浏览器打开
 - 仅使用 HIOS 通用插件协议，无主程序专用适配
@@ -27,3 +29,9 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser
 
 - 增强 Bing 等搜索页的原图地址提取。
 - 图片右键菜单新增“保存原图到画布”。
+
+## 0.2.2
+
+- 增加真正原图探测，支持 mooool 使用的阿里云 OSS 图片处理参数。
+- 支持 gooood 等 WordPress 站点的尺寸后缀还原，例如从 `name-960x640.jpg` 探测 `name.jpg`。
+- 使用图片自然尺寸校验探测结果，失败时自动回退网页原地址。
