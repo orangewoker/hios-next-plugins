@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.2.3",
-  "description": "画布内的网页与原图采集节点，支持 CDN、WordPress 及小红书公开文章的真实原图提取。",
+  "version": "0.2.4",
+  "description": "画布内的网页与原图采集节点，支持 CDN、WordPress 及小红书公开文章原图提取，兼容 HIOS Tauri。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",
   "permissions": [

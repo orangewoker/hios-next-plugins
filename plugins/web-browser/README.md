@@ -42,3 +42,9 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser
 - 小红书文章链接改用 HIOS 内嵌真实网页加载，不再只读到登录页 Logo。
 - 自动识别并关闭登录弹窗，无需登录即可读取公开文章。
 - 同时扫描 DOM、网络资源和 `__INITIAL_STATE__`，去重后输出高分辨率文章图片。
+
+## 0.2.4
+
+- 修复 Tauri 版 HIOS 中小红书页面空白、无法进入原图列表的问题。
+- 小红书提取改为通用 `network-request` 协议，无需 Electron `webview`，不需要重新打包主程序。
+- 直接解析公开文章服务器返回的 `__INITIAL_STATE__`，过滤页面 Logo 并提取文章图片。

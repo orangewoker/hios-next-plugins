@@ -3,6 +3,16 @@
   "pluginId": "web-browser",
   "versions": [
     {
+      "version": "0.2.4",
+      "ref": "web-browser-v0.2.4",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "修复 HIOS Tauri 中小红书页面显示空白的问题",
+        "改用通用插件网络协议读取公开文章，不再依赖 Electron webview",
+        "从服务器返回的 __INITIAL_STATE__ 中安全解析和去重文章原图"
+      ]
+    },
+    {
       "version": "0.2.3",
       "ref": "web-browser-v0.2.3",
       "releasedAt": "2026-09-21",
