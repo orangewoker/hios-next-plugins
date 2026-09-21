@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "watermark-master",
+  "name": "水印大师",
+  "version": "0.1.0",
+  "description": "在画布中为图片添加可配置的文字或图片水印，支持九宫格定位、旋转、透明度和平铺。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/watermark-master",
+  "permissions": ["canvas"],
+  "capabilities": [
+    {
+      "id": "image.watermark",
+      "title": "图片水印",
+      "description": "在本地为画布图片添加文字或图片水印。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "image.watermark",
+      "title": "水印大师",
+      "description": "连接一张图片，配置文字或图片水印后运行并输出新图片。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        { "id": "image", "title": "原始图片", "type": "image", "required": true }
+      ],
+      "outputs": [
+        { "id": "image", "title": "水印图片", "type": "image" }
+      ],
+      "hidePortLabels": true,
+      "defaultSize": { "width": 620, "height": 720 },
+      "defaultData": {
+        "mode": "text",
+        "text": "LIANG·VISUAL",
+        "fontFamily": "Microsoft YaHei UI",
+        "fontSize": 64,
+        "fontUnit": "px",
+        "bold": true,
+        "italic": false,
+        "direction": "horizontal",
+        "align": "center",
+        "lineHeight": 1.25,
+        "letterSpacing": 2,
+        "opacity": 0.7,
+        "rotation": 0,
+        "anchor": "bottom-right",
+        "marginX": 24,
+        "marginY": 24,
+        "color": "#ffffff",
+        "background": "#000000",
+        "backgroundEnabled": false,
+        "tile": false,
+        "imageWidth": 20,
+        "imageUnit": "percent",
+        "outputFormat": "png",
+        "quality": 0.92
+      }
+    }
+  ]
+}
