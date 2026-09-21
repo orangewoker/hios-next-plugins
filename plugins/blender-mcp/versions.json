@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "blender-mcp",
+  "versions": [
+    {
+      "version": "0.2.0",
+      "ref": "blender-mcp-v0.2.0",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：通过标准 MCP 让 HIOS 智能体安全地创建、检查、迭代、视觉验收并导出 Blender 模型。"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "blender-mcp-v0.1.0",
+      "releasedAt": "2026-09-06",
+      "notes": [
+        "版本变更：preserve app settings during canvas random"
+      ]
+    }
+  ]
+}

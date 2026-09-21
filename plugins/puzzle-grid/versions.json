@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "puzzle-grid",
+  "versions": [
+    {
+      "version": "0.2.0",
+      "ref": "puzzle-grid-v0.2.0",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：将 2、4、6 或 9 张图片合成为宫格拼图，支持间隔和文字水印。"
+      ]
+    },
+    {
+      "version": "0.1.1",
+      "ref": "puzzle-grid-v0.1.1",
+      "releasedAt": "2026-09-20",
+      "notes": [
+        "版本变更：chore: disable remote collector plugins"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "puzzle-grid-v0.1.0",
+      "releasedAt": "2026-09-05",
+      "notes": [
+        "版本变更：feat: add puzzle grid canvas plugin"
+      ]
+    }
+  ]
+}

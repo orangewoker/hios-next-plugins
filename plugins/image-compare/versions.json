@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "image-compare",
+  "versions": [
+    {
+      "version": "0.3.4",
+      "ref": "image-compare-v0.3.4",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：完全独立的图片遮罩对比节点。两张图片固定叠放，滑杆只改变 A 图的可见范围。"
+      ]
+    },
+    {
+      "version": "0.3.3",
+      "ref": "image-compare-v0.3.3",
+      "releasedAt": "2026-09-20",
+      "notes": [
+        "版本变更：chore: disable remote collector plugins"
+      ]
+    },
+    {
+      "version": "0.3.2",
+      "ref": "image-compare-v0.3.2",
+      "releasedAt": "2026-09-01",
+      "notes": [
+        "版本变更：fix: 修复提示词插件工作流输出"
+      ]
+    },
+    {
+      "version": "0.3.1",
+      "ref": "image-compare-v0.3.1",
+      "releasedAt": "2026-08-31",
+      "notes": [
+        "版本变更：fix: bridge browser plugins through host webview"
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "ref": "image-compare-v0.3.0",
+      "releasedAt": "2026-08-31",
+      "notes": [
+        "版本变更：feat: externalize image compare runtime"
+      ]
+    },
+    {
+      "version": "0.2.2",
+      "ref": "image-compare-v0.2.2",
+      "releasedAt": "2026-08-31",
+      "notes": [
+        "版本变更：fix: use clipping mask for image comparison"
+      ]
+    },
+    {
+      "version": "0.2.1",
+      "ref": "image-compare-v0.2.1",
+      "releasedAt": "2026-08-31",
+      "notes": [
+        "版本变更：fix: wait for Pinterest webview readiness"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "compute-cloud",
+  "versions": [
+    {
+      "version": "0.2.2",
+      "ref": "compute-cloud-v0.2.2",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：连接 AutoDL.Art ComfyUI API，管理多个云端工作流，并在应用或画布节点中生成图片、视频与音频。"
+      ]
+    },
+    {
+      "version": "0.2.1",
+      "ref": "compute-cloud-v0.2.1",
+      "releasedAt": "2026-09-14",
+      "notes": [
+        "版本变更：feat: 支持应用工作流调用算力云"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "compute-cloud-v0.1.0",
+      "releasedAt": "2026-09-10",
+      "notes": [
+        "版本变更：feat: add AutoDL compute cloud workflow plugin"
+      ]
+    }
+  ]
+}

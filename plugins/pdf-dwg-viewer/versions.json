@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "pdf-dwg-viewer",
+  "versions": [
+    {
+      "version": "0.1.1",
+      "ref": "pdf-dwg-viewer-v0.1.1",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：在 HIOS 无限画布节点中本地打开 PDF、DWG 与 DXF，浏览页面或图纸，并把当前视图输出为图片。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "ai-prompt-library",
+  "versions": [
+    {
+      "version": "0.1.1",
+      "ref": "ai-prompt-library-v0.1.1",
+      "releasedAt": "2026-09-21",
+      "notes": [
+        "当前稳定版本：连接自托管 AI Prompt Library，按分类随机抽取提示词并输出到 HIOS 画布工作流。"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "ai-prompt-library-v0.1.0",
+      "releasedAt": "2026-09-01",
+      "notes": [
+        "版本变更：fix: 修复 Civitai 搜索与游标分页"
+      ]
+    }
+  ]
+}
