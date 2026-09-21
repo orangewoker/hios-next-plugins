@@ -27,10 +27,3 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser
 
 - 增强 Bing 等搜索页的原图地址提取。
 - 图片右键菜单新增“保存原图到画布”。
-
-## 0.2.0
-
-- “网页”页签优先显示实时原始网页；运行环境不支持内嵌网页时显示保留原版式的页面快照。
-- 支持普通网页、小红书笔记页与 Pinterest 页面。
-- 解析小红书 `urlDefault` 与 Pinterest `originals` 原图地址。
-- 保存时通过 HIOS 下载原图字节，避免防盗链导致缩略图或保存失败。

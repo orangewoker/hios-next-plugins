@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.2.0",
-  "description": "画布内的原始网页浏览和原图采集节点，支持普通网页、小红书与 Pinterest，并可将原图保存到画布。",
+  "version": "0.2.1",
+  "description": "画布内的轻量网页浏览与原图采集节点，恢复稳定的网页阅读和原图库交互。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",
   "permissions": [
@@ -14,14 +14,14 @@
     {
       "id": "web.browser",
       "title": "网页浏览与原图采集",
-      "description": "显示原始网页、提取高清原图并输出到画布。"
+      "description": "读取公开网页、提取原图并输出到画布。"
     }
   ],
   "nodes": [
     {
       "id": "web.browser",
       "title": "浏览器",
-      "description": "输入网址查看原始网页，右键页面图片或在原图库中保存高清原图。",
+      "description": "输入网址浏览网页，从原图库选择高清图片并保存到画布。",
       "rendererEntry": "runtime/index.html",
       "inputs": [],
       "outputs": [
