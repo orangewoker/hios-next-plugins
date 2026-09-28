@@ -3,6 +3,14 @@
   "pluginId": "image-compare",
   "versions": [
     {
+      "version": "0.3.6",
+      "ref": "image-compare-v0.3.6",
+      "releasedAt": "2026-09-28",
+      "notes": [
+        "图片对比区域改为铺满节点，去除上下留白。"
+      ]
+    },
+    {
       "version": "0.3.5",
       "ref": "image-compare-v0.3.5",
       "releasedAt": "2026-09-28",

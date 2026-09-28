@@ -30,7 +30,7 @@
     .stage { position:relative;min-height:0;overflow:hidden;touch-action:none;cursor:ew-resize;background-color:#151a20;background-image:linear-gradient(45deg,#1d242c 25%,transparent 25%),linear-gradient(-45deg,#1d242c 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#1d242c 75%),linear-gradient(-45deg,transparent 75%,#1d242c 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0; }
     :root[data-theme="light"] .stage { background-color:#e3e9ee;background-image:linear-gradient(45deg,#d7dfe6 25%,transparent 25%),linear-gradient(-45deg,#d7dfe6 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#d7dfe6 75%),linear-gradient(-45deg,transparent 75%,#d7dfe6 75%); }
     .layer { position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;pointer-events:none; }
-    .layer img { display:block;width:100%;height:100%;object-fit:contain;object-position:center;user-select:none; }
+    .layer img { display:block;width:100%;height:100%;object-fit:cover;object-position:center;user-select:none; }
     .layer-a { z-index:2;clip-path:inset(0 50% 0 0); }
     .divider { position:absolute;z-index:4;top:0;bottom:0;left:50%;width:2px;transform:translateX(-1px);background:#fff;box-shadow:0 0 0 1px rgba(16,107,206,.55),0 0 18px rgba(0,0,0,.32);pointer-events:none; }
     .badge { position:absolute;z-index:5;top:9px;padding:4px 7px;color:#fff;background:rgba(14,18,23,.7);border:1px solid rgba(255,255,255,.16);border-radius:7px;backdrop-filter:blur(8px);font-size:8px;pointer-events:none; }
