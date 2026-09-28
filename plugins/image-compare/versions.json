@@ -3,6 +3,14 @@
   "pluginId": "image-compare",
   "versions": [
     {
+      "version": "0.3.5",
+      "ref": "image-compare-v0.3.5",
+      "releasedAt": "2026-09-28",
+      "notes": [
+        "移除画布图片对比节点内重复的标题栏、状态文字和底部提示，仅保留图片对比区域。"
+      ]
+    },
+    {
       "version": "0.3.4",
       "ref": "image-compare-v0.3.4",
       "releasedAt": "2026-09-21",

@@ -17,7 +17,8 @@
     body { color:var(--text);background:var(--bg);font-family:"PingFang SC","Microsoft YaHei UI",system-ui,sans-serif;font-size:11px; }
     button,input { font:inherit; }
     button { cursor:pointer; }
-    .app { height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto; }
+    .app { height:100%;min-height:0;display:grid;grid-template-rows:minmax(0,1fr); }
+    /* The canvas node shell owns the transparent title and run action. */
     .toolbar { min-width:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border);background:var(--surface); }
     .title { min-width:0;display:flex;align-items:center;gap:8px; }
     .mark { width:25px;height:25px;display:grid;place-items:center;flex:none;color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));border-radius:8px;font-weight:800; }
@@ -38,6 +39,7 @@
     .empty[hidden] { display:none !important; }
     .empty strong { color:var(--text-2);font-size:11px; }.empty span { max-width:280px;font-size:9px;line-height:1.55; }
     .controls { display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;border-top:1px solid var(--border);background:var(--surface); }
+    .toolbar,.controls { display:none !important; }
     .value { min-width:0;color:var(--text-2);font-variant-numeric:tabular-nums;font-size:9px;white-space:nowrap; }
     /* Execution is controlled by the canvas shell standard 运行 button. */
     .output { display:none !important; }
@@ -46,7 +48,7 @@
 <body>
   <main class="app">
     <header class="toolbar">
-      <div class="title"><span class="mark">A/B</span><span><strong>固定画幅对比</strong><small>滑杆只裁切 A 图，不缩放任何图片</small></span></div>
+      <div class="title"><span class="mark">A/B</span></div>
       <span id="status" class="status">等待输入</span>
     </header>
     <section id="stage" class="stage" aria-label="图片对比区域">
@@ -54,7 +56,7 @@
       <div id="layerA" class="layer layer-a"><img id="imageA" alt="图片 A" /></div>
       <span id="divider" class="divider"></span>
       <span class="badge badge-a">A</span><span class="badge badge-b">B</span>
-      <div id="empty" class="empty"><strong>连接两张图片</strong><span>将左侧图片节点分别连接到“图片 A”和“图片 B”输入口，图片始终保持固定尺寸叠放。</span></div>
+      <div id="empty" class="empty"></div>
     </section>
     <footer class="controls">
       <span id="value" class="value">拖动画面分割线 · A 50%</span>
