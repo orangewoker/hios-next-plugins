@@ -18,6 +18,10 @@
     .bar span { min-width:200px; flex:1; color:var(--text-2); }
     .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     .cards section { min-width:0; min-height:280px; padding:18px; border:1px solid var(--border); border-radius:13px; background:var(--surface); }
+    .settings { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0; }
+    .settings label { display:flex; flex-direction:column; gap:6px; color:var(--text-2); }
+    .settings select { width:100%; padding:8px 9px; color:var(--text); background:var(--control); border:1px solid var(--border); border-radius:7px; font:inherit; }
+    .settings input[type="range"] { width:100%; margin:7px 0; accent-color:var(--accent); }
     button { padding:9px 14px; border:1px solid transparent; border-radius:8px; background:var(--accent); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
     button:hover:not(:disabled) { filter:brightness(1.06); }
     button:disabled { opacity:.48; cursor:not-allowed; }
@@ -45,7 +49,19 @@
         <h2>输入图片</h2>
         <p id="filename">尚未导入图片</p>
         <button id="choose">导入 PNG / JPG / WEBP</button>
-        <p style="margin-top:16px"><small>RTX 4060 8GB 默认使用自然风格，不自动高倍放大。</small></p>
+        <div class="settings">
+          <label>增强风格
+            <select id="style">
+              <option value="natural">自然</option>
+              <option value="default">默认</option>
+              <option value="cinematic">电影感</option>
+            </select>
+          </label>
+          <label>增强强度 <span id="strength-value">1.0</span>
+            <input id="strength" type="range" min="0" max="2" step="0.1" value="1">
+          </label>
+        </div>
+        <p><small>默认自然风格、强度 1.0；在 RTX 4060 上不自动高倍放大。</small></p>
         <button id="render" disabled>开始增强</button>
       </section>
       <section>
@@ -75,6 +91,10 @@
       const tokens = theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
       for (const [key, css] of Object.entries(names)) if (typeof tokens[key] === 'string' && tokens[key]) document.documentElement.style.setProperty(css, tokens[key]);
     }
+    function settings() { return { style:$('style').value, strength:Number($('strength').value) }; }
+    function saveSettings() { $('strength-value').textContent = settings().strength.toFixed(1); post('state', { state:settings() }); }
+    $('style').addEventListener('change', saveSettings);
+    $('strength').addEventListener('input', saveSettings);
     function message(text) { $('status').textContent = text; }
     function update() { $('render').disabled = !token || !configured || busy; }
     async function check() {
@@ -91,7 +111,13 @@
     window.addEventListener('message', (event) => {
       if (event.source !== parent || event.data?.protocol !== protocol) return;
       const { type, payload = {} } = event.data;
-      if (type === 'init') { applyTheme(payload.theme); void check(); }
+      if (type === 'init') {
+        applyTheme(payload.theme);
+        if (['natural','default','cinematic'].includes(payload.state?.style)) $('style').value = payload.state.style;
+        if (Number.isFinite(Number(payload.state?.strength))) $('strength').value = String(Math.max(0, Math.min(2, Number(payload.state.strength))));
+        $('strength-value').textContent = settings().strength.toFixed(1);
+        void check();
+      }
       if (type === 'theme') applyTheme(payload.theme);
       if (type === 'dlss5-image-result') {
         const item = pending.get(payload.requestId);
@@ -114,7 +140,7 @@
     $('render').onclick = async () => {
       busy = true; update(); message('正在本机增强图片，请稍候…');
       try {
-        const result = await request('render', { token });
+        const result = await request('render', { token, ...settings() });
         token = '';
         $('filename').textContent = '处理完成，可继续导入图片';
         $('preview').src = result.source;

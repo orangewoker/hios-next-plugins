@@ -6,7 +6,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 
 | 插件 | 版本 | 安装 URL |
 | --- | --- | --- |
-| DLSS 5 图片增强 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`（需 HIOS Next 桌面版 ≥ 2.6.2） |
+| DLSS 5 图片增强 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`（需 HIOS Next 桌面版 ≥ 2.6.3） |
 | 图片对比 | 0.3.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare` |
 | 拼图 | 0.2.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid` |
 | AI 提示词库 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |
