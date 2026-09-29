@@ -1,9 +1,133 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DLSS 5 图片增强</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#171d25;color:#eaf0f7;font:14px system-ui,'Microsoft YaHei',sans-serif}main{max-width:1100px;margin:auto;padding:32px}h1{font-size:26px;margin:0 0 8px}p{color:#a9b7c5;line-height:1.6}.bar,.cards{display:flex;gap:16px;flex-wrap:wrap}.bar{align-items:center;padding:18px 0}.cards>section{flex:1 1 360px;background:#222b36;border:1px solid #3a4b5a;border-radius:16px;padding:20px;min-width:0}button{background:#4963e8;color:white;border:0;border-radius:9px;padding:10px 16px;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.ghost{background:#364352}.status{padding:12px;background:#263545;border-radius:9px;white-space:pre-wrap;word-break:break-word}img{display:block;max-width:100%;max-height:480px;margin:14px auto;border-radius:8px}small{color:#9fb0c3}a{color:#9db0ff}
-</style></head><body><main><h1>DLSS 5 图片增强</h1><p>使用本机 NVIDIA 显卡和独立安装的 Visual Enhancer CLI。图片处理在本机完成；实验性效果不等同于游戏内 3D 引导渲染。</p><div class="bar"><button id="runtime">选择 VE_CLI.exe</button><button class="ghost" id="check">检测设备</button><span id="gpu">检测中…</span></div><div class="cards"><section><h2>输入图片</h2><p id="filename">尚未导入图片</p><button id="choose">导入 PNG / JPG / WEBP</button><p><small>RTX 4060 8GB 默认使用 CLI 自身设置，不自动高倍放大。</small></p><button id="render" disabled>开始增强</button></section><section><h2>增强结果</h2><div class="status" id="status">等待图片</div><img id="preview" hidden alt="增强结果"></section></div><p><small>运行库需单独安装：<a href="https://github.com/Merserk/dlss5-visual-enhancer" target="_blank">Visual Enhancer</a>。HIOS 安装包不包含第三方运行库。</small></p></main>
-<script>
-const protocol='hios-plugin-app/v1',pluginId='dlss5-image',appId='dlss5-image';let token='',configured=false,busy=false;const pending=new Map();const $=id=>document.getElementById(id);function post(type,payload={}){parent.postMessage({protocol,pluginId,appId,type,payload},'*')}function request(action,extra={}){const requestId=crypto.randomUUID();post('dlss5-image-request',{requestId,action,...extra});return new Promise((resolve,reject)=>pending.set(requestId,{resolve,reject}))}function message(text){$('status').textContent=text}function update(){ $('render').disabled=!token||!configured||busy }
-async function check(){try{const s=await request('status');configured=!!s.configured&&!!s.compatible;$('gpu').textContent=s.gpu?`${s.gpu} · 驱动 ${s.driver} · ${s.memoryMiB} MiB${configured?' · GPU 已兼容':s.configured?' · GPU 不兼容':' · 尚未配置运行库'}`:'未检测到 NVIDIA GPU';if(s.cliError)message(`运行库设备检测失败：${s.cliError}`);update()}catch(e){message(String(e.message||e))}}
-window.addEventListener('message',event=>{if(event.source!==parent||event.data?.protocol!==protocol)return;const m=event.data;if(m.type==='dlss5-image-result'){const p=m.payload||{};const item=pending.get(p.requestId);if(!item)return;pending.delete(p.requestId);p.error?item.reject(new Error(p.error)):item.resolve(p.result)}if(m.type==='init')void check()});$('check').onclick=check;$('runtime').onclick=async()=>{try{await request('choose-runtime');await check()}catch(e){message(String(e.message||e))}};$('choose').onclick=async()=>{try{const r=await request('choose-image');if(!r)return;token=r.token;$('filename').textContent=r.name;message('图片已就绪');update()}catch(e){message(String(e.message||e))}};$('render').onclick=async()=>{busy=true;update();message('正在本机增强图片，请稍候…');try{const r=await request('render',{token});token='';$('filename').textContent='处理完成，可继续导入图片';$('preview').src=r.source;$('preview').hidden=false;message(`已完成，结果保存到 HIOS 素材库：${r.name}`);post('output',{output:{kind:'image',source:r.source,name:r.name,mime:'image/png'}})}catch(e){token='';$('filename').textContent='请重新导入图片';message(String(e.message||e))}finally{busy=false;update()}};post('ready');
-</script></body></html>
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DLSS 5 图片增强</title>
+  <style>
+    :root { color-scheme:light; --bg:#edf2f6; --surface:#f8fafc; --muted:#e8eef3; --control:#e7edf2; --text:#253143; --text-2:#5f6c7e; --border:#cbd6df; --accent:#5768f2; }
+    :root[data-theme="dark"] { color-scheme:dark; --bg:#18212c; --surface:#202c39; --muted:#17212b; --control:#253240; --text:#edf3f8; --text-2:#b6c1cd; --border:#344352; --accent:#5768f2; }
+    * { box-sizing:border-box; }
+    html, body { width:100%; height:100%; margin:0; }
+    body { color:var(--text); background:var(--bg); font:13px/1.55 system-ui,"Microsoft YaHei",sans-serif; }
+    main { width:100%; max-width:1160px; height:100%; min-height:0; margin:auto; padding:24px; overflow:auto; }
+    h1 { margin:0 0 5px; font-size:23px; line-height:1.35; }
+    h2 { margin:0 0 12px; font-size:16px; }
+    p { margin:0 0 14px; color:var(--text-2); }
+    .bar { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:18px 0; }
+    .bar span { min-width:200px; flex:1; color:var(--text-2); }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .cards section { min-width:0; min-height:280px; padding:18px; border:1px solid var(--border); border-radius:13px; background:var(--surface); }
+    button { padding:9px 14px; border:1px solid transparent; border-radius:8px; background:var(--accent); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+    button:hover:not(:disabled) { filter:brightness(1.06); }
+    button:disabled { opacity:.48; cursor:not-allowed; }
+    button.ghost { color:var(--text); background:var(--control); border-color:var(--border); }
+    .status { margin-bottom:12px; padding:10px 12px; border-radius:8px; color:var(--text-2); background:var(--muted); white-space:pre-wrap; overflow-wrap:anywhere; }
+    img { display:block; max-width:100%; max-height:min(55vh,520px); margin:0 auto; border-radius:8px; object-fit:contain; }
+    img[hidden] { display:none; }
+    small { color:var(--text-2); }
+    a { color:var(--accent); }
+    .footer { margin-top:16px; }
+    @media (max-width:760px) { main{padding:16px}.cards{grid-template-columns:1fr}.cards section{min-height:180px} }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DLSS 5 图片增强</h1>
+    <p>使用本机 NVIDIA 显卡和独立安装的 Visual Enhancer CLI。实验性图片效果不等同于游戏内 3D 引导渲染。</p>
+    <div class="bar">
+      <button id="runtime">选择 VE_CLI.exe</button>
+      <button class="ghost" id="check">检测设备</button>
+      <span id="gpu">检测中…</span>
+    </div>
+    <div class="cards">
+      <section>
+        <h2>输入图片</h2>
+        <p id="filename">尚未导入图片</p>
+        <button id="choose">导入 PNG / JPG / WEBP</button>
+        <p style="margin-top:16px"><small>RTX 4060 8GB 默认使用自然风格，不自动高倍放大。</small></p>
+        <button id="render" disabled>开始增强</button>
+      </section>
+      <section>
+        <h2>增强结果</h2>
+        <div class="status" id="status">等待图片</div>
+        <img id="preview" hidden alt="增强结果">
+      </section>
+    </div>
+    <p class="footer"><small>运行库需单独安装：<a href="https://github.com/Merserk/dlss5-visual-enhancer" target="_blank">Visual Enhancer</a>。HIOS 安装包不包含第三方运行库。</small></p>
+  </main>
+  <script>
+    const protocol = 'hios-plugin-app/v1', pluginId = 'dlss5-image', appId = 'dlss5-image';
+    const pending = new Map();
+    const $ = (id) => document.getElementById(id);
+    let token = '', configured = false, busy = false;
+
+    function post(type, payload = {}) { parent.postMessage({ protocol, pluginId, appId, type, payload }, '*'); }
+    function request(action, extra = {}) {
+      const requestId = crypto.randomUUID();
+      post('dlss5-image-request', { requestId, action, ...extra });
+      return new Promise((resolve, reject) => pending.set(requestId, { resolve, reject }));
+    }
+    function applyTheme(theme) {
+      if (!theme || typeof theme !== 'object') return;
+      document.documentElement.dataset.theme = theme.mode === 'dark' ? 'dark' : 'light';
+      const names = { background:'--bg', surface:'--surface', muted:'--muted', control:'--control', text:'--text', textSecondary:'--text-2', border:'--border', accent:'--accent' };
+      const tokens = theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
+      for (const [key, css] of Object.entries(names)) if (typeof tokens[key] === 'string' && tokens[key]) document.documentElement.style.setProperty(css, tokens[key]);
+    }
+    function message(text) { $('status').textContent = text; }
+    function update() { $('render').disabled = !token || !configured || busy; }
+    async function check() {
+      try {
+        const state = await request('status');
+        configured = Boolean(state.configured && state.compatible);
+        $('gpu').textContent = state.gpu
+          ? `${state.gpu} · 驱动 ${state.driver} · ${state.memoryMiB} MiB${configured ? ' · GPU 已兼容' : state.configured ? ' · GPU 不兼容' : ' · 尚未配置运行库'}`
+          : '未检测到 NVIDIA GPU';
+        if (state.cliError) message(`运行库设备检测失败：${state.cliError}`);
+        update();
+      } catch (error) { message(String(error.message || error)); }
+    }
+    window.addEventListener('message', (event) => {
+      if (event.source !== parent || event.data?.protocol !== protocol) return;
+      const { type, payload = {} } = event.data;
+      if (type === 'init') { applyTheme(payload.theme); void check(); }
+      if (type === 'theme') applyTheme(payload.theme);
+      if (type === 'dlss5-image-result') {
+        const item = pending.get(payload.requestId);
+        if (!item) return;
+        pending.delete(payload.requestId);
+        payload.error ? item.reject(new Error(payload.error)) : item.resolve(payload.result);
+      }
+    });
+    $('check').onclick = check;
+    $('runtime').onclick = async () => { try { await request('choose-runtime'); await check(); } catch (error) { message(String(error.message || error)); } };
+    $('choose').onclick = async () => {
+      try {
+        const result = await request('choose-image');
+        if (!result) return;
+        token = result.token;
+        $('filename').textContent = result.name;
+        message('图片已就绪'); update();
+      } catch (error) { message(String(error.message || error)); }
+    };
+    $('render').onclick = async () => {
+      busy = true; update(); message('正在本机增强图片，请稍候…');
+      try {
+        const result = await request('render', { token });
+        token = '';
+        $('filename').textContent = '处理完成，可继续导入图片';
+        $('preview').src = result.source;
+        $('preview').hidden = false;
+        message(`已完成，结果保存到 HIOS 素材库：${result.name}`);
+        post('output', { output: { kind:'image', source:result.source, name:result.name, mime:'image/png' } });
+      } catch (error) {
+        token = '';
+        $('filename').textContent = '请重新导入图片';
+        message(String(error.message || error));
+      } finally { busy = false; update(); }
+    };
+    post('ready');
+  </script>
+</body>
+</html>

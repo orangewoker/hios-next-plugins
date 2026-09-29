@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "dlss5-image",
   "name": "DLSS 5 图片增强",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "调用本机 Visual Enhancer CLI 增强图片，不包含第三方运行库。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image",

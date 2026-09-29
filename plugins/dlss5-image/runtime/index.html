@@ -1,3 +1,86 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DLSS 5 图片增强</title><style>*{box-sizing:border-box}body{margin:0;background:#1e2630;color:#eef3f7;font:13px system-ui,'Microsoft YaHei',sans-serif}.wrap{height:100vh;padding:14px;display:flex;flex-direction:column;gap:10px}p{margin:0;color:#a9b6c4}img{min-height:0;flex:1;max-width:100%;object-fit:contain;border-radius:8px;background:#151b22}.state{white-space:pre-wrap;word-break:break-word;color:#9eb1c2}</style></head><body><div class="wrap"><strong>本机图片增强</strong><p>连接图片后，点击画布节点的运行按钮。</p><img id="preview" hidden alt="增强预览"><div class="state" id="state">等待输入图片</div></div><script>
-const protocol='hios-plugin-node/v1',pluginId='dlss5-image';let nodeId='',source='';const pending=new Map();function post(type,payload={}){parent.postMessage({protocol,pluginId,nodeId,type,payload},'*')}function request(source){const requestId=crypto.randomUUID();post('dlss5-image-request',{requestId,source});return new Promise((resolve,reject)=>pending.set(requestId,{resolve,reject}))}function set(text){document.getElementById('state').textContent=text}function hydrate(p){nodeId=p.nodeId||nodeId;const value=p.inputs?.image;source=typeof value==='string'?value:Array.isArray(value)&&typeof value[0]==='string'?value[0]:'';if(!source)set('等待连接 HIOS 本地图片')}window.addEventListener('message',e=>{if(e.source!==parent||e.data?.protocol!==protocol)return;const m=e.data;if(m.type==='init')hydrate(m.payload||{});if(m.type==='dlss5-image-result'){const p=m.payload||{},item=pending.get(p.requestId);if(item){pending.delete(p.requestId);p.error?item.reject(new Error(p.error)):item.resolve(p.result)}}if(m.type==='run'){hydrate(m.payload||{});if(!source){set('请先连接图片');post('error',{message:'请先连接图片'});return}set('正在调用本机显卡处理…');request(source).then(r=>{document.getElementById('preview').src=r.source;document.getElementById('preview').hidden=false;set('增强完成');post('output',{output:{kind:'image',portId:'image',source:r.source,name:r.name,mime:'image/png'}})}).catch(err=>{set(String(err.message||err));post('error',{message:String(err.message||err)})})}});post('ready');
-</script></body></html>
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DLSS 5 图片增强</title>
+  <style>
+    :root { color-scheme:light; --bg:#edf2f6; --surface:#f8fafc; --muted:#e8eef3; --text:#253143; --text-2:#5f6c7e; --border:#cbd6df; --accent:#5768f2; }
+    :root[data-theme="dark"] { color-scheme:dark; --bg:#18212c; --surface:#202c39; --muted:#17212b; --text:#edf3f8; --text-2:#b6c1cd; --border:#344352; --accent:#5768f2; }
+    * { box-sizing:border-box; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; }
+    body { color:var(--text); background:var(--muted); font:12px/1.45 system-ui,"Microsoft YaHei",sans-serif; }
+    .wrap { height:100%; min-height:0; padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .headline { display:flex; align-items:center; gap:7px; color:var(--text); font-weight:600; }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex:none; }
+    p { margin:0; color:var(--text-2); }
+    img { min-height:0; flex:1; max-width:100%; object-fit:contain; border:1px solid var(--border); border-radius:8px; background:var(--surface); }
+    img[hidden] { display:none; }
+    .state { color:var(--text-2); white-space:pre-wrap; overflow-wrap:anywhere; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="headline"><span class="dot"></span><span>本机图片增强</span></div>
+    <p>连接图片后，点击节点下方的运行按钮。</p>
+    <img id="preview" hidden alt="增强预览">
+    <div class="state" id="state">等待输入图片</div>
+  </div>
+  <script>
+    const protocol = 'hios-plugin-node/v1', pluginId = 'dlss5-image';
+    const pending = new Map();
+    let nodeId = '', hasInput = false;
+    function post(type, payload = {}) { parent.postMessage({ protocol, pluginId, nodeId, type, payload }, '*'); }
+    function request() {
+      const requestId = crypto.randomUUID();
+      post('dlss5-image-request', { requestId });
+      return new Promise((resolve, reject) => pending.set(requestId, { resolve, reject }));
+    }
+    function set(text) { document.getElementById('state').textContent = text; }
+    function applyTheme(theme) {
+      if (!theme || typeof theme !== 'object') return;
+      document.documentElement.dataset.theme = theme.mode === 'dark' ? 'dark' : 'light';
+      const names = { background:'--bg', surface:'--surface', muted:'--muted', text:'--text', textSecondary:'--text-2', border:'--border', accent:'--accent' };
+      const tokens = theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
+      for (const [key, css] of Object.entries(names)) if (typeof tokens[key] === 'string' && tokens[key]) document.documentElement.style.setProperty(css, tokens[key]);
+    }
+    function hydrate(payload) {
+      nodeId = payload.nodeId || nodeId;
+      applyTheme(payload.theme);
+      const connected = payload.inputs?.image;
+      hasInput = typeof connected === 'string' ? Boolean(connected) : Array.isArray(connected) && Boolean(connected[0]);
+      if (!hasInput) set('等待连接图片');
+      else if (document.getElementById('preview').hidden) set('图片已连接，等待运行');
+    }
+    window.addEventListener('message', (event) => {
+      if (event.source !== parent || event.data?.protocol !== protocol) return;
+      const { type, payload = {} } = event.data;
+      if (type === 'init') hydrate(payload);
+      if (type === 'dlss5-image-result') {
+        const item = pending.get(payload.requestId);
+        if (!item) return;
+        pending.delete(payload.requestId);
+        payload.error ? item.reject(new Error(payload.error)) : item.resolve(payload.result);
+      }
+      if (type === 'run') {
+        hydrate(payload);
+        // The host resolves the authoritative connected image; the iframe
+        // does not pass or validate a potentially stale resource URL.
+        set('正在调用本机显卡处理…');
+        request().then((result) => {
+          const preview = document.getElementById('preview');
+          preview.src = result.source;
+          preview.hidden = false;
+          set('增强完成');
+          post('output', { output: { kind:'image', portId:'image', source:result.source, name:result.name, mime:'image/png' } });
+        }).catch((error) => {
+          const message = String(error.message || error);
+          set(message);
+          post('error', { message });
+        });
+      }
+    });
+    post('ready');
+  </script>
+</body>
+</html>
