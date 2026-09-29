@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "dlss5-image",
+  "versions": [
+    {
+      "version": "0.1.2",
+      "ref": "dlss5-image-v0.1.2",
+      "releasedAt": "2026-09-29",
+      "notes": [
+        "画布节点运行后生成独立的结果图片节点。",
+        "应用与画布节点新增增强风格和强度设置；需要 HIOS Next 2.6.3。"
+      ]
+    },
+    {
+      "version": "0.1.1",
+      "ref": "dlss5-image-v0.1.1",
+      "releasedAt": "2026-09-29",
+      "notes": [
+        "适配应用与画布节点主题，修复已连接图片的运行问题。"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "dlss5-image-v0.1.0",
+      "releasedAt": "2026-09-29",
+      "notes": [
+        "首次发布本机 DLSS 5 图片增强应用和画布节点。"
+      ]
+    }
+  ]
+}
