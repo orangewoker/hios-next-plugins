@@ -42,6 +42,7 @@
     .footer { margin-top:16px; }
     @media (max-width:760px) { main{padding:16px}.cards,.preview-grid{grid-template-columns:1fr}.cards section{min-height:180px} }
   </style>
+  <link rel="stylesheet" href="../controls/theme-controls.css">
 </head>
 <body>
   <main>
@@ -100,10 +101,12 @@
     <p class="footer"><small>运行库需单独安装：<a href="https://github.com/Merserk/dlss5-visual-enhancer" target="_blank">Visual Enhancer</a>。HIOS 安装包不包含第三方运行库。</small></p>
   </main>
   <script src="../effects/light-material.js"></script>
+  <script src="../controls/theme-controls.js"></script>
   <script>
     const protocol = 'hios-plugin-app/v1', pluginId = 'dlss5-image', appId = 'dlss5-image';
     const pending = new Map();
     const $ = (id) => document.getElementById(id);
+    const themeControls = DlssThemeControls.init();
     let token = '', configured = false, busy = false, lastOutput = null;
 
     function post(type, payload = {}) { parent.postMessage({ protocol, pluginId, appId, type, payload }, '*'); }
@@ -158,6 +161,7 @@
         if (Number.isFinite(Number(payload.state?.strength))) $('strength').value = String(Math.max(0, Math.min(2, Number(payload.state.strength))));
         const effect = DlssLightMaterial.settings(payload.state);
         for (const key of effectKeys) $(key).value = String(effect[key]);
+        themeControls.sync();
         saveSettings();
         void check();
       }

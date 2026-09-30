@@ -23,6 +23,7 @@
     .hint { color:var(--text-2); }
     .status { margin-top:auto; padding:8px 9px; color:var(--text-2); background:var(--surface); border:1px solid var(--border); border-radius:7px; white-space:pre-wrap; overflow-wrap:anywhere; }
   </style>
+  <link rel="stylesheet" href="../controls/theme-controls.css">
 </head>
 <body>
   <div class="wrap">
@@ -57,9 +58,11 @@
     <div class="status" id="status">等待连接图片</div>
   </div>
   <script src="../effects/light-material.js"></script>
+  <script src="../controls/theme-controls.js"></script>
   <script>
     const protocol = 'hios-plugin-node/v1', pluginId = 'dlss5-image';
     const pending = new Map();
+    const themeControls = DlssThemeControls.init();
     const effectKeys = Object.keys(DlssLightMaterial.DEFAULTS);
     const modeInput = document.getElementById('mode');
     const styleInput = document.getElementById('style');
@@ -100,6 +103,7 @@
         if (Number.isFinite(Number(payload.state.strength))) strengthInput.value = String(Math.max(0, Math.min(2, Number(payload.state.strength))));
         const effect = DlssLightMaterial.settings(payload.state);
         for (const key of effectKeys) document.getElementById(key).value = String(effect[key]);
+        themeControls.sync();
         saveSettings();
       }
       const connected = payload.inputs?.image;
