@@ -22,6 +22,14 @@
     .settings label { display:flex; flex-direction:column; gap:6px; color:var(--text-2); }
     .settings select { width:100%; padding:8px 9px; color:var(--text); background:var(--control); border:1px solid var(--border); border-radius:7px; font:inherit; }
     .settings input[type="range"] { width:100%; margin:7px 0; accent-color:var(--accent); }
+    .effect-controls { margin:12px 0; padding:12px; border:1px solid var(--border); border-radius:9px; background:var(--muted); }
+    .effect-controls[hidden] { display:none; }
+    .effect-controls .settings { margin:0; }
+    .effect-controls input[type="range"] { width:100%; accent-color:var(--accent); }
+    .preview-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .preview-grid figure { margin:0; min-width:0; }
+    .preview-grid figcaption { margin-bottom:6px; color:var(--text-2); }
+    .preview-grid[hidden] { display:none; }
     button { padding:9px 14px; border:1px solid transparent; border-radius:8px; background:var(--accent); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
     button:hover:not(:disabled) { filter:brightness(1.06); }
     button:disabled { opacity:.48; cursor:not-allowed; }
@@ -32,7 +40,7 @@
     small { color:var(--text-2); }
     a { color:var(--accent); }
     .footer { margin-top:16px; }
-    @media (max-width:760px) { main{padding:16px}.cards{grid-template-columns:1fr}.cards section{min-height:180px} }
+    @media (max-width:760px) { main{padding:16px}.cards,.preview-grid{grid-template-columns:1fr}.cards section{min-height:180px} }
   </style>
 </head>
 <body>
@@ -50,6 +58,12 @@
         <p id="filename">尚未导入图片</p>
         <button id="choose">导入 PNG / JPG / WEBP</button>
         <div class="settings">
+          <label>处理模式
+            <select id="mode">
+              <option value="standard">基础增强</option>
+              <option value="light-material">光影材质增强</option>
+            </select>
+          </label>
           <label>增强风格
             <select id="style">
               <option value="natural">自然</option>
@@ -61,22 +75,36 @@
             <input id="strength" type="range" min="0" max="2" step="0.1" value="1">
           </label>
         </div>
+        <div class="effect-controls" id="effect-controls" hidden>
+          <div class="settings">
+            <label>阴影层次 <span id="shadows-value">45%</span><input id="shadows" type="range" min="0" max="100" step="1" value="45"></label>
+            <label>光照层次 <span id="lighting-value">42%</span><input id="lighting" type="range" min="0" max="100" step="1" value="42"></label>
+            <label>材质细节 <span id="texture-value">38%</span><input id="texture" type="range" min="0" max="100" step="1" value="38"></label>
+            <label>已有反射 <span id="reflections-value">32%</span><input id="reflections" type="range" min="0" max="100" step="1" value="32"></label>
+          </div>
+          <small>只增强图片中已有的明暗和高光，不生成真实的新投影或镜面内容。</small>
+        </div>
         <p><small>默认自然风格、强度 1.0；在 RTX 4060 上不自动高倍放大。</small></p>
         <button id="render" disabled>开始增强</button>
       </section>
       <section>
         <h2>增强结果</h2>
         <div class="status" id="status">等待图片</div>
-        <img id="preview" hidden alt="增强结果">
+        <div class="preview-grid" id="preview-grid" hidden>
+          <figure id="before-figure" hidden><figcaption>基础增强</figcaption><img id="before" alt="基础增强结果"></figure>
+          <figure><figcaption id="after-label">增强结果</figcaption><img id="preview" alt="最终增强结果"></figure>
+        </div>
+        <button class="ghost" id="download" hidden>下载最终图片</button>
       </section>
     </div>
     <p class="footer"><small>运行库需单独安装：<a href="https://github.com/Merserk/dlss5-visual-enhancer" target="_blank">Visual Enhancer</a>。HIOS 安装包不包含第三方运行库。</small></p>
   </main>
+  <script src="../effects/light-material.js"></script>
   <script>
     const protocol = 'hios-plugin-app/v1', pluginId = 'dlss5-image', appId = 'dlss5-image';
     const pending = new Map();
     const $ = (id) => document.getElementById(id);
-    let token = '', configured = false, busy = false;
+    let token = '', configured = false, busy = false, lastOutput = null;
 
     function post(type, payload = {}) { parent.postMessage({ protocol, pluginId, appId, type, payload }, '*'); }
     function request(action, extra = {}) {
@@ -91,10 +119,22 @@
       const tokens = theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
       for (const [key, css] of Object.entries(names)) if (typeof tokens[key] === 'string' && tokens[key]) document.documentElement.style.setProperty(css, tokens[key]);
     }
-    function settings() { return { style:$('style').value, strength:Number($('strength').value) }; }
-    function saveSettings() { $('strength-value').textContent = settings().strength.toFixed(1); post('state', { state:settings() }); }
+    const effectKeys = Object.keys(DlssLightMaterial.DEFAULTS);
+    function settings() {
+      return { mode:$('mode').value, style:$('style').value, strength:Number($('strength').value),
+        ...Object.fromEntries(effectKeys.map((key) => [key, Number($(key).value)])) };
+    }
+    function saveSettings() {
+      const value = settings();
+      $('strength-value').textContent = value.strength.toFixed(1);
+      $('effect-controls').hidden = value.mode !== 'light-material';
+      for (const key of effectKeys) $(`${key}-value`).textContent = `${value[key]}%`;
+      post('state', { state:value });
+    }
+    $('mode').addEventListener('change', saveSettings);
     $('style').addEventListener('change', saveSettings);
     $('strength').addEventListener('input', saveSettings);
+    for (const key of effectKeys) $(key).addEventListener('input', saveSettings);
     function message(text) { $('status').textContent = text; }
     function update() { $('render').disabled = !token || !configured || busy; }
     async function check() {
@@ -113,9 +153,12 @@
       const { type, payload = {} } = event.data;
       if (type === 'init') {
         applyTheme(payload.theme);
+        if (['standard','light-material'].includes(payload.state?.mode)) $('mode').value = payload.state.mode;
         if (['natural','default','cinematic'].includes(payload.state?.style)) $('style').value = payload.state.style;
         if (Number.isFinite(Number(payload.state?.strength))) $('strength').value = String(Math.max(0, Math.min(2, Number(payload.state.strength))));
-        $('strength-value').textContent = settings().strength.toFixed(1);
+        const effect = DlssLightMaterial.settings(payload.state);
+        for (const key of effectKeys) $(key).value = String(effect[key]);
+        saveSettings();
         void check();
       }
       if (type === 'theme') applyTheme(payload.theme);
@@ -137,20 +180,45 @@
         message('图片已就绪'); update();
       } catch (error) { message(String(error.message || error)); }
     };
+    $('download').onclick = () => {
+      if (!lastOutput) return;
+      const link = document.createElement('a');
+      link.href = lastOutput.source;
+      link.download = lastOutput.name;
+      document.body.append(link);
+      link.click();
+      link.remove();
+    };
     $('render').onclick = async () => {
-      busy = true; update(); message('正在本机增强图片，请稍候…');
+      busy = true; lastOutput = null;
+      $('preview-grid').hidden = true;
+      $('download').hidden = true;
+      update(); message('正在本机增强图片，请稍候…');
       try {
-        const result = await request('render', { token, ...settings() });
+        const selected = settings();
+        const result = await request('render', { token, style:selected.style, strength:selected.strength });
         token = '';
         $('filename').textContent = '处理完成，可继续导入图片';
+        $('before').src = result.source;
+        $('before-figure').hidden = selected.mode !== 'light-material';
+        $('preview-grid').hidden = false;
         $('preview').src = result.source;
-        $('preview').hidden = false;
-        message(`已完成，结果保存到 HIOS 素材库：${result.name}`);
-        post('output', { output: { kind:'image', source:result.source, name:result.name, mime:'image/png' } });
+        $('after-label').textContent = selected.mode === 'light-material' ? '正在处理光影材质…' : '增强结果';
+        let final = { source:result.source, name:result.name, mime:'image/png' };
+        if (selected.mode === 'light-material') {
+          message('神经增强完成，正在处理阴影、光照与材质…');
+          final = await DlssLightMaterial.enhanceSource(result.source, selected);
+          $('preview').src = final.source;
+          $('after-label').textContent = '光影材质增强';
+          message('处理完成。基础图已保存到 HIOS 素材库；最终图片可在下方下载。');
+        } else message(`已完成，结果保存到 HIOS 素材库：${result.name}`);
+        lastOutput = final;
+        $('download').hidden = false;
+        post('output', { output: { kind:'image', source:final.source, name:final.name, mime:final.mime } });
       } catch (error) {
         token = '';
         $('filename').textContent = '请重新导入图片';
-        message(String(error.message || error));
+        message(`${String(error.message || error)}${$('preview-grid').hidden ? '' : '。基础增强图已保存，可切换基础模式重试。'}`);
       } finally { busy = false; update(); }
     };
     post('ready');

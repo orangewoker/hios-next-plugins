@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "dlss5-image",
   "name": "DLSS 5 图片增强",
-  "version": "0.1.2",
-  "description": "调用本机 Visual Enhancer CLI 增强图片，不包含第三方运行库。",
+  "version": "0.1.3",
+  "description": "调用本机 Visual Enhancer CLI 增强图片，并在插件内提供光影材质增强模式；不包含第三方运行库。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image",
   "permissions": ["canvas", "process"],
@@ -11,12 +11,12 @@
   "nodes": [{
     "id": "dlss5-image.enhance",
     "title": "DLSS 5 图片增强",
-    "description": "输入本地图片，输出增强后的图片。",
+    "description": "输入图片，输出基础增强或光影材质增强后的图片。",
     "rendererEntry": "runtime/index.html",
     "inputs": [{ "id": "image", "title": "输入图片", "type": "image", "required": true }],
     "outputs": [{ "id": "image", "title": "增强图片", "type": "image" }],
-    "defaultSize": { "width": 360, "height": 280 },
-    "defaultData": { "style": "natural", "strength": 1 }
+    "defaultSize": { "width": 380, "height": 390 },
+    "defaultData": { "mode": "standard", "style": "natural", "strength": 1, "shadows": 45, "lighting": 42, "texture": 38, "reflections": 32 }
   }],
   "contributes": { "apps": [{
     "id": "dlss5-image",
