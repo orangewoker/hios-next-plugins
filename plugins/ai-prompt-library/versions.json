@@ -3,6 +3,15 @@
   "pluginId": "ai-prompt-library",
   "versions": [
     {
+      "version": "0.1.2",
+      "ref": "ai-prompt-library-v0.1.2",
+      "releasedAt": "2026-10-07",
+      "notes": [
+        "增大画布节点文字与输入字号，提高说明、占位文字和状态的对比度。",
+        "修复密钥显示按钮换行与底部按钮遮挡内容，保持文字输入无高亮边框；无需升级 HIOS 主程序。"
+      ]
+    },
+    {
       "version": "0.1.1",
       "ref": "ai-prompt-library-v0.1.1",
       "releasedAt": "2026-09-21",
