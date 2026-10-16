@@ -3,6 +3,16 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.3.1",
+      "ref": "photocraft-v0.3.1",
+      "releasedAt": "2026-10-17",
+      "notes": [
+        "将导出格式、AI功能、路由、模型和范围下拉菜单改为插件内部绘制，避免画布缩放造成原生菜单错位。",
+        "菜单支持深浅主题、边界避让、键盘导航及 Escape 关闭。",
+        "编辑器指针按下前同步焦点，改善切换工具栏后首次点击响应。"
+      ]
+    },
+    {
       "version": "0.3.0",
       "ref": "photocraft-v0.3.0",
       "releasedAt": "2026-10-17",

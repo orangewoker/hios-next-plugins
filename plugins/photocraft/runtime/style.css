@@ -13,3 +13,17 @@
 body[data-theme="light"] .ai-toolbar{--ai-bg:#e5e5e5;--ai-control:#f0f0f0;--ai-hover:#f9f9f9;--ai-border:#b7b7b7;--ai-text:#333;--ai-muted:#666;border-color:#b8b8b8}body[data-theme="light"] .ai-toolbar :is(button,select){background:var(--ai-control);color:var(--ai-text);border-color:var(--ai-border)}
 @media(max-width:900px){.ai-toolbar-row{gap:5px}#aiMode{width:94px}#aiRoute{width:112px;flex-basis:112px}#aiModel{width:170px;flex:1 1 120px}#aiScope{width:94px}.ai-divider{margin:0}.ai-toolbar{padding-inline:6px}.ai-toolbar :is(button,select,input,summary){font-size:11px;padding-inline:6px}.ai-prompt{flex-basis:130px;width:130px}}
 @media(max-width:650px){.ai-toolbar-row{overflow-x:auto;padding-bottom:2px}.ai-toolbar-row>select{flex-shrink:0}#aiModel{flex:0 0 145px}.ai-status-line #status{display:none}.ai-more .ai-popover{position:fixed;right:10px;bottom:70px}}
+/* DOM menus stay in iframe coordinates, including zoomed canvas nodes. */
+select[hidden]{display:none!important}
+.select-trigger{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.select-trigger::after{content:'⌄';margin-left:auto;flex-shrink:0}
+.select-trigger[data-select="format"]{width:92px}
+.ai-toolbar .select-trigger{flex-shrink:1;text-align:left}
+.select-trigger[data-select="aiMode"]{width:110px;flex:0 0 110px}.select-trigger[data-select="aiRoute"]{width:140px;flex:0 1 140px}.select-trigger[data-select="aiModel"]{width:215px;flex:0 1 260px}.select-trigger[data-select="aiScope"]{width:108px;flex:0 0 108px}
+.select-menu{position:fixed;z-index:1000;overflow:auto;padding:4px;background:#4b4b4b;color:#dedede;border:1px solid #686868;border-radius:3px;box-shadow:0 4px 16px #0005;color-scheme:dark}
+.select-menu button{display:block;width:100%;height:auto;min-height:28px;text-align:left;border:0;border-radius:2px;background:transparent;color:inherit;font:12px Inter,"Microsoft YaHei",sans-serif;white-space:normal;overflow-wrap:anywhere;padding:6px 8px}
+.select-menu button:hover,.select-menu button:focus-visible,.select-menu button[aria-selected="true"]{background:#666;outline:none}
+body[data-theme="light"] .select-menu{background:#f0f0f0;color:#333;border-color:#b7b7b7;color-scheme:light}body[data-theme="light"] .select-menu button:hover,body[data-theme="light"] .select-menu button:focus-visible,body[data-theme="light"] .select-menu button[aria-selected="true"]{background:#d5d5d5}
+body[data-theme="light"] .bar{background:#e5e5e5;color:#333;border-color:#b7b7b7}body[data-theme="light"] .bar button{background:#f0f0f0;color:#333;border-color:#b7b7b7}
+@media(max-width:900px){.select-trigger[data-select="aiMode"]{width:94px;flex-basis:94px}.select-trigger[data-select="aiRoute"]{width:112px;flex-basis:112px}.select-trigger[data-select="aiModel"]{width:170px;flex:1 1 120px}.select-trigger[data-select="aiScope"]{width:94px;flex-basis:94px}}
+@media(max-width:650px){.ai-toolbar .select-trigger{flex-shrink:0}.select-trigger[data-select="aiModel"]{flex:0 0 145px}}

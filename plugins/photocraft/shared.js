@@ -1,4 +1,12 @@
 // The same real WASM editor runs in both hosts. Only the outer protocol differs.
+import { installSelectMenus } from './select-menu.js';
+installSelectMenus();
+// eframe runs a frame synchronously in pointerdown, before the browser's
+// default focus action. Focus first so the initial click after toolbar/iframe
+// interaction is not processed as an unfocused frame (notably Home).
+document.getElementById('photocraft_canvas').addEventListener('pointerdown', event => {
+  if (event.button === 0) event.currentTarget.focus({ preventScroll: true });
+}, { capture: true });
 const NODE = 'hios-plugin-node/v1', APP = 'hios-plugin-app/v1';
 const isNode = document.body.dataset.surface === 'node';
 const protocol = isNode ? NODE : APP;
