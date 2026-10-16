@@ -18,7 +18,7 @@ let nodeId = '', pluginId = 'photocraft', origin = '*', state = {}, initialized 
 let bindings, runtimeReady = false, doc = null, lastDocKey = '', savedDocKey = '';
 let starting, initTask = Promise.resolve(), saving = null, saveTimer = 0, currentTheme = '';
 const requests = new Map(), hostRequests = new Map(), seenInputs = new Set();
-let aiInitialized = false, aiChoices = [], aiCapture = null, aiTimer = 0, aiPreviewUrl = '', aiBusy = false;
+let aiProtocol = '', aiInitialized = false, aiChoices = [], aiCapture = null, aiTimer = 0, aiPreviewUrl = '', aiBusy = false;
 const status = (message, error = false) => { $('status').textContent = message; $('status').classList.toggle('error', error); };
 const post = (type, payload = {}) => parent.postMessage({ protocol, pluginId, nodeId, type, payload }, origin);
 const remember = () => post('state', { state });
@@ -284,16 +284,16 @@ function aiRoutes() {
   aiOptions('aiRoute',routes,state.aiSettings?.routeId); aiModels();
   $('aiLayerOptions').hidden=aiMode()!=='psd';
   $('aiPrompt').hidden=aiMode()==='psd';
-  $('aiHint').textContent=aiMode()==='psd' ? '分层可能超过 5 分钟，最多等待 30 分钟。需路由提供 PSD v2 文件生成接口。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
+  $('aiHint').textContent=aiMode()==='psd' ? '分层可能超过 5 分钟，最多等待 30 分钟。本地组装 PSD；请在更多中选择图片编辑模型。每层可能产生一次图片调用，文字为像素层。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
   $('aiStart').textContent=aiMode()==='psd' ? '分层' : '生成';
   if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
 }
 async function aiCatalog() {
-  try { const catalog=await aiHost({action:'catalog'}); aiChoices=catalog.choices || []; aiRoutes(); }
+  try { const catalog=await aiHost({action:'catalog'}); aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); aiImageRoutes(); }
   catch(e) { aiMessage(e.message,true); }
 }
 function aiSettings() {
-  state.aiSettings={mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
+  state.aiSettings={imageRouteId:$('aiImageRoute').value,imageModel:$('aiImageModel').value,mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
 }
 async function captureAI() {
   await initTask; await saveDocument();
@@ -319,11 +319,20 @@ async function captureAI() {
 function aiRunning(running) {
   $('aiStart').disabled=running; $('aiCancel').disabled=!running; $('aiCancel').hidden=!running; $('aiProgress').hidden=!running;
   $('aiStart').textContent=aiMode()==='psd' ? (running?'分层中…':'分层') : (running?'生成中…':'生成');
-  for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt']) $(id).disabled=running;
+  for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt','aiImageRoute','aiImageModel']) $(id).disabled=running;
 }
 async function applyAI(asNewDocument = false) {
   const job=state.aiJob; if (!job?.output) return;
-  const file=await readSource(job.output);
+  let file=await readSource(job.output);
+  if (job.output.name?.endsWith('.layers.json')) {
+    aiMessage('正在本地组装 PSD…');
+    const {composeLayers}=await import('./compose-layers.js');
+    const bytes=await composeLayers(file.bytes,job.capture,readSource);
+    const name=job.output.name.replace('.layers.json','.psd');
+    const stored=await storeFile({bytes,name,format:'psd'},crypto.randomUUID());
+    job.output={url:stored.url,name}; remember();
+    file={bytes};
+  }
   if (asNewDocument || !job.capture) await request('open',job.output.name,file.bytes);
   else {
     const c=job.capture; const mask=c.mask ? (await readSource({url:c.mask})).bytes : new Uint8Array();
@@ -346,7 +355,8 @@ async function watchAI() {
     if (result.status==='running') { aiRunning(true); aiTimer=setTimeout(()=>void watchAI(),4000); return; }
     aiRunning(false); job.status=result.status;
     if (result.status==='success') {
-      job.output=result.output; remember(); $('aiResultActions').hidden=false; $('aiApply').disabled=!!job.applied;
+      if (!job.output?.name?.endsWith('.psd')) job.output=result.output;
+      remember(); $('aiResultActions').hidden=false; $('aiApply').disabled=!!job.applied;
       if (!job.applied) {
         try { await applyAI(); } catch(e) { aiMessage(`结果已保留，自动导入未完成：${e.message}。可切回原文档重试，或作为新文档打开。`,true); }
       }
@@ -365,12 +375,14 @@ async function startAI() {
   try {
     aiSettings();
     if (!$('aiRoute').value || !$('aiModel').value) throw new Error('请先配置并选择对应 AI 路由和模型');
+    if(aiMode()==='psd' && aiProtocol!=='local-layers/v1') throw new Error('请先更新 HIOS 至支持本地分层的版本');
+    if(aiMode()==='psd' && (!$('aiImageRoute').value || !$('aiImageModel').value)) throw new Error('请在更多中选择分层图片路由和模型');
     const capture=await captureAI(), kind=aiMode()==='psd' ? 'psd' : 'image';
     const id=crypto.randomUUID();
     submittedId=id;
     state.aiJob={id,kind,capture,status:'submitting'}; remember(); $('aiResultActions').hidden=true;
     aiMessage('正在提交…');
-    await aiHost({action:'start',clientId:id,kind,mode:aiMode(),routeId:$('aiRoute').value,model:$('aiModel').value,prompt:aiMode()==='psd'?'':$('aiPrompt').value,layers:Number($('aiLayers').value),image:capture?.image,size:'1024x1024'});
+    await aiHost({action:'start',clientId:id,kind,pipeline:kind==='psd'?'local-layers/v1':undefined,imageRouteId:$('aiImageRoute').value,imageModel:$('aiImageModel').value,mode:aiMode(),routeId:$('aiRoute').value,model:$('aiModel').value,prompt:aiMode()==='psd'?'':$('aiPrompt').value,layers:Number($('aiLayers').value),image:capture?.image,size:'1024x1024'});
     void watchAI();
   } catch(e) { aiRunning(false); aiMessage(e.message,true); if (submittedId) aiTimer=setTimeout(()=>void watchAI(),1000); }
   finally { aiBusy=false; }
@@ -384,6 +396,10 @@ async function initializeAI() {
     void watchAI();
   }
 }
+function aiImageModels() { aiOptions('aiImageModel',aiChoices.filter(c=>c.routeId===$('aiImageRoute').value && c.modes.includes('edit')).map(c=>[c.model,c.model]),state.aiSettings?.imageModel); }
+function aiImageRoutes() { aiOptions('aiImageRoute',[...new Map(aiChoices.filter(c=>c.modes.includes('edit')).map(c=>[c.routeId,[c.routeId,c.routeName]])).values()],state.aiSettings?.imageRouteId); aiImageModels(); }
+$('aiImageRoute').onchange=()=>{aiImageModels();aiSettings();};
+$('aiImageModel').onchange=aiSettings;
 $('aiRefresh').onclick=()=>void aiCatalog();
 $('aiRoute').onchange=()=>{aiModels();aiSettings();};
 $('aiModel').onchange=aiSettings;

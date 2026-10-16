@@ -173,3 +173,5 @@ parent.postMessage({protocol: 'hios-plugin-node/v1', pluginId, nodeId, type: 'ai
 - `cancel`：`jobId`。中止宿主 HTTP/轮询，禁止晚到结果成为可导入结果；PSD 上游没有取消端点时可能继续生成。
 
 任务按账户/插件隔离，每插件同时最多2个，最长30分钟。状态仅存任务元数据和素材引用，不保存 API Key、参考图 base64 或提示词。应将任务 ID 和范围元数据保存在插件 state，再每4秒查询，重载时不重新 start。图片生成复用宿主完整协议中心路由；PSD 使用单独的可编辑文件服务 v2（详见 PhotoCraft 的 backend 文档），只下载同源 PSD，不跟随带凭据重定向。
+
+PhotoCraft 0.4.0 分层使用 `pipeline:local-layers/v1`，由通用视觉和图片编辑模型生成素材清单，在插件本地组装 PSD；要求 HIOS Next 3.0.1+。详见 plugins/photocraft/README.md；不需要部署 PSD 专用后端。
