@@ -43,7 +43,7 @@ try {
     ['let inbox: Inbox = Arc::default();', 'crate::hios::attach(&cc.egui_ctx);\n                    let inbox: Inbox = Arc::default();'],
     ['let dropped = ctx.input_mut', 'crate::hios::pump(&mut self.app, ctx);\n        let dropped = ctx.input_mut'],
   ]);
-  await patch(join(web, 'Cargo.toml'), [['[dependencies]', '[dependencies]\nserde_json = { workspace = true }']]);
+  await patch(join(web, 'Cargo.toml'), [['[dependencies]', '[dependencies]\nserde_json = { workspace = true }\nphotocraft-compose = { workspace = true }\nphotocraft-raster = { workspace = true }\nphotocraft-color = { workspace = true }\nphotocraft-geom = { workspace = true }\nphotocraft-algo = { workspace = true }']]);
   // rustc still uses the upstream size-optimized profile, without Binaryen's slow convergence pass.
   await patch(join(web, 'index.html'), [['data-wasm-opt="z" data-wasm-opt-params="--converge"', 'data-wasm-opt="0"']]);
   await run('trunk', ['build', '--release', '--filehash', 'false', '--dist', dist], web);
@@ -52,7 +52,7 @@ try {
   await rm(staged, { recursive: true, force: true });
   await cp(dist, staged, { recursive: true });
   const sha256 = createHash('sha256').update(await readFile(join(staged, 'photocraft-web_bg.wasm'))).digest('hex');
-  await writeFile(join(staged, 'build.json'), JSON.stringify({ upstream: actualHead, adapter: 2, sha256, builtAt: new Date().toISOString() }, null, 2));
+  await writeFile(join(staged, 'build.json'), JSON.stringify({ upstream: actualHead, adapter: 3, sha256, builtAt: new Date().toISOString() }, null, 2));
   await rm(backup, { recursive: true, force: true });
   if (existsSync(target)) await rename(target, backup);
   try { await rename(staged, target); } catch (e) { if (existsSync(backup)) await rename(backup, target); throw e; }

@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "id": "photocraft",
   "name": "PhotoCraft",
-  "version": "0.2.0",
-  "description": "开源的 Photoshop 类图像编辑器，支持图层、蒙版、滤镜和 PSD 文件。",
+  "version": "0.3.0",
+  "description": "开源图像编辑器，支持 AI 局部改图、图生图、文生图和 GPT 图片分层为 PSD。",
   "author": "PhotoCraft / HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft",
-  "permissions": ["filesystem", "canvas"],
+  "permissions": ["filesystem", "canvas", "agent"],
   "capabilities": [{ "id": "photocraft.edit", "title": "PhotoCraft 图像编辑", "description": "在 HIOS 应用或画布节点中使用 PhotoCraft 编辑图像。" }],
   "contributes": {
     "apps": [{ "id": "photocraft", "title": "PhotoCraft", "description": "开源图像编辑器，支持图层、蒙版、滤镜和 PSD。", "entry": "app/index.html", "icon": "assets/icon.svg", "category": "design" }]

@@ -10,6 +10,7 @@ let nodeId = '', pluginId = 'photocraft', origin = '*', state = {}, initialized 
 let bindings, runtimeReady = false, doc = null, lastDocKey = '', savedDocKey = '';
 let starting, initTask = Promise.resolve(), saving = null, saveTimer = 0, currentTheme = '';
 const requests = new Map(), hostRequests = new Map(), seenInputs = new Set();
+let aiInitialized = false, aiChoices = [], aiCapture = null, aiTimer = 0, aiPreviewUrl = '', aiBusy = false;
 const status = (message, error = false) => { $('status').textContent = message; $('status').classList.toggle('error', error); };
 const post = (type, payload = {}) => parent.postMessage({ protocol, pluginId, nodeId, type, payload }, origin);
 const remember = () => post('state', { state });
@@ -157,6 +158,7 @@ async function initialize(payload) {
   }
   await theme(payload.theme);
   await syncInputs(payload);
+  if (!aiInitialized) { aiInitialized = true; void initializeAI(); }
   post('loaded', { ready: true });
 }
 async function storeFile(file, key = state.documentKey) {
@@ -215,7 +217,7 @@ addEventListener('message', event => {
     initTask = initTask.then(() => syncInputs(payload));
     void output('png', true).catch(e => { fail(e); post('error', { message: e.message || String(e) }); });
   } else if (message.type === 'theme') { void theme(payload.theme).catch(fail); }
-  else if (message.type === 'file-store-result') {
+  else if ((message.type === 'file-store-result' || message.type === 'ai-result')) {
     const pending = hostRequests.get(payload.requestId); if (!pending) return;
     hostRequests.delete(payload.requestId); clearTimeout(pending.timer);
     if (payload.error) pending.reject(new Error(payload.error)); else pending.resolve(payload.result);
@@ -243,7 +245,149 @@ $('reload').onclick = async () => {
 };
 $('webgl').onclick = () => { const url = new URL(location.href); url.searchParams.set('webgl', '1'); location.href = url.href; };
 addEventListener('pagehide', () => {
-  clearInterval(ticker); clearTimeout(saveTimer);
+  clearInterval(ticker); clearTimeout(saveTimer); clearTimeout(aiTimer);
   for (const pending of [...requests.values(), ...hostRequests.values()]) clearTimeout(pending.timer);
 });
-post('ready', { version: '0.2.0' });
+post('ready', { version: '0.3.0' });
+
+// All model access is mediated by HIOS. No route credentials enter this plugin.
+function aiHost(payload) {
+  return new Promise((resolve, reject) => {
+    const requestId = crypto.randomUUID();
+    const timer = setTimeout(() => { hostRequests.delete(requestId); reject(new Error('AI 宿主未响应，请更新 HIOS 到支持插件 AI 的版本')); }, 30000);
+    hostRequests.set(requestId, {resolve,reject,timer}); post('ai-request', {requestId,...payload});
+  });
+}
+// Shared by optional editor panels; one reply consumer prevents lost WASM replies.
+export { request as editorRequest };
+const aiMessage = (text, error = false) => { $('aiStatus').textContent = text; $('aiStatus').classList.toggle('error',error); };
+function aiOptions(id, items, selected) {
+  const select = $(id); select.replaceChildren();
+  for (const [value,text] of items) { const option=document.createElement('option'); option.value=value; option.textContent=text; select.append(option); }
+  if (items.some(([v]) => v === selected)) select.value=selected;
+}
+function aiMode() { return $('aiMode').value === 'psd' ? 'psd' : $('aiMode').value === 'generate' ? 'generate' : 'edit'; }
+function aiModels() {
+  aiOptions('aiModel',aiChoices.filter(c=>c.routeId===$('aiRoute').value && c.modes.includes(aiMode())).map(c=>[c.model,c.model]), state.aiSettings?.model);
+}
+function aiRoutes() {
+  const choices=aiChoices.filter(c=>c.modes.includes(aiMode()));
+  const routes=[...new Map(choices.map(c=>[c.routeId,[c.routeId,c.routeName]])).values()];
+  aiOptions('aiRoute',routes,state.aiSettings?.routeId); aiModels();
+  $('aiLayerOptions').hidden=aiMode()!=='psd';
+  $('aiPrompt').hidden=aiMode()==='psd';
+  $('aiHint').textContent=aiMode()==='psd' ? '分层可能超过 5 分钟，最多等待 30 分钟。需路由提供 PSD v2 文件生成接口。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
+  $('aiStart').textContent=aiMode()==='psd' ? '分层' : '生成';
+  if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
+}
+async function aiCatalog() {
+  try { const catalog=await aiHost({action:'catalog'}); aiChoices=catalog.choices || []; aiRoutes(); }
+  catch(e) { aiMessage(e.message,true); }
+}
+function aiSettings() {
+  state.aiSettings={mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
+}
+async function captureAI() {
+  await initTask; await saveDocument();
+  if (!doc && aiMode()==='generate') { aiCapture=null; return null; }
+  const captured=await request('ai-context',JSON.stringify({token:crypto.randomUUID(),scope:$('aiScope').value}));
+  const {bytes,...context}=captured;
+  try {
+    const stored=await storeFile({bytes,name:'AI范围.png',format:'png'},crypto.randomUUID());
+    let mask;
+    if (context.hasMask) {
+      const value=await request('ai-mask',JSON.stringify({token:context.token}));
+      mask=await storeFile({bytes:value.bytes,name:'AI选区.png',format:'png'},crypto.randomUUID());
+    }
+    if (aiCapture) void request('ai-release',JSON.stringify({token:aiCapture.token})).catch(()=>{});
+    aiCapture={...context,image:stored.url,mask:mask?.url};
+    if (aiPreviewUrl) URL.revokeObjectURL(aiPreviewUrl);
+    aiPreviewUrl=URL.createObjectURL(new Blob([bytes],{type:'image/png'}));
+    $('aiPreview').src=aiPreviewUrl; $('aiPreview').hidden=false;
+    $('aiBounds').textContent=`${context.bounds[2]} × ${context.bounds[3]} · ${context.scope === 'selection' ? '选区' : context.scope === 'layer' ? '图层' : '画布'}`;
+    return aiCapture;
+  } catch(e) { void request('ai-release',JSON.stringify({token:context.token})).catch(()=>{}); throw e; }
+}
+function aiRunning(running) {
+  $('aiStart').disabled=running; $('aiCancel').disabled=!running; $('aiCancel').hidden=!running; $('aiProgress').hidden=!running;
+  $('aiStart').textContent=aiMode()==='psd' ? (running?'分层中…':'分层') : (running?'生成中…':'生成');
+  for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt']) $(id).disabled=running;
+}
+async function applyAI(asNewDocument = false) {
+  const job=state.aiJob; if (!job?.output) return;
+  const file=await readSource(job.output);
+  if (asNewDocument || !job.capture) await request('open',job.output.name,file.bytes);
+  else {
+    const c=job.capture; const mask=c.mask ? (await readSource({url:c.mask})).bytes : new Uint8Array();
+    await request('ai-restore',JSON.stringify(c),mask);
+    const result=await request(job.kind==='psd' ? 'ai-import-psd' : 'ai-apply-image',JSON.stringify({token:c.token}),file.bytes);
+    if (result.warnings?.length) aiMessage(`已导入。PSD 兼容提示：${result.warnings.join('；')}`);
+  }
+  // Persist the edited document BEFORE recording completion; don't lose layers on reload.
+  poll(); await saveDocument(); job.applied=true; remember();
+  if (job.capture) void request('ai-release',JSON.stringify({token:job.capture.token})).catch(()=>{});
+  $('aiApply').disabled=true; aiMessage(job.kind==='psd' ? 'PSD 已解析为独立图层，原图层保留。可在图层面板检查或撤销。' : 'AI 结果已加入新图层，原图层保留。');
+}
+async function watchAI() {
+  clearTimeout(aiTimer);
+  const job=state.aiJob; if (!job?.id) return;
+  try {
+    const result=await aiHost({action:'status',jobId:job.id});
+    if (state.aiJob?.id !== job.id || job.cancelled) return;
+    aiMessage(`${result.stage} · 已等待 ${Math.floor(result.elapsedSeconds/60)}分${result.elapsedSeconds%60}秒${result.error ? ` · ${result.error}` : ''}`,result.status==='error');
+    if (result.status==='running') { aiRunning(true); aiTimer=setTimeout(()=>void watchAI(),4000); return; }
+    aiRunning(false); job.status=result.status;
+    if (result.status==='success') {
+      job.output=result.output; remember(); $('aiResultActions').hidden=false; $('aiApply').disabled=!!job.applied;
+      if (!job.applied) {
+        try { await applyAI(); } catch(e) { aiMessage(`结果已保留，自动导入未完成：${e.message}。可切回原文档重试，或作为新文档打开。`,true); }
+      }
+    } else remember();
+  } catch(e) {
+    if (/任务不存在|不属于|未启用|agent 权限/.test(e.message)) {
+      aiRunning(false); aiMessage(`无法恢复该任务：${e.message}。没有重新提交。已保存结果仍可下载或打开。`,true); return;
+    }
+    aiMessage(`查询中断：${e.message}。稍后继续查询，不会重新提交。`,true);
+    aiTimer=setTimeout(()=>void watchAI(),10000);
+  }
+}
+async function startAI() {
+  if (aiBusy) return; aiBusy=true; aiRunning(true);
+  let submittedId='';
+  try {
+    aiSettings();
+    if (!$('aiRoute').value || !$('aiModel').value) throw new Error('请先配置并选择对应 AI 路由和模型');
+    const capture=await captureAI(), kind=aiMode()==='psd' ? 'psd' : 'image';
+    const id=crypto.randomUUID();
+    submittedId=id;
+    state.aiJob={id,kind,capture,status:'submitting'}; remember(); $('aiResultActions').hidden=true;
+    aiMessage('正在提交…');
+    await aiHost({action:'start',clientId:id,kind,mode:aiMode(),routeId:$('aiRoute').value,model:$('aiModel').value,prompt:aiMode()==='psd'?'':$('aiPrompt').value,layers:Number($('aiLayers').value),image:capture?.image,size:'1024x1024'});
+    void watchAI();
+  } catch(e) { aiRunning(false); aiMessage(e.message,true); if (submittedId) aiTimer=setTimeout(()=>void watchAI(),1000); }
+  finally { aiBusy=false; }
+}
+async function initializeAI() {
+  const s=state.aiSettings;
+  if (s) { $('aiMode').value=s.mode||'psd'; $('aiScope').value=s.scope||'canvas'; $('aiLayers').value=s.layers||3; $('aiPrompt').value=s.prompt||''; }
+  await aiCatalog();
+  if (state.aiJob?.id) {
+    if (state.aiJob.output) { $('aiResultActions').hidden=false; $('aiApply').disabled=!!state.aiJob.applied; }
+    void watchAI();
+  }
+}
+$('aiRefresh').onclick=()=>void aiCatalog();
+$('aiRoute').onchange=()=>{aiModels();aiSettings();};
+$('aiModel').onchange=aiSettings;
+$('aiMode').onchange=()=>{ if ($('aiMode').value==='edit') $('aiScope').value='selection'; else $('aiScope').value='canvas'; aiRoutes(); aiSettings(); };
+$('aiScope').onchange=aiSettings;
+$('aiCapture').onclick=()=>void captureAI().catch(e=>aiMessage(e.message,true));
+$('aiStart').onclick=()=>void startAI();
+$('aiCancel').onclick=async()=>{
+  const job=state.aiJob; if (!job) return;
+  try { const result=await aiHost({action:'cancel',jobId:job.id}); job.cancelled=true; job.status='cancelled'; remember(); clearTimeout(aiTimer); aiRunning(false); aiMessage(result.stage); }
+  catch(e) {aiMessage(e.message,true);}
+};
+$('aiApply').onclick=()=>void applyAI().catch(e=>aiMessage(e.message,true));
+$('aiOpenResult').onclick=()=>void applyAI(true).catch(e=>aiMessage(e.message,true));
+$('aiDownload').onclick=async()=>{try {const f=await readSource(state.aiJob.output);download(f.bytes,state.aiJob.output.name,fileMime(state.aiJob.kind==='psd'?'psd':'png'));}catch(e){aiMessage(e.message,true);}};

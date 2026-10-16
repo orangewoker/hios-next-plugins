@@ -1,6 +1,6 @@
 {
   "upstream": "2a952f164c0b4cf936b1c6497db10dd095341c00",
-  "adapter": 2,
-  "sha256": "c6b7c16ec251ea68929152c0c856d96162144868a173d5de34f2583e65bd2577",
-  "builtAt": "2026-10-16T14:16:40.780Z"
+  "adapter": 3,
+  "sha256": "34d5fc35e13721f1a0158ecfd08f54b759157ec7b13c00e87ca1beac56b1f83b",
+  "builtAt": "2026-10-16T15:16:59.347Z"
 }

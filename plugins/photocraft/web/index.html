@@ -28,7 +28,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
     #photocraft_stalled { color: #8c8c8c; visibility: hidden; animation: photocraft-stalled 0s 20s forwards; }
     @keyframes photocraft-stalled { to { visibility: visible; } }
   </style>
-<link rel="modulepreload" href="./photocraft-web.js" crossorigin="anonymous" integrity="sha384-50D4y+pS+ZsKJoZ/0vqBjQ0OgBI/gDJ1BM2LmnI//wOjpc5EsGwCEt2HXt3WRWSX"><link rel="preload" href="./photocraft-web_bg.wasm" crossorigin="anonymous" integrity="sha384-Cb2PKHuOzu+QSjz27vts+wB62SH8JkEXzCr+7uJb8dWt5Wrbilple7uXs4jDz116" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="./photocraft-web.js" crossorigin="anonymous" integrity="sha384-IvPmYa7emJBX8hx+hfpI/iyAhWGiI6zq5Vk9U8IO5A4DSkKKY/KaL90PZGAp0Tqs"><link rel="preload" href="./photocraft-web_bg.wasm" crossorigin="anonymous" integrity="sha384-jnkGqRsdBoKyg7O6XUJ35yCRrz+dY63M+jjy6qVnkRjLcZ1ZxqLOghHjLZjP9gzl" as="fetch" type="application/wasm"></head>
 <body>
   <canvas id="photocraft_canvas"></canvas>
   <div id="photocraft_loading">

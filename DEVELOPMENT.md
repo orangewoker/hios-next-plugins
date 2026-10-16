@@ -154,3 +154,22 @@ node scripts/validate-plugins.mjs
 ## 兼容性
 
 仓库中的第三方插件均自行携带 `runtime` 界面与业务逻辑，不依赖主程序内的插件 ID 专用适配器。主程序只提供版本化消息协议、画布端口、目录选择和通用浏览器等稳定接口。插件新增页面、解析规则或交互时只需发布新的插件版本；仅在需要一种尚未开放的宿主级能力时，才需要升级 HIOS Next。
+
+## 通用 AI 长任务（应用与节点）
+
+声明 `agent` 权限的已安装、已启用插件可发送 `ai-request`。宿主在 source/origin/pluginId 校验后再由主进程复核真实安装权限；模型凭据不会进入插件。
+
+```js
+parent.postMessage({protocol: 'hios-plugin-node/v1', pluginId, nodeId, type: 'ai-request', payload: {
+  requestId: crypto.randomUUID(), action: 'catalog'
+}}, hostOrigin);
+```
+
+应用使用 `hios-plugin-app/v1`。应答为 `ai-result`，payload 含 `requestId`、`result` 或 `error`。
+
+- `catalog`：返回 `choices:[{routeId,routeName,model,modes:['generate','edit','psd']}]`，只列出 AI 路由已启用的能力绑定，不暴露密钥。
+- `start`：`clientId` UUID（相同 ID 幂等）、`kind:'image'|'psd'`、`mode:'generate'|'edit'`、`routeId`、`model`、`prompt`、`image`（编辑/分层需要本地 hios-asset 图片 URL）、`layers`（PSD 默认3，2–30）、`size`。立即返回任务 ID 和状态，不等待生成完成。
+- `status`：`jobId`，返回 `status:'running'|'success'|'error'|'cancelled'`、`stage`、`elapsedSeconds`、成功时 `output:{url,name}`。
+- `cancel`：`jobId`。中止宿主 HTTP/轮询，禁止晚到结果成为可导入结果；PSD 上游没有取消端点时可能继续生成。
+
+任务按账户/插件隔离，每插件同时最多2个，最长30分钟。状态仅存任务元数据和素材引用，不保存 API Key、参考图 base64 或提示词。应将任务 ID 和范围元数据保存在插件 state，再每4秒查询，重载时不重新 start。图片生成复用宿主完整协议中心路由；PSD 使用单独的可编辑文件服务 v2（详见 PhotoCraft 的 backend 文档），只下载同源 PSD，不跟随带凭据重定向。

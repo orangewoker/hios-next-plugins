@@ -3,6 +3,18 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.3.0",
+      "ref": "photocraft-v0.3.0",
+      "releasedAt": "2026-10-17",
+      "notes": [
+        "增加与编辑器主体一致的底部单行 AI 工具栏：从 HIOS AI 路由选择图片模型，支持局部改图、图生图、文生图。",
+        "范围支持选区、当前图层、整个画布；结果新增图层，保留非矩形/羽化选区及原坐标。",
+        "GPT 图片分层：层数可选，默认 3 层背景/文字/主体，仅获取 PSD 并解析为独立图层。",
+        "长任务后台运行，最多等待 30 分钟，支持取消、重载恢复和客户端幂等；原图层保留。",
+        "需要支持 ai-request 的新版 HIOS；PSD 路由需部署 backend/ 下的 chatgpt2api-h v2 兼容补丁。"
+      ]
+    },
+    {
       "version": "0.2.0",
       "ref": "photocraft-v0.2.0",
       "releasedAt": "2026-10-16",

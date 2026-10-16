@@ -7,7 +7,7 @@ export function checkPhotoCraftRuntime() {
     const root = new URL('../plugins/photocraft/', import.meta.url);
     const bytes = readFileSync(new URL('web/photocraft-web_bg.wasm', root));
     const metadata = JSON.parse(readFileSync(new URL('web/build.json', root), 'utf8'));
-    if (metadata.upstream !== '2a952f164c0b4cf936b1c6497db10dd095341c00' || metadata.adapter !== 2
+    if (metadata.upstream !== '2a952f164c0b4cf936b1c6497db10dd095341c00' || metadata.adapter !== 3
       || metadata.sha256 !== createHash('sha256').update(bytes).digest('hex')) throw Error('构建版本或 WASM SHA-256 不匹配');
     const module = new WebAssembly.Module(bytes);
     const exports = new Set(WebAssembly.Module.exports(module).map(item => item.name));

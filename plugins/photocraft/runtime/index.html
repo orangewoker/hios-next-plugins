@@ -7,6 +7,22 @@
 <button id="export" class="primary" disabled>输出到画布</button><button id="reload" title="保存后重新加载">↻</button><button id="expand" title="全屏编辑 / 退出全屏" aria-label="全屏编辑">⛶</button></div></header>
 <main class="stage" data-no-node-drag><canvas id="photocraft_canvas" tabindex="0"></canvas>
 <section id="photocraft_loading" class="loading"><img src="assets/icon.svg" alt=""><h1 id="loadingMessage">正在启动 PhotoCraft…</h1><p id="loadingDetail">首次载入约 30 MB 的 WebAssembly，请稍候。</p><button id="webgl">使用 WebGL 模式重试</button></section></main>
-<footer><span id="status" role="status">等待 HIOS 初始化…</span><span id="document">无文档</span></footer>
+<section id="aiPanel" class="ai-toolbar" aria-label="AI 工具栏" data-no-node-drag>
+<div class="ai-toolbar-row" role="toolbar" aria-label="AI 图像工具">
+<select id="aiMode" aria-label="AI 功能" title="AI 功能"><option value="psd">一键分层</option><option value="edit">局部改图</option><option value="variation">图生图</option><option value="generate">文生图</option></select>
+<span class="ai-divider" aria-hidden="true"></span>
+<select id="aiRoute" aria-label="AI 路由" title="AI 路由"><option value="">选择路由</option></select>
+<select id="aiModel" aria-label="AI 模型" title="AI 模型"><option value="">选择模型</option></select>
+<span class="ai-divider" aria-hidden="true"></span>
+<select id="aiScope" aria-label="作用范围" title="作用范围"><option value="canvas">整个画布</option><option value="selection">选区</option><option value="layer">当前图层</option></select>
+<label id="aiLayerOptions" class="ai-layer-count" title="目标层数，默认背景、文字、主体"><input id="aiLayers" aria-label="分层数量" type="number" min="2" max="30" value="3"><span>层</span></label>
+<input id="aiPrompt" class="ai-prompt" aria-label="提示词" maxlength="12000" placeholder="描述要生成或修改的内容" hidden>
+<button id="aiStart">分层</button><button id="aiCancel" hidden disabled>取消</button>
+<details class="ai-more"><summary title="刷新模型、范围预览">更多</summary><div class="ai-popover"><button id="aiRefresh">刷新路由模型</button><button id="aiCapture">预览当前范围</button><span id="aiBounds">尚未捕获</span><img id="aiPreview" hidden alt="发送给模型的范围预览"><small id="aiHint">默认 3 层：背景、文字、主体；仅返回 PSD。</small></div></details>
+<details id="aiResultActions" class="ai-more" hidden><summary>结果</summary><div class="ai-popover"><button id="aiApply">导入原范围</button><button id="aiOpenResult">作为新文档打开</button><button id="aiDownload">下载结果</button></div></details>
+</div>
+<footer class="ai-status-line"><span id="aiStatus" role="status">正在读取 AI 路由…</span><span id="status" role="status">等待 HIOS 初始化…</span><span id="document">无文档</span></footer>
+<progress id="aiProgress" hidden aria-label="AI 任务进行中"></progress>
+</section>
 <input id="fileInput" type="file" accept=".png,.jpg,.jpeg,.webp,.psd,.psb,.pcraft,.tif,.tiff,.ora,.kra,.svg" multiple hidden>
 <script type="module" src="shared.js"></script></body></html>

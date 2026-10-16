@@ -10,7 +10,7 @@
 https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft
 ```
 
-安装后才会在应用列表与画布节点菜单出现。可在插件管理停用、启用、检查更新或卸载。约 41 MB 的 WASM 和字体只保存在插件安装目录，不增加 HIOS 安装包体积。需要包含 `file-store` 二进制文件协议的 HIOS Next 主程序更新；旧版宿主若不支持该协议，无法保存文档或完成画布输出。
+安装后才会在应用列表与画布节点菜单出现。可在插件管理停用、启用、检查更新或卸载。约 41 MB 的 WASM 和字体只保存在插件安装目录，不增加 HIOS 安装包体积。需要包含 `file-store` 和 `ai-request` 协议的 HIOS Next 主程序更新；旧版宿主若不支持该协议，无法保存文档或完成画布输出。
 
 ## 使用
 
@@ -20,6 +20,23 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft
 - **保存**：停止编辑约 1.8 秒后自动将当前文档保存成 HIOS 磁盘素材中的 `.pcraft`，保留图层。顶部“保存文档”可立即保存；重新打开会恢复最近保存的活动文档。
 - `.psd`、`.psb`、`.pcraft` 文件关联到该节点，不更改 PNG/JPG 的默认图片节点。
 - 界面默认简体中文，附带可离线使用的 Noto Sans SC 字体，避免 Web 版中文显示为方框；仍可在 PhotoCraft 偏好设置切换语言。
+
+### AI 工作台（0.3.0）
+
+底部单行 **AI 工具栏** 在应用或画布节点中始终可用，沿用编辑器的中性灰控件；下方仅显示状态：
+
+1. 在 HIOS 设置 → AI 路由中配置并启用图片生成/编辑模型；分层模型使用已绑定到对话/视觉能力的 GPT 模型。
+2. 选择局部改图 / 图生图 / 文生图 / GPT 分层，选择 **选区、当前图层、整个画布**，再选择路由与模型。局部改图默认选区，无选区会明确报错。
+3. 可在“更多”中点击“预览当前范围”核对实际发给模型的图片。开始时重新捕获最新范围；选区会保存灰度覆盖度，包括非矩形边界和羽化。
+4. 图片结果按捕获时的范围缩放定位，作为新图层加入；选区范围使用保留下来的蒙版，范围外像素不变。文生图不发送参考图，无文档时会打开结果为新文档。
+5. **GPT 分层**的层数默认 3（背景、文字、主体），可设置 2–30。模型返回的真实 PSD 按原坐标导入一个图层组，保留其独立图层、文字、组和蒙版；不扁平化，不下载 ZIP。层数、文字是否为可编辑文字层及分离质量由模型实际生成的 PSD 决定。
+6. PSD 生成可超过 5 分钟，总等待上限 30 分钟，显示实际已等待时间和阶段。无需保持一个长 IPC 请求；窗口重载后查询同一个任务，宿主重启后 PSD 任务也按已保存 ID 恢复查询，不自动重新提交收费任务。
+7. 取消会停止宿主图片请求/PSD 轮询与自动导入；PSD 上游任务可能仍在执行，界面会明确说明。
+8. 原文档关闭、画布尺寸改变、PSD 尺寸不符或无真实分层时，结果仍保存在 HIOS，可下载或“作为新文档打开”，不会强行覆盖原编辑。
+
+**PSD 服务要求**：普通 GPT 对话端点不能直接返回带图层的 PSD。所选路由需提供 `chatgpt2api-h` PSD 文件接口及本次 v2 扩展；详见 [backend/README.md](backend/README.md)。插件在提交前检查能力，且核对所选模型和 PSD-only 回执，不会悄悄换模型或回退到 ZIP。
+
+AI 密钥只在 HIOS 主进程读取，插件只获得路由名称、模型和结果素材 URL。AI 范围上限 1600 万像素，单文件 64 MiB。此插件仍完全可选，不随主程序打包。
 
 ### 当前边界
 
@@ -49,7 +66,8 @@ node scripts/check-photocraft-runtime.mjs
 ## 验证
 
 ```powershell
-node --test tests/photocraft-plugin.test.mjs
+node --test tests/photocraft-plugin.test.mjs tests/plugin-ai-service.test.mjs
+python tests/photocraft-psd-backend.test.py
 node scripts/check-photocraft-runtime.mjs
 npm run typecheck
 node tests/fixtures/photocraft-host.mjs
