@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "photocraft",
+  "versions": [
+    {
+      "version": "0.2.0",
+      "ref": "photocraft-v0.2.0",
+      "releasedAt": "2026-10-16",
+      "notes": [
+        "首次作为可选插件发布，支持应用与窗口式画布节点，不随 HIOS 安装包分发。",
+        "画布图片逐张追加为同一文档中的独立像素图层，保留已有编辑；重复运行和恢复不重复导入。",
+        "运行节点直接在画布生成并连接合成结果图片，支持 PSD 与 PhotoCraft 可编辑文件导出。",
+        "真实 Rust/WASM 编辑器与离线简体中文字体；需要支持 file-store 协议的 HIOS Next 主程序更新。"
+      ]
+    }
+  ]
+}

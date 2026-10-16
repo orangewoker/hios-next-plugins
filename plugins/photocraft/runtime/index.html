@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>PhotoCraft</title><link rel="stylesheet" href="runtime/style.css"></head>
+<body data-surface="node">
+<header class="bar"><div class="brand"><img src="assets/icon.svg" alt=""><strong>PhotoCraft</strong><span>画布编辑窗口</span></div>
+<div class="actions" data-no-node-drag><button id="open" title="打开图片、PSD 或 .pcraft">打开</button><button id="save" disabled title="保存当前可编辑文档到 HIOS，保留图层">保存文档</button>
+<select id="format" aria-label="导出格式"><option value="png">PNG</option><option value="jpg">JPEG</option><option value="webp">WebP</option><option value="psd">PSD</option><option value="pcraft">PhotoCraft</option></select>
+<button id="export" class="primary" disabled>输出到画布</button><button id="reload" title="保存后重新加载">↻</button><button id="expand" title="全屏编辑 / 退出全屏" aria-label="全屏编辑">⛶</button></div></header>
+<main class="stage" data-no-node-drag><canvas id="photocraft_canvas" tabindex="0"></canvas>
+<section id="photocraft_loading" class="loading"><img src="assets/icon.svg" alt=""><h1 id="loadingMessage">正在启动 PhotoCraft…</h1><p id="loadingDetail">首次载入约 30 MB 的 WebAssembly，请稍候。</p><button id="webgl">使用 WebGL 模式重试</button></section></main>
+<footer><span id="status" role="status">等待 HIOS 初始化…</span><span id="document">无文档</span></footer>
+<input id="fileInput" type="file" accept=".png,.jpg,.jpeg,.webp,.psd,.psb,.pcraft,.tif,.tiff,.ora,.kra,.svg" multiple hidden>
+<script type="module" src="shared.js"></script></body></html>

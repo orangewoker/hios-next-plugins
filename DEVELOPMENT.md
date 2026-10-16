@@ -128,6 +128,12 @@ parent.postMessage({
 
 图片 `output` 项若带有 `metadata: { addToCanvas: true }`，宿主会保存原图、在插件节点右侧创建图片节点并自动连线。网页素材插件可把右下角批量输出按钮和 `context-action/save-original` 右键动作统一接到这套输出协议。
 
+### 二进制文档保存
+
+支持 `file-store` 协议的 HIOS Next 宿主允许声明 `filesystem` 权限的应用与节点发送 `file-store`：`payload` 为 `{ requestId, key, name, mime, bytes }`。`bytes` 为 `Uint8Array` 或 `ArrayBuffer`，大小为 1 byte–64 MiB；`key` 为 8–80 位字母、数字、`_` 或 `-`，不得提供本机磁盘路径。宿主通过 `file-store-result` 返回 `{ requestId, result: { url, name, size } }` 或 `{ requestId, error }`。
+
+插件仅在成功回复后标记文档已保存。JSON `state` 保存返回的素材 URL，不内嵌文档二进制或大型 base64。快照和图片导出应使用不同的 `key`，避免覆盖快照素材条目。PhotoCraft 是可选的独立插件示例：编辑器、WASM 和字体不随 HIOS 主程序分发。
+
 ## 仓库工作流
 
 1. 在 `plugins/<plugin-id>` 新建插件目录。
