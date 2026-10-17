@@ -3,6 +3,15 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.4.1",
+      "ref": "photocraft-v0.4.1",
+      "releasedAt": "2026-10-17",
+      "notes": [
+        "分层复用 chatgpt2api-h 调试页 PSD 任务接口，不调用独立图片模型。",
+        "兼容旧服务，无需 capabilities 接口；仅下载 PSD，保留原图层；需配套新版 HIOS。"
+      ]
+    },
+    {
       "version": "0.4.0",
       "ref": "photocraft-v0.4.0",
       "releasedAt": "2026-10-17",

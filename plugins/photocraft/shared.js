@@ -289,11 +289,11 @@ function aiRoutes() {
   if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
 }
 async function aiCatalog() {
-  try { const catalog=await aiHost({action:'catalog'}); aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); aiImageRoutes(); }
+  try { const catalog=await aiHost({action:'catalog'}); aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }
   catch(e) { aiMessage(e.message,true); }
 }
 function aiSettings() {
-  state.aiSettings={imageRouteId:$('aiImageRoute').value,imageModel:$('aiImageModel').value,mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
+  state.aiSettings={mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
 }
 async function captureAI() {
   await initTask; await saveDocument();
@@ -319,7 +319,7 @@ async function captureAI() {
 function aiRunning(running) {
   $('aiStart').disabled=running; $('aiCancel').disabled=!running; $('aiCancel').hidden=!running; $('aiProgress').hidden=!running;
   $('aiStart').textContent=aiMode()==='psd' ? (running?'分层中…':'分层') : (running?'生成中…':'生成');
-  for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt','aiImageRoute','aiImageModel']) $(id).disabled=running;
+  for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt']) $(id).disabled=running;
 }
 async function applyAI(asNewDocument = false) {
   const job=state.aiJob; if (!job?.output) return;
@@ -375,14 +375,13 @@ async function startAI() {
   try {
     aiSettings();
     if (!$('aiRoute').value || !$('aiModel').value) throw new Error('请先配置并选择对应 AI 路由和模型');
-    if(aiMode()==='psd' && aiProtocol!=='local-layers/v1') throw new Error('请先更新 HIOS 至支持本地分层的版本');
-    if(aiMode()==='psd' && (!$('aiImageRoute').value || !$('aiImageModel').value)) throw new Error('请在更多中选择分层图片路由和模型');
+    if(aiMode()==='psd' && aiProtocol!=='editable-file/v1') throw new Error('请先更新 HIOS 至支持 PSD 任务接口的版本');
     const capture=await captureAI(), kind=aiMode()==='psd' ? 'psd' : 'image';
     const id=crypto.randomUUID();
     submittedId=id;
     state.aiJob={id,kind,capture,status:'submitting'}; remember(); $('aiResultActions').hidden=true;
     aiMessage('正在提交…');
-    await aiHost({action:'start',clientId:id,kind,pipeline:kind==='psd'?'local-layers/v1':undefined,imageRouteId:$('aiImageRoute').value,imageModel:$('aiImageModel').value,mode:aiMode(),routeId:$('aiRoute').value,model:$('aiModel').value,prompt:aiMode()==='psd'?'':$('aiPrompt').value,layers:Number($('aiLayers').value),image:capture?.image,size:'1024x1024'});
+    await aiHost({action:'start',clientId:id,kind,mode:aiMode(),routeId:$('aiRoute').value,model:$('aiModel').value,prompt:aiMode()==='psd'?'':$('aiPrompt').value,layers:Number($('aiLayers').value),image:capture?.image,size:'1024x1024'});
     void watchAI();
   } catch(e) { aiRunning(false); aiMessage(e.message,true); if (submittedId) aiTimer=setTimeout(()=>void watchAI(),1000); }
   finally { aiBusy=false; }
@@ -396,10 +395,6 @@ async function initializeAI() {
     void watchAI();
   }
 }
-function aiImageModels() { aiOptions('aiImageModel',aiChoices.filter(c=>c.routeId===$('aiImageRoute').value && c.modes.includes('edit')).map(c=>[c.model,c.model]),state.aiSettings?.imageModel); }
-function aiImageRoutes() { aiOptions('aiImageRoute',[...new Map(aiChoices.filter(c=>c.modes.includes('edit')).map(c=>[c.routeId,[c.routeId,c.routeName]])).values()],state.aiSettings?.imageRouteId); aiImageModels(); }
-$('aiImageRoute').onchange=()=>{aiImageModels();aiSettings();};
-$('aiImageModel').onchange=aiSettings;
 $('aiRefresh').onclick=()=>void aiCatalog();
 $('aiRoute').onchange=()=>{aiModels();aiSettings();};
 $('aiModel').onchange=aiSettings;
