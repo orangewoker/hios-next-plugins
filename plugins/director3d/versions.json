@@ -2,6 +2,14 @@
   "schemaVersion": 1,
   "pluginId": "director3d",
   "versions": [{
+    "version": "0.1.1",
+    "ref": "director3d-v0.1.1",
+    "releasedAt": "2026-10-22",
+    "notes": [
+      "画布“运行”与“导出视频节点”统一导出当前预演视频文件，不再创建 AI 视频生成节点。",
+      "视频以可播放的独立文件节点出现在画布，可手动连接到视频生成节点；关键帧图片仍单独生成图片节点。"
+    ]
+  }, {
     "version": "0.1.0",
     "ref": "director3d-v0.1.0",
     "releasedAt": "2026-10-22",

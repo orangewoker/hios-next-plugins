@@ -81,8 +81,7 @@ const disconnect = connect((type, p) => {
   }
   if (type === 'run') {
     if (!loaded.value || busy.value) { post('error', { message: '导演台尚未就绪或正在执行任务' }); return; }
-    const a = doc.value.anchors[0] || { id: crypto.randomUUID(), camera: doc.value.scene.sceneConfig.camera, controls: doc.value.scene.sceneConfig.controls };
-    void exportImage(a, 16 / 9, a.time || 0, false);
+    void exportVideo(16 / 9);
   }
 });
 function persist(snapshot: DirectorDocument, signal?: AbortSignal) {
@@ -216,6 +215,7 @@ async function exportVideo(aspect: number) {
     if (!selected.value) throw new Error('请先生成或选择方案');
     exportingVideo.value = true; exportProgress.value = 0;
     try { const file = await renderVideo(plain(doc.value.scene), plain(selected.value), aspect, controller!.signal, p => { exportProgress.value = p; }, plain(lighting.value), plain(doc.value.sceneSettings)); await output(file, 'video', true); }
+    catch (e) { post('error', { message: errorText(e) }); throw e; }
     finally { exportingVideo.value = false; }
   });
 }

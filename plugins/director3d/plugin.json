@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "director3d",
   "name": "3D 导演台",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "三维场景、人偶动作、AI 局部编辑与相机运镜预演，导出关键帧和视频。",
   "author": "HIOS Next / Toonflow contributors",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/director3d",
