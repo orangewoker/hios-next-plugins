@@ -4,10 +4,11 @@
     v-model:lighting="lighting" v-model:sceneSettings="doc.sceneSettings" :scene="doc.scene" :result="selected"
     :plans="doc.plans" :selectedPlanId="doc.selectedPlanId" :tasks="tasks" :models="models" :modelsLoading="modelsLoading"
     :addingMannequin="busy" :exportingVideo="exportingVideo" :exportingImage="exportingImage" :exportProgress="exportProgress"
-    @selectPlan="doc.selectedPlanId = $event" @loadModels="loadModels" @generate="generate" @addMannequin="addMannequin"
+    @selectPlan="doc.selectedPlanId = $event" @loadModels="loadModels" @generate="generate" @addMannequin="addMannequin" @removeMannequin="removeMannequin"
     @exportImage="exportImage" @exportVideo="exportVideo" @editInstruction="doc.prompt = $event" @close="post('close')">
     <template #toolbar>
       <div class="hios-toolbar">
+        <button :disabled="busy" @click="newProject">新建工程</button>
         <button :disabled="busy" @click="makeCameraPlan">关键帧生成运镜</button>
         <button :disabled="busy" @click="openJson">场景 JSON</button>
         <button :disabled="busy" @click="fileInput?.click()">导入工程</button>
@@ -30,7 +31,7 @@
 </template>
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { ElDialog, ElButton, ElMessage } from 'element-plus';
+import { ElDialog, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import SceneEditor from './sceneEditor.vue';
 import { initialDocument, documentSchema, type DirectorDocument } from './document';
 import { createMannequinObject, createStage, disposeStage, getSceneLighting } from './scene';
@@ -188,6 +189,30 @@ function addMannequin() { void edit(async () => {
   object.position.x = next.scene.objectList.length * 1.5; next.scene.objectList.push(object);
   await commit(next, controller!.signal);
 }); }
+function removeMannequin(objectId: string) { void edit(async () => {
+  const next = plain(doc.value), index = next.scene.objectList.findIndex(object => object.threeJsonId === objectId && object.objType === 'mannequin');
+  if (index < 0) throw new Error('要找的人偶已经不存在');
+  next.scene.objectList.splice(index, 1);
+  for (const plan of next.plans) plan.tracks = plan.tracks.filter(track => track.objectId !== objectId);
+  await commit(next, controller!.signal);
+}); }
+async function newProject() {
+  if (busy.value || !loaded.value) return;
+  try {
+    await ElMessageBox.confirm(
+      '当前工程已自动保存。新建工程会清空场景、人偶、关键帧和方案；如需保留，请先导出工程。',
+      '新建 3D 导演台工程',
+      { type: 'warning', confirmButtonText: '新建工程', cancelButtonText: '取消', closeOnClickModal: false },
+    );
+  } catch { return; }
+  void edit(async () => {
+    const next = initialDocument();
+    next.model = doc.value.model;
+    tasks.value = [];
+    await commit(next, controller!.signal);
+    status.value = '已新建工程';
+  });
+}
 function makeCameraPlan() { void edit(async () => {
   const next = plain(doc.value), anchors = next.anchors;
   if (!anchors.length) throw new Error('请先添加至少一个关键帧');

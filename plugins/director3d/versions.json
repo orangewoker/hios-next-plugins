@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "pluginId": "director3d",
   "versions": [{
+    "version": "0.1.2",
+    "ref": "director3d-v0.1.2",
+    "releasedAt": "2026-10-22",
+    "notes": [
+      "第一人称取景改为 E 上升、Q 下降。",
+      "设置面板可查看并删除场景人偶，删除时同步清理相关动画轨道。",
+      "顶部新增“新建工程”，确认后重置场景、人偶、关键帧和方案并自动保存。"
+    ]
+  }, {
     "version": "0.1.1",
     "ref": "director3d-v0.1.1",
     "releasedAt": "2026-10-22",

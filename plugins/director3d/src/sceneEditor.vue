@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="playbackBar">
-          <el-popover trigger="click" placement="top-start" :width="180">
+          <el-popover trigger="click" placement="top-start" :width="280">
             <template #reference>
               <el-button :icon="IconSettings" :disabled="!ready" aria-label="场景设置">设置</el-button>
             </template>
@@ -61,6 +61,14 @@
                 <el-switch :modelValue="sceneSettings.skyVisible" aria-label="显示天空盒" @change="sceneSettings = { ...sceneSettings, skyVisible: $event === true }" />
               </div>
               <el-button :icon="IconUserPlus" :loading="addingMannequin" :disabled="!ready || addingMannequin || exportingVideo || !!exportingImage || tasks.some(task => !task.error)" @click="emit('addMannequin')">添加人偶</el-button>
+              <div v-if="mannequinObjects.length" class="mannequinObjectList">
+                <div class="mannequinObjectHeading"><span>场景人偶</span><small>{{ mannequinObjects.length }} 个</small></div>
+                <div v-for="(object, index) in mannequinObjects" :key="object.threeJsonId" class="mannequinObjectItem">
+                  <span class="mannequinColor" :style="{ background: object.material.color }" />
+                  <span class="mannequinName">{{ object.name || "关节人偶" }} <small>#{{ index + 1 }}</small></span>
+                  <el-button :icon="IconTrash" text circle size="small" :disabled="addingMannequin" :aria-label="'删除人偶 ' + (index + 1)" title="删除人偶" @click="emit('removeMannequin', object.threeJsonId)" />
+                </div>
+              </div>
             </div>
           </el-popover>
           <el-button
@@ -119,7 +127,7 @@
             {{ exportingVideo ? `导出视频 ${exportProgress ?? 0}%` : '导出视频节点' }}
           </el-button>
         </div>
-        <div class="controlHint">WASD 移动 · 空格上升 · Shift 下降 · 滚轮调焦 · 右键记录 · 左键 / Esc 退出取景</div>
+        <div class="controlHint">WASD 移动 · E 上升 · Q 下降 · 滚轮调焦 · 右键记录 · 左键 / Esc 退出取景</div>
         <div class="referenceHeader">
           <span>
             关键帧
@@ -190,7 +198,7 @@ const props = defineProps<{
   exportingImage: string;
   exportProgress?: number;
 }>();
-const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; close: []; addMannequin: []; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
+const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; close: []; addMannequin: []; removeMannequin: [objectId: string]; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
 const anchors = defineModel<CameraAnchor[]>("anchors", { default: () => [] });
 const lighting = defineModel<LightingSettings>("lighting", { required: true });
 const sceneSettings = defineModel<SceneSettings>("sceneSettings", { required: true });
@@ -217,7 +225,8 @@ const focalLength = ref(0);
 const activeAnchorId = ref("");
 const captureFlash = ref(0);
 const pressedKeys = new Set<string>();
-const moveKeys = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "Space", "ShiftLeft", "ShiftRight"]);
+const moveKeys = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyQ", "KeyE"]);
+const mannequinObjects = computed(() => props.scene.objectList.filter(object => object.objType === "mannequin"));
 const focalSteps = [...Array.from({ length: 30 }, (_, index) => index + 6), 40, 45, 50, 55, 60, 65, 70, 80, 90, 100, 110];
 const movement = new Vector3();
 let runtime: SceneRuntime | undefined;
@@ -320,7 +329,7 @@ function updateFrame() {
   movement
     .set(
       Number(pressedKeys.has("KeyD")) - Number(pressedKeys.has("KeyA")),
-      Number(pressedKeys.has("Space")) - Number(pressedKeys.has("ShiftLeft") || pressedKeys.has("ShiftRight")),
+      Number(pressedKeys.has("KeyE")) - Number(pressedKeys.has("KeyQ")),
       Number(pressedKeys.has("KeyW")) - Number(pressedKeys.has("KeyS"))
     )
     .normalize()
@@ -555,6 +564,61 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+  }
+
+  .mannequinObjectList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 4px;
+    border-top: 1px solid var(--el-border-color-lighter);
+  }
+
+  .mannequinObjectHeading,
+  .mannequinObjectItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mannequinObjectHeading {
+    justify-content: space-between;
+    color: var(--el-text-color-regular);
+
+    small {
+      color: var(--el-text-color-secondary);
+    }
+  }
+
+  .mannequinObjectItem {
+    min-height: 30px;
+    padding: 3px 4px 3px 8px;
+    border-radius: var(--el-border-radius-base);
+    background: var(--el-fill-color-lighter);
+
+    .mannequinColor {
+      width: 10px;
+      height: 10px;
+      flex: 0 0 10px;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px #0002;
+    }
+
+    .mannequinName {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      small {
+        color: var(--el-text-color-secondary);
+      }
+    }
+
+    .el-button {
+      margin: 0;
+    }
   }
 }
 .lightingPanel {

@@ -33,7 +33,7 @@ const steps = [
   {
     target: ".viewport",
     title: "第一人称取景",
-    description: "点击三维画面后，用鼠标调整朝向。WASD 移动，空格上升，Shift 下降，滚轮调焦；左键或 Esc 退出取景。",
+    description: "点击三维画面后，用鼠标调整朝向。WASD 移动，E 上升，Q 下降，滚轮调焦；左键或 Esc 退出取景。",
   },
   {
     target: ".stagePanel .referenceList",
@@ -43,7 +43,7 @@ const steps = [
   {
     target: ".playbackBar",
     title: "播放与画面设置",
-    description: "用播放按钮和进度条检查动画；在这里调整画面比例、网格、天空与光照，让预演画面更符合你的想法。",
+    description: "用播放按钮和进度条检查动画；在“设置”中添加或删除人偶，并调整网格与天空。这里还能调整画面比例和光照，让预演画面更符合你的想法。",
   },
   {
     target: '[aria-label="导出视频节点"]',
