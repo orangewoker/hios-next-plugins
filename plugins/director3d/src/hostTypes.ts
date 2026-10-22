@@ -15,3 +15,8 @@ export type NodeAiTool = {
   parameters: Record<string, unknown>;
   execute(args: Record<string, unknown>, signal?: AbortSignal): unknown | Promise<unknown>;
 };
+
+export type DshModelCatalog = {
+  default?: { provider: string; model: string };
+  groups: Array<{ id: string; name: string; models: Array<{ id: string; name: string }> }>;
+};

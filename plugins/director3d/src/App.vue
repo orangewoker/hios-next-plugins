@@ -1,10 +1,12 @@
 <template>
   <div v-if="!loaded" class="boot"><h2>3D 导演台</h2><p>{{ status }}</p><button @click="post('ready')">重试连接</button></div>
   <SceneEditor v-else v-model:anchors="doc.anchors" v-model:prompt="doc.prompt" v-model:model="doc.model"
+    v-model:aiEngine="doc.aiEngine" v-model:dshModel="doc.dshModel"
     v-model:lighting="lighting" v-model:sceneSettings="doc.sceneSettings" :scene="doc.scene" :result="selected"
     :plans="doc.plans" :selectedPlanId="doc.selectedPlanId" :tasks="tasks" :models="models" :modelsLoading="modelsLoading"
+    :dshModels="dshModels" :dshModelsLoading="dshModelsLoading" :dshModelsError="dshModelsError"
     :addingMannequin="busy" :exportingVideo="exportingVideo" :exportingImage="exportingImage" :exportProgress="exportProgress"
-    @selectPlan="doc.selectedPlanId = $event" @loadModels="loadModels" @generate="generate" @addMannequin="addMannequin" @removeMannequin="removeMannequin"
+    @selectPlan="doc.selectedPlanId = $event" @loadModels="loadModels" @loadDshModels="loadDshModels" @generate="generate" @addMannequin="addMannequin" @removeMannequin="removeMannequin"
     @exportImage="exportImage" @exportVideo="exportVideo" @editInstruction="doc.prompt = $event" @close="post('close')">
     <template #toolbar>
       <div class="hios-toolbar">
@@ -40,7 +42,7 @@ import { prepareMotion, sampleMotion, type CameraAnchor } from './motion';
 import { renderImage, renderVideo } from './renderMedia';
 import { createDirectorDraft } from './agentTools';
 import { directorPrompt } from './agentPrompt';
-import type { NodeAiModel } from './hostTypes';
+import type { DshModelCatalog, NodeAiModel } from './hostTypes';
 import { connect, post, request, storeFile, assetUrl } from './bridge';
 
 const doc = ref<DirectorDocument>(initialDocument());
@@ -48,10 +50,12 @@ const lighting = computed({ get: () => doc.value.lighting || getSceneLighting(do
 const selected = computed(() => doc.value.plans.find(p => p.id === doc.value.selectedPlanId));
 const loaded = ref(false), status = ref('正在连接 HIOS…'), busy = ref(false), modelsLoading = ref(false);
 const models = ref<NodeAiModel[]>([]), tasks = ref<DirectorGeneration[]>([]), references = ref<unknown[]>([]);
+const dshModels = ref<DshModelCatalog | null>(null), dshModelsLoading = ref(false), dshModelsError = ref('');
 const exportingVideo = ref(false), exportingImage = ref(''), exportProgress = ref(0);
 const jsonOpen = ref(false), jsonText = ref(''), fileInput = ref<HTMLInputElement>();
 let initialized = false, disposed = false, restoring = false, timer: ReturnType<typeof setTimeout> | undefined;
 let queue: Promise<unknown> = Promise.resolve(), controller: AbortController | undefined, decisionId = '';
+let dshRunId = '', dshSessionId = '';
 const plain = <T,>(value: T): T => value === undefined ? value : JSON.parse(JSON.stringify(value));
 const errorText = (e: unknown) => e instanceof Error ? e.message : String(e);
 function fail(e: unknown) { status.value = errorText(e); ElMessage.error(status.value); }
@@ -76,6 +80,7 @@ const disconnect = connect((type, p) => {
         else if (p.file?.url) doc.value = await readDocument(p.file.url);
         initialized = true; loaded.value = true; status.value = '已就绪';
         void loadModels();
+        if (doc.value.aiEngine === 'dsh') void loadDshModels();
       } catch (e) { status.value = `工程恢复失败，未覆盖原文件：${errorText(e)}`; }
       finally { restoring = false; }
     })();
@@ -116,6 +121,20 @@ async function loadModels() {
     if (!models.value.length) status.value = '请在 HIOS AI 路由中启用文字模型';
   } catch (e) { status.value = errorText(e); } finally { modelsLoading.value = false; }
 }
+async function loadDshModels() {
+  if (dshModelsLoading.value) return;
+  dshModelsLoading.value = true; dshModelsError.value = '';
+  try {
+    dshModels.value = await request('ai-request', { action: 'dsh-catalog' }, 190_000);
+  } catch (e) {
+    dshModelsError.value = `DSH 读取失败：${errorText(e)}`;
+  } finally {
+    dshModelsLoading.value = false;
+  }
+}
+watch(() => doc.value.aiEngine, value => {
+  if (value === 'dsh' && !dshModels.value) void loadDshModels();
+});
 async function validatePreview(next: DirectorDocument, signal: AbortSignal) {
   signal.throwIfAborted();
   const runtime = await createStage(document.createElement('canvas'), next.scene, undefined, 16 / 9, next.lighting, next.sceneSettings);
@@ -134,16 +153,17 @@ async function commit(next: DirectorDocument, signal: AbortSignal) {
 function cancel() {
   controller?.abort(new Error('用户取消任务'));
   if (decisionId) void request('ai-request', { action: 'cancel-decision', clientId: decisionId }, 10000).catch(() => {});
+  if (dshRunId && dshSessionId) void request('ai-request', { action: 'dsh-stop', sessionId: dshSessionId, runId: dshRunId }, 10000).catch(() => {});
 }
 async function generate() {
-  if (busy.value || !doc.value.prompt.trim() || !doc.value.model) return;
+  const engine = doc.value.aiEngine;
+  if (busy.value || !doc.value.prompt.trim() || (engine === 'builtin' && !doc.value.model)) return;
   busy.value = true; controller = new AbortController();
   const signal = controller.signal, timeout = setTimeout(cancel, 600_000);
   const id = crypto.randomUUID(), instruction = doc.value.prompt;
   tasks.value.push({ id, instruction });
   const baseline = JSON.stringify(doc.value.scene);
   try {
-    const [routeId, model] = JSON.parse(doc.value.model);
     const current = selected.value;
     const basePlan = current ? { name: current.name, duration: current.duration, tracks: plain(current.tracks), cameraFrames: plain(current.cameraFrames) } : undefined;
     const draft = createDirectorDraft(plain(doc.value.scene), basePlan, plain(doc.value.plans));
@@ -151,26 +171,77 @@ async function generate() {
       inputText: references.value.filter(v => typeof v === 'string' && !/^\w+:\/\//.test(v as string)).join('\n').slice(0, 16000) };
     const images = references.value.filter(v => typeof v === 'string' && /^hios-asset:\/\//.test(v as string)).slice(0, 4);
     const history: unknown[] = [];
-    let finished = false;
-    for (let round = 0; round < 40; round++) {
-      signal.throwIfAborted(); status.value = `AI 编辑第 ${round + 1} 轮…`; decisionId = crypto.randomUUID();
-      const result = await request('ai-request', { action: 'tool-decision', clientId: decisionId, routeId, model, images,
-        systemPrompt: directorPrompt + '\n工具历史在用户消息中。继续已有草稿，不要重复已成功操作。编辑完成且 valid=true 后不再调用工具，直接简短回复。',
-        prompt: JSON.stringify({ ...context, document: draft.summary(), history }), tools: draft.tools.map(({ execute: _execute, ...tool }) => tool) });
-      decisionId = ''; signal.throwIfAborted();
-      const calls = result.toolCalls || [];
-      if (!calls.length) { finished = true; break; }
-      for (const call of calls) {
+    if (engine === 'dsh') {
+      dshSessionId = id; status.value = '正在连接 DSH…';
+      const nativeModel = doc.value.dshModel ? JSON.parse(doc.value.dshModel) : undefined;
+      const started = await request('ai-request', {
+        action: 'dsh-start',
+        sessionId: id,
+        nativeModel,
+        prompt: JSON.stringify({
+          instructions: directorPrompt,
+          ...context,
+          referenceImages: images,
+          document: draft.summary(),
+          tools: ['director_read_document', 'director_edit_document'],
+        }),
+      }, 190_000);
+      dshRunId = String(started.id || '');
+      if (!dshRunId) throw new Error('DSH 未返回接管会话');
+      let finished = false;
+      for (let poll = 0; poll < 600; poll++) {
         signal.throwIfAborted();
-        const tool = draft.tools.find(t => t.name === call.name);
-        let output;
-        try { if (!tool) throw new Error('未知工具'); output = await tool.execute(call.arguments, signal); }
-        catch (e) { output = { error: errorText(e) }; }
-        history.push({ call, output });
+        const state = await request('ai-request', { action: 'dsh-poll', sessionId: id, runId: dshRunId }, 15_000);
+        if (state.error) throw new Error(String(state.error));
+        if (state.runtime?.model) status.value = `DSH 接管中 · ${state.runtime.model}`;
+        if (state.command) {
+          const command = state.command;
+          const toolName = command.toolId === 'client:director3d:read-document'
+            ? 'readDocument'
+            : command.toolId === 'client:director3d:edit-document' ? 'editDocument' : '';
+          if (!toolName) throw new Error('DSH 请求了未授权的导演台工具');
+          await request('ai-request', { action: 'dsh-check', sessionId: id, runId: dshRunId, commandId: command.id }, 10_000);
+          const tool = draft.tools.find(item => item.name === toolName);
+          let output;
+          try {
+            signal.throwIfAborted();
+            if (!tool) throw new Error('导演台工具不可用');
+            output = await tool.execute(command.arguments || {}, signal);
+          } catch (e) {
+            output = { error: errorText(e) };
+          }
+          await request('ai-request', { action: 'dsh-complete', sessionId: id, runId: dshRunId, commandId: command.id, result: output }, 10_000);
+          history.push({ call: { id: command.id, name: toolName, arguments: command.arguments || {} }, output });
+          status.value = `DSH 编辑第 ${history.length} 步…`;
+          continue;
+        }
+        if (state.done) { finished = true; break; }
+        await new Promise(resolve => setTimeout(resolve, 180));
       }
+      if (!finished) throw new Error('DSH 已达到等待上限，草稿未提交');
+    } else {
+      const [routeId, model] = JSON.parse(doc.value.model);
+      let finished = false;
+      for (let round = 0; round < 40; round++) {
+        signal.throwIfAborted(); status.value = `内置模型编辑第 ${round + 1} 轮…`; decisionId = crypto.randomUUID();
+        const result = await request('ai-request', { action: 'tool-decision', clientId: decisionId, routeId, model, images,
+          systemPrompt: directorPrompt + '\n工具历史在用户消息中。继续已有草稿，不要重复已成功操作。编辑完成且 valid=true 后不再调用工具，直接简短回复。',
+          prompt: JSON.stringify({ ...context, document: draft.summary(), history }), tools: draft.tools.map(({ execute: _execute, ...tool }) => tool) });
+        decisionId = ''; signal.throwIfAborted();
+        const calls = result.toolCalls || [];
+        if (!calls.length) { finished = true; break; }
+        for (const call of calls) {
+          signal.throwIfAborted();
+          const tool = draft.tools.find(t => t.name === call.name);
+          let output;
+          try { if (!tool) throw new Error('未知工具'); output = await tool.execute(call.arguments, signal); }
+          catch (e) { output = { error: errorText(e) }; }
+          history.push({ call, output });
+        }
+      }
+      if (!finished) throw new Error('已达到 40 轮上限，草稿未提交');
     }
-    if (!finished) throw new Error('已达到 40 轮上限，草稿未提交');
-    if (!draft.edited) throw new Error('模型未修改场景，请换用支持工具调用的文字模型');
+    if (!draft.edited) throw new Error(engine === 'dsh' ? 'DSH 未修改场景，请明确描述要调整的模型或镜头' : '模型未修改场景，请换用支持工具调用的文字模型');
     if (JSON.stringify(doc.value.scene) !== baseline) throw new Error('基础场景发生变化，草稿未提交');
     const result = draft.read(), next = plain(doc.value);
     next.scene = result.scene;
@@ -178,7 +249,12 @@ async function generate() {
     next.plans.push({ ...result.plan, id, instruction }); next.selectedPlanId = id;
     await commit(next, signal); tasks.value = tasks.value.filter(t => t.id !== id);
   } catch (e) { const task = tasks.value.find(t => t.id === id); if (task) task.error = errorText(e); fail(e); }
-  finally { clearTimeout(timeout); busy.value = false; decisionId = ''; }
+  finally {
+    clearTimeout(timeout);
+    if (dshRunId && dshSessionId) await request('ai-request', { action: 'dsh-stop', sessionId: dshSessionId, runId: dshRunId }, 10_000).catch(() => {});
+    dshRunId = ''; dshSessionId = '';
+    busy.value = false; decisionId = '';
+  }
 }
 async function edit(work: () => Promise<void>) {
   if (busy.value) return; busy.value = true; controller = new AbortController();
@@ -208,6 +284,8 @@ async function newProject() {
   void edit(async () => {
     const next = initialDocument();
     next.model = doc.value.model;
+    next.aiEngine = doc.value.aiEngine;
+    next.dshModel = doc.value.dshModel;
     tasks.value = [];
     await commit(next, controller!.signal);
     status.value = '已新建工程';

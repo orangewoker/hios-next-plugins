@@ -31,13 +31,27 @@
     <p class="instructionHint">{{ referenceCount ? `使用 ${referenceCount} 个关键帧生成运镜` : result ? `参考：${result.name}` : '模型动画与运镜同步生成' }}</p>
     <footer class="chatFooter">
       <div class="inputContent"><slot name="input" /></div>
+      <p v-if="aiEngine === 'dsh' && dshModelsError" class="dshError" role="alert">{{ dshModelsError }}</p>
       <div class="inputActions">
-        <el-select v-model="model" class="modelSelect" size="small" :loading="modelsLoading" filterable placeholder="选择模型" aria-label="生成模型" @visibleChange="$event && emit('loadModels')">
-          <el-option-group v-for="provider in modelGroups" :key="provider.id" :label="provider.label">
-            <el-option v-for="item in provider.models" :key="item.modelId" :label="item.label" :value="JSON.stringify([item.providerId, item.modelId])" />
-          </el-option-group>
-        </el-select>
-        <el-button class="sendButton" type="primary" round :disabled="initializing || !prompt.trim() || !model" aria-label="生成动画" @click="sendInstruction">
+        <div class="modelControls">
+          <el-select v-model="aiEngine" class="engineSelect" size="small" aria-label="AI 执行方式">
+            <el-option label="DSH 智能体" value="dsh" />
+            <el-option label="内置模型" value="builtin" />
+          </el-select>
+          <el-select v-if="aiEngine === 'builtin'" v-model="model" class="modelSelect" size="small" :loading="modelsLoading" filterable placeholder="选择内置模型" aria-label="内置模型" @visibleChange="$event && emit('loadModels')">
+            <el-option-group v-for="provider in modelGroups" :key="provider.id" :label="`内置模型 · ${provider.label}`">
+              <el-option v-for="item in provider.models" :key="item.modelId" :label="item.label" :value="JSON.stringify([item.providerId, item.modelId])" />
+            </el-option-group>
+          </el-select>
+          <el-select v-else v-model="dshModel" class="modelSelect" size="small" :loading="dshModelsLoading" filterable placeholder="DSH 默认模型" aria-label="DSH 智能体模型" @visibleChange="$event && emit('loadDshModels')">
+            <el-option v-for="option in savedDshOptions" :key="option.value" :label="option.label" :value="option.value" />
+            <el-option :label="`DSH 默认模型${dshModels?.default?.model ? ' · ' + dshModels.default.model : ''}`" value="" />
+            <el-option-group v-for="provider in dshModels?.groups || []" :key="provider.id" :label="`DSH 智能体 · ${provider.name}`">
+              <el-option v-for="item in provider.models" :key="item.id" :label="item.name || item.id" :value="JSON.stringify({ provider: provider.id, model: item.id })" />
+            </el-option-group>
+          </el-select>
+        </div>
+        <el-button class="sendButton" type="primary" round :disabled="initializing || !prompt.trim() || (aiEngine === 'builtin' && !model)" aria-label="生成动画" @click="sendInstruction">
           <icon-sparkles :size="14" /><span>生成方案</span>
         </el-button>
       </div>
@@ -49,18 +63,29 @@
 import { computed } from "vue";
 import { ElButton, ElOption, ElOptionGroup, ElSelect } from "element-plus";
 import { IconLoader2, IconSparkles, IconMovie, IconCheck, IconAlertCircle, IconArrowBackUp } from "@tabler/icons-vue";
-import type { NodeAiModel } from "./hostTypes";
+import type { DshModelCatalog, NodeAiModel } from "./hostTypes";
 import { groupNodeModels } from "./groupNodeModels";
 
 import type { DirectorPlan, DirectorPlanItem, DirectorGeneration } from "./sceneAnimation";
 
-const props = defineProps<{ result?: DirectorPlan; referenceCount: number; initializing: boolean; plans: DirectorPlanItem[]; selectedPlanId: string; tasks: DirectorGeneration[]; models: NodeAiModel[]; modelsLoading: boolean }>();
-const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; send: []; loadModels: [] }>();
+const props = defineProps<{ result?: DirectorPlan; referenceCount: number; initializing: boolean; plans: DirectorPlanItem[]; selectedPlanId: string; tasks: DirectorGeneration[]; models: NodeAiModel[]; modelsLoading: boolean; dshModels: DshModelCatalog | null; dshModelsLoading: boolean; dshModelsError: string }>();
+const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; send: []; loadModels: []; loadDshModels: [] }>();
 const prompt = defineModel<string>("prompt", { default: "" });
 const model = defineModel<string>("model", { default: "" });
+const aiEngine = defineModel<"builtin" | "dsh">("aiEngine", { default: "builtin" });
+const dshModel = defineModel<string>("dshModel", { default: "" });
 const modelGroups = computed(() => groupNodeModels(props.models));
+const savedDshOptions = computed(() => {
+  if (!dshModel.value || (props.dshModels?.groups || []).some(group => group.models.some(item => JSON.stringify({ provider: group.id, model: item.id }) === dshModel.value))) return [];
+  try {
+    const saved = JSON.parse(dshModel.value) as { provider?: string; model?: string };
+    return [{ value: dshModel.value, label: `已保存 · ${saved.model || 'DSH 模型'}` }];
+  } catch {
+    return [{ value: dshModel.value, label: `已保存 · ${dshModel.value}` }];
+  }
+});
 function sendInstruction() {
-  if (props.initializing || !prompt.value.trim() || !model.value) return;
+  if (props.initializing || !prompt.value.trim() || (aiEngine.value === "builtin" && !model.value)) return;
   emit("send");
 }
 
@@ -144,22 +169,35 @@ function sendInstruction() {
       gap: 8px;
       padding: 4px;
 
+      .modelControls {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        gap: 6px;
+      }
+
+      .engineSelect {
+        flex: 0 0 104px;
+        width: 104px;
+      }
+
       .modelSelect {
         flex: 1;
         min-width: 0;
-        max-width: calc(100% - 112px);
-
-        :deep(.el-select__wrapper) {
-          background: transparent;
-          box-shadow: none;
-          border-radius: var(--el-border-radius-base);
-
-          &:hover:not(.is-disabled) { background: var(--el-fill-color-light); }
-          &.is-focused { box-shadow: 0 0 0 1px var(--el-color-primary-light-5) inset; }
-        }
-
-        :deep(.el-select__selected-item) { color: var(--el-text-color-regular); }
       }
+
+      :deep(.engineSelect .el-select__wrapper),
+      :deep(.modelSelect .el-select__wrapper) {
+        background: transparent;
+        box-shadow: none;
+        border-radius: var(--el-border-radius-base);
+
+        &:hover:not(.is-disabled) { background: var(--el-fill-color-light); }
+        &.is-focused { box-shadow: 0 0 0 1px var(--el-color-primary-light-5) inset; }
+      }
+
+      :deep(.engineSelect .el-select__selected-item),
+      :deep(.modelSelect .el-select__selected-item) { color: var(--el-text-color-regular); }
 
       .sendButton {
         flex-shrink: 0;
@@ -167,6 +205,15 @@ function sendInstruction() {
         height: 32px;
         margin: 0;
       }
+    }
+
+    .dshError {
+      margin: 0;
+      padding: 4px 8px 0;
+      color: var(--el-color-danger);
+      font-size: 11px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
     }
   }
 }

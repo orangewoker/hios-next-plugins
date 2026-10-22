@@ -150,6 +150,8 @@
       <directorPanel
         v-model:prompt="prompt"
         v-model:model="model"
+        v-model:aiEngine="aiEngine"
+        v-model:dshModel="dshModel"
         :result="result"
         :referenceCount="anchors.length"
         :plans="plans"
@@ -159,7 +161,11 @@
         @selectPlan="selectPlan"
         :models="models"
         :modelsLoading="modelsLoading"
+        :dshModels="dshModels"
+        :dshModelsLoading="dshModelsLoading"
+        :dshModelsError="dshModelsError"
         @loadModels="emit('loadModels')"
+        @loadDshModels="emit('loadDshModels')"
         @send="emit('generate')"
         @editInstruction="emit('editInstruction', $event)">
         <template #input><slot name="input" /></template>
@@ -180,7 +186,7 @@ import { VueDraggable } from "vue-draggable-plus";
 import { Vector3 } from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import type { SceneRuntime } from "threejson/core";
-import type { NodeAiModel } from "./hostTypes";
+import type { DshModelCatalog, NodeAiModel } from "./hostTypes";
 import { applyLighting, applySceneSettings, captureCamera, createStage, disposeStage, type LightingSettings, type SceneDocument, type SceneSettings } from "./scene";
 import { anchorSchema, applyCamera, prepareMotion, sampleMotion, type CameraAnchor } from "./motion";
 import { prepareSceneAnimation, type DirectorPlan, type DirectorPlanItem, type DirectorGeneration } from "./sceneAnimation";
@@ -193,12 +199,15 @@ const props = defineProps<{
   tasks: DirectorGeneration[];
   models: NodeAiModel[];
   modelsLoading: boolean;
+  dshModels: DshModelCatalog | null;
+  dshModelsLoading: boolean;
+  dshModelsError: string;
   addingMannequin: boolean;
   exportingVideo: boolean;
   exportingImage: string;
   exportProgress?: number;
 }>();
-const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; close: []; addMannequin: []; removeMannequin: [objectId: string]; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
+const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; loadDshModels: []; close: []; addMannequin: []; removeMannequin: [objectId: string]; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
 const anchors = defineModel<CameraAnchor[]>("anchors", { default: () => [] });
 const lighting = defineModel<LightingSettings>("lighting", { required: true });
 const sceneSettings = defineModel<SceneSettings>("sceneSettings", { required: true });
@@ -206,6 +215,8 @@ const lightingDraft = ref({ ...lighting.value });
 const lightingReference = ref(0);
 const prompt = defineModel<string>("prompt", { default: "" });
 const model = defineModel<string>("model", { default: "" });
+const aiEngine = defineModel<"builtin" | "dsh">("aiEngine", { default: "builtin" });
+const dshModel = defineModel<string>("dshModel", { default: "" });
 const anchorPreviews = ref<Record<string, string>>({});
 const workspace = ref<HTMLElement>();
 const canvas = ref<HTMLCanvasElement>();

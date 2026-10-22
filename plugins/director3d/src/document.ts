@@ -7,6 +7,8 @@ export const documentSchema = z.object({
   plans: z.array(directorPlanSchema.safeExtend({ id: z.string().min(1), instruction: z.string().optional() })).max(100),
   selectedPlanId: z.string().default(''), anchors: z.array(anchorSchema).max(120).default([]),
   prompt: z.string().max(12000).default(''), model: z.string().default(''),
+  aiEngine: z.enum(['builtin', 'dsh']).default('builtin'),
+  dshModel: z.string().max(400).default(''),
   lighting: z.object({ globalEnabled: z.boolean(), globalIntensity: z.number().min(0).max(100), sunEnabled: z.boolean(), azimuth: z.number().finite(), elevation: z.number().finite(), intensity: z.number().min(0).max(100), color: z.string().regex(/^#[\da-f]{6}$/i) }).optional(),
   sceneSettings: z.object({ gridVisible: z.boolean(), skyVisible: z.boolean() }).default({ gridVisible: true, skyVisible: true }),
 }).superRefine((doc, ctx) => {

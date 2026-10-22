@@ -6,7 +6,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 
 | 插件 | 版本 | 安装 URL |
 | --- | --- | --- |
-| 3D 导演台 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/director3d`（完整功能需要支持 local-tools/v1 与 Pointer Lock 的 HIOS 构建） |
+| 3D 导演台 | 0.1.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/director3d`（DSH 与完整功能需要包含导演台 DSH 桥接的新版 HIOS） |
 | PhotoCraft 图像编辑器 | 0.4.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft`（需支持 `file-store` 和 `ai-request` 协议的 HIOS Next 主程序更新） |
 | DLSS 5 图片增强 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`（需 HIOS Next 桌面版 ≥ 2.6.3） |
 | 图片对比 | 0.3.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare` |
