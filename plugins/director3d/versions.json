@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "director3d",
+  "versions": [{
+    "version": "0.1.0",
+    "ref": "director3d-v0.1.0",
+    "releasedAt": "2026-10-22",
+    "notes": [
+      "首次发布：应用与画布节点双入口，三维场景、关节人偶、关键帧和手动运镜。",
+      "接入宿主文字工具调用、场景局部编辑与磁盘工程保存；支持 PNG、MP4/WebM 和工程导出。",
+      "完整 AI 与第一人称取景需要包含 2026-10-22 local-tools/v1 和 Pointer Lock 适配的 HIOS 构建；插件不自动更新宿主。"
+    ]
+  }]
+}
