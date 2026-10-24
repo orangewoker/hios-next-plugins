@@ -11,6 +11,26 @@
     *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden}body{font:11px/1.45 "Inter","PingFang SC","Microsoft YaHei UI",system-ui,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:auto 190px minmax(0,1fr);min-height:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;background:var(--surface);border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:8px;min-width:0}.brand i{width:28px;height:28px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,var(--accent),#7357ef);border-radius:9px;font-style:normal;font-weight:900}.brand strong,.brand small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand small{color:var(--text3);font-size:8px}.status{padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:var(--text3);background:var(--muted);font-size:8px;white-space:nowrap}.status.ok{color:var(--positive)}.status.error{color:var(--negative)}
     .preview{position:relative;min-height:0;display:grid;place-items:center;overflow:hidden;padding:12px;background-color:var(--muted);background-image:linear-gradient(45deg,color-mix(in srgb,var(--border) 40%,transparent) 25%,transparent 25%),linear-gradient(-45deg,color-mix(in srgb,var(--border) 40%,transparent) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,color-mix(in srgb,var(--border) 40%,transparent) 75%),linear-gradient(-45deg,transparent 75%,color-mix(in srgb,var(--border) 40%,transparent) 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}.preview canvas{display:block;width:100%;height:100%;object-fit:contain;box-shadow:none;background:transparent}.empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:6px;color:var(--text3);text-align:center;padding:20px;background:color-mix(in srgb,var(--muted) 88%,transparent)}.empty[hidden]{display:none}.empty strong{font-size:12px;color:var(--text2)}.empty span{max-width:310px;font-size:9px}
     .panel{min-height:0;overflow:auto;padding:10px;background:var(--surface);border-top:1px solid var(--border);scrollbar-color:var(--border) transparent}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;background:var(--muted);border:1px solid var(--border);border-radius:9px}.tabs button{height:29px;border:0;border-radius:7px;background:transparent;color:var(--text3);font-weight:700}.tabs button.active{color:#fff;background:var(--accent);box-shadow:0 4px 12px color-mix(in srgb,var(--accent) 28%,transparent)}.fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}.field{display:grid;gap:4px;min-width:0}.field.wide{grid-column:1/-1}.field.span2{grid-column:span 2}.field>span,.section-label{color:var(--text3);font-size:8px;text-transform:uppercase;letter-spacing:.04em}.field input,.field select,.field textarea{width:100%;min-width:0;border:1px solid var(--border);border-radius:7px;background:var(--bg);outline:none}.field input,.field select{height:30px;padding:0 8px}.field textarea{height:48px;resize:vertical;padding:7px}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accentSoft)}.toggle-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.toggle{height:30px;min-width:34px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text3);font-weight:700}.toggle.active{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 60%,var(--border));background:var(--accentSoft)}.color-field{display:grid;grid-template-columns:34px 1fr;gap:5px}.color-field input[type=color]{padding:3px}.anchors{display:grid;grid-template-columns:repeat(3,26px);gap:3px;justify-content:start}.anchors button{width:26px;height:22px;border:1px solid var(--border);border-radius:5px;background:var(--bg);position:relative}.anchors button::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--text3);left:50%;top:50%;transform:translate(-50%,-50%)}.anchors button.active{border-color:var(--accent);background:var(--accentSoft)}.anchors button.active::after{background:var(--accent)}.image-pick{display:flex;align-items:center;gap:8px;min-height:48px;padding:7px;border:1px dashed var(--border);border-radius:8px;background:var(--bg)}.image-pick img{width:38px;height:38px;object-fit:contain;border-radius:6px;background:var(--muted)}.image-pick span{min-width:0;flex:1;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.image-pick button,.reset{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:7px;background:var(--control)}.footer-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border)}.footer-row small{color:var(--text3)}.hidden{display:none!important}@media(max-width:520px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.field.span2{grid-column:span 2}}
+
+    .app{grid-template-rows:auto var(--preview-height,360px) minmax(0,1fr)}
+    .preview{padding:10px}.panel{padding:12px;overscroll-behavior:contain}
+    .field>span,.section-label{font-size:10px;letter-spacing:0;text-transform:none}
+    .field input,.select-trigger{height:34px}.field textarea{height:40px}
+    .fields{gap:9px}.quick-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .settings{margin-top:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg)}
+    .settings>summary{cursor:pointer;padding:10px;color:var(--text2);font-weight:600}
+    .settings>.fields{padding:0 10px 10px;margin-top:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .select-control{display:grid;gap:4px;min-width:0}
+    .select-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:var(--bg)}
+    .select-trigger::after{content:'⌄';color:var(--text3)}
+    .select-trigger[aria-expanded=true]{border-color:var(--accent)}
+    .select-options{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:7px;background:var(--surface);padding:4px;overscroll-behavior:contain}
+    .select-options[hidden]{display:none}
+    .select-options button{display:block;width:100%;border:0;border-radius:4px;background:transparent;text-align:left;padding:7px 8px;overflow-wrap:anywhere}
+    .select-options button:hover,.select-options button:focus-visible,.select-options button[aria-selected=true]{background:var(--accentSoft);color:var(--accent)}
+    button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .footer-row small{font-size:9px}.anchors{grid-template-columns:repeat(3,30px)}.anchors button{width:30px;height:24px}
+    @media(max-width:360px){.panel{padding:8px}.fields{gap:6px}.brand small{max-width:160px}.status{max-width:100px;overflow:hidden;text-overflow:ellipsis}}
   </style>
 </head>
 <body>
@@ -57,7 +77,7 @@ function schedule(save=true){clearTimeout(runtime.renderTimer);runtime.renderTim
 function loadImage(image,source){return new Promise((resolve,reject)=>{image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('图片加载失败'));image.crossOrigin='anonymous';image.src=source})}
 function readAsset(source){if(!/^hios-asset:/i.test(source))return Promise.resolve(source);const requestId=crypto.randomUUID();return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{runtime.assetRequests.delete(requestId);reject(new Error('读取画布原图超时'))},30000);runtime.assetRequests.set(requestId,{resolve,reject,timer});post('asset-read',{requestId,source})})}
 async function ensureFont(){if(state.mode!=='text'||!document.fonts?.load)return;try{await document.fonts.load(`32px "${state.fontFamily}"`)}catch{}}
-async function loadInput(source){runtime.source=source;runtime.inputReady=false;empty.hidden=false;if(!source){setStatus('等待图片');return}setStatus('正在读取原图…');try{let readable=source;try{readable=await readAsset(source)}catch{}await loadImage(runtime.inputImage,readable);runtime.inputReady=true;runtime.lastWidth=runtime.inputImage.naturalWidth;runtime.lastHeight=runtime.inputImage.naturalHeight;empty.hidden=true;setStatus(`${runtime.lastWidth} × ${runtime.lastHeight}`,'ok');await renderPreview();post('loaded',{ready:true})}catch{setStatus('原图读取失败','error');post('error',{message:'无法读取连接的原始图片'})}}
+async function loadInput(source){runtime.source=source;runtime.inputReady=false;empty.hidden=false;if(!source){resizePreview();setStatus('等待图片');return}setStatus('正在读取原图…');try{let readable=source;try{readable=await readAsset(source)}catch{}await loadImage(runtime.inputImage,readable);runtime.inputReady=true;runtime.lastWidth=runtime.inputImage.naturalWidth;runtime.lastHeight=runtime.inputImage.naturalHeight;empty.hidden=true;resizePreview();setStatus(`${runtime.lastWidth} × ${runtime.lastHeight}`,'ok');await renderPreview();post('loaded',{ready:true})}catch{setStatus('原图读取失败','error');post('error',{message:'无法读取连接的原始图片'})}}
 async function loadWatermark(source,name=''){state.watermarkSource=source;state.watermarkName=name;runtime.watermarkReady=false;$('watermarkName').textContent=name||'尚未选择，可使用 PNG / JPG / WebP / SVG';$('watermarkThumb').removeAttribute('src');if(!source){schedule();return}try{await loadImage(runtime.watermarkImage,source);runtime.watermarkReady=true;$('watermarkThumb').src=source;schedule()}catch{setStatus('水印图片读取失败','error')}}
 function measureSpaced(ctx,text,spacing){return [...text].reduce((n,ch,i)=>n+ctx.measureText(ch).width+(i?spacing:0),0)}
 function drawSpaced(ctx,text,x,y,spacing,align){const width=measureSpaced(ctx,text,spacing);let cursor=align==='center'?x-width/2:align==='right'?x-width:x;for(const ch of [...text]){ctx.fillText(ch,cursor,y);cursor+=ctx.measureText(ch).width+spacing}}
@@ -73,11 +93,20 @@ function paintMark(ctx,metric,cx,cy){ctx.save();ctx.globalAlpha=Math.max(0,Math.
 function renderTo(canvas,maxEdge=0){if(!runtime.inputReady)throw new Error('请先连接原始图片');const iw=runtime.inputImage.naturalWidth,ih=runtime.inputImage.naturalHeight,ratio=maxEdge?Math.min(1,maxEdge/Math.max(iw,ih)):1,w=Math.max(1,Math.round(iw*ratio)),h=Math.max(1,Math.round(ih*ratio));canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,w,h);ctx.drawImage(runtime.inputImage,0,0,w,h);const metric=watermarkMetrics(ctx,w,h,ratio);if(!metric||(state.mode==='text'&&!String(state.text||'').trim()))return{width:w,height:h};const pos=anchorPoint(w,h,metric.width,metric.height,ratio);if(state.tile){const gapX=Math.max(metric.width*.55,40*ratio),gapY=Math.max(metric.height*.7,40*ratio);for(let y=-metric.height;y<h+metric.height;y+=metric.height+gapY)for(let x=-metric.width;x<w+metric.width;x+=metric.width+gapX)paintMark(ctx,metric,x+metric.width/2+((Math.round(y/(metric.height+gapY))%2)*(metric.width+gapX)/2),y+metric.height/2)}else paintMark(ctx,metric,pos.x+metric.width/2,pos.y+metric.height/2);return{width:w,height:h}}
 async function renderPreview(){if(!runtime.inputReady)return;try{await ensureFont();renderTo(preview,1400)}catch(e){setStatus(e.message||String(e),'error')}}
 function fitPreview(){const box=preview.parentElement;if(!box||!preview.width||!preview.height)return;const cs=getComputedStyle(box),availableWidth=Math.max(1,box.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)),availableHeight=Math.max(1,box.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)),scale=Math.min(availableWidth/preview.width,availableHeight/preview.height);preview.style.width=`${Math.max(1,Math.round(preview.width*scale))}px`;preview.style.height=`${Math.max(1,Math.round(preview.height*scale))}px`}
+function resizePreview(){
+  const app=document.querySelector('.app'), header=document.querySelector('.topbar');
+  const available=Math.max(0,app.clientHeight-header.offsetHeight);
+  const ratio=runtime.inputReady?runtime.lastWidth/runtime.lastHeight:16/10;
+  const ideal=(app.clientWidth-20)/ratio+20;
+  const budget=Math.max(100,Math.min(available*.62,available-315));
+  app.style.setProperty('--preview-height',Math.round(Math.min(ideal,budget))+'px');
+  fitPreview();
+}
 function setToggle(id,on){$(id).classList.toggle('active',Boolean(on))}
 function syncControls(){
   $('tabText').classList.toggle('active',state.mode==='text');$('tabImage').classList.toggle('active',state.mode==='image');$('textFields').classList.toggle('hidden',state.mode!=='text');$('imageFields').classList.toggle('hidden',state.mode!=='image');
   ['text','fontFamily','fontSize','fontUnit','lineHeight','letterSpacing','color','background','imageWidth','imageUnit','rotation','marginX','marginY','outputFormat'].forEach(id=>{if($(id).value!==String(state[id]))$(id).value=String(state[id])});$('colorText').value=state.color;$('opacity').value=String(Math.round(state.opacity*100));$('quality').value=String(Math.round(state.quality*100));
-  setToggle('bold',state.bold);setToggle('italic',state.italic);setToggle('horizontal',state.direction==='horizontal');setToggle('vertical',state.direction==='vertical');setToggle('backgroundEnabled',state.backgroundEnabled);setToggle('tile',state.tile);document.querySelectorAll('.align').forEach(b=>b.classList.toggle('active',b.dataset.value===state.align));document.querySelectorAll('#anchors button').forEach(b=>b.classList.toggle('active',b.dataset.value===state.anchor));
+  document.querySelectorAll('.select-control').forEach(control=>control.sync());$('textSettings').classList.toggle('hidden',state.mode!=='text');$('fontSize').closest('.field').classList.toggle('hidden',state.mode!=='text');$('quality').disabled=state.outputFormat==='png';setToggle('bold',state.bold);setToggle('italic',state.italic);setToggle('horizontal',state.direction==='horizontal');setToggle('vertical',state.direction==='vertical');setToggle('backgroundEnabled',state.backgroundEnabled);setToggle('tile',state.tile);document.querySelectorAll('.align').forEach(b=>b.classList.toggle('active',b.dataset.value===state.align));document.querySelectorAll('#anchors button').forEach(b=>b.classList.toggle('active',b.dataset.value===state.anchor));
 }
 function bindValue(id,key,convert=v=>v){$(id).addEventListener('input',()=>{state[key]=convert($(id).value);schedule()})}
 const anchorValues=['top-left','top-center','top-right','center-left','center-center','center-right','bottom-left','bottom-center','bottom-right'];anchorValues.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.title=v;b.addEventListener('click',()=>{state.anchor=v;schedule()});$('anchors').appendChild(b)});
@@ -88,7 +117,54 @@ $('reset').onclick=()=>{const keep={mode:state.mode,watermarkSource:state.waterm
 async function output(){if(!runtime.inputReady)throw new Error('请先连接原始图片');if(state.mode==='image'&&!runtime.watermarkReady)throw new Error('请先选择水印图片');await ensureFont();const canvas=document.createElement('canvas'),size=renderTo(canvas,0),mime=state.outputFormat==='jpeg'?'image/jpeg':state.outputFormat==='webp'?'image/webp':'image/png',source=canvas.toDataURL(mime,state.quality);post('output',{output:{kind:'image',portId:'image',source,dataUrl:source,name:`水印图片.${state.outputFormat==='jpeg'?'jpg':state.outputFormat}`,mime,width:size.width,height:size.height,metadata:{watermarkMode:state.mode,addToCanvas:true}}});setStatus('输出已生成','ok')}
 async function hydrate(payload){runtime.nodeId=String(payload.nodeId||runtime.nodeId);runtime.pluginId=String(payload.pluginId||runtime.pluginId||PLUGIN);applyTheme(payload.theme);Object.assign(state,defaults,payload.state||{});syncControls();if(state.watermarkSource&&state.watermarkSource!==runtime.watermarkImage.src)void loadWatermark(state.watermarkSource,state.watermarkName);const source=sourceFrom((payload.inputs||{}).image);if(source!==runtime.source)await loadInput(source);else if(runtime.inputReady)post('loaded',{ready:true})}
 window.addEventListener('message',event=>{const m=event.data;if(!m||m.protocol!==PROTOCOL)return;if(m.type==='asset-result'){const pending=runtime.assetRequests.get(m.payload?.requestId);if(!pending)return;clearTimeout(pending.timer);runtime.assetRequests.delete(m.payload.requestId);if(m.payload.error)pending.reject(new Error(m.payload.error));else if(m.payload.dataUrl)pending.resolve(m.payload.dataUrl);else pending.reject(new Error('原图数据为空'));return}if(m.type==='init')void hydrate(m.payload||{});if(m.type==='run')void hydrate(m.payload||{}).then(output).catch(e=>{setStatus(e.message||String(e),'error');post('error',{message:e.message||String(e)})});if(m.type==='file-result'&&m.payload?.requestId===runtime.fileRequest){const f=m.payload.files?.[0];if(f)void loadWatermark(sourceFrom(f),f.name||'水印图片').then(emitState)}});
-new ResizeObserver(fitPreview).observe(preview.parentElement);preview.addEventListener('load',fitPreview);const previewObserver=new MutationObserver(fitPreview);previewObserver.observe(preview,{attributes:true,attributeFilter:['width','height']});syncControls();post('ready',{version:'0.1.2'});
+
+// Move existing controls instead of duplicating them: state and rendering stay unchanged.
+function group(id,title,controls){
+  const details=document.createElement('details');details.className='settings';details.id=id;
+  const summary=document.createElement('summary');summary.textContent=title;details.append(summary);
+  const fields=document.createElement('div');fields.className='fields';details.append(fields);
+  controls.forEach(key=>fields.append($(key).closest('.field')));
+  document.querySelector('.panel').insertBefore(details,document.querySelector('.footer-row'));
+}
+group('textSettings','字体与样式 · 字体、颜色、排版',['fontFamily','bold','fontUnit','lineHeight','letterSpacing','color','background']);
+// Alignment has no input id.
+$('textSettings').lastElementChild.append(document.querySelector('.align').closest('.field'));
+group('layoutSettings','位置与分布 · 定位、边距、旋转',['anchors','marginX','marginY','rotation','tile']);
+group('exportSettings','导出设置 · 格式、质量',['outputFormat','quality']);
+$('opacity').closest('.fields').prepend($('fontSize').closest('.field'));
+$('fontSize').closest('.field').classList.add('span2');
+$('opacity').closest('.field').classList.add('span2');
+document.querySelectorAll('select').forEach(select=>{
+  const control=document.createElement('div');control.className='select-control';
+  select.after(control);select.hidden=true;select.tabIndex=-1;
+  const trigger=document.createElement('button');trigger.type='button';trigger.className='select-trigger';
+  trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-expanded','false');
+  const list=document.createElement('div');list.className='select-options';list.id=select.id+'-options';list.role='listbox';list.hidden=true;
+  const label=select.closest('.field').querySelector('span').textContent;
+  trigger.setAttribute('aria-label',label);list.setAttribute('aria-label',label);trigger.setAttribute('aria-controls',list.id);
+  control.append(trigger,list);
+  const close=()=>{list.hidden=true;trigger.setAttribute('aria-expanded','false')};
+  control.sync=()=>{trigger.textContent=select.selectedOptions[0]?.textContent||select.value;list.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.value===select.value)))};
+  Array.from(select.options).forEach(option=>{
+    const button=document.createElement('button');button.type='button';button.role='option';button.dataset.value=option.value;button.textContent=option.textContent;
+    button.onclick=()=>{select.value=option.value;select.dispatchEvent(new Event('input',{bubbles:true}));close();trigger.focus()};list.append(button);
+  });
+  trigger.onclick=()=>{const opening=list.hidden;document.querySelectorAll('.select-control').forEach(c=>c.close());list.hidden=!opening;trigger.setAttribute('aria-expanded',String(opening));if(opening)list.querySelector('[aria-selected=true]')?.focus()};
+  control.close=close;
+  control.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){close();trigger.focus();event.preventDefault()}
+    if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){
+      event.preventDefault();list.hidden=false;trigger.setAttribute('aria-expanded','true');
+      const buttons=Array.from(list.children),i=buttons.indexOf(document.activeElement);
+      buttons[event.key==='Home'?0:event.key==='End'?buttons.length-1:(i+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length].focus();
+    }
+  });
+  control.addEventListener('focusout',event=>{if(!control.contains(event.relatedTarget))close()});control.sync();
+});
+document.addEventListener('pointerdown',event=>document.querySelectorAll('.select-control').forEach(c=>{if(!c.contains(event.target))c.close()}));
+new ResizeObserver(resizePreview).observe(document.querySelector('.app'));
+
+new ResizeObserver(fitPreview).observe(preview.parentElement);preview.addEventListener('load',fitPreview);const previewObserver=new MutationObserver(fitPreview);previewObserver.observe(preview,{attributes:true,attributeFilter:['width','height']});syncControls();post('ready',{version:'0.1.4'});
 })();
 </script>
 </body>
