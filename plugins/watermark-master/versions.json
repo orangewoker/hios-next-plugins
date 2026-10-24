@@ -3,6 +3,16 @@
   "pluginId": "watermark-master",
   "versions": [
     {
+      "version": "0.1.5",
+      "ref": "watermark-master-v0.1.5",
+      "releasedAt": "2026-10-24",
+      "notes": [
+        "预览按图片宽高比铺满可用宽度，取消固定节点高度对竖图的压缩。",
+        "图片加载后通过通用 resize-request 请求调整节点外框；需要支持该协议的新版 HIOS Next。",
+        "旧版主程序保持大比例预览，可滚动查看下方参数；保留折叠设置。"
+      ]
+    },
+    {
       "version": "0.1.4",
       "ref": "watermark-master-v0.1.4",
       "releasedAt": "2026-10-24",
