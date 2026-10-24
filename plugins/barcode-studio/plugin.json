@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "id": "barcode-studio",
+  "name": "条形码工作室",
+  "version": "0.1.0",
+  "description": "条形码与二维码生成，支持应用入口、画布文本输入和图片输出，以及 SVG/PDF/PNG 导出。",
+  "author": "HIOS Next adaptation; original DXOS barcode authors",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio",
+  "permissions": [
+    "canvas",
+    "filesystem"
+  ],
+  "contributes": {
+    "apps": [
+      {
+        "id": "barcode",
+        "title": "条形码工作室",
+        "description": "生成条形码与二维码，导出到素材库",
+        "entry": "runtime/index.html",
+        "category": "design"
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "barcode.generate",
+      "title": "生成条形码与二维码"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "barcode.generate",
+      "title": "条形码工作室",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        {
+          "id": "text",
+          "title": "编码内容",
+          "type": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "image",
+          "title": "条码图片",
+          "type": "image"
+        }
+      ],
+      "defaultSize": {
+        "width": 960,
+        "height": 760
+      },
+      "defaultData": {}
+    }
+  ]
+}

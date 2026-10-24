@@ -1,0 +1,29 @@
+{
+  "appId": "barcode",
+  "version": "1.0.7",
+  "build": 10007,
+  "extractedAt": "2026-10-24T22:38:01.9867257+08:00",
+  "kind": "published web bundle, not original Vue/TypeScript project",
+  "files": [
+    {
+      "path": "dx-app.json",
+      "bytes": 1706,
+      "sha256": "F1FEF304DE76B1238EBA794D7E42222BF839BF5CE95DBAB799D48F0891E2B86A"
+    },
+    {
+      "path": "index.html",
+      "bytes": 391,
+      "sha256": "7D50B673FFB80FABCC6D97FC4D1116B2BF84AB4A5F417C97D6ABFB87C5987F02"
+    },
+    {
+      "path": "assets\\index-gEbHBOqK.js",
+      "bytes": 93942,
+      "sha256": "3586E25A37C7E002AE8CD5677FE643F8A0DC85B44BCF17294D82CC6B34D72E4C"
+    },
+    {
+      "path": "assets\\index-hON-a-e0.css",
+      "bytes": 13133,
+      "sha256": "8D5FFB72007BFA183A14ED3F72AD66EF7606196A1A771A64C3CC413DFB39EFC2"
+    }
+  ]
+}

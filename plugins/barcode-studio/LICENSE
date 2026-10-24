@@ -1,0 +1,4 @@
+Licensing notice for barcode-studio
+
+The reconstructed encoder, rendering logic and UI derived from DXOS barcode 1.0.7 retain their original rights. No standalone license for that application was supplied in the extracted files. No new MIT grant is made for those portions. The repository root MIT license does not override this notice or grant rights to third-party derived code.
+Vue is licensed under MIT; its copyright/license notice is included in THIRD_PARTY_NOTICES.md. HIOS-specific integration additions do not change the original application's licensing.
