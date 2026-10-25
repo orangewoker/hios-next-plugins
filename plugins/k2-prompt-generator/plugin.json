@@ -2,11 +2,13 @@
   "schemaVersion": 1,
   "id": "k2-prompt-generator",
   "name": "K2 人像提示词生成器",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "根据镜头、人物、服装、姿态、场景等维度生成 K2 人像提示词，并提供自检结果。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator",
-  "permissions": ["canvas"],
+  "permissions": [
+    "canvas"
+  ],
   "capabilities": [
     {
       "id": "k2.prompt.generate",
@@ -34,12 +36,18 @@
       "rendererEntry": "runtime/index.html",
       "inputs": [],
       "outputs": [
-        { "id": "prompt", "title": "提示词", "type": "text" }
+        {
+          "id": "prompt",
+          "title": "提示词",
+          "type": "text"
+        }
       ],
       "hidePortLabels": true,
-      "defaultSize": { "width": 440, "height": 330 },
+      "defaultSize": {
+        "width": 440,
+        "height": 330
+      },
       "defaultData": {}
     }
   ]
 }
-

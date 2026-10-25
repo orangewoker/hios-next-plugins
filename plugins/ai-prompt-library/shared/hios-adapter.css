@@ -1,0 +1,3 @@
+/* Opt-in adapter: ai-prompt-library. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.panel-body button,.panel-body textarea,.panel-body select,.input-wrap input) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.panel{border-radius:16px}.panel-body{gap:14px}

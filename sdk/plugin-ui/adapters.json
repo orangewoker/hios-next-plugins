@@ -1,0 +1,74 @@
+{
+  "barcode-studio": {
+    "controls": ".typeChip, .exports button, .content textarea, .stageBar button",
+    "css": ".railScroll{gap:24px!important;padding:24px!important}.typeChip{min-height:42px}.exports button{min-height:38px;padding:8px 16px}.content textarea{padding:14px!important}.block{border-radius:var(--hios-radius-panel)} :root{--font:Inter,\"Microsoft YaHei\",\"Segoe UI\",system-ui,sans-serif}"
+  },
+  "compute-cloud": {
+    "controls": ".primary-button,.soft-button,.ghost-button,.field input,.field select",
+    "css": ".panel{border-radius:var(--hios-radius-panel);padding:20px}.actions{gap:12px;flex-wrap:wrap}.field{margin-bottom:14px} :root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--control:var(--hios-control);--text:var(--hios-text);--border:var(--hios-border);--accent:var(--hios-accent)}"
+  },
+  "director3d": {
+    "controls": ".el-button,.el-input__wrapper,.el-select__wrapper",
+    "css": ".el-button{--el-border-radius-base:12px}.el-input__wrapper,.el-select__wrapper{border-radius:12px}"
+  },
+  "hunyuan-3d": {
+    "controls": ".actions button, main textarea, main select, main input:not([type=checkbox]):not([type=range]):not([type=color])",
+    "css": ".actions{gap:12px;flex-wrap:wrap}main textarea,main select{min-height:36px}"
+  },
+  "image-compare": {
+    "controls": ".toolbar button,.output.plugin-run",
+    "css": ".output.plugin-run{border-radius:12px;box-shadow:var(--hios-shadow-button)}"
+  },
+  "k2-prompt-generator": {
+    "controls": ".actions button,.btn,.tools select,.tools input",
+    "css": ".info-card,.result-card,.out-card{border-radius:16px}.actions,.btnrow{gap:12px;flex-wrap:wrap}.actions button{min-height:36px}.node-shell{gap:14px} :root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--surface2:var(--hios-control);--border:var(--hios-border);--text:var(--hios-text);--muted:var(--hios-text-secondary,#777);--card:var(--hios-surface);--card2:var(--hios-control);--line:var(--hios-border);--txt:var(--hios-text);--sub:var(--hios-text-secondary,#777)}header strong,.info-title,.result-title strong{color:var(--hios-text)}"
+  },
+  "pdf-dwg-viewer": {
+    "controls": ".viewer-toolbar button,.page-field input",
+    "css": ".viewer-toolbar{gap:10px;flex-wrap:wrap}.viewer-toolbar button{border-radius:10px}"
+  },
+  "photocraft": {
+    "controls": ".ai-toolbar button,.ai-popover button,.ai-prompt",
+    "css": ".ai-popover{border-radius:16px}.ai-toolbar-row{gap:10px}"
+  },
+  "poster-editor": {
+    "controls": ".node-actions button,.toolbar button,.actions button,.left input:not([type=color]):not([type=range]),.right select",
+    "css": ".node-actions,.actions{gap:10px;flex-wrap:wrap} body{min-width:0}main{grid-template-columns:minmax(180px,230px) minmax(0,1fr) minmax(180px,240px)}@media(max-width:700px){html,body{overflow:auto}header{height:auto;min-height:72px;gap:12px;flex-wrap:wrap;padding:16px}main{display:flex;flex-direction:column;height:auto}.workspace{min-height:420px}aside{overflow:visible}.canvas-wrap{min-height:320px}}"
+  },
+  "static-site-runner": {
+    "controls": ".bar button,.address",
+    "css": ".bar{gap:10px}"
+  },
+  "watermark-master": {
+    "controls": ".tabs button,.image-pick,.reset,.fields input:not([type=range]):not([type=color]):not([type=checkbox]),.fields select",
+    "css": ".panel{padding:16px!important}.fields{gap:14px!important}.field{font-size:12px}.tabs{gap:8px}.reset,.image-pick{min-height:34px} :root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--control:var(--hios-control);--text:var(--hios-text);--border:var(--hios-border);--accent:var(--hios-accent)} .field>span,.section-label{font-size:12px}.field input:not([type=range]):not([type=color]):not([type=checkbox]),.select-trigger{min-height:36px}"
+  },
+  "civitai-assets": {
+    "controls": ".toolbar button,.toolbar input,.toolbar select,.bar button,.bar input,.settings input,.settings select",
+    "css": ".toolbar,.bar{gap:10px}.settings{border-radius:16px;padding:20px} body{grid-template-rows:auto 25px minmax(0,1fr) 42px}.toolbar{flex-wrap:wrap}.toolbar .search{flex:1 1 140px}"
+  },
+  "pinterest-assets": {
+    "controls": ".toolbar button,.toolbar input,.toolbar select,.bar button,.bar input,.settings input,.settings select",
+    "css": ".toolbar,.bar{gap:10px}.settings{border-radius:16px;padding:20px}"
+  },
+  "xiaohongshu-assets": {
+    "controls": ".toolbar button,.toolbar input,.toolbar select,.bar button,.bar input,.settings input,.settings select",
+    "css": ".toolbar,.bar{gap:10px}.settings{border-radius:16px;padding:20px}"
+  },
+  "ai-prompt-library": {
+    "controls": ".panel-body button,.panel-body textarea,.panel-body select,.input-wrap input",
+    "css": ".panel{border-radius:16px}.panel-body{gap:14px}"
+  },
+  "puzzle-grid": {
+    "controls": ".select-button,.controls select,.controls input:not([type=range]):not([type=color]),.output",
+    "css": ".controls{gap:14px}"
+  },
+  "web-browser": {
+    "controls": ".address,.go,.nav-actions button",
+    "css": ".nav{gap:10px}"
+  },
+  "dlss5-image": {
+    "controls": ".settings select,.settings button,.footer button,.wrap select,.wrap button",
+    "css": ".settings{gap:14px}.footer{gap:12px}"
+  }
+}

@@ -1,0 +1,3 @@
+/* Opt-in adapter: web-browser. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.address,.go,.nav-actions button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.nav{gap:10px}

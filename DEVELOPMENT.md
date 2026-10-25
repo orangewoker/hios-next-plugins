@@ -175,3 +175,7 @@ parent.postMessage({protocol: 'hios-plugin-node/v1', pluginId, nodeId, type: 'ai
 任务按账户/插件隔离，每插件同时最多2个，最长30分钟。状态仅存任务元数据和素材引用，不保存 API Key、参考图 base64 或提示词。应将任务 ID 和范围元数据保存在插件 state，再每4秒查询，重载时不重新 start。图片生成复用宿主完整协议中心路由；PSD 使用单独的可编辑文件服务 v2（详见 PhotoCraft 的 backend 文档），只下载同源 PSD，不跟随带凭据重定向。
 
 PhotoCraft 0.4.0 分层使用 `pipeline:local-layers/v1`，由通用视觉和图片编辑模型生成素材清单，在插件本地组装 PSD；要求 HIOS Next 3.0.1+。详见 plugins/photocraft/README.md；不需要部署 PSD 专用后端。
+
+## 节点视觉标准（UI v1）
+
+新插件必须采用 `sdk/plugin-ui` 的共享套件与模板。表单圆角 12px、面板 20px、控件高度 36px、间距 14px；不要对图片/SVG/画布/定位手柄应用通用表单样式。宿主负责外壳，插件负责 iframe 内容。构建后执行 `node scripts/sync-plugin-ui.mjs`，不得只手工修改打包后的 HTML。详见 `sdk/plugin-ui/README.md`。

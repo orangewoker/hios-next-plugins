@@ -2,25 +2,79 @@
   "schemaVersion": 1,
   "id": "photocraft",
   "name": "PhotoCraft",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "开源图像编辑器，支持 AI 局部改图、图生图、文生图和 GPT PSD 任务分层与图层导入。",
   "author": "PhotoCraft / HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft",
-  "permissions": ["filesystem", "canvas", "agent"],
-  "capabilities": [{ "id": "photocraft.edit", "title": "PhotoCraft 图像编辑", "description": "在 HIOS 应用或画布节点中使用 PhotoCraft 编辑图像。" }],
+  "permissions": [
+    "filesystem",
+    "canvas",
+    "agent"
+  ],
+  "capabilities": [
+    {
+      "id": "photocraft.edit",
+      "title": "PhotoCraft 图像编辑",
+      "description": "在 HIOS 应用或画布节点中使用 PhotoCraft 编辑图像。"
+    }
+  ],
   "contributes": {
-    "apps": [{ "id": "photocraft", "title": "PhotoCraft", "description": "开源图像编辑器，支持图层、蒙版、滤镜和 PSD。", "entry": "app/index.html", "icon": "assets/icon.svg", "category": "design" }]
+    "apps": [
+      {
+        "id": "photocraft",
+        "title": "PhotoCraft",
+        "description": "开源图像编辑器，支持图层、蒙版、滤镜和 PSD。",
+        "entry": "app/index.html",
+        "icon": "assets/icon.svg",
+        "category": "design"
+      }
+    ]
   },
-  "nodes": [{
-    "id": "photocraft.editor",
-    "title": "PhotoCraft 编辑器",
-    "description": "在画布窗口中打开 PhotoCraft，编辑输入图像并输出图片。",
-    "rendererEntry": "runtime/index.html",
-    "inputs": [{ "id": "input", "title": "图片 / 文档", "type": "any", "multiple": true }],
-    "outputs": [{ "id": "image", "title": "编辑结果", "type": "image" }, { "id": "file", "title": "编辑文件", "type": "file" }],
-    "hidePortLabels": true,
-    "defaultSize": { "width": 980, "height": 720 },
-    "defaultData": {}
-  }],
-  "fileAssociations": [{ "extensions": ["psd", "psb", "pcraft"], "mimeTypes": ["image/vnd.adobe.photoshop"], "nodeId": "photocraft.editor" }]
+  "nodes": [
+    {
+      "id": "photocraft.editor",
+      "title": "PhotoCraft 编辑器",
+      "description": "在画布窗口中打开 PhotoCraft，编辑输入图像并输出图片。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        {
+          "id": "input",
+          "title": "图片 / 文档",
+          "type": "any",
+          "multiple": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "image",
+          "title": "编辑结果",
+          "type": "image"
+        },
+        {
+          "id": "file",
+          "title": "编辑文件",
+          "type": "file"
+        }
+      ],
+      "hidePortLabels": true,
+      "defaultSize": {
+        "width": 980,
+        "height": 720
+      },
+      "defaultData": {}
+    }
+  ],
+  "fileAssociations": [
+    {
+      "extensions": [
+        "psd",
+        "psb",
+        "pcraft"
+      ],
+      "mimeTypes": [
+        "image/vnd.adobe.photoshop"
+      ],
+      "nodeId": "photocraft.editor"
+    }
+  ]
 }

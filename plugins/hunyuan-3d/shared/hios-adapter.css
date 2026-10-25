@@ -1,0 +1,3 @@
+/* Opt-in adapter: hunyuan-3d. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.actions button, main textarea, main select, main input:not([type=checkbox]):not([type=range]):not([type=color])) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.actions{gap:12px;flex-wrap:wrap}main textarea,main select{min-height:36px}

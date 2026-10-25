@@ -1,0 +1,3 @@
+/* Opt-in adapter: pdf-dwg-viewer. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.viewer-toolbar button,.page-field input) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.viewer-toolbar{gap:10px;flex-wrap:wrap}.viewer-toolbar button{border-radius:10px}

@@ -1,0 +1,3 @@
+/* Opt-in adapter: image-compare. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.toolbar button,.output.plugin-run) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.output.plugin-run{border-radius:12px;box-shadow:var(--hios-shadow-button)}

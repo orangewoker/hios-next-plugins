@@ -2,11 +2,14 @@
   "schemaVersion": 1,
   "id": "hunyuan-3d",
   "name": "混元3D",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "调用腾讯混元生3D API，通过文本、单图或多视图生成、预览和导出3D模型。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d",
-  "permissions": ["network", "canvas"],
+  "permissions": [
+    "network",
+    "canvas"
+  ],
   "capabilities": [
     {
       "id": "hunyuan-3d.generate",
@@ -21,14 +24,28 @@
       "title": "混元3D生成",
       "description": "连接文字或图片，自动判断文生、单图生或多视图生3D。",
       "rendererEntry": "runtime/index.html",
-      "permissions": ["network"],
+      "permissions": [
+        "network"
+      ],
       "inputs": [
-        { "id": "input", "title": "智能输入", "type": "any", "multiple": true }
+        {
+          "id": "input",
+          "title": "智能输入",
+          "type": "any",
+          "multiple": true
+        }
       ],
       "outputs": [
-        { "id": "result", "title": "模型结果", "type": "any" }
+        {
+          "id": "result",
+          "title": "模型结果",
+          "type": "any"
+        }
       ],
-      "defaultSize": { "width": 480, "height": 460 }
+      "defaultSize": {
+        "width": 480,
+        "height": 460
+      }
     }
   ],
   "contributes": {

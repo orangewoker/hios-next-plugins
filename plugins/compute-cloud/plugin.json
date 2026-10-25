@@ -2,11 +2,15 @@
   "schemaVersion": 1,
   "id": "compute-cloud",
   "name": "算力云",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "连接 AutoDL.Art ComfyUI API，管理多个云端工作流，并在应用或画布节点中生成图片、视频与音频。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/compute-cloud",
-  "permissions": ["network", "filesystem", "canvas"],
+  "permissions": [
+    "network",
+    "filesystem",
+    "canvas"
+  ],
   "capabilities": [
     {
       "id": "compute-cloud.workflow",
@@ -32,7 +36,12 @@
         "appId": "compute-cloud",
         "title": "算力云工作流",
         "description": "调用算力云应用中已经配置并验证过的 AutoDL ComfyUI 工作流。",
-        "capabilities": ["image", "video", "audio", "file"]
+        "capabilities": [
+          "image",
+          "video",
+          "audio",
+          "file"
+        ]
       }
     ]
   }

@@ -2,11 +2,13 @@
   "schemaVersion": 1,
   "id": "puzzle-grid",
   "name": "拼图",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "将 2、4、6 或 9 张图片合成为宫格拼图，支持间隔和文字水印。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid",
-  "permissions": ["canvas"],
+  "permissions": [
+    "canvas"
+  ],
   "capabilities": [
     {
       "id": "image.puzzle-grid",
@@ -21,12 +23,25 @@
       "description": "连接图片并选择宫格布局，设置间隔与文字水印后输出 PNG。",
       "rendererEntry": "runtime/index.html",
       "inputs": [
-        { "id": "images", "title": "图片", "type": "image", "required": true, "multiple": true }
+        {
+          "id": "images",
+          "title": "图片",
+          "type": "image",
+          "required": true,
+          "multiple": true
+        }
       ],
       "outputs": [
-        { "id": "image", "title": "拼图结果", "type": "image" }
+        {
+          "id": "image",
+          "title": "拼图结果",
+          "type": "image"
+        }
       ],
-      "defaultSize": { "width": 560, "height": 650 },
+      "defaultSize": {
+        "width": 560,
+        "height": 650
+      },
       "defaultData": {
         "layout": 4,
         "gap": 1,

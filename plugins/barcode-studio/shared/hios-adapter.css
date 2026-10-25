@@ -1,0 +1,3 @@
+/* Opt-in adapter: barcode-studio. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.typeChip, .exports button, .content textarea, .stageBar button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.railScroll{gap:24px!important;padding:24px!important}.typeChip{min-height:42px}.exports button{min-height:38px;padding:8px 16px}.content textarea{padding:14px!important}.block{border-radius:var(--hios-radius-panel)} :root{--font:Inter,"Microsoft YaHei","Segoe UI",system-ui,sans-serif}

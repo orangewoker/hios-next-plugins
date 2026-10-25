@@ -1,0 +1,3 @@
+/* Opt-in adapter: dlss5-image. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.settings select,.settings button,.footer button,.wrap select,.wrap button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+.settings{gap:14px}.footer{gap:12px}
