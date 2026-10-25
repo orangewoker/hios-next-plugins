@@ -1,4 +1,4 @@
-export interface SystemContext { appearance?: 'dark' | 'light'; interfaceLocale?: string; locale?: string; direction?: 'ltr' | 'rtl'; displayScale?: number }
+export interface SystemContext { appearance?: 'dark' | 'light'; interfaceLocale?: string; locale?: string; direction?: 'ltr' | 'rtl'; displayScale?: number; themeTokens?: Record<string, unknown> }
 const PLUGIN = 'barcode-studio';
 let protocol = '', nodeId = '', appId = '', origin = '*';
 const pending = new Map<string, { resolve: (value: any) => void; reject: (reason: Error) => void; timer: number }>();
@@ -48,7 +48,7 @@ export function connectHost(onContext: (value: SystemContext) => void, hydrate: 
       else request.resolve(payload.result);
       return;
     }
-    if (payload.theme) onContext({ appearance: payload.theme.mode === 'dark' ? 'dark' : 'light' });
+    if (payload.theme) onContext({ appearance: payload.theme.mode === 'dark' ? 'dark' : 'light', themeTokens: payload.theme.tokens });
     if (m.type === 'init' || m.type === 'run') {
       try { hydrate(payload); post('loaded', { ready: true }); }
       catch (e) { post('error', { message: String(e) }); return; }

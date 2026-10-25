@@ -211,6 +211,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import useBarcode from "./useBarcode";
+import { applyThemeTokens } from "./theme";
 import { connectHost, publishImage, postState, type SystemContext } from "./host";
 import { translations, exportIcons } from "./presentation";
 
@@ -291,6 +292,7 @@ function applyContext(context: SystemContext) {
   direction.value = context.direction === "rtl" ? "rtl" : "ltr";
   const root = document.documentElement;
   root.dataset.theme = context.appearance === "dark" ? "dark" : "light";
+  applyThemeTokens(root.style, context.themeTokens);
   root.lang = locale.value;
   root.dir = direction.value;
   root.style.setProperty(
