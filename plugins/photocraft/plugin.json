@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "photocraft",
   "name": "PhotoCraft",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "开源图像编辑器，支持 AI 局部改图、图生图、文生图和 GPT PSD 任务分层与图层导入。",
   "author": "PhotoCraft / HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft",

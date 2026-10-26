@@ -1,3 +1,4 @@
+import { configureGraphics } from './graphics.js';
 // The same real WASM editor runs in both hosts. Only the outer protocol differs.
 import { installSelectMenus } from './select-menu.js';
 installSelectMenus();
@@ -72,9 +73,10 @@ function poll() {
   } catch (e) { fail(e); }
 }
 const ticker = setInterval(poll, 100);
-async function start() {
+async function start(graphics) {
   if (starting) return starting;
   starting = (async () => {
+    configureGraphics(graphics, text => { const label = document.getElementById('graphicsStatus'); if (label) label.textContent = text; });
     status('正在加载 PhotoCraft WebAssembly…');
     try {
       bindings = await import('./web/photocraft-web.js');
@@ -146,7 +148,7 @@ async function initialize(payload) {
   if (!initialized) {
     state = payload.state && typeof payload.state === 'object' ? { ...payload.state } : {};
     state.documentKey ||= crypto.randomUUID(); remember();
-    await start();
+    await start(payload.graphics);
     await request('locale', payload.locale || document.documentElement.lang || 'zh-CN');
     const font = await fetch(new URL('./fonts/NotoSansSC-Regular.ttf', import.meta.url));
     if (!font.ok) throw new Error('中文字体资源缺失，请检查插件 fonts/ 目录');

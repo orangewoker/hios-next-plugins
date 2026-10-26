@@ -14,12 +14,14 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft
 
 ## 使用
 
-- **应用**：在应用列表打开 PhotoCraft，打开本机图片/PSD/PhotoCraft 文档，使用原生的图层、蒙版、绘画、调整和滤镜界面；顶部“导出”下载当前文档。
-- **画布**：添加“PhotoCraft 编辑器”节点，窗口式界面可调整大小、全屏编辑。连接多张图片到“图片 / 文档”输入，每张图片在同一个文档中占一个独立像素图层，不替换前面导入的图或已有编辑。首图决定画布尺寸，后续图片居中放置，超出画布时等比缩小；导入可撤销。重复初始化、重复运行和重载不会重复添加相同输入，断开连线不会删除已导入图层。节点顶部“打开”选择普通图片时同样追加图层；PSD/PhotoCraft 等分层项目仍按文档打开。
-- **输出**：点击节点“运行”即导出当前文档所有可见图层的合成 PNG，在画布上新增并连接一个结果图片节点，同时更新图片端口；顶部“输出到画布”也可选择其他格式。PNG/JPEG/WebP 为图片输出，PSD/PhotoCraft 为保留图层的文件输出。
-- **保存**：停止编辑约 1.8 秒后自动将当前文档保存成 HIOS 磁盘素材中的 `.pcraft`，保留图层。顶部“保存文档”可立即保存；重新打开会恢复最近保存的活动文档。
+- **应用**：在应用列表打开 PhotoCraft，打开本机图片/PSD/PhotoCraft 文档，使用原生的图层、蒙版、绘画、调整和滤镜界面；底部“导出文件”下载当前文档。
+- **画布**：添加“PhotoCraft 编辑器”节点，窗口式界面可调整大小、全屏编辑。连接多张图片到“图片 / 文档”输入，每张图片在同一个文档中占一个独立像素图层，不替换前面导入的图或已有编辑。首图决定画布尺寸，后续图片居中放置，超出画布时等比缩小；导入可撤销。重复初始化、重复运行和重载不会重复添加相同输入，断开连线不会删除已导入图层。底部“文档 → 打开文件”选择普通图片时同样追加图层；PSD/PhotoCraft 等分层项目仍按文档打开。
+- **输出**：点击节点“运行”即导出当前文档所有可见图层的合成 PNG，在画布上新增并连接一个结果图片节点，同时更新图片端口；底部“文档”菜单也可选择导出格式并“输出到画布”。PNG/JPEG/WebP 为图片输出，PSD/PhotoCraft 为保留图层的文件输出。
+- **保存**：停止编辑约 1.8 秒后自动将当前文档保存成 HIOS 磁盘素材中的 `.pcraft`，保留图层。底部“文档 → 保存可编辑文档”可立即保存；重新打开会恢复最近保存的活动文档。
 - `.psd`、`.psb`、`.pcraft` 文件关联到该节点，不更改 PNG/JPG 的默认图片节点。
 - 界面默认简体中文，附带可离线使用的 Noto Sans SC 字体，避免 Web 版中文显示为方框；仍可在 PhotoCraft 偏好设置切换语言。
+
+顶部仅保留 PhotoCraft 原生菜单，HIOS 的打开、保存、导出格式、全屏和重载统一收纳到底部“文档”菜单，不再额外占用标题栏。应用页使用紧凑返回栏并自适应填满剩余窗口；画布节点保留宿主标题用于拖动、删除，使用宿主“运行”输出结果。
 
 ### AI 工具栏与 GPT PSD 任务（0.4.1）
 
@@ -75,3 +77,7 @@ node tests/fixtures/photocraft-host.mjs
 HIOS 适配文件：`LICENSE`（MIT）。PhotoCraft：`LICENSE-MIT` 或 `LICENSE-APACHE`，另保留 `NOTICE`、`ATTRIBUTION.md`。WASM 内嵌的字体、图标、词典和主题许可文本位于 `THIRD_PARTY/`（保留上游目录结构）。`fonts/NotoSansSC-Regular.ttf` 是 HIOS 现有 Noto Sans SC 可变字体的 Regular 实例（`python scripts/photocraft/prepare-font.py <NotoSansSC-Variable.woff2>` 可重建），许可为 `fonts/OFL-NotoSansSC.txt`。HIOS 入口图标为独立绘制，不使用受限的 ArtCraft 品牌资料。
 
 本地 PSD 组装依赖 ag-psd 31.0.2，浏览器 bundle 仅随可选插件分发。可在 HIOS 开发工作区运行 `node scripts/build-photocraft-psd.mjs` 重建。第三方许可保存在 vendor/THIRD-PARTY-LICENSES.txt。
+
+## 0.4.3 图形偏好
+
+搭配 HIOS Next 3.4.3，在设置 → 图形与性能选择 GPU 功耗偏好与 WebGL 兼容模式；重新打开编辑器后生效，并显示实际图形后端。旧宿主保持默认自动模式。

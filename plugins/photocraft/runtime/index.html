@@ -2,14 +2,19 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>PhotoCraft</title><link rel="stylesheet" href="runtime/style.css"><!-- hios-ui:start --><link rel="stylesheet" href="shared/hios-ui.css"><link rel="stylesheet" href="shared/hios-adapter.css"><script src="shared/hios-ui.js" data-plugin-id="photocraft"></script><!-- hios-ui:end -->
 </head>
 <body data-surface="node">
-<header class="bar"><div class="brand"><img src="assets/icon.svg" alt=""><strong>PhotoCraft</strong><span>画布编辑窗口</span></div>
-<div class="actions" data-no-node-drag><button id="open" title="打开图片、PSD 或 .pcraft">打开</button><button id="save" disabled title="保存当前可编辑文档到 HIOS，保留图层">保存文档</button>
-<select id="format" aria-label="导出格式"><option value="png">PNG</option><option value="jpg">JPEG</option><option value="webp">WebP</option><option value="psd">PSD</option><option value="pcraft">PhotoCraft</option></select>
-<button id="export" class="primary" disabled>输出到画布</button><button id="reload" title="保存后重新加载">↻</button><button id="expand" title="全屏编辑 / 退出全屏" aria-label="全屏编辑">⛶</button></div></header>
 <main class="stage" data-no-node-drag><canvas id="photocraft_canvas" tabindex="0"></canvas>
 <section id="photocraft_loading" class="loading"><img src="assets/icon.svg" alt=""><h1 id="loadingMessage">正在启动 PhotoCraft…</h1><p id="loadingDetail">首次载入约 30 MB 的 WebAssembly，请稍候。</p><button id="webgl">使用 WebGL 模式重试</button></section></main>
 <section id="aiPanel" class="ai-toolbar" aria-label="AI 工具栏" data-no-node-drag>
 <div class="ai-toolbar-row" role="toolbar" aria-label="AI 图像工具">
+<details id="documentTools" class="ai-more document-tools"><summary title="打开、保存、导出格式和窗口操作">文档</summary><div class="ai-popover document-popover" aria-label="文档操作">
+<button id="open" title="打开图片、PSD 或 .pcraft">打开文件…</button>
+<button id="save" disabled title="保存当前可编辑文档到 HIOS，保留图层">保存可编辑文档</button>
+<label class="document-format"><span>导出格式</span><select id="format" aria-label="导出格式"><option value="png">PNG</option><option value="jpg">JPEG</option><option value="webp">WebP</option><option value="psd">PSD</option><option value="pcraft">PhotoCraft</option></select></label>
+<button id="export" class="primary" disabled>输出到画布</button>
+<button id="expand" title="全屏编辑 / 退出全屏" aria-label="全屏编辑">全屏编辑 / 退出全屏</button>
+<small id="graphicsStatus" role="status">图形状态：等待编辑器初始化；偏好在 HIOS 设置 → 图形与性能中修改。</small>
+<button id="reload" title="保存后重新加载">保存并重新加载</button>
+</div></details>
 <select id="aiMode" aria-label="AI 功能" title="AI 功能"><option value="psd">一键分层</option><option value="edit">局部改图</option><option value="variation">图生图</option><option value="generate">文生图</option></select>
 <span class="ai-divider" aria-hidden="true"></span>
 <select id="aiRoute" aria-label="AI 路由" title="AI 路由"><option value="">选择路由</option></select>
