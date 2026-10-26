@@ -53,6 +53,7 @@ const models = ref<NodeAiModel[]>([]), tasks = ref<DirectorGeneration[]>([]), re
 const dshModels = ref<DshModelCatalog | null>(null), dshModelsLoading = ref(false), dshModelsError = ref('');
 const exportingVideo = ref(false), exportingImage = ref(''), exportProgress = ref(0);
 const jsonOpen = ref(false), jsonText = ref(''), fileInput = ref<HTMLInputElement>();
+let documentKey = crypto.randomUUID();
 let initialized = false, disposed = false, restoring = false, timer: ReturnType<typeof setTimeout> | undefined;
 let queue: Promise<unknown> = Promise.resolve(), controller: AbortController | undefined, decisionId = '';
 let dshRunId = '', dshSessionId = '';
@@ -62,7 +63,7 @@ function fail(e: unknown) { status.value = errorText(e); ElMessage.error(status.
 function theme(p: any) { document.documentElement.classList.toggle('dark', p?.theme?.mode !== 'light'); }
 
 async function readDocument(url: string) {
-  const response = await fetch(assetUrl(url));
+  const response = await fetch(assetUrl(url), { cache: 'no-store' });
   if (!response.ok) throw new Error('无法读取工程素材');
   const text = await response.text();
   if (text.length > 4_000_000) throw new Error('工程文件超过 4 MB');
@@ -74,11 +75,13 @@ const disconnect = connect((type, p) => {
     theme(p); references.value = Object.values(p.inputs || {}).flat();
     if (initialized || restoring) return;
     restoring = true;
+    if (typeof p.state?.documentKey === 'string' && /^[a-zA-Z0-9_-]{8,80}$/.test(p.state.documentKey)) documentKey = p.state.documentKey;
     void (async () => {
       try {
         if (p.state?.documentUrl) doc.value = await readDocument(p.state.documentUrl);
         else if (p.file?.url) doc.value = await readDocument(p.file.url);
         if (typeof p.manjuDirector?.instruction === 'string') doc.value.prompt = p.manjuDirector.instruction.slice(0, 12000);
+        post('state', { state: { ...p.state, documentKey } });
         initialized = true; loaded.value = true; status.value = p.manjuDirector ? '已接收分镜任务草稿，请确认后运行 Agent' : '已就绪';
         void loadModels();
         if (doc.value.aiEngine === 'dsh') void loadDshModels();
@@ -96,10 +99,10 @@ function persist(snapshot: DirectorDocument, signal?: AbortSignal) {
   const work = queue.catch(() => {}).then(async () => {
     signal?.throwIfAborted();
     if (disposed) throw new Error('导演台已关闭');
-    const result = await storeFile(new Blob([JSON.stringify(copy)], { type: 'application/x-hios-director3d' }), '场景.director3d');
+    const result = await storeFile(new Blob([JSON.stringify(copy)], { type: 'application/x-hios-director3d' }), '场景.director3d', documentKey, 'draft');
     if (disposed) throw new Error('导演台已关闭');
     signal?.throwIfAborted();
-    post('state', { state: { version: 1, documentUrl: result.url } });
+    post('state', { state: { version: 1, documentKey, documentUrl: result.url } });
     status.value = '已保存';
     return result;
   });

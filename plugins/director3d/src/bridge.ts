@@ -34,7 +34,7 @@ export function connect(receive: (type: string, payload: any) => void) {
 export function assetUrl(url: string) {
   return location.protocol === 'http:' && location.hostname === 'hios-plugin.localhost' ? url.replace(/^hios-asset:\/\//, 'http://hios-asset.localhost/') : url;
 }
-export async function storeFile(file: Blob, name: string, key = crypto.randomUUID()) {
+export async function storeFile(file: Blob, name: string, key = crypto.randomUUID(), purpose?: 'draft') {
   if (file.size > 64 * 1024 * 1024) throw new Error('文件超过宿主 64 MB 上限');
-  return request('file-store', { key, name, mime: file.type || 'application/octet-stream', bytes: new Uint8Array(await file.arrayBuffer()) });
+  return request('file-store', { key, purpose, name, mime: file.type || 'application/octet-stream', bytes: new Uint8Array(await file.arrayBuffer()) });
 }

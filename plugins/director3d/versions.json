@@ -3,6 +3,14 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.6",
+      "ref": "director3d-v0.1.6",
+      "releasedAt": "2026-10-26",
+      "notes": [
+        "自动保存改为独立草稿，同一工程覆盖保存，不再在资源库重复新增文件。请配合 HIOS Next 3.4.9 或更新版本使用。"
+      ]
+    },
+    {
       "version": "0.1.5",
       "ref": "director3d-v0.1.5",
       "releasedAt": "2026-10-26",

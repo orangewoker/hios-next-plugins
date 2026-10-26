@@ -106,7 +106,7 @@ async function readSource(source) {
   if (!url || !/^(?:https?:|hios-asset:|data:|blob:)/i.test(url)) throw new Error('输入文件地址无效');
   // Windows/Linux Tauri custom schemes are exposed as *.localhost, including saved state URLs.
   if (location.hostname === 'hios-plugin.localhost') url = url.replace(/^hios-asset:\/\//i, 'http://hios-asset.localhost/');
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) throw new Error(`读取文件失败：HTTP ${response.status}`);
   if (Number(response.headers.get('content-length')) > MAX_BYTES) throw new Error('输入文件超过 64 MB');
   const bytes = new Uint8Array(await response.arrayBuffer());
@@ -171,12 +171,12 @@ async function initialize(payload) {
   if (!aiInitialized) { aiInitialized = true; void initializeAI(); }
   post('loaded', { ready: true });
 }
-async function storeFile(file, key = state.documentKey) {
+async function storeFile(file, key = state.documentKey, purpose) {
   return new Promise((resolve, reject) => {
     const requestId = crypto.randomUUID();
     const timer = setTimeout(() => { hostRequests.delete(requestId); reject(new Error('宿主文件保存超时')); }, 30000);
     hostRequests.set(requestId, { resolve, reject, timer });
-    post('file-store', { requestId, key, name: file.name, mime: fileMime(file.format), bytes: file.bytes });
+    post('file-store', { requestId, key, purpose, name: file.name, mime: fileMime(file.format), bytes: file.bytes });
   });
 }
 async function saveDocument() {
@@ -188,7 +188,7 @@ async function saveDocument() {
     status('正在保存可编辑文档…');
     const file = await request('snapshot');
     const inputSources = [...seenInputs];
-    const stored = await storeFile(file);
+    const stored = await storeFile(file, state.documentKey, 'draft');
     state.document = { ...stored, name: file.name }; state.inputSources = inputSources; remember();
     savedDocKey = `${file.documentId}:${file.revision}`;
     await request('saved', savedDocKey);
