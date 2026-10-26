@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.2.5",
-  "description": "画布内的网页与原图采集节点，支持 CDN、WordPress 及小红书公开文章原图提取，兼容 HIOS Tauri。",
+  "version": "0.3.0",
+  "description": "节点内真实网页浏览，按需悬浮添加或拖放原图，无自动采集与独立窗口。需配套新版 HIOS Tauri。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",
   "permissions": [
@@ -14,14 +14,14 @@
     {
       "id": "web.browser",
       "title": "网页浏览与原图采集",
-      "description": "读取公开网页，探测 CDN、WordPress 与小红书文章原图并输出到画布。"
+      "description": "节点内真实网页浏览，按需悬浮添加或拖放原图，无自动采集与独立窗口。需配套新版 HIOS Tauri。"
     }
   ],
   "nodes": [
     {
       "id": "web.browser",
       "title": "浏览器",
-      "description": "输入网址浏览网页，从原图库选择高清图片并保存到画布。",
+      "description": "节点内真实网页浏览，按需悬浮添加或拖放原图，无自动采集与独立窗口。需配套新版 HIOS Tauri。",
       "rendererEntry": "runtime/index.html",
       "inputs": [],
       "outputs": [

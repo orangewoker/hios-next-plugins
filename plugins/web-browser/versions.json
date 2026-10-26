@@ -3,6 +3,17 @@
   "pluginId": "web-browser",
   "versions": [
     {
+      "version": "0.3.0",
+      "ref": "web-browser-v0.3.0",
+      "releasedAt": "2026-10-26",
+      "notes": [
+        "需要 HIOS Next 3.4.7 或更高版本（Windows Tauri）",
+        "节点内真实网页，取消独立窗口和自动抓取图库",
+        "悬停添加与拖放原图；支持小红书文件 ID 原图和 mooool 原文件",
+        "优化浏览器节点位置、尺寸与显示缩放同步；复杂页面仍需兼容性验证"
+      ]
+    },
+    {
       "version": "0.2.4",
       "ref": "web-browser-v0.2.4",
       "releasedAt": "2026-09-21",
