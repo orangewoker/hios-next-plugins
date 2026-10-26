@@ -1,0 +1,3 @@
+/* Opt-in adapter: dx-cut. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.hios-cut-toolbar button,.hios-cut-toolbar select,.titlebar button,.modal button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+:root[data-theme]{--accent:var(--hios-accent)}

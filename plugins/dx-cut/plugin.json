@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "dx-cut",
+  "name": "DX Cut",
+  "version": "0.1.0",
+  "description": "独立本地视频剪辑器：多轨时间线、字幕、工程恢复与视频导出。不依赖 DXOS。",
+  "permissions": [
+    "filesystem",
+    "canvas",
+    "process"
+  ],
+  "contributes": {
+    "apps": [
+      {
+        "id": "editor",
+        "title": "DX Cut 视频剪辑",
+        "entry": "runtime/index.html",
+        "category": "video"
+      }
+    ],
+    "mcpServers": [
+      {
+        "id": "engine",
+        "name": "DX Cut 本地引擎",
+        "transport": "stdio",
+        "entry": "backend/server.cjs",
+        "runtime": "node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "editor",
+      "title": "DX Cut 视频剪辑",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        {
+          "id": "media",
+          "title": "视频 / 音频 / 图片",
+          "type": "any"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "video",
+          "title": "成片",
+          "type": "video"
+        }
+      ],
+      "defaultSize": {
+        "width": 1100,
+        "height": 800
+      },
+      "defaultData": {}
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "dx-cut",
+  "versions": [{
+    "version": "0.1.0",
+    "ref": "dx-cut-v0.1.0",
+    "releasedAt": "2026-10-26",
+    "notes": [
+      "首个 Windows x64 预览版，需要 HIOS Next 3.4.5 或更新版本。",
+      "独立应用和画布节点，多轨剪辑、工程恢复、FFmpeg 导出及硬件编码回退。",
+      "不依赖 DXOS；已知未接通功能详见 README。"
+    ]
+  }]
+}

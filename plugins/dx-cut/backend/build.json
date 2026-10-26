@@ -1,0 +1,6 @@
+{
+  "platform": "win32",
+  "arch": "x64",
+  "canvas": "^1.0.11",
+  "node": "v24.7.0"
+}

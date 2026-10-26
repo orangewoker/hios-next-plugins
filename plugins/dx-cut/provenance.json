@@ -1,0 +1,6 @@
+{
+  "upstream": "https://github.com/Xiangyu-CAS/rea-capcut",
+  "commit": "427742ee9022e68c44d9c9398331530b89678a53",
+  "source": "D:/AIGC/dxCutExport/source",
+  "note": "上游源码适配；不包含 DXOS 平台与定制服务"
+}
