@@ -1,0 +1,15 @@
+/* Host chrome consumes the live HIOS palette; never recolor image pixels. */
+html,body,.stage,.loading { background:var(--hios-background); color:var(--hios-text); }
+body .ai-toolbar { --ai-bg:var(--hios-surface); --ai-control:var(--hios-control); --ai-hover:color-mix(in srgb,var(--hios-text) 8%,var(--hios-control)); --ai-border:var(--hios-border); --ai-text:var(--hios-text); --ai-muted:var(--hios-text-secondary,var(--hios-text)); background:var(--ai-bg); border-color:var(--ai-border); }
+body .ai-toolbar :is(button,input,summary),body .select-trigger { background:var(--hios-control); color:var(--hios-text); border-color:var(--hios-border); border-radius:var(--hios-radius-control); }
+body .ai-toolbar :is(button,summary):hover,body .select-trigger:hover { background:color-mix(in srgb,var(--hios-text) 8%,var(--hios-control)); }
+body .ai-divider { border-color:var(--hios-border); }
+body .ai-popover,body .select-menu { background:var(--hios-surface); color:var(--hios-text); border:1px solid var(--hios-border); border-radius:var(--hios-radius-control); box-shadow:0 8px 24px #0003; }
+body .select-menu button { background:transparent; color:var(--hios-text); border-radius:calc(var(--hios-radius-control) / 2); }
+body .select-menu button:hover,body .select-menu button:focus-visible { background:color-mix(in srgb,var(--hios-text) 8%,var(--hios-surface)); }
+body .select-menu button[aria-selected=true] { background:var(--hios-accent-soft,color-mix(in srgb,var(--hios-accent) 16%,transparent)); color:var(--hios-accent); }
+body .select-menu button:focus-visible,body .ai-toolbar :is(button,input,summary):focus-visible { outline:2px solid var(--hios-accent); outline-offset:-2px; }
+body .ai-toolbar #export,body .primary { background:var(--hios-accent); border-color:var(--hios-accent); color:white; }
+body .ai-toolbar .ai-status-line #aiStatus.error { color:var(--hios-negative,#d43b47); }
+body .ai-toolbar progress { accent-color:var(--hios-accent); }
+body .select-menu { scrollbar-color:var(--hios-border) var(--hios-surface); }

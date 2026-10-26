@@ -3,6 +3,15 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.5.0",
+      "ref": "photocraft-v0.5.0",
+      "releasedAt": "2026-10-26",
+      "notes": [
+        "升级原作者 PhotoCraft v0.16.0 稳定版，保留 HIOS AI、文档保存与画布输出。",
+        "应用与画布节点工具栏、下拉菜单跟随宿主主题。"
+      ]
+    },
+    {
       "version": "0.4.1",
       "ref": "photocraft-v0.4.1",
       "releasedAt": "2026-10-17",

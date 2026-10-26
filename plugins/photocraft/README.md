@@ -1,6 +1,6 @@
 # PhotoCraft for HIOS Next
 
-可选安装的 PhotoCraft Rust/WASM 编辑器插件，不内置、不随 HIOS 安装包分发，不依赖远程网站、外部 exe 或界面截图。上游：[orangewoker/photocraft](https://github.com/orangewoker/photocraft)，固定版本 `2a952f164c0b4cf936b1c6497db10dd095341c00`。
+可选安装的 PhotoCraft Rust/WASM 编辑器插件，不内置、不随 HIOS 安装包分发，不依赖远程网站、外部 exe 或界面截图。上游：[storytold/photocraft](https://github.com/storytold/photocraft)，固定版本 `b1794c6e0608ccfc887213dcf58398977c5cb75e`。
 
 ## 安装与卸载
 
@@ -81,3 +81,9 @@ HIOS 适配文件：`LICENSE`（MIT）。PhotoCraft：`LICENSE-MIT` 或 `LICENSE
 ## 0.4.3 图形偏好
 
 搭配 HIOS Next 3.4.3，在设置 → 图形与性能选择 GPU 功耗偏好与 WebGL 兼容模式；重新打开编辑器后生效，并显示实际图形后端。旧宿主保持默认自动模式。
+
+## 0.5.0 更新
+
+- 升级原作者 storytold/photocraft 稳定版 v0.16.0（2026-10-25）。
+- 保留 HIOS AI、文档保存和画布输出桥接。
+- 应用与画布节点底部工具栏、下拉菜单跟随宿主主题。

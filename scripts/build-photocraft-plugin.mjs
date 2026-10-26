@@ -6,8 +6,8 @@ import { spawn, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pin = '2a952f164c0b4cf936b1c6497db10dd095341c00';
-const source = resolve(process.env.PHOTOCRAFT_ROOT || join(project, 'tmp', 'photocraft-source'));
+const pin = 'b1794c6e0608ccfc887213dcf58398977c5cb75e';
+const source = resolve(process.env.PHOTOCRAFT_ROOT || join(project, 'tmp', 'photocraft-source-v016'));
 const target = join(project, 'plugins', 'photocraft', 'web');
 const run = (command, args, cwd) => new Promise((res, rej) => {
   const env = { ...process.env }; delete env.NO_COLOR;
@@ -16,7 +16,7 @@ const run = (command, args, cwd) => new Promise((res, rej) => {
 });
 if (!existsSync(join(source, 'Cargo.toml'))) {
   await mkdir(dirname(source), { recursive: true });
-  await run('git', ['clone', 'https://github.com/orangewoker/photocraft.git', source], project);
+  await run('git', ['clone', 'https://github.com/storytold/photocraft.git', source], project);
   await run('git', ['checkout', '--detach', pin], source);
 }
 const actualHead = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: source, encoding: 'utf8', windowsHide: true }).trim();
@@ -61,6 +61,7 @@ try {
   const licenses = [
     'assets/fonts/OFL-Inter.txt', 'assets/fonts/OFL-JetBrainsMono.txt',
     'assets/icons/LICENSE-lucide.txt', 'assets/icons/LICENSE-noun-magnetic-lasso.txt', 'assets/icons/LICENSE-symmetry-axes.txt',
+    'crates/algo/data/LICENSE-libfacedetection.txt', 'crates/ui-egui/src/i18n/LICENSE-translations.txt',
     'assets/dict/LICENSE-SCOWL.txt', 'crates/ui-egui/src/LICENSE-solarized.txt',
   ];
   for (const name of licenses) {

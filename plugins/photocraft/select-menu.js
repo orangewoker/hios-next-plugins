@@ -62,4 +62,29 @@ export function installSelectMenus() {
       (items.find(i => i.getAttribute('aria-selected') === 'true') || items[0])?.focus({ preventScroll: true });
     };
   }
+  // Footer popovers do not cover the editor after an action or an outside click.
+  const popovers = [...document.querySelectorAll('.ai-more')];
+  for (const details of popovers) details.addEventListener('toggle', () => {
+    if (details.open) for (const other of popovers) if (other !== details) other.open = false;
+  });
+  document.addEventListener('pointerdown', event => {
+    if (event.target.closest('.select-menu')) return;
+    for (const details of popovers) if (!details.contains(event.target)) details.open = false;
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const details = popovers.find(item => item.open);
+    if (details) { event.preventDefault(); details.open = false; details.querySelector('summary').focus(); }
+  });
+  document.addEventListener('click', event => {
+    if (event.target.closest('#open,#save,#export,#expand,#reload')) {
+      const tools = document.getElementById('documentTools');
+      if (tools) tools.open = false;
+    }
+  });
+  for (const span of document.querySelectorAll('.ai-status-line>span')) {
+    const syncTitle = () => { span.title = span.textContent; };
+    new MutationObserver(syncTitle).observe(span, { childList: true, characterData: true, subtree: true });
+    syncTitle();
+  }
 }
