@@ -1,12 +1,12 @@
-# DX Cut for HIOS — 0.1.0 预览版
+# DX Cut for HIOS — 0.2.0 预览版
 
 独立 React/TypeScript 剪辑器，基于 ReaCut 提交 `427742ee9022e68c44d9c9398331530b89678a53`。不加载 DXOS 页面、账户、数据库或 `/reacut` 服务；也不声称包含 DXOS 0.5.33 的全部定制。
 
 ## 安装
 
-需要 **HIOS Next 3.4.5 或更新版本**（包含 `dxcut-request` 桥接）。旧版宿主不支持此插件。本次本机产物为 **Windows x64**；其他平台必须重新构建原生 Canvas 依赖。
+需要 **HIOS Next 3.4.6 或更新版本**。3.4.5 不支持本版剪辑助手，请先更新主程序。旧版宿主不支持此插件。本次本机产物为 **Windows x64**；其他平台必须重新构建原生 Canvas 依赖。
 
-在插件管理中“从本地目录安装”，选择打包脚本输出的目录，而非包含开发用 node_modules 的 source 目录。安装后提供应用“DX Cut 视频剪辑”和同名画布节点。需要 `filesystem`、`canvas`、`process` 权限。官方插件库支持 GitHub / Gitee 双渠道。安装地址：`https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dx-cut`；国内镜像：`https://gitee.com/forlotus/hios-next-releases/tree/plugins/plugins/dx-cut`。
+在插件管理中“从本地目录安装”，选择打包脚本输出的目录，而非包含开发用 node_modules 的 source 目录。安装后提供应用“DX Cut 视频剪辑”和同名画布节点。需要 `filesystem`、`canvas`、`process`、`agent` 权限。官方插件库支持 GitHub / Gitee 双渠道。安装地址：`https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dx-cut`；国内镜像：`https://gitee.com/forlotus/hios-next-releases/tree/plugins/plugins/dx-cut`。
 
 ## 已接通
 
@@ -20,11 +20,21 @@
 - 导出结果在 HIOS 数据目录中直接落盘，以素材 URL 输出至画布，避免传递大视频 Base64。“另存成片”可复制到用户指定目录。
 - 完整 / ½ / ¼ 预览质量，只影响画布采样，不影响最终输出。
 
+## DSH 剪辑助手
+
+复用 HIOS 智能体的 `DshNativeCanvasManager` 与内置 DSH 运行时，读取原生模型列表，按编辑器 / 工程隔离持续会话。不启动 Codex / Claude CLI，不要求单独配置云端 API。
+
+只发送用户问题、对话和不含路径的工程摘要，不发送媒体文件。返回的剪辑动作经过白名单、数量和参数校验，再由用户确认应用；工程已变化时拒绝旧建议。支持取消及失效任务清理。清空本地记录不会删除智能体原生会话。
+
+原“云端与 API AI”为上游未实现功能的提示占位，现已移除；这不表示 DSH 所选模型一定在本地运行，模型仍按 HIOS 智能体配置调用。
+
+已验证真实 FFmpeg 导出、应用和节点的主题下拉框及全屏；DSH 模型列表、建议与确认应用使用模拟后端做自动化测试，真实账号模型联调尚未完成。
+
 ## 当前未接通
 
-AI 助手、内置素材库、倒放/定格派生素材、工程打包、剪映工程导入、字幕文件读写、外部素材重新链接及工程另存为。相关操作会明确报“尚未接入”，不返回虚假成功。文字/时间线内编辑不受字幕文件导入限制。用户拖放外部文件时将使用宿主文件选择流程。
+内置素材库、倒放/定格派生素材、工程打包、剪映工程导入、字幕文件读写、外部素材重新链接及工程另存为。相关操作会明确报“尚未接入”，不返回虚假成功。文字/时间线内编辑不受字幕文件导入限制。用户拖放外部文件时将使用宿主文件选择流程。
 
-目前保留上游深色编辑布局；没有宣称所有图像效果都使用 GPU，也没有大工程性能对比数据。WebView2 实机验证及跨平台原生包尚未完成。
+界面跟随 HIOS 浅色 / 深色主题，下拉框在 iframe 内绘制以兼容画布缩放；应用和节点均提供全屏编辑按钮（Esc 退出），不重新挂载编辑器。没有宣称所有图像效果都使用 GPU，也没有大工程性能对比数据。WebView2 实机验证及跨平台原生包尚未完成。
 
 ## 存储与引擎
 
