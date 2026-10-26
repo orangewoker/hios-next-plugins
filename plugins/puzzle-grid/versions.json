@@ -3,6 +3,15 @@
   "pluginId": "puzzle-grid",
   "versions": [
     {
+      "version": "0.2.2",
+      "ref": "puzzle-grid-v0.2.2",
+      "releasedAt": "2026-10-26",
+      "notes": [
+        "修复布局、水印范围和水印位置下拉菜单偏移：对齐触发控件，不再跟随鼠标点击位置。",
+        "空间不足时向上展开，限制菜单高度并支持滚动，避免超出节点边界。"
+      ]
+    },
+    {
       "version": "0.2.0",
       "ref": "puzzle-grid-v0.2.0",
       "releasedAt": "2026-09-21",
