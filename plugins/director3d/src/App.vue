@@ -78,7 +78,8 @@ const disconnect = connect((type, p) => {
       try {
         if (p.state?.documentUrl) doc.value = await readDocument(p.state.documentUrl);
         else if (p.file?.url) doc.value = await readDocument(p.file.url);
-        initialized = true; loaded.value = true; status.value = '已就绪';
+        if (typeof p.manjuDirector?.instruction === 'string') doc.value.prompt = p.manjuDirector.instruction.slice(0, 12000);
+        initialized = true; loaded.value = true; status.value = p.manjuDirector ? '已接收分镜任务草稿，请确认后运行 Agent' : '已就绪';
         void loadModels();
         if (doc.value.aiEngine === 'dsh') void loadDshModels();
       } catch (e) { status.value = `工程恢复失败，未覆盖原文件：${errorText(e)}`; }
