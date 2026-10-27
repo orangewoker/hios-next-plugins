@@ -1,5 +1,9 @@
 # HIOS Next 插件开发规范
 
+## 插件增量更新清单
+
+发布插件前，将该插件的新增、修改和删除文件全部暂存，然后运行 `node scripts/generate-plugin-update-manifest.mjs plugins/<plugin-id>`，并将生成的 `plugin-update.json` 与插件修改一同提交、推送及同步 Gitee。清单按 Git 暂存区中的发布字节计算 SHA-256，避免 Windows 换行转换影响校验；每次修改插件文件或版本都必须重新生成。清单不包含自身，暂不支持符号链接和 Git LFS。未提供清单的插件仍可通过完整安装方式更新。
+
 ## Skill + MCP 插件（schemaVersion 2）
 
 插件可以独立贡献标准 `SKILL.md` 和 MCP Server，更新插件即可更新能力，不需要修改或重新打包 HIOS 主程序：

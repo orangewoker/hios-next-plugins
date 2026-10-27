@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "compute-cloud",
+  "version": "0.2.3",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 2096,
+      "sha256": "39b9bace3bc4f7d2c5fd95b481604147c33190bdd708246b6322226f801ccb63"
+    },
+    {
+      "path": "app/app.js",
+      "size": 31897,
+      "sha256": "e70df038cb17dcad85d6e4143c847e637df36a239a8bf6ba7bd4897764ac5a7e"
+    },
+    {
+      "path": "app/index.html",
+      "size": 6274,
+      "sha256": "d5fd48fbad2dea4833020ed1757858a3b9d9ad56e8d75a9d6fa977951f777e94"
+    },
+    {
+      "path": "app/style.css",
+      "size": 14492,
+      "sha256": "8064be72fc5fa806992ff178fa442110917c8621b25e919dd24466e38aaea049"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 591,
+      "sha256": "c14df628643d8fe49e3a64e3626fd6e8b6a7edf7389866e0ab4cd1b839e84e92"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1347,
+      "sha256": "a88f0b9ee5acb4cbf1a042cab6ad213a28329f04321bf5db470c343357425e3c"
+    },
+    {
+      "path": "shared/client.js",
+      "size": 2680,
+      "sha256": "e48680ff7706aceddf148fb67fdb14da23fba270fbf141d46380d0cf7cbcacfa"
+    },
+    {
+      "path": "shared/core.js",
+      "size": 12437,
+      "sha256": "33b9c9d1373a55fd9c064fcda7d4d8deb781c48913b2a05777699504ff43969b"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 570,
+      "sha256": "905839dfee9ccbeab01cd43784fec560e13edaf8b08367f9e21a39620533ec66"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "shared/storage.js",
+      "size": 3265,
+      "sha256": "4e0686c632cfc9e3485ddec01e8a7ba6e0da232ca9f377cda82db2a44eaf34a6"
+    },
+    {
+      "path": "tests/core.test.mjs",
+      "size": 3787,
+      "sha256": "14a55fadf4fe6a3a5710e7b1e116e403b54c05fe11dda166be3d7b0502cf109e"
+    },
+    {
+      "path": "tests/theme-picker.test.mjs",
+      "size": 846,
+      "sha256": "dc387021b6a66ee0a09aac854140c431f09520589093a79a8f4b052c56995fe3"
+    },
+    {
+      "path": "versions.json",
+      "size": 778,
+      "sha256": "55185c75e235f5b017be654735a4a6f4a9699690c3e3b79f55cb75bd27d71d8f"
+    }
+  ]
+}

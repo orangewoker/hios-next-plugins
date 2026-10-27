@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "hunyuan-3d",
+  "version": "0.2.2",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 3083,
+      "sha256": "8a6308596f6e2144e496539b28101d2ff31f51e5a1d2b3eaac726d6ceb349176"
+    },
+    {
+      "path": "app/assets/index-CrLfN1zB.css",
+      "size": 20608,
+      "sha256": "9d86895120e5dbdd5eabfb40733f7d44d92f9b781bd86be9601e0badd1317245"
+    },
+    {
+      "path": "app/assets/index-DA-qNytk.js",
+      "size": 979666,
+      "sha256": "fd8565ac3909ed6f59686cffa649d029c1c2e20b4ba4a2b3d48551600f0ac40b"
+    },
+    {
+      "path": "app/index.html",
+      "size": 631,
+      "sha256": "d4957e7aeee556c16345e586842607c13a643a069a931d46806e5ac5e324c509"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 554,
+      "sha256": "96a8d074ece0d27c65e4a5b3f002036b4a4cf03f7abc3bef17aca0ab3eba1a12"
+    },
+    {
+      "path": "package.json",
+      "size": 627,
+      "sha256": "665ca676a91aa80728c2c9d56e67b34021147db6bb987df1becad0b1f2fbdd42"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1521,
+      "sha256": "b55bea55b7ed6e8df5ed6ac1a069cc556697adb684a8e7ba33abd504df961c35"
+    },
+    {
+      "path": "runtime/assets/index-CXskUVvc.js",
+      "size": 14292,
+      "sha256": "63057afd7ec8d3bfebe0d2c523916c38b5b3498730ddca091ec451edfd33468b"
+    },
+    {
+      "path": "runtime/assets/index-ColKBH9K.css",
+      "size": 1156,
+      "sha256": "f0348b1ca22763e210dd35b8b68c627e0013c0039e4989f6ddf53555568fcdae"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 2652,
+      "sha256": "2586e47771a387448c7da166f01b56dde3dfb0e4e988ad5771f6344639737f6f"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 380,
+      "sha256": "cc7e6901090f5791f14eb095b6eda71a76cb210e2faecb509c030bf776bbc713"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "src/App.tsx",
+      "size": 27227,
+      "sha256": "0aa3940705cd0a9982cb21b5f86f5f6d7fa97cf9eeadff9316f2d616363021a2"
+    },
+    {
+      "path": "src/ModelViewer.tsx",
+      "size": 8905,
+      "sha256": "a1c9df0feac7b70cb0dbbe7ce84635150c672c72a08705b6ff3492b0f65cc1a7"
+    },
+    {
+      "path": "src/api.ts",
+      "size": 10664,
+      "sha256": "9f16cf2bfad45c45d588221f76d3b44abf8c7ab010bd7f7f9b01d5b687813b7a"
+    },
+    {
+      "path": "src/bridge.ts",
+      "size": 3003,
+      "sha256": "20dc64da614e56df6ea3b8acd97a351aa9c0befe776a7d638fbade7463f37eff"
+    },
+    {
+      "path": "src/cache.ts",
+      "size": 2122,
+      "sha256": "d48fc975084bbd314643e6abb444c1462bf9f42af6cdd94eb2f649f2f1f18780"
+    },
+    {
+      "path": "src/index.html",
+      "size": 302,
+      "sha256": "ee13d5687e20cdde949340c86efbe8b105e8c7405b98fcad29a22497f26cc8b9"
+    },
+    {
+      "path": "src/main.tsx",
+      "size": 195,
+      "sha256": "27af9f6458d6158008449b96ec1197e20bd961df29a9d78e0d885ac9f3f2cc2f"
+    },
+    {
+      "path": "src/preview.ts",
+      "size": 2122,
+      "sha256": "872b7fb62b3dc40cfaf8eb10266fddf6b4a8ccf74e9d63af356eab81b765e1b8"
+    },
+    {
+      "path": "src/runtime/index.html",
+      "size": 2323,
+      "sha256": "e085767b9ae6f8de5b38ec6fc23cc7e693cce9c42bdb5ba76034ccecc720a9e7"
+    },
+    {
+      "path": "src/runtime/node.css",
+      "size": 1156,
+      "sha256": "f0348b1ca22763e210dd35b8b68c627e0013c0039e4989f6ddf53555568fcdae"
+    },
+    {
+      "path": "src/runtime/node.ts",
+      "size": 9948,
+      "sha256": "08648a6755c55d3c39ad4bbe3b232c4c8cb6407a24f27cdbb2b46059a95d7c57"
+    },
+    {
+      "path": "src/storage.ts",
+      "size": 1827,
+      "sha256": "02f2ce5768bc7c971d59b1916e1558f809c2fb62e00d6d272329de5126398eb7"
+    },
+    {
+      "path": "src/styles.css",
+      "size": 15137,
+      "sha256": "bf08a063ce31e8cbe89103ad0a63db9ce5e52a2680d924cc46c732c045c5260f"
+    },
+    {
+      "path": "src/theme.css",
+      "size": 6435,
+      "sha256": "04b6312fed74f715925c2158f25d637da382738730527db04161de9f1a9354ae"
+    },
+    {
+      "path": "src/types.ts",
+      "size": 1779,
+      "sha256": "47cbf19085970a88e3a5b4d6148fb8f3e7878bdaf42298408d1facebd006fc60"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 469,
+      "sha256": "09d06e970392443985d5ca099870f97f6e324c38de26e68f064b037ebf271d60"
+    },
+    {
+      "path": "versions.json",
+      "size": 1394,
+      "sha256": "d70bef7c7dc71a9e571792ed23d4644f3d6a9f54d4557ff0568380596105fa55"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 344,
+      "sha256": "12772a9910996187072b50dd81b1209d1a186a8d8f58026ab9608d113863f8e3"
+    },
+    {
+      "path": "vite.node.config.ts",
+      "size": 255,
+      "sha256": "475ef06b7006aa243b10d89ef29688b47558c70f5c2b50e2f9b9558bfa43ac94"
+    }
+  ]
+}

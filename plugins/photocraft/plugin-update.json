@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "photocraft",
+  "version": "0.5.2",
+  "files": [
+    {
+      "path": "ATTRIBUTION.md",
+      "size": 26844,
+      "sha256": "f9c076102d8e7cfd92ee035960cbf70ad0fdf5b8a3649150f4b6fde5e9d1a42d"
+    },
+    {
+      "path": "LICENSE",
+      "size": 1199,
+      "sha256": "7290a636b6b16f45d2ac1c36fd54faf8219720e6fd1a53041fb46fed40918645"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "size": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "LICENSE-MIT",
+      "size": 1102,
+      "sha256": "1a8f66d8a86b146f5336fa0d4b1186576c8aa98e60823080c85c7811cfd810af"
+    },
+    {
+      "path": "NOTICE",
+      "size": 1646,
+      "sha256": "25a69f3364a0d7fea0ea486a9def19c3dc1af51608ec1218911a1a24069b4454"
+    },
+    {
+      "path": "README.md",
+      "size": 7814,
+      "sha256": "92141688f072359590365d7f18d2a95310b9a1961be012fc8ba9c3b817decea3"
+    },
+    {
+      "path": "THIRD_PARTY/assets/dict/LICENSE-SCOWL.txt",
+      "size": 12561,
+      "sha256": "e2a852424fe4ee684225a6a8a34c73f8944f11ad825b7fc3a58ddcee617ed23d"
+    },
+    {
+      "path": "THIRD_PARTY/assets/fonts/OFL-Inter.txt",
+      "size": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+    },
+    {
+      "path": "THIRD_PARTY/assets/fonts/OFL-JetBrainsMono.txt",
+      "size": 4399,
+      "sha256": "a76abf002c49097d146e86740a3105a5d00450b1592e820a1109a8c5680cd697"
+    },
+    {
+      "path": "THIRD_PARTY/assets/icons/LICENSE-lucide.txt",
+      "size": 3208,
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "THIRD_PARTY/assets/icons/LICENSE-noun-magnetic-lasso.txt",
+      "size": 20102,
+      "sha256": "667185ed8a375d40aff0d19f02ce880e786e355253b7c5adba2be7471b70c36a"
+    },
+    {
+      "path": "THIRD_PARTY/assets/icons/LICENSE-symmetry-axes.txt",
+      "size": 11525,
+      "sha256": "d43c48d168983b4d2a48e3d0d1b3c8f3ff662e8161da2d91d229b587f5e421ec"
+    },
+    {
+      "path": "THIRD_PARTY/crates/algo/data/LICENSE-libfacedetection.txt",
+      "size": 1803,
+      "sha256": "95b286c39b1444594e18672e6092321e39cc11f2f1daf994cadfd95af7c91dcc"
+    },
+    {
+      "path": "THIRD_PARTY/crates/ui-egui/src/LICENSE-solarized.txt",
+      "size": 1302,
+      "sha256": "04268daec181d192ff99530d1af65cb30bfc6a315e1567332a14892a5b3c4c56"
+    },
+    {
+      "path": "THIRD_PARTY/crates/ui-egui/src/i18n/LICENSE-translations.txt",
+      "size": 2256,
+      "sha256": "29b9fe048f00085d503fd088f9b22a3fc1256c47426cbda65b169a252479b698"
+    },
+    {
+      "path": "app/index.html",
+      "size": 4693,
+      "sha256": "874e8ef59a82017813c090237e6ec25749aca03efd8b0aa86706e32e42b585cb"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 265,
+      "sha256": "4250c7a5cbf66c46bf3f2474bb49fbd9e4ae9f9b20d4b283fa3a8357c0b264c6"
+    },
+    {
+      "path": "backend/README.md",
+      "size": 2350,
+      "sha256": "d589afa2ee45f42f4e92610644693077a8147d3aafc53c4a88cacf8f0e837c95"
+    },
+    {
+      "path": "backend/chatgpt2api-h-psd-v2.patch",
+      "size": 16117,
+      "sha256": "90bd650f81c4ee3c5677930eae47f301ca41ab19c4d81fce75787f3b59d52aa9"
+    },
+    {
+      "path": "compose-layers.js",
+      "size": 3085,
+      "sha256": "fd7f95e717e4e1cbd99fc9ba8b7e37a2cd007fafd3833592df9c8c31456ed4ea"
+    },
+    {
+      "path": "fonts/NotoSansSC-Regular.ttf",
+      "size": 10595948,
+      "sha256": "0b2ef7cfb9562fcf3bd720da78e9c6750d7d319fd21b9697fe94cb2f89960272"
+    },
+    {
+      "path": "fonts/OFL-NotoSansSC.txt",
+      "size": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "path": "fonts/manifest.txt",
+      "size": 253,
+      "sha256": "92519a863be907353f90392879a88a5875548e7d2d76e67fcfd2b91196494d15"
+    },
+    {
+      "path": "graphics.js",
+      "size": 1675,
+      "sha256": "a59bfebc5d454ff443a1a3fad5b3673454f7b2053a56f07a94c11ac5e22e3c86"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1934,
+      "sha256": "2bb4d4e3ac757bbc0cc78f4e23be9105614e62c58bbdc6ec42cae70c1cda9ed2"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 4697,
+      "sha256": "95bba36a94bc622e0049e820b3ac7c15cef2b1307315ca21fbec27547c060335"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 7387,
+      "sha256": "42ba8880163a66b6a9e6a56c8666ffa13e507549d59066f2e34f905e0e23519c"
+    },
+    {
+      "path": "runtime/theme.css",
+      "size": 2043,
+      "sha256": "93939d3f5d8df80a4516d5694e0e71d91a12d7ace196abe3a907bcc1389a4d62"
+    },
+    {
+      "path": "select-menu.js",
+      "size": 5082,
+      "sha256": "5ce751d2a282a7d38ed627484f26b39748731a6180035297ce95abb7f0f9308e"
+    },
+    {
+      "path": "shared.js",
+      "size": 24751,
+      "sha256": "524e5e3a7305d42fd4cc628ad209d70a73bee362134cd05704a0347a6d7317dc"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 297,
+      "sha256": "6955da35332fcdfc9d372d3a1bea2d1ea53c55aaaaaa1f666dd78b509f1fb956"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "vendor/LICENSE-ag-psd",
+      "size": 1205,
+      "sha256": "035430250509b801de02201d2f9bc9388a1220198f9276d38f4059df882e585c"
+    },
+    {
+      "path": "vendor/THIRD-PARTY-LICENSES.txt",
+      "size": 3443,
+      "sha256": "4b60552c33dcd3ce2ee01cfad482f8a10ee981c16812c7139e6e21f3ec368e85"
+    },
+    {
+      "path": "vendor/ag-psd.js",
+      "size": 291812,
+      "sha256": "ec5d0638ef3e4710d190654cdf62ba3e858122c63b5d59ca5b1b8dbfde33b488"
+    },
+    {
+      "path": "versions.json",
+      "size": 3887,
+      "sha256": "1601e5f7995e3d42f33414c01a6f207b538d0defbe4a3023c20fc74207ccd863"
+    },
+    {
+      "path": "web/build.json",
+      "size": 197,
+      "sha256": "9db6f6856e7e5574d9c04c6f1dd159d9bca339bf4cfdbb5867657b12cce88bf0"
+    },
+    {
+      "path": "web/index.html",
+      "size": 2252,
+      "sha256": "fca5e8a75a0d0b07de47c85af2867e44575e4e08dbc4a2f59507d52420df60b7"
+    },
+    {
+      "path": "web/photocraft-web.js",
+      "size": 170700,
+      "sha256": "ba454bdae61f21ed8c972eff9ca1c4688f0c0332d9a0f1a3bbf76b55a169e7ca"
+    },
+    {
+      "path": "web/photocraft-web_bg.wasm",
+      "size": 32209057,
+      "sha256": "4816269b4fc80f56061cdec3c8c93a08605572d3f563f60b317930bcff6be874"
+    }
+  ]
+}

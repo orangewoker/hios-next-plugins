@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "pdf-dwg-viewer",
+  "version": "0.1.2",
+  "files": [
+    {
+      "path": "LICENSE",
+      "size": 34020,
+      "sha256": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee"
+    },
+    {
+      "path": "README.md",
+      "size": 2571,
+      "sha256": "6ed92a713d78a1e9cce9c80d3ceb293160580a99caa63301fbdf784b59419e9b"
+    },
+    {
+      "path": "THIRD_PARTY-CAD-VIEWER-LICENSE.txt",
+      "size": 34020,
+      "sha256": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee"
+    },
+    {
+      "path": "THIRD_PARTY-CAD-VIEWER-NOTICE.txt",
+      "size": 772,
+      "sha256": "a6f4f2d3dacfe44c2d3c9f8860aa3b8a1f64d4d61b749f4c53af247dd9df4a83"
+    },
+    {
+      "path": "THIRD_PARTY-LIBREDWG-SOURCE.md",
+      "size": 1080,
+      "sha256": "6f2bc3484fdaaf75ee4c864ddf649e6aa8c2e76a4dc34deba64aa44274f56d31"
+    },
+    {
+      "path": "THIRD_PARTY-PDFJS-LICENSE.txt",
+      "size": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "size": 1109,
+      "sha256": "d1d503419ffd75f7e7dfdcf68171a9cb63dd0bfe70f5e6c76dfe84d37fdf9082"
+    },
+    {
+      "path": "index.html",
+      "size": 3368,
+      "sha256": "27e271513cef9d79183af930e07e279f14193d47293c42999bce640dcf8957f7"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 46709,
+      "sha256": "1040f1ec34a264dee85dc88fea209baf740ab6069ba5b89a707a41c831a0f822"
+    },
+    {
+      "path": "package.json",
+      "size": 539,
+      "sha256": "0418c7bd57b33c91f85c9dfd14404adddd71e9a315986345f8508b764cfc263f"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1768,
+      "sha256": "88678ebe367fb2a34668f8358111983aa4a31f7818b75d55de7ed83c66426219"
+    },
+    {
+      "path": "runtime/assets/index-C8d6z2g8.js",
+      "size": 25525,
+      "sha256": "f516455c32d564c02d310f4c0a39d1c5458ab301418a761516eb72ec49c001f6"
+    },
+    {
+      "path": "runtime/assets/index-Ckqc7Hl7.js",
+      "size": 681710,
+      "sha256": "3e3b07d9eee4c14ef0b7a2abdd01b7bdd4f29794eb9087e67c84a42ae219ea95"
+    },
+    {
+      "path": "runtime/assets/index-kA7YQlJf.css",
+      "size": 6971,
+      "sha256": "90da9eda6561b1e2005cd2d43c57d48a8f24df778e805bf21fe26fd63a6ac9fe"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 3697,
+      "sha256": "9bf47c52e472485faba658a5867d672739824e96c4b61727a0fe1dc837f939f1"
+    },
+    {
+      "path": "runtime/pdf.worker.min.mjs",
+      "size": 1375838,
+      "sha256": "1baa1844c89c80a5b2797c916e75ab29254be46d8e9cb53cb6364d7aad84be36"
+    },
+    {
+      "path": "runtime/wasm/dwfv-render.wasm",
+      "size": 4916,
+      "sha256": "f537c5b05cbfc744578110ce49a7fdf97a7d6bdb2b1dff849ad4330f7997140e"
+    },
+    {
+      "path": "runtime/wasm/dwg-worker.js",
+      "size": 165078,
+      "sha256": "3413e71d61611f07e7dd2007a160223b6d82f6924836c8ad519b0fa32ceeb202"
+    },
+    {
+      "path": "runtime/wasm/libredwg-web.js",
+      "size": 110192,
+      "sha256": "62deaef11c2d6cf8fd0a0ee83d29120ca40bdabc2cdd9baa1f7911410bf9d73f"
+    },
+    {
+      "path": "runtime/wasm/libredwg-web.wasm",
+      "size": 9960337,
+      "sha256": "d8b78f6d5e63e6e178cf7343cfd08ebe798d75b6754c593e15d8f948b823e038"
+    },
+    {
+      "path": "scripts/copy-runtime.mjs",
+      "size": 1235,
+      "sha256": "63d1707a7c18310c236717e840faa38439352213aacd802f12a557e4006f6770"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 319,
+      "sha256": "61117d256929519913963d5e90fb22ab9ecc070749ed097941fa579df43338af"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "src/main.ts",
+      "size": 20846,
+      "sha256": "c0e4898b81452b7d4e18635a2d15ac5dcb7e8a85dc96af6e60bd46bf054b9c2b"
+    },
+    {
+      "path": "src/styles.css",
+      "size": 4549,
+      "sha256": "e82caba9094aacc45be56ff116148de755db594047197856826747f6728fc2ad"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 403,
+      "sha256": "569ef23bc956634694616dba7f74e57a0841274039bbdeadb4ca700ca37cf04a"
+    },
+    {
+      "path": "versions.json",
+      "size": 368,
+      "sha256": "ad6a692af857d7bfb74e5d2e44928dd4a879b5192a278306a8eebf08d14c93f4"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 293,
+      "sha256": "027b9baedde0d01dfeb457359476e9aeb6478ddd33a9752f94f1d99b77f697e5"
+    }
+  ]
+}

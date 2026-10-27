@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "director3d",
+  "version": "0.1.6",
+  "files": [
+    {
+      "path": ".gitignore",
+      "size": 14,
+      "sha256": "4d56952b0fb13bf8f9b6c13a6d4c34a075bac3af447636a1df4335d7576e2f97"
+    },
+    {
+      "path": "LICENSE",
+      "size": 1065,
+      "sha256": "e301150b3205cbb097e30c30e488f5a9ac9a70cbcfe819b8d486367812a53ef7"
+    },
+    {
+      "path": "README.md",
+      "size": 5162,
+      "sha256": "47f792c8b6ab8f66570151d4b8637506c4f16c63f7c5ed6a91aedf525c39dc17"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "size": 88580,
+      "sha256": "43826483e11ccd35214e08dad7aa212271615fbdc2ccb92aa89fe23472577e6a"
+    },
+    {
+      "path": "app.html",
+      "size": 254,
+      "sha256": "f75b180a85ad484e5b7a3e3caab7e81600701c358ada2ee66afe7ce0c82de960"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 289,
+      "sha256": "0d564331863d64d8a58f1d4fc8aa3fc2733a86b7e1e75435611e08843580070f"
+    },
+    {
+      "path": "index.html",
+      "size": 254,
+      "sha256": "f75b180a85ad484e5b7a3e3caab7e81600701c358ada2ee66afe7ce0c82de960"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 82037,
+      "sha256": "0aa1bf790845d3c43424e8a65851f200379f543e0a92ad6b2bbca497502acd67"
+    },
+    {
+      "path": "package.json",
+      "size": 742,
+      "sha256": "80204bec1674d60ab33024d34c45f89b7524e93c117e5d663381d48c559e190d"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1791,
+      "sha256": "95ca493f037ad25db629992334e49066e45280b7388f958be82401dfddfa7fb5"
+    },
+    {
+      "path": "runtime/app.html",
+      "size": 578,
+      "sha256": "83c5aa7890a5a8bd1023f87d4f2776e25be233338f2b2635444b82fa0d7e959b"
+    },
+    {
+      "path": "runtime/assets/FBXLoader-DatBW8T0.js",
+      "size": 46040,
+      "sha256": "9c6b7ef1245df870096b1d6a791722b45aa2f9bf389ac8d15cc1cdaade3a5f13"
+    },
+    {
+      "path": "runtime/assets/PLYLoader-CBbqa8Wp.js",
+      "size": 6699,
+      "sha256": "eb57461ad6a51e3903ae0100bd437e2999df6c40a24306ff320c2886b0a34c21"
+    },
+    {
+      "path": "runtime/assets/STLLoader-B2--G-sZ.js",
+      "size": 2934,
+      "sha256": "c9e960f27ecebd715be9f8a844fd2c370c44908839a1adb5a0a6923cadcd9a86"
+    },
+    {
+      "path": "runtime/assets/USDLoader-DNRnutIv.js",
+      "size": 66927,
+      "sha256": "69608112ba35e96e80d89dedc434003cb31c873a97c3bcb9b8112604e338ee34"
+    },
+    {
+      "path": "runtime/assets/fflate.module-eaDUqR-S.js",
+      "size": 5556,
+      "sha256": "1a33028cee84c011b42d0dfed16ac93cd7348ec2ddcc44cc6c4d2851bb98e445"
+    },
+    {
+      "path": "runtime/assets/index-C3SldFua.js",
+      "size": 7625,
+      "sha256": "18f99c23076ed2caa7df63b9f73c86c14faa197cdde42dff59f32c19346cbf6d"
+    },
+    {
+      "path": "runtime/assets/main-BBBEsQG2.css",
+      "size": 381262,
+      "sha256": "ffa47e011f933d999768f76bca121909e24f6ebc3a2b22fad2d4b3d33929d47c"
+    },
+    {
+      "path": "runtime/assets/main-Ct3lz3K0.js",
+      "size": 2270078,
+      "sha256": "d4fdad05a9558db1e30922c26f67b365deb55351a4b23fd7aad66b1dc335efd8"
+    },
+    {
+      "path": "runtime/assets/sdfText-vZyYuB9V.js",
+      "size": 118638,
+      "sha256": "20924890d44a2760d5fe4ba742d9b22e266a943a79fa3ccfd5ab8e2bbaacb53e"
+    },
+    {
+      "path": "runtime/assets/tjzArchive-DABMsCDH.js",
+      "size": 11435,
+      "sha256": "1a4855a9483d1052b91c80ae2edd8e8032fcd58509b79c44243c14acec36d35e"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 578,
+      "sha256": "83c5aa7890a5a8bd1023f87d4f2776e25be233338f2b2635444b82fa0d7e959b"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 340,
+      "sha256": "eb5a4f5178d9a5e8ae7882c886b822c19ef245fe456a03c33420d27cc7e50524"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "src/App.vue",
+      "size": 21318,
+      "sha256": "a24ce4c1698623cc48c1920bc3df5ef8492fbbc5194be326346537eeeb818ef6"
+    },
+    {
+      "path": "src/agentPrompt.ts",
+      "size": 3949,
+      "sha256": "5d7416c787ab3e1bb43b274dd9cf57f093557c391f47dd7533fbdb8e9fa8e765"
+    },
+    {
+      "path": "src/agentTools.ts",
+      "size": 9450,
+      "sha256": "ef875d85c3fb834e8f8af2539ad0b658eb0ef28282572e8b0ed1f3ce56fd43bd"
+    },
+    {
+      "path": "src/bridge.ts",
+      "size": 2596,
+      "sha256": "dd7039f7c2cf0249267e1f2b0367960fa69e3c71a7f20971c397a4ce52a072ad"
+    },
+    {
+      "path": "src/directorPanel.vue",
+      "size": 10306,
+      "sha256": "df2955e479329845a11496867c58120823dc1ae1431e4a19cc927a99317364bf"
+    },
+    {
+      "path": "src/directorTour.vue",
+      "size": 2679,
+      "sha256": "15f939145ba6a6214eded0671f417cc7b85ad7b906e691586eb1760deb220afc"
+    },
+    {
+      "path": "src/document.ts",
+      "size": 1901,
+      "sha256": "5dc8f3f2744ffc6e073462b54532cac1f4e84a9fe780d3cd2a4b6e74f5a2096b"
+    },
+    {
+      "path": "src/env.d.ts",
+      "size": 24,
+      "sha256": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c"
+    },
+    {
+      "path": "src/groupNodeModels.ts",
+      "size": 401,
+      "sha256": "dae12b48357bde80c11382b8cc1333c68660d9b5cfe04e6ac31c9f00d070d488"
+    },
+    {
+      "path": "src/hios.css",
+      "size": 1851,
+      "sha256": "a05d04a821e88e11088facdfd5177623e0de703922739dda2b6772bbd9ba80e0"
+    },
+    {
+      "path": "src/hostTypes.ts",
+      "size": 716,
+      "sha256": "bc480602f37aebb46d8ac8ca779191c7e7b044f29d34764d83e864f744048573"
+    },
+    {
+      "path": "src/lightDirection.vue",
+      "size": 10981,
+      "sha256": "c31d802a7580111ce006d5a124704409918c35d6fed162d27d4518aef79decfa"
+    },
+    {
+      "path": "src/main.ts",
+      "size": 204,
+      "sha256": "561137f15313a0fb56603056a89505c3940dd75be3dd69c6d37d33c8d3c68606"
+    },
+    {
+      "path": "src/mannequin.ts",
+      "size": 4885,
+      "sha256": "6180d5cb831ef1afa4021bd3388463d83580ba96756914db7b4c96f51a98ab2e"
+    },
+    {
+      "path": "src/motion.ts",
+      "size": 2384,
+      "sha256": "0bf02ecd8878f914101b72f85a01711e2838d754d3ecd8e089def163d58abe76"
+    },
+    {
+      "path": "src/renderMedia.ts",
+      "size": 6478,
+      "sha256": "68baefd038db77e77db6be68a0a3e84b40b8e50254400ef5873c8e00417d8097"
+    },
+    {
+      "path": "src/scene.ts",
+      "size": 12687,
+      "sha256": "695a27f8dc44f493024f9b6b4e1ea4852cd8b88e9cc7917b205ad6e76cd238b2"
+    },
+    {
+      "path": "src/sceneAnimation.ts",
+      "size": 4943,
+      "sha256": "e405b608b91932ff1a28c8ba8a36c095f57b90aabd1f85ec60416f665106055b"
+    },
+    {
+      "path": "src/sceneEditor.vue",
+      "size": 32679,
+      "sha256": "94e7af40af8495025079bc0ce3c34d6b0dac8079d3107f36e5c26322f67f7759"
+    },
+    {
+      "path": "src/threejson.d.ts",
+      "size": 758,
+      "sha256": "13fb715ceccbd7636a632a5121eeb92f7160eebc9d9ea470a603bb37179b1df7"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 324,
+      "sha256": "744e7fd45bc39e78150e6d6ed9611264180ab1f1f771150fb2aaa40295313b5d"
+    },
+    {
+      "path": "versions.json",
+      "size": 2393,
+      "sha256": "d81315d609ef0f1b3e59f71e3b322ee1b426f5f168a6f3cb116014adcf28a0bc"
+    },
+    {
+      "path": "vite.config.mjs",
+      "size": 241,
+      "sha256": "916916350ac6f4a35fc4f6b9f6984d85a847b2fb7a9927a8254aa5db10a00f96"
+    }
+  ]
+}

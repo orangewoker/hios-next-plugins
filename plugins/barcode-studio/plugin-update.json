@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "barcode-studio",
+  "version": "0.1.2",
+  "files": [
+    {
+      "path": ".gitignore",
+      "size": 21,
+      "sha256": "bc2357da450357d483c37582bffb622e397df847c33b58ab06fb06682232c56a"
+    },
+    {
+      "path": "LICENSE",
+      "size": 564,
+      "sha256": "07b197bc5116f2c1d462186414b4b341ea4d4c732ebeb36487390a805f8b7368"
+    },
+    {
+      "path": "README.md",
+      "size": 3088,
+      "sha256": "c106201cbc1549d049030fa1273b0baad205ecbae89d45cc06a7e7148ec3a1cd"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "size": 1395,
+      "sha256": "d8574f8cc6a42c4ec4ad8a2c6ba4131e68fac6799283831a56d33f859ee3af87"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1352,
+      "sha256": "4ca20ed2fcc2520818b76043c768abc44a6355d6f6c1851057706e9abaa7c683"
+    },
+    {
+      "path": "provenance.json",
+      "size": 820,
+      "sha256": "58854c0773e4aa692f4c83eac37a0ab794e11b48918c4492edb0d307bea0e26b"
+    },
+    {
+      "path": "runtime/assets/index-DGmlpp2S.js",
+      "size": 93045,
+      "sha256": "1b15e47749a824e61513277116538b2271c4e37fc14c1cdf78597f4420637a90"
+    },
+    {
+      "path": "runtime/assets/index-D_WPzcoH.css",
+      "size": 11409,
+      "sha256": "46db4b07eab6363f2ce25aef256d3e21c823367545b4aa571d06b91b5639730c"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 623,
+      "sha256": "2aff1c3970ead404dbabfcaee7253a05072f4b16cd0e6f02640315920c059864"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 546,
+      "sha256": "4768333d228b39cfeb4a9f772ac589fbb231a4b59af27a0f88a7ce6ce4894d48"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "source/index.html",
+      "size": 294,
+      "sha256": "d6dc66a5b7f5c3f0d4ff04ea653f8507a3de341ba0d3e3ebbb7f13d216b3d377"
+    },
+    {
+      "path": "source/package-lock.json",
+      "size": 38184,
+      "sha256": "700007ac84c0eec1fbd9b19f5ac069e9c41aea896f3f0451dac0a893db2e29c8"
+    },
+    {
+      "path": "source/package.json",
+      "size": 452,
+      "sha256": "6a0589d9a14b287ab9f28dfbaac04fa57debbae1b0b6c3ca7d835a39a40f0edf"
+    },
+    {
+      "path": "source/src/barcodeApp.vue",
+      "size": 11530,
+      "sha256": "63d2c09f799de87f25a5e18833fc9f71f3220665c713535cdbdf150133436400"
+    },
+    {
+      "path": "source/src/encoders.ts",
+      "size": 19074,
+      "sha256": "1496cbc0f4516d96f56b1892cb4ec55c6d34908d383ba8bc4068d49c91e17078"
+    },
+    {
+      "path": "source/src/host.ts",
+      "size": 4278,
+      "sha256": "1c173b60d08ccf3fc3212970ae38249f58b38160a0ea4ec5325e032e8678cb74"
+    },
+    {
+      "path": "source/src/main.ts",
+      "size": 135,
+      "sha256": "00390e7074e92907cfac793e3bb2d85d6ca76c38a9be07dca6b0e9c135bd57d7"
+    },
+    {
+      "path": "source/src/presentation.ts",
+      "size": 3317,
+      "sha256": "b2e2371d072acbd0b2d1018c4821012e213b18b02d41c35565f47bc03cbc5aee"
+    },
+    {
+      "path": "source/src/style.css",
+      "size": 13827,
+      "sha256": "839372f0824a0bdb7f614af0c6cd95993ba737a44e6f9d82fe67041cbe5e00cc"
+    },
+    {
+      "path": "source/src/theme.ts",
+      "size": 999,
+      "sha256": "c6794a8933be613b5a262759fd37740c177ed2c2c76a3bdf63bd7d953b6e1138"
+    },
+    {
+      "path": "source/src/useBarcode.ts",
+      "size": 16411,
+      "sha256": "5a126087746cf25284b80fcb9c4c812c5e924f5a47a2f8c4b2c98764ca0437bf"
+    },
+    {
+      "path": "source/tsconfig.json",
+      "size": 319,
+      "sha256": "9ebf8d76dc0764cdb557f72a77a8756fa933a6d07a9a1f8181ad547fbff95ccb"
+    },
+    {
+      "path": "source/vite.config.ts",
+      "size": 190,
+      "sha256": "44087e1e77f1e274eeb2e575ea0e13e1dbffcf26ca256d75893c6b081be2600b"
+    },
+    {
+      "path": "tests/host.test.mjs",
+      "size": 4585,
+      "sha256": "e7c0549aec15156468a56129dee785d1a3f508f5d4bdbcb6798cd4e695301811"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "dlss5-image",
+  "version": "0.1.5",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 2020,
+      "sha256": "da3bd85171c33b24c3b181e05744c41700333f810eed445c17c9fab35c27629f"
+    },
+    {
+      "path": "app/index.html",
+      "size": 13668,
+      "sha256": "0f238c7f7f490e048470d573a42eb154708f17b93196dd968d9c34f6af188d67"
+    },
+    {
+      "path": "controls/theme-controls.css",
+      "size": 2857,
+      "sha256": "3e143d843138f1298555ebdda16c7bbeb859ff1ea586f11e1b0bc31f6d8662a4"
+    },
+    {
+      "path": "controls/theme-controls.js",
+      "size": 5023,
+      "sha256": "69660751a0c0c80e9e91611ecac07d58cc3097e1138448abb45fd70241770562"
+    },
+    {
+      "path": "effects/light-material.js",
+      "size": 6074,
+      "sha256": "5bf0e40dfeff225080a1ef6290bfc28e3e842de844b11215775e26c28aae9ff6"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1651,
+      "sha256": "fbea5c29195ed58617ee33a2ab1782b8bd467b040c32358e05ec0307948e8d4e"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 9133,
+      "sha256": "ef72ee46034ab6182e4b8a69bbf49895e00085be7f6206d79ed61d36cc45d40f"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 304,
+      "sha256": "d2b6429e4a2721bf278db4489a13abc04a60d47c12b4e8983dd8b76e23d8a397"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "versions.json",
+      "size": 1481,
+      "sha256": "92c7c3b7074af556c407c7fc3eda39e11456fc5d9871de2e3d8bf3aede9db2cc"
+    }
+  ]
+}

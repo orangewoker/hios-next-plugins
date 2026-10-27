@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "ai-prompt-library",
+  "version": "0.1.3",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 2573,
+      "sha256": "494406d1cfec42ae86c7bf818b01a1ea8fdf4ab2155c149a96e3737f25e0bce7"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1298,
+      "sha256": "9859ffbe7a2b2abbdb1aaa96ca850b090d7345eb2a823c57447063d5d6f69050"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 25064,
+      "sha256": "e7848b4a62c1a6336d0ad8da976c2b1e1d8c423ec34e146a0bcb7e9a44227bb9"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 323,
+      "sha256": "0e1401b7dc7d4eae407dc23a9519aa94783e1afe3b7f4f6fa9bc3e2eba27b95b"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "versions.json",
+      "size": 940,
+      "sha256": "42f77e9346102a182bad4d44d409dfc416f75a969e8de5de6f817b733ac60273"
+    }
+  ]
+}

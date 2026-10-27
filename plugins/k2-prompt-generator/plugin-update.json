@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "k2-prompt-generator",
+  "version": "0.2.7",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 998,
+      "sha256": "b2820a26b93a879b0d595227bf93bc4aa505169498cf826d4698c983d4aab5f3"
+    },
+    {
+      "path": "app/bridge.js",
+      "size": 7915,
+      "sha256": "e755d09c3956711dc848ce9a31a42445ed4392da9139a3a5f4d9ac8ff44ac796"
+    },
+    {
+      "path": "app/index.html",
+      "size": 11056,
+      "sha256": "6c98a470931d2d179f1bcb47847aa30f6e6560d0b8d0b4bdcd5c35c92dd6ef64"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 240,
+      "sha256": "92cbdf5ead8f345851d22e5d4ac2ac03804b1ce8ce0dd8d253e2ae7b10a41a73"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1499,
+      "sha256": "7a7d6a78c85dff5090b2faf4f1174c2311ee5d68d53f6e0821ed082aa6af133e"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 1552,
+      "sha256": "2a1af4d7a1dd93e4f795ddfa9d861a1635abe0add5a11f452b5267a9dbd6162d"
+    },
+    {
+      "path": "runtime/node.js",
+      "size": 5739,
+      "sha256": "e67e8ac8f1a8e1c45d1a988c0ba2409ee551795f2630c0db14d65cd5dfff5829"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 1804,
+      "sha256": "efbeb0db1ffb9d5f99e93730cfafe8711f1e62b0b40a64dfdf0a53bb7f11b37c"
+    },
+    {
+      "path": "shared/generator.js",
+      "size": 100492,
+      "sha256": "afa73551677f94ee1f8f1a91bc4b283b81beec1ea5d582c12fc2f015354f45c5"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 808,
+      "sha256": "5d67120459629a056a9f04e2d0fb8caff6e5ccce75f919dba9479321d363d114"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1538,
+      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2064,
+      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+    },
+    {
+      "path": "versions.json",
+      "size": 2438,
+      "sha256": "1e209652181c0b37524dfda4e2a39bb0517f270df4fc9a0428e94c20f4154fcf"
+    }
+  ]
+}
