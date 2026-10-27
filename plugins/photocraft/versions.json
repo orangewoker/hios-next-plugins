@@ -3,6 +3,15 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.5.2",
+      "ref": "photocraft-v0.5.2",
+      "releasedAt": "2026-10-27",
+      "notes": [
+        "工具栏增加全屏编辑按钮，点击同一按钮退出，保留当前编辑文档。",
+        "修复 AI 路由成功读取后仍显示正在读取的状态。"
+      ]
+    },
+    {
       "version": "0.5.1",
       "ref": "photocraft-v0.5.1",
       "releasedAt": "2026-10-26",

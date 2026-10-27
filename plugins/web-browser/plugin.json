@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "web-browser",
   "name": "浏览器",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "节点内真实网页浏览，按需悬浮添加或拖放原图，无自动采集与独立窗口。需配套新版 HIOS Tauri。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser",

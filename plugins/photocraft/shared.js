@@ -250,6 +250,13 @@ $('expand').onclick = async () => {
   try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
   catch { status('宿主不支持全屏，可拖动节点边缘放大编辑器'); }
 };
+addEventListener('fullscreenchange', () => {
+  const expanded = !!document.fullscreenElement, button = $('expand');
+  button.title = expanded ? '退出全屏' : '全屏编辑';
+  button.setAttribute('aria-label', button.title);
+  button.setAttribute('aria-pressed', String(expanded));
+  button.textContent = expanded ? '⊡' : '⛶';
+});
 $('reload').onclick = async () => {
   try { await saveDocument(); location.reload(); } catch (e) { fail(new Error(`保存未完成，未重新加载：${e.message}`)); }
 };
@@ -289,6 +296,7 @@ function aiRoutes() {
   $('aiHint').textContent=aiMode()==='psd' ? '分层可能超过 5 分钟，最多等待 30 分钟。本地组装 PSD；请在更多中选择图片编辑模型。每层可能产生一次图片调用，文字为像素层。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
   $('aiStart').textContent=aiMode()==='psd' ? '分层' : '生成';
   if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
+  else aiMessage('AI 路由已就绪');
 }
 async function aiCatalog() {
   try { const catalog=await aiHost({action:'catalog'}); aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }

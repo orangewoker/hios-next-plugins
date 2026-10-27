@@ -3,6 +3,16 @@
   "pluginId": "web-browser",
   "versions": [
     {
+      "version": "0.3.1",
+      "ref": "web-browser-v0.3.1",
+      "releasedAt": "2026-10-27",
+      "notes": [
+        "配合包含本次图片解析修复的 HIOS Tauri 开发版使用；仅更新插件不能修复旧版主程序。",
+        "优先尝试页面原图和 srcset，失败时回退网页显示的图片，并注明未确认原图。",
+        "改善小红书等页面原图下载失败时的回退；真实站点仍需实测。"
+      ]
+    },
+    {
       "version": "0.3.0",
       "ref": "web-browser-v0.3.0",
       "releasedAt": "2026-10-26",

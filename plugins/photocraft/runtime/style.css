@@ -45,3 +45,4 @@ body[data-theme="light"] .select-menu{background:#f0f0f0;color:#333;border-color
 .ai-toolbar .select-trigger[data-select="aiRoute"]{min-width:76px}
 .ai-toolbar .select-trigger[data-select="aiModel"]{min-width:100px}
 .ai-toolbar #export{flex-shrink:0}.ai-toolbar-row>#export{margin-left:auto}
+.ai-toolbar .fullscreen-toggle{margin-left:auto;min-width:30px;padding:0 6px;font-size:19px;line-height:1}
