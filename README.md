@@ -14,7 +14,6 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | 图片对比 | 0.3.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare` |
 | 拼图 | 0.2.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid` |
 | AI 提示词库 | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |
-| Blender MCP 建模 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/blender-mcp` |
 | K2 人像提示词生成器 | 0.2.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator` |
 | 算力云 | 0.2.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/compute-cloud` |
 | 混元3D | 0.2.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d` |
