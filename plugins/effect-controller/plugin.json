@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "effect-controller",
   "name": "效果控制器",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "为室内、商业、公建、店面、建筑与景观组合预设，本地输出结构化图生图提示词。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/effect-controller",

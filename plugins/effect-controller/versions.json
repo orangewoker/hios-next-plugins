@@ -3,6 +3,15 @@
   "pluginId": "effect-controller",
   "versions": [
     {
+      "version": "1.0.1",
+      "ref": "effect-controller-v1.0.1",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "所有下拉框改用主题化菜单，适配默认与夏日主题的深浅模式。",
+        "修复画布缩放后下拉菜单错位，支持边缘向上展开、滚动关闭及键盘选择。"
+      ]
+    },
+    {
       "version": "1.0.0",
       "ref": "effect-controller-v1.0.0",
       "releasedAt": "2026-10-28",

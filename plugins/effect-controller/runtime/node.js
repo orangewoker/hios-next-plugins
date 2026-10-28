@@ -1,5 +1,6 @@
 import { categories, getControls, getPresets } from "../shared/catalog.js";
 import { createDefaultState, normalizeState, applyPreset, compilePrompt } from "../shared/compiler.js";
+import { syncSelects, closeSelect } from "./select.js";
 const $ = (id) => document.getElementById(id);
 const protocol = "hios-plugin-node/v1", pluginId = "effect-controller";
 let nodeId = new URLSearchParams(location.search).get("nodeId") || "", origin, bound = false, restored = false;
@@ -73,6 +74,7 @@ function refreshPreview() {
   $("conflicts").textContent = (r.conflicts || []).map((x) => x.message).join("；");
 }
 function render() {
+  closeSelect();
   $("modes").replaceChildren();
   for (const [id, label] of [["render", "模型出图"], ["enhance", "效果提升"]]) {
     const b = button(label, "mode", id);
@@ -168,6 +170,7 @@ function render() {
   option($("customPreset"), "", "选择已保存预设");
   customPresets.forEach((p) => option($("customPreset"), p.id, `${p.name} · ${categories.find((c) => c.id === p.state.categoryId)?.label || ""}`));
   refreshPreview();
+  syncSelects();
 }
 function changeContext(mode, category) {
   drafts[key(state.mode, state.categoryId)] = clone(state);
