@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "effect-controller",
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 3049,
+      "sha256": "50b6dbe7a43b86f488ae3b0e27f695083195a7f9e92f6461d91102cf0bf75934"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 330,
+      "sha256": "243d6de216df4fc88043608af8ab9bbe994020456f75503b945fe3a5a33fa5b2"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1071,
+      "sha256": "e608e06cce5fc0900a0242eb7e06372d41e146a10e49e065a84dee22f9a53764"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 3551,
+      "sha256": "1bb8b74f2f9e031e50b3220bdddf72cefdd9191f1bef8ea5c54a5c109d4488d9"
+    },
+    {
+      "path": "runtime/node.js",
+      "size": 18007,
+      "sha256": "4e62f845ee91d4682f1e2cbcf2890a007498de4e83b5d71e621b8da2f94bfd18"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 3422,
+      "sha256": "5c62702d06fac9793344fa9d4ef11e7d5ba3a9dcbbc8a1735c0eceda5129556e"
+    },
+    {
+      "path": "shared/catalog.js",
+      "size": 39078,
+      "sha256": "4a2842945646109991571873bb22b25696b09825134f6fcf16e4cc86445c384e"
+    },
+    {
+      "path": "shared/compiler.js",
+      "size": 9123,
+      "sha256": "5a4d99e3cb36f6a5e13e39393aca5d263eddab14998ae3b7a9a9203bcd8d153c"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 322,
+      "sha256": "1b5ddb4c06abdb323372c82aa793746e37411c35c63c5eea4de7c50eacdc95a2"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "versions.json",
+      "size": 533,
+      "sha256": "40b9e2a7085bb4e76e0c888babc0eff45c6d380952e82cbeac1bbbd8b92d4d5d"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 
 | 插件 | 版本 | 安装 URL |
 | --- | --- | --- |
+| 效果控制器（画布提示词节点） | 1.0.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/effect-controller`（本地生成提示词；已验证 HIOS Next 3.6.6，无需额外主程序更新） |
 | DX Cut 视频剪辑（应用 + 画布节点） | 0.2.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dx-cut`（Windows x64，需 HIOS Next ≥ 3.6.2；设置中可选择 Gitee 国内渠道） |
 | 条形码工作室（应用 + 画布节点） | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio` |
 | 3D 导演台 | 0.1.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/director3d`（DSH 与完整功能需要包含导演台 DSH 桥接的新版 HIOS） |

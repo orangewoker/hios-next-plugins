@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "effect-controller",
+  "name": "效果控制器",
+  "version": "1.0.0",
+  "description": "为室内、商业、公建、店面、建筑与景观组合预设，本地输出结构化图生图提示词。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/effect-controller",
+  "permissions": ["canvas"],
+  "capabilities": [
+    { "id": "effect.prompt.compose", "title": "效果图提示词编排", "description": "模型出图 / 效果提升；按场景选择预设与控制项，无需模型或网络。" }
+  ],
+  "nodes": [
+    {
+      "id": "effect-controller",
+      "title": "效果控制器",
+      "description": "选择场景与预设，将提示词连接生图节点；原始图片直接连接生图节点。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [],
+      "outputs": [{ "id": "prompt", "title": "提示词", "type": "text" }],
+      "hidePortLabels": false,
+      "defaultSize": { "width": 480, "height": 760 },
+      "defaultData": {}
+    }
+  ]
+}

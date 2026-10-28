@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>效果控制器</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <!-- hios-ui:start --><link rel="stylesheet" href="../shared/hios-ui.css"><link rel="stylesheet" href="../shared/hios-adapter.css"><script src="../shared/hios-ui.js" data-plugin-id="effect-controller"></script><!-- hios-ui:end -->
+</head>
+<body>
+  <main id="app" class="hios-panel">
+    <header><div><strong>效果控制器</strong><p>场景化提示词 · 本地生成</p></div><span class="badge">不调用生图</span></header>
+    <div class="modes" id="modes"></div>
+    <div class="grid">
+      <label>场景分类<select id="category" class="hios-control"></select></label>
+      <label>具体业态<select id="type" class="hios-control"></select></label>
+    </div>
+    <label id="customSceneLabel" hidden>自定义场景名称<input id="customScene" class="hios-control" maxlength="200" placeholder="输入空间或场景名称"></label>
+    <label>搜索场景<input id="search" class="hios-control" placeholder="例如：咖啡、门头、口腔" autocomplete="off"><select id="searchResults" class="hios-control" hidden aria-label="搜索结果"></select></label>
+    <details><summary>收藏与最近使用</summary><div class="actions"><button id="favorite" class="hios-control">收藏当前场景</button></div><div id="favorites"></div><div id="recent"></div></details>
+    <label>效果预设<select id="preset" class="hios-control"></select></label>
+    <div id="confirm" class="notice" hidden><span>应用预设将替换当前控制项，是否继续？</span><div><button class="hios-control" id="confirmApply">应用</button> <button class="hios-control" id="cancelApply">取消</button></div></div>
+    <section>
+      <div class="section-head"><strong>效果控制</strong><span id="count"></span></div>
+      <div id="controls"></div>
+      <details><summary>添加更多控制项</summary><div id="available"></div></details>
+    </section>
+    <div id="conflicts" class="notice" hidden role="status"></div>
+    <label>补充要求<textarea id="supplement" class="hios-control" rows="2" maxlength="2000" placeholder="输入其他需要保留或表现的内容"></textarea></label>
+    <details>
+      <summary>我的预设</summary>
+      <div class="preset-tools">
+        <input id="presetName" class="hios-control" maxlength="50" placeholder="预设名称">
+        <button id="savePreset" class="hios-control">保存当前</button>
+        <select id="customPreset" class="hios-control" aria-label="我的预设"></select>
+        <div class="actions"><button id="applyCustom" class="hios-control">应用</button><button id="deleteCustom" class="hios-control">删除</button><button id="exportCustom" class="hios-control">导出</button><button id="importCustom" class="hios-control">导入</button><input type="file" id="file" accept="application/json,.json" hidden></div>
+        <p id="presetStatus" aria-live="polite"></p>
+      </div>
+    </details>
+    <details>
+      <summary>提示词预览</summary>
+      <div class="section-head"><span>本地生成的文本</span><button id="copy" class="hios-control">复制</button></div>
+      <textarea id="preview" class="hios-control preview" readonly aria-label="提示词预览"></textarea>
+      <p id="status" aria-live="polite">修改后实时更新输出</p>
+    </details>
+  </main>
+  <script type="module" src="node.js"></script>
+</body>
+</html>

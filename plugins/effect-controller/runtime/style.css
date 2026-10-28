@@ -1,0 +1,223 @@
+:root {
+  color-scheme: light dark;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  font: 13px/1.5 system-ui, sans-serif;
+  color: var(--hios-text);
+  background: var(--hios-background);
+}
+#app {
+  height: 100%;
+  overflow: auto;
+  border-radius: 0;
+  padding: 14px;
+  gap: 12px;
+}
+header,
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+header strong {
+  font-size: 16px;
+}
+p {
+  margin: 3px 0;
+  color: var(--hios-text-secondary,var(--hios-text));
+  opacity: .8;
+  font-size: 12px;
+}
+.badge {
+  border: 1px solid var(--hios-border);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.modes,
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.modes button {
+  flex: 1;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+label {
+  display: grid;
+  gap: 5px;
+  font-weight: 600;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  font-weight: 400;
+}
+textarea {
+  resize: vertical;
+}
+.section-head {
+  margin-bottom: 7px;
+}
+.section-head button,
+.actions button {
+  min-height: 30px;
+  padding: 4px 9px;
+}
+.control-row {
+  border: 1px solid var(--hios-border);
+  border-radius: var(--hios-radius-control);
+  padding: 8px;
+  margin: 6px 0;
+  display: grid;
+  gap: 6px;
+}
+.control-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.control-top label {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.control-top input {
+  width: auto;
+}
+.control-top button {
+  min-height: 26px;
+  padding: 2px 7px;
+}
+details {
+  border: 1px solid var(--hios-border);
+  border-radius: var(--hios-radius-control);
+  padding: 8px;
+  margin-top: 8px;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.available {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 0;
+}
+.available button {
+  min-height: 28px;
+  padding: 3px 8px;
+}
+.preset-tools {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+.notice {
+  border: 1px solid var(--hios-accent);
+  border-radius: var(--hios-radius-control);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+.notice[hidden] {
+  display: none;
+}
+.preview {
+  height: 150px;
+  line-height: 1.6;
+}
+button {
+  cursor: pointer;
+}
+@media (max-width: 340px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  #app {
+    padding: 10px;
+  }
+}
+[hidden] {
+  display: none !important;
+}
+input[type=checkbox] {
+  accent-color: var(--hios-accent);
+}
+.hios-control::placeholder {
+  color: var(--hios-text-secondary,var(--hios-text));
+  opacity: .65;
+}
+label > .hios-control {
+  font-weight: 400;
+}
+.control-row {
+  padding: 5px 6px;
+  margin: 4px 0;
+}
+.control-top {
+  display: grid;
+  grid-template-columns: minmax(78px, .85fr) minmax(0, 1.3fr) auto;
+  gap: 5px;
+}
+.control-top label {
+  min-width: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.control-top select {
+  min-height: 30px;
+  padding: 4px 7px;
+}
+.control-top button {
+  min-width: 28px;
+  font-size: 16px;
+}
+.control-row > input {
+  min-height: 30px;
+  padding: 4px 7px;
+}
+#favorites button,
+#recent button {
+  margin: 2px;
+  min-height: 28px;
+  padding: 3px 7px;
+  font-size: 12px;
+}
+details .section-head {
+  margin-top: 8px;
+}
+#app {
+  padding: 10px 12px;
+  gap: 7px;
+}
+details {
+  margin-top: 3px;
+  padding: 6px;
+}
+.control-row {
+  margin: 3px 0;
+}
+.section-head {
+  margin-bottom: 4px;
+}

@@ -1,4 +1,8 @@
 {
+  "effect-controller": {
+    "controls": "button.hios-control,input.hios-control,select.hios-control,textarea.hios-control",
+    "css": "/* Colors follow the host theme tokens. */"
+  },
   "barcode-studio": {
     "controls": ".typeChip, .exports button, .content textarea, .stageBar button",
     "css": ".railScroll{gap:24px!important;padding:24px!important}.typeChip{min-height:42px}.exports button{min-height:38px;padding:8px 16px}.content textarea{padding:14px!important}.block{border-radius:var(--hios-radius-panel)} :root{--font:Inter,\"Microsoft YaHei\",\"Segoe UI\",system-ui,sans-serif}"

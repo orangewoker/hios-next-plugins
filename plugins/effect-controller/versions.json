@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "effect-controller",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "ref": "effect-controller-v1.0.0",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "首次发布：模型出图与效果提升双模式，本地编排结构化提示词。",
+        "18 类场景、166 种具体空间、36 个控制项及商业/公共空间/门头专属预设。",
+        "支持自定义预设、导入导出、收藏搜索，以及浅色、深色和自定义主题。"
+      ]
+    }
+  ]
+}
