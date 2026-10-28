@@ -27,6 +27,8 @@ var import_node_readline = require("node:readline");
 var import_promises4 = require("node:fs/promises");
 var import_node_path4 = require("node:path");
 var import_node_crypto3 = require("node:crypto");
+var import_node_child_process4 = require("node:child_process");
+var import_node_util = require("node:util");
 
 // plugins/dx-cut/source/electron/media.ts
 var import_node_child_process = require("node:child_process");
@@ -1451,6 +1453,9 @@ var configured = false;
 var jobs2 = /* @__PURE__ */ new Map();
 var starting = /* @__PURE__ */ new Set();
 var writes = /* @__PURE__ */ new Map();
+var execFileAsync = (0, import_node_util.promisify)(import_node_child_process4.execFile);
+var strips = /* @__PURE__ */ new Map();
+var stripQueue = Promise.resolve();
 var safeId = (value) => {
   if (typeof value !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(value)) throw Error("\u5DE5\u7A0B\u6807\u8BC6\u65E0\u6548");
   return value;
@@ -1500,6 +1505,44 @@ async function execute(action, args, scope) {
     const assets = await importAssets(files, (0, import_node_path4.join)(root, "cache"));
     assets.forEach((asset, index) => asset.name = (0, import_node_path4.basename)(args.paths[index]));
     return assets;
+  }
+  if (action === "filmstrip") {
+    if (typeof args.path !== "string") throw Error("\u7D20\u6750\u8DEF\u5F84\u65E0\u6548");
+    const file = await (0, import_promises4.realpath)(args.path), mediaRoot = await (0, import_promises4.realpath)((0, import_node_path4.join)(root, "media"));
+    const rel = (0, import_node_path4.relative)(mediaRoot, file);
+    if (!rel || rel.startsWith("..") || (0, import_node_path4.resolve)(mediaRoot, rel) !== file) throw Error("\u7D20\u6750\u4E0D\u5728\u526A\u8F91\u5DE5\u7A0B\u76EE\u5F55\u5185");
+    const start = Number(args.sourceIn), duration = Number(args.duration), count = Number(args.count);
+    if (!Number.isFinite(start) || start < 0 || start > 28800 || !Number.isFinite(duration) || duration <= 0 || duration > 28800 || !Number.isInteger(count) || count < 1 || count > 24) throw Error("\u7F29\u7565\u5E27\u53C2\u6570\u65E0\u6548");
+    const info = await (0, import_promises4.stat)(file);
+    const key = (0, import_node_crypto3.createHash)("sha256").update(`${file}:${info.size}:${info.mtimeMs}:${start.toFixed(3)}:${duration.toFixed(3)}:${count}`).digest("hex");
+    const output = (0, import_node_path4.join)(root, "cache", `strip-${key}.jpg`);
+    const existing = strips.get(key);
+    if (existing) return existing;
+    const generate = stripQueue.catch(() => {
+    }).then(async () => {
+      try {
+        await (0, import_promises4.access)(output);
+        return { url: mediaUrl(output), count };
+      } catch {
+      }
+      const temporary = (0, import_node_path4.join)(root, "cache", `strip-${key}-${(0, import_node_crypto3.randomUUID)()}.jpg`);
+      try {
+        const filter = `fps=${count / duration}:round=down,scale=120:68:force_original_aspect_ratio=decrease,pad=120:68:(ow-iw)/2:(oh-ih)/2:black,setsar=1,tile=${count}x1`;
+        await execFileAsync(String(process.env.REACUT_FFMPEG), ["-v", "error", "-y", "-ss", String(start), "-i", file, "-vf", filter, "-frames:v", "1", "-q:v", "4", temporary], { timeout: 12e4, windowsHide: true, maxBuffer: 1024 * 1024 });
+        await (0, import_promises4.rename)(temporary, output);
+        return { url: mediaUrl(output), count };
+      } finally {
+        await (0, import_promises4.unlink)(temporary).catch(() => {
+        });
+      }
+    });
+    stripQueue = generate;
+    strips.set(key, generate);
+    try {
+      return await generate;
+    } finally {
+      strips.delete(key);
+    }
   }
   if (action === "save") {
     const project = await verifyProject(args.project);

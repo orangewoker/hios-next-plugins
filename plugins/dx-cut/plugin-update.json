@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "dx-cut",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "files": [
     {
       "path": "LICENSE",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 5570,
-      "sha256": "91f5ca1be57420cd6692b4388ce1f936259e9238fb5eb7d5993a08cae6331327"
+      "size": 5673,
+      "sha256": "ec35ca375cd33b2de71a9064e86649013c1561b36d2bc0ea9739ac4320e674f0"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -25,8 +25,8 @@
     },
     {
       "path": "backend/server.cjs",
-      "size": 72470,
-      "sha256": "864673cb10843cb0f6c529bf07ff6c20ae7c9fda511f2dd574046ef88f1f6c76"
+      "size": 75149,
+      "sha256": "8e7effc65f98c9a9b874fa48264823bb97fad866d13523d7caeb099b6b3e295d"
     },
     {
       "path": "backend/vendor/canvas-win32-x64-msvc/README.md",
@@ -106,7 +106,7 @@
     {
       "path": "plugin.json",
       "size": 1192,
-      "sha256": "d41b78e93771e33a09fb8e0468797792792acba74c73c7223aece96f6145bbbe"
+      "sha256": "006b7c8aa4da1778be99d13e0b68fefb72512def7fe45d727cd7fe0c49df075f"
     },
     {
       "path": "provenance.json",
@@ -114,14 +114,14 @@
       "sha256": "d3f3e3cbcb2911f9c2e44197da1f026e608187c3149941de38d3cf4dd51740f4"
     },
     {
-      "path": "runtime/assets/index-DlNcmLlh.css",
-      "size": 83418,
-      "sha256": "d5aa7d88f9e014f9b7a72bd2758d9d34839b7a8a7fdeab6ae45ff6ce428d013d"
+      "path": "runtime/assets/index-Vpccwh1N.js",
+      "size": 492875,
+      "sha256": "bee949ef96a81c5e9e34a15baf7d3080d938305b206b0acbe7f95165113b9910"
     },
     {
-      "path": "runtime/assets/index-IHuJ-7pm.js",
-      "size": 491076,
-      "sha256": "1c3083db3f75e77c2dca487434bd3fa0ac8d1eb7db79b8b948dedde04586be0f"
+      "path": "runtime/assets/index-gS2Ehw55.css",
+      "size": 83544,
+      "sha256": "e96ccc589266ef5987edc5f4b066cdf9d55c3028ceff6d5de4b1928250017378"
     },
     {
       "path": "runtime/builtin-assets/LICENSE.txt",
@@ -751,7 +751,7 @@
     {
       "path": "runtime/index.html",
       "size": 654,
-      "sha256": "d5eca913418d24c44c3970a206ac90513d6a7178e9214a32863b3e09e368f8d6"
+      "sha256": "9547f64642b512aca60bd7c3984a47e8fb96a4fa1afde8c77e1314fcf97371b5"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -770,8 +770,8 @@
     },
     {
       "path": "versions.json",
-      "size": 933,
-      "sha256": "df6affc02f04f7f5af338e151b51b5907f8a89fe897ce3537cc1a9280873e3c5"
+      "size": 1396,
+      "sha256": "dbe6fa98b0467a2db18d320acc0884de27376d1fd81298975a31eebcb5e9e633"
     }
   ]
 }

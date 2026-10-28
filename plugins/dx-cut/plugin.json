@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "dx-cut",
   "name": "DX Cut",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "独立本地视频剪辑器：多轨时间线、字幕、工程恢复与视频导出。不依赖 DXOS。",
   "permissions": [
     "filesystem",
