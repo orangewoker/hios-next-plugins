@@ -3,6 +3,14 @@
   "pluginId": "image-compare",
   "versions": [
     {
+      "version": "0.3.9",
+      "ref": "image-compare-v0.3.9",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
+      ]
+    },
+    {
       "version": "0.3.6",
       "ref": "image-compare-v0.3.6",
       "releasedAt": "2026-09-28",

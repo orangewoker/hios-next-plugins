@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "director3d",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "files": [
     {
       "path": ".gitignore",
@@ -51,7 +51,7 @@
     {
       "path": "plugin.json",
       "size": 1791,
-      "sha256": "95ca493f037ad25db629992334e49066e45280b7388f958be82401dfddfa7fb5"
+      "sha256": "2b7394709c4a1fa4447802d14a07a7251f9de201b355a3b5ab527cf720953ed3"
     },
     {
       "path": "runtime/app.html",
@@ -120,13 +120,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "src/App.vue",
@@ -235,8 +235,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2393,
-      "sha256": "d81315d609ef0f1b3e59f71e3b322ee1b426f5f168a6f3cb116014adcf28a0bc"
+      "size": 2614,
+      "sha256": "a937806c1fdd74a590f10d3beeb30c371fe530bbe0d4b7dfcf8ee14e9e149ac7"
     },
     {
       "path": "vite.config.mjs",

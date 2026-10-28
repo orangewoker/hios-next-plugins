@@ -141,8 +141,17 @@ function importFile(file) {
 async function theme(value) {
   const mode = value?.mode === 'light' ? 'light' : 'dark';
   document.body.dataset.theme = mode;
-  if (!runtimeReady || mode === currentTheme) return;
-  await request('theme', mode); currentTheme = mode;
+  // Convert CSS colors for egui; never filter the image canvas.
+  const painter = document.createElement('canvas').getContext('2d');
+  const tokens = {};
+  for (const [key, color] of Object.entries(value?.tokens || {})) {
+    if (typeof color !== 'string' || !CSS.supports('color', color)) continue;
+    painter.clearRect(0, 0, 1, 1); painter.fillStyle = color; painter.fillRect(0, 0, 1, 1);
+    tokens[key] = Array.from(painter.getImageData(0, 0, 1, 1).data);
+  }
+  const palette = JSON.stringify({mode, tokens});
+  if (!runtimeReady || palette === currentTheme) return;
+  await request('theme', palette); currentTheme = palette;
 }
 async function initialize(payload) {
   if (!initialized) {

@@ -3,6 +3,14 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.7",
+      "ref": "director3d-v0.1.7",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
+      ]
+    },
+    {
       "version": "0.1.6",
       "ref": "director3d-v0.1.6",
       "releasedAt": "2026-10-26",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -126,7 +126,7 @@
     {
       "path": "plugin.json",
       "size": 1934,
-      "sha256": "2bb4d4e3ac757bbc0cc78f4e23be9105614e62c58bbdc6ec42cae70c1cda9ed2"
+      "sha256": "d54ed2fab6a1dd1289a87dc11753626860e48019d93cc698faa35fd09c0a42a9"
     },
     {
       "path": "runtime/index.html",
@@ -150,8 +150,8 @@
     },
     {
       "path": "shared.js",
-      "size": 24751,
-      "sha256": "524e5e3a7305d42fd4cc628ad209d70a73bee362134cd05704a0347a6d7317dc"
+      "size": 25276,
+      "sha256": "4edb260f5931b22eabc20c5028661a0440ec6150b2e5c72d6d9ac793ff5fc087"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -160,13 +160,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "vendor/LICENSE-ag-psd",
@@ -185,28 +185,28 @@
     },
     {
       "path": "versions.json",
-      "size": 3887,
-      "sha256": "1601e5f7995e3d42f33414c01a6f207b538d0defbe4a3023c20fc74207ccd863"
+      "size": 4108,
+      "sha256": "44ba086693fe762b92c4d70a516ef3eff2b5f4df34ce146cf25891b5baef33e5"
     },
     {
       "path": "web/build.json",
       "size": 197,
-      "sha256": "9db6f6856e7e5574d9c04c6f1dd159d9bca339bf4cfdbb5867657b12cce88bf0"
+      "sha256": "906ef79d6768e9bef1284a250928afb4e3220484bb11ae84c259648320b83e70"
     },
     {
       "path": "web/index.html",
       "size": 2252,
-      "sha256": "fca5e8a75a0d0b07de47c85af2867e44575e4e08dbc4a2f59507d52420df60b7"
+      "sha256": "74b6f2d181bcde224952142174134de3fcc8e46b6663418b791a487f31c00765"
     },
     {
       "path": "web/photocraft-web.js",
       "size": 170700,
-      "sha256": "ba454bdae61f21ed8c972eff9ca1c4688f0c0332d9a0f1a3bbf76b55a169e7ca"
+      "sha256": "a1383597c67cfdde1ea4526ea520a10e2fbf9c90dcc0b164fe108e3bdfacb53f"
     },
     {
       "path": "web/photocraft-web_bg.wasm",
-      "size": 32209057,
-      "sha256": "4816269b4fc80f56061cdec3c8c93a08605572d3f563f60b317930bcff6be874"
+      "size": 32213088,
+      "sha256": "d6f2102c308dcd84395d4f561f1b5c34aded5e69648be0024f9c3dd98544494a"
     }
   ]
 }

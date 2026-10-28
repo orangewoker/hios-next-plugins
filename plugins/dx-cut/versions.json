@@ -3,6 +3,14 @@
   "pluginId": "dx-cut",
   "versions": [
     {
+      "version": "0.2.2",
+      "ref": "dx-cut-v0.2.2",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
+      ]
+    },
+    {
       "version": "0.2.1",
       "ref": "dx-cut-v0.2.1",
       "releasedAt": "2026-10-28",

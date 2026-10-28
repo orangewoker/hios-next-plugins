@@ -3,6 +3,14 @@
   "pluginId": "watermark-master",
   "versions": [
     {
+      "version": "0.1.7",
+      "ref": "watermark-master-v0.1.7",
+      "releasedAt": "2026-10-28",
+      "notes": [
+        "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
+      ]
+    },
+    {
       "version": "0.1.5",
       "ref": "watermark-master-v0.1.5",
       "releasedAt": "2026-10-24",

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "barcode-studio",
   "name": "条形码工作室",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "条形码与二维码生成，支持应用入口、画布文本输入和图片输出，以及 SVG/PDF/PNG 导出。",
   "author": "HIOS Next adaptation; original DXOS barcode authors",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio",

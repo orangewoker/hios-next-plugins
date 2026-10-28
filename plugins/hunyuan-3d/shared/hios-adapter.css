@@ -1,3 +1,12 @@
 /* Opt-in adapter: hunyuan-3d. Never targets canvas, SVG, media or positioning handles. */
 :root body :is(.actions button, main textarea, main select, main input:not([type=checkbox]):not([type=range]):not([type=color])) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
-.actions{gap:12px;flex-wrap:wrap}main textarea,main select{min-height:36px}
+.actions{gap:12px;flex-wrap:wrap}main textarea,main select{min-height:36px} :root[data-theme]{--plugin-accent:var(--hios-accent);--accent:var(--hios-accent)}
+:root[data-theme] :is(body,.app-shell){color:var(--hios-text);background:var(--hios-background)}
+:root[data-theme] :is(.topbar,.generation-panel,.history-panel,.settings-modal){color:var(--hios-text);background:var(--hios-surface);border-color:var(--hios-border)}
+:root[data-theme] :is(.brand small,.eyebrow,.field>span,.range-field>span,.section-toggle,.remember-row,.job-main>small,.job-files,.display-card label>span,.field em,.empty-history){color:var(--hios-text-secondary)}
+:root[data-theme] :is(.connection,.running-pill,.icon-button,.settings-button,.soft-button,.segmented,.provider-tabs,.job-card,.job-files>div,.viewer-modes,.viewer-actions,.viewer-footer,.display-card){color:var(--hios-text);background:var(--hios-control);border-color:var(--hios-border);box-shadow:none}
+:root[data-theme] :is(.segmented button,.provider-tabs button,.viewer-modes button,.viewer-actions button,.job-files button){color:var(--hios-text-secondary)}
+:root[data-theme] :is(.segmented button.active,.provider-tabs button.active,.viewer-modes button.active,.viewer-actions button.active){color:var(--hios-accent);background:color-mix(in srgb,var(--hios-accent) 13%,var(--hios-control));border-color:var(--hios-accent)}
+:root[data-theme] :is(.upload-zone,.view-slot,.field textarea,.field input,.field select){color:var(--hios-text);background:var(--hios-control);border-color:var(--hios-border)}
+:root[data-theme] :is(.upload-zone strong,.upload-zone span,.job-main>strong,.display-card strong,.empty-history strong){color:var(--hios-text)}
+:root[data-theme] :is(.generate-button,.primary-button){background:var(--hios-accent);border-color:var(--hios-accent);color:var(--hios-accent-contrast,#fff)}

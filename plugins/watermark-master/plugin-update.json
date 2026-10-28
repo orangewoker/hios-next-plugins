@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "watermark-master",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "files": [
     {
       "path": "README.md",
@@ -21,7 +21,7 @@
     {
       "path": "plugin.json",
       "size": 1933,
-      "sha256": "4bd629b2a4820edbfad1f5b56ae443fa051bb9e280d7ff1823921fffbc908601"
+      "sha256": "2cb66b0205ecf2f0ee3ad5e9222c2371a5dff44e3eb0115beac58160eb533fe0"
     },
     {
       "path": "runtime/index.html",
@@ -30,23 +30,23 @@
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 776,
-      "sha256": "c1728fb4003432e002ab1c77974cd2e88723816040be79dc6c7451fe67c12831"
+      "size": 854,
+      "sha256": "64ee4289def9cd869b96b3c64bcde916173a214de105e443954743ad225553a3"
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "versions.json",
-      "size": 2056,
-      "sha256": "db932c885b0a75b1b20396fa794f2b979020e17d82e489446026e533750110c8"
+      "size": 2283,
+      "sha256": "9972502766b43c1231b0dd3e39636eec063a915d08e41791b9b65ce8c059b103"
     }
   ]
 }
