@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "pluginId": "model-gallery",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "files": [
     {
       "path": "README.md",
-      "size": 4599,
-      "sha256": "4029890f278644979738e37e229d95161a005b7cfca3fc32b020b7a48462f910"
+      "size": 5579,
+      "sha256": "10f632faf8c28cbf7f1b5db909fe356beea1bf32c15960749f364c5d55bb916d"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "size": 1491,
-      "sha256": "bafb269616abac2d1c2fcc9095777d359f222951251fa0d7d21775e2e114fbf9"
+      "size": 1518,
+      "sha256": "8dee43e3bdbba65175261561c1fb6c58df04dd33319c52ab619e58b30bec5cb3"
     },
     {
       "path": "data-packs.json",
@@ -50,8 +50,8 @@
     },
     {
       "path": "plugin.json",
-      "size": 1596,
-      "sha256": "e03ed40cfe3c24f6f79faa72ec95a245cb2b5615db6cca94c3df24da56f06562"
+      "size": 1584,
+      "sha256": "33a0b3a59d16f42de8d7656f24d35433df657f01755254f8be70d720f6569ac7"
     },
     {
       "path": "runtime/gallery-core.mjs",
@@ -60,18 +60,23 @@
     },
     {
       "path": "runtime/gallery.css",
-      "size": 8117,
-      "sha256": "b5007c78ce932c1edb785a37838a39d0b00cecce9095b1217be7294f595e4285"
+      "size": 11390,
+      "sha256": "c3f778523a07a312fbf1dc515cef12fe60fcab1a81395cade741ed8c313c9058"
     },
     {
       "path": "runtime/gallery.mjs",
-      "size": 22766,
-      "sha256": "52e6e04e33d580e9b1134e2a4d3608f1d8d4cfc21516d1cf4d5ca339e62b6b8d"
+      "size": 22925,
+      "sha256": "93acd136fd8e37d9debd790aa9068334cc5bc2cabdfb5d7b2f6749556dabdad9"
     },
     {
       "path": "runtime/index.html",
-      "size": 3959,
-      "sha256": "9e3f314cbe1476c11ffbe901166d4a98901bff977851f2c1c662bb6811b3cb8d"
+      "size": 4028,
+      "sha256": "b79460b037421b848df52c4a481972fdbb156bbcee175938a8fd06508763b097"
+    },
+    {
+      "path": "runtime/themed-select.mjs",
+      "size": 4883,
+      "sha256": "3d2fa65656b256baaab4b57b45cc8e88c3e60400e0a83d52150ab479d26bf654"
     },
     {
       "path": "runtime/vendor/portrait-core.mjs",

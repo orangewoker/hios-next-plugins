@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "model-gallery",
   "name": "模特",
-  "version": "0.2.0",
-  "description": "需 HIOS ≥ 3.8.0；安装时下载约 6.62 GiB 图库，人物、服装、姿势独立输出一至三张原图。",
+  "version": "0.3.0",
+  "description": "需 HIOS ≥ 3.8.1；插件与约 6.62 GiB 素材分别下载，更新插件直接复用已有图库。",
   "author": "HIOS Next / upstream gallery contributors",
   "permissions": [
     "filesystem",

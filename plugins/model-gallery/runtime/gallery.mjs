@@ -1,3 +1,4 @@
+import { themedSelect } from './themed-select.mjs';
 import { KINDS, LABELS, ANGLES, INDEX, defaults, normalizeCatalog, filterCatalog, groupPoses, groupKey, outputKinds, canonicalUrl, renderUrl } from './gallery-core.mjs';
 
 const P = 'hios-plugin-node/v1', $ = id => document.getElementById(id);
@@ -38,7 +39,7 @@ function renderCompact() {
     const pick = button('', () => open(k), 'slot-image'); pick.setAttribute('aria-label', `选择${LABELS[k]}`);
     if (item?.thumbUrl) pick.append(image(item.thumbUrl, item.title));
     else { const empty = element('span', 'placeholder'); empty.append(element('b', '', '+'), element('span', '', `选择${LABELS[k]}`)); pick.append(empty); }
-    const row = element('div', 'slot-title'), label = element('label'), check = element('input'); check.type = 'checkbox'; check.checked = state.enabled[k] !== false; check.disabled = !item;
+    const row = element('div', 'slot-title'), label = element('label'), check = element('input'); check.type = 'checkbox'; check.checked = Boolean(item) && state.enabled[k] !== false; check.disabled = !item;
     check.onchange = () => commit({ ...state, enabled: { ...state.enabled, [k]: check.checked } });
     label.append(check, document.createTextNode(LABELS[k])); row.append(label);
     if (item) row.append(button('清空', () => { const next = clone(state); delete next.selections[k]; commit(next); }, 'text-button'));
@@ -65,7 +66,7 @@ async function ensureLibrary(k, selectionState = expanded ? draft : state) {
     id = result.directories?.find(g => g.id === `managed:${k}`)?.id;
     if (id) selectionState.libraries[k] = id;
   }
-  if (!id) throw Error(`请先关联${LABELS[k]}图库`);
+  if (!id) throw Error(`请到「插件管理 → 模特」下载${LABELS[k]}素材库，或关联已有本地图库`);
   if (libraries.get(k)?.id === id) return libraries.get(k);
   const key = `${k}:${id}`;
   if (!loadingLibraries.has(key)) loadingLibraries.set(key, (async () => {
@@ -91,7 +92,7 @@ function selectFilter(label, key, values) {
   select.setAttribute('aria-label', label);
   for (const [value, title] of values) { const option = element('option', '', title); option.value = value; select.append(option); }
   select.value = filters[kind][key]; select.onchange = () => { filters[kind][key] = select.value; shown = 60; renderGrid(); };
-  field.append(element('span', '', label), select); return field;
+  field.append(element('span', '', label), themedSelect(select)); return field;
 }
 function checkFilter(label, key) {
   const field = element('label', 'check-filter'), input = element('input'); input.type = 'checkbox'; input.checked = filters[kind][key];
@@ -206,7 +207,7 @@ function renderSettings() {
       if (!select.value) return;
       select.disabled = true;
       try { const result = await request('resource-directory', { action: 'restore', id: select.value }); await bindLibrary(k, result.directory); } catch (error) { notify(error.message); } finally { select.disabled = false; }
-    }; section.append(select);
+    }; section.append(themedSelect(select));
     const lib = libraries.get(k); section.append(element('small', '', lib && lib.id === draft.libraries[k] ? `${lib.name} · 已读取 ${lib.rows.length} 张索引` : draft.libraries[k] ? '已关联，等待读取或目录已移动' : '尚未关联'));
     return section;
   }));
