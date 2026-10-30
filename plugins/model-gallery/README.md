@@ -44,7 +44,7 @@ UI 回归测试另见 `tests/model-gallery-ui-regression.cjs`。上游逻辑和�
 
 ## 下载源与后续 CDN
 
-当前从你指定的三个 `orangewoker/comfyui-*-gallery` 仓库的固定提交，通过 `raw.githubusercontent.com` 下载；GitHub 插件代码更新不携带 6.62 GiB 图片。若网络无法访问 GitHub Raw，可配置 HIOS 网络代理后重试；已完成文件不会重下。
+当前从你指定的三个 `orangewoker/comfyui-*-gallery` 仓库的固定提交，通过 `raw.githubusercontent.com` 下载；GitHub 插件代码更新不携带 6.62 GiB 图片。安装需要能够访问 GitHub Raw 的网络环境；网络不可达时可更换可达网络，或由发布者配置下述受信任 CDN 镜像后重试。已完成文件不会重下。
 
 宿主 3.8.0 支持可选 `packs[].mirrors`（最多三个 HTTPS 基址）。CDN 按 `<base>/<owner>/<repo>/<commit>/library/<relative path>` 保存文件；镜像失败或哈希不符会尝试下一个源及 GitHub Raw。改变镜像地址不会使已验证缓存失效。当前没有配置 CDN，不宣称已具备国内加速。
 
