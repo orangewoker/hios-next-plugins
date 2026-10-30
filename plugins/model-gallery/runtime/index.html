@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模特 · 参考素材</title><link rel="stylesheet" href="gallery.css">
+<!-- hios-ui:start --><link rel="stylesheet" href="../shared/hios-ui.css"><link rel="stylesheet" href="../shared/hios-adapter.css"><script src="../shared/hios-ui.js" data-plugin-id="model-gallery"></script><!-- hios-ui:end -->
+</head><body>
+<main id="compact" class="compact">
+  <header><div><span class="eyebrow">REFERENCE STUDIO</span><h1>构建你的模特参考</h1></div><button id="open" class="hios-control">选择素材 ↗</button></header>
+  <div id="slots" class="slots"></div>
+  <footer><span id="output-count">选择图片后运行</span><label><input id="add-canvas" type="checkbox"> 同时添加图片到画布</label></footer>
+  <p class="hint">只提供参考原图，不执行换装或生成。勾选要输出的图片，点击节点「运行」。</p>
+</main>
+<main id="workbench" class="workbench" hidden>
+  <header class="toolbar"><nav id="tabs" aria-label="图库类型"></nav><label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索关键词 / 素材编号" aria-label="搜索素材"></label><button id="settings-toggle" class="hios-control">图库设置</button></header>
+  <div class="workspace">
+    <aside class="filters"><span class="eyebrow">筛选素材</span><div id="filters"></div><button id="reset" class="hios-control">重置筛选</button><p class="hint" id="library-info"></p><button id="source-info" class="text-button">来源与许可</button></aside>
+    <section class="collection"><div class="collection-bar"><span id="count"></span><span id="loading" role="status"></span></div><div class="scroll" id="scroll"><div id="grid" class="grid"></div><div id="empty" class="empty" hidden></div><button id="more" class="hios-control more" hidden>加载更多</button></div></section>
+    <aside class="preview"><div id="preview-stage" class="preview-stage"><span>点击图片，查看细节</span></div><div id="preview-meta"></div><div id="angles" class="angles"></div><div class="preview-actions"><button id="favorite" class="hios-control" disabled>收藏</button><button id="use" class="hios-control hios-primary" disabled>选用此图片</button></div></aside>
+  </div>
+  <footer class="selection-bar"><div id="draft-slots" class="draft-slots"></div><button id="cancel" class="hios-control">取消</button><button id="apply" class="hios-control hios-primary">应用选择</button></footer>
+</main>
+<dialog id="settings" class="settings"><header><h2>图库设置</h2><button id="settings-close" class="text-button" aria-label="关闭设置">×</button></header><p class="hint">安装完成后自动使用已下载图库。也可选择自己的仓库根目录或 library 目录替代，只读使用，不复制整个图库。</p><div id="library-settings"></div><p class="hint">也可以从下拉列表重新使用已授权的目录。关联成功后点击「应用选择」保存到当前节点。</p></dialog>
+<dialog id="notices" class="settings"><header><h2>来源与许可</h2><button id="notices-close" class="text-button">×</button></header><p>人物、服装、姿势逻辑改编自 orangewoker 的三个 ComfyUI 图库及其上游项目。插件不包含第三方原图或索引。</p><p>程序代码按上游 MIT 范围复用；图片及元数据不因代码开源获得相同许可。姿势素材列有非商业限制；服装素材使用范围依原权利人条款；人物库记录了 CC0 标注与原站附带请求。</p><p>详细原文随插件保留在 licenses 目录。人物库中的正脸与造型不是同一人物的成对照片。姿势图是参考原图，不是自动生成的深度图或骨骼图。</p></dialog>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<script type="module" src="gallery.mjs"></script></body></html>

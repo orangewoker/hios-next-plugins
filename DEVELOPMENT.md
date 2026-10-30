@@ -183,3 +183,12 @@ PhotoCraft 0.4.0 分层使用 `pipeline:local-layers/v1`，由通用视觉和图
 ## 节点视觉标准（UI v1）
 
 新插件必须采用 `sdk/plugin-ui` 的共享套件与模板。表单圆角 12px、面板 20px、控件高度 36px、间距 14px；不要对图片/SVG/画布/定位手柄应用通用表单样式。宿主负责外壳，插件负责 iframe 内容。构建后执行 `node scripts/sync-plugin-ui.mjs`，不得只手工修改打包后的 HTML。详见 `sdk/plugin-ui/README.md`。
+
+
+### 安装时下载素材（dataPacks）
+
+插件可声明 `install: { "dataPacks": "data-packs.json" }`。此清单 schemaVersion=1，packs 为数组，每项包含唯一 id、GitHub repository（owner/repo）、固定 40 位 commit、files（path 相对上游 library/、size、Git blob sha1）。只接受 JSON/PNG/JPEG/WebP，单文件最多 64 MiB，总计最多 32 GiB。宿主在安装事务中下载校验，数据缓存不放入插件代码或主程序安装包；失败阻止激活，重试复用已验证文件。无需 process 权限，不执行上游脚本。
+
+有 filesystem 权限的已启用插件可通过 resource-directory list/restore 使用 `managed:<pack id>`。这些目录由宿主管理，不能用 remove 删除授权。插件卸载不清理下载缓存，重装可复用。安装进度/取消属于宿主插件管理接口，不开放给 iframe。
+
+可选 `packs[].mirrors` 支持最多三个无凭据和参数的 HTTPS 基址，路径为 `<base>/<owner>/<repo>/<commit>/library/<file>`。镜像和源站均必须通过大小与 Git blob 哈希验证；镜像地址不影响缓存标识。

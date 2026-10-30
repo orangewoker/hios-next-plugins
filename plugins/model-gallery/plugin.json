@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "model-gallery",
+  "name": "模特",
+  "version": "0.2.0",
+  "description": "需 HIOS ≥ 3.8.0；安装时下载约 6.62 GiB 图库，人物、服装、姿势独立输出一至三张原图。",
+  "author": "HIOS Next / upstream gallery contributors",
+  "permissions": [
+    "filesystem",
+    "canvas"
+  ],
+  "capabilities": [
+    {
+      "id": "model.references",
+      "title": "模特参考图库",
+      "description": "离线检索、组合人物服装姿势参考图。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "model.references",
+      "title": "模特",
+      "description": "选择人物、服装、姿势，勾选本次输出，运行后从对应端口获取原图。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "portrait",
+          "title": "人物",
+          "type": "image"
+        },
+        {
+          "id": "costume",
+          "title": "服装",
+          "type": "image"
+        },
+        {
+          "id": "pose",
+          "title": "姿势",
+          "type": "image"
+        }
+      ],
+      "defaultSize": {
+        "width": 650,
+        "height": 440
+      },
+      "defaultData": {
+        "schema": 1,
+        "selections": {},
+        "libraries": {},
+        "enabled": {
+          "portrait": true,
+          "costume": true,
+          "pose": true
+        },
+        "addToCanvas": false
+      }
+    }
+  ],
+  "install": {
+    "dataPacks": "data-packs.json"
+  },
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/model-gallery"
+}

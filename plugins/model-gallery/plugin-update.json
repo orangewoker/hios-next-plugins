@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "model-gallery",
+  "version": "0.2.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 4518,
+      "sha256": "bef0f51351dd55e9b1484b55ad2093ebc27c8abc1a1e394c8722a86bcf0ba171"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "size": 1491,
+      "sha256": "bafb269616abac2d1c2fcc9095777d359f222951251fa0d7d21775e2e114fbf9"
+    },
+    {
+      "path": "data-packs.json",
+      "size": 995714,
+      "sha256": "c2ab67b367c87ce8d71ca6900ad8acd8e569a90f5d43953c3f5ad639e71f7f11"
+    },
+    {
+      "path": "licenses/costume-LICENSE.txt",
+      "size": 1208,
+      "sha256": "52d2c2f2977012ff4a1770466b8b9dd22aaca109cb0d80d1d795569728662a7f"
+    },
+    {
+      "path": "licenses/costume-NOTICES.md",
+      "size": 2053,
+      "sha256": "d9cbb881d24285632d6d8c5f4fa7bf2332b9f89fa1647ad4ac29b580dde4f284"
+    },
+    {
+      "path": "licenses/portrait-LICENSE.txt",
+      "size": 1323,
+      "sha256": "e7a3a8d04143f6d5278dc80952f33f9958fff586a77369b04d8a1acd14af3e04"
+    },
+    {
+      "path": "licenses/portrait-NOTICES.md",
+      "size": 1034,
+      "sha256": "6bcfb9a3ab6a6432ecd54e230232de9d1b63bbabde94100e826627e012d14b5c"
+    },
+    {
+      "path": "licenses/pose-LICENSE.txt",
+      "size": 1615,
+      "sha256": "7f8b59e5d91bc2c4957618b45fc063d739a26e0a30ef13b8260f115b7dec7b71"
+    },
+    {
+      "path": "licenses/pose-NOTICES.md",
+      "size": 884,
+      "sha256": "929c25fd95e38b72b2b23411a322c99cbd66a86d11ad1c4a5f7b7dc0f9ffa686"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1596,
+      "sha256": "e03ed40cfe3c24f6f79faa72ec95a245cb2b5615db6cca94c3df24da56f06562"
+    },
+    {
+      "path": "runtime/gallery-core.mjs",
+      "size": 4524,
+      "sha256": "839c091e9177b1e650d646527df1c7b5af4ce23a221026d342ca8248c164af48"
+    },
+    {
+      "path": "runtime/gallery.css",
+      "size": 8117,
+      "sha256": "b5007c78ce932c1edb785a37838a39d0b00cecce9095b1217be7294f595e4285"
+    },
+    {
+      "path": "runtime/gallery.mjs",
+      "size": 22766,
+      "sha256": "52e6e04e33d580e9b1134e2a4d3608f1d8d4cfc21516d1cf4d5ca339e62b6b8d"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 3959,
+      "sha256": "9e3f314cbe1476c11ffbe901166d4a98901bff977851f2c1c662bb6811b3cb8d"
+    },
+    {
+      "path": "runtime/vendor/portrait-core.mjs",
+      "size": 1724,
+      "sha256": "ae5288242359c66db94faf3d93c8d48b3f87ced1adec46481093b1d63a8fe722"
+    },
+    {
+      "path": "scripts/validate-library.mjs",
+      "size": 1508,
+      "sha256": "24fabd94bfd95874408391a660c0d239374cd997f056a232a58acf2d7aa53c91"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 304,
+      "sha256": "ea6a771fce589c44ef9e09702fc9b65af467700cc86666cff162b90f4acc8e2e"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    }
+  ]
+}

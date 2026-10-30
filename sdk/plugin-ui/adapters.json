@@ -74,5 +74,9 @@
   "dlss5-image": {
     "controls": ".settings select,.settings button,.footer button,.wrap select,.wrap button",
     "css": ".settings{gap:14px}.footer{gap:12px}"
+  },
+  "model-gallery": {
+    "controls": ".hios-control,.filter-field select,.search",
+    "css": "/* Media cards and pose angle controls keep their own geometry. */"
   }
 }

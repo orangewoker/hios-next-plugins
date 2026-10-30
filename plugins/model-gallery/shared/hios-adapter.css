@@ -1,0 +1,3 @@
+/* Opt-in adapter: model-gallery. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.hios-control,.filter-field select,.search) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+/* Media cards and pose angle controls keep their own geometry. */
