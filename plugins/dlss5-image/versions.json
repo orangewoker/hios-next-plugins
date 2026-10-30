@@ -3,6 +3,15 @@
   "pluginId": "dlss5-image",
   "versions": [
     {
+      "version": "0.1.6",
+      "ref": "dlss5-image-v0.1.6",
+      "releasedAt": "2026-10-30",
+      "notes": [
+        "滑块采用 macOS 风格细轨道与白色滑钮，去除厚描边，保留宽触控区域和键盘操作。",
+        "优化插件内滚动条主题适配；仅更新插件，无需更新主程序。"
+      ]
+    },
+    {
       "version": "0.1.4",
       "ref": "dlss5-image-v0.1.4",
       "releasedAt": "2026-09-30",

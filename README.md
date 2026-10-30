@@ -12,7 +12,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | 条形码工作室（应用 + 画布节点） | 0.1.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio` |
 | 3D 导演台 | 0.1.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/director3d`（DSH 与完整功能需要包含导演台 DSH 桥接的新版 HIOS） |
 | PhotoCraft 图像编辑器 | 0.5.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft`（需支持 `file-store` 和 `ai-request` 协议的 HIOS Next 主程序更新） |
-| DLSS 5 图片增强 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`（需 HIOS Next 桌面版 ≥ 2.6.3） |
+| DLSS 5 图片增强 | 0.1.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`（需 HIOS Next 桌面版 ≥ 2.6.3） |
 | 图片对比 | 0.3.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/image-compare` |
 | 拼图 | 0.2.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/puzzle-grid` |
 | AI 提示词库 | 0.3.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |

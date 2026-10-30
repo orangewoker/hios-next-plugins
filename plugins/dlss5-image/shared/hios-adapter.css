@@ -1,3 +1,11 @@
 /* Opt-in adapter: dlss5-image. Never targets canvas, SVG, media or positioning handles. */
 :root body :is(.settings select,.settings button,.footer button,.wrap select,.wrap button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
 .settings{gap:14px}.footer{gap:12px}
+
+/* Scroll containers live inside the plugin iframe; host CSS cannot reach them. */
+:root { --hios-scroll-thumb: color-mix(in srgb, var(--hios-text-secondary, var(--hios-text)) 45%, transparent); }
+:root * { scrollbar-width: thin; scrollbar-color: var(--hios-scroll-thumb) transparent; }
+:root *::-webkit-scrollbar { width: 7px; height: 7px; }
+:root *::-webkit-scrollbar-track, :root *::-webkit-scrollbar-corner { background: transparent; }
+:root *::-webkit-scrollbar-thumb { background: var(--hios-scroll-thumb); border-radius: 999px; }
+:root *::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
