@@ -79,7 +79,7 @@ async function until(check, label) {
   await win.loadURL(origin);
   await until(() => js('messages.some(m=>m.type==="ready")'), 'ready');
   const init = async inputs => { await js(`frames[0].postMessage({protocol:'hios-plugin-node/v1',pluginId:'ai-prompt-library',nodeId:'fixture',type:'init',payload:{state:{},inputs:${JSON.stringify(inputs)}}},'*')`); await delay(80); };
-  const select = async id => frame(`const el=d.querySelector('#saveCategory');el.value=${JSON.stringify(id)};el.dispatchEvent(new w.Event('change',{bubbles:true}));`);
+  const select = async id => frame(`const el=d.querySelector('#saveCategory'),index=[...el.options].findIndex(o=>o.value===${JSON.stringify(id)});if(index<0)throw Error('missing category');d.querySelector('#saveCategoryTrigger').click();const option=d.querySelectorAll('#saveCategoryMenu [role="option"]')[index];if(!option)throw Error('category menu did not open');option.click();`);
   const save = async () => frame(`d.querySelector('#saveAsset').click()`);
   const count = () => requests.filter(item => item.url === '/api/v1/assets/upload').length;
   const waitCount = async n => { await until(() => count() === n, `upload ${n}`); await until(() => frame(`return !d.querySelector('#saveAsset').disabled`), 'save settled'); };

@@ -40,7 +40,17 @@
     .field-row { display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:7px; }
     .input-wrap { position:relative; }
     input { width:100%;min-width:0;height:36px;padding:0 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;outline:0;font-size:14px; }
-    select { width:100%;min-width:0;height:36px;padding:0 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:14px; }
+    .save-category-field { display:grid;gap:5px;min-width:0; }
+    .save-category-trigger { width:100%;min-width:0;height:36px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;text-align:left;font-size:14px; }
+    .save-category-trigger:disabled { opacity:.5;cursor:not-allowed; }
+    .save-category-trigger:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .save-category-trigger[aria-expanded="true"] { border-color:var(--accent); }
+    .save-category-caption { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .save-category-trigger::after { content:"";width:6px;height:6px;flex:none;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg); }
+    .save-category-menu { position:fixed;z-index:1000;overflow:auto;overscroll-behavior:contain;padding:4px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);scrollbar-color:var(--border) var(--surface); }
+    .save-category-option { min-height:32px;padding:7px 10px;border-radius:7px;color:var(--text);font-size:14px;line-height:1.3;overflow-wrap:anywhere;cursor:pointer; }
+    .save-category-option[aria-selected="true"] { color:var(--accent);font-weight:600; }
+    .save-category-option.is-active { background:var(--accent-soft); }
     /* Text entry keeps its normal border, including on older HIOS hosts. */
     input:focus { outline:none;box-shadow:none; }
     input::placeholder { color:var(--text-2);opacity:1; }
@@ -107,7 +117,11 @@
             <div class="save-input"><strong>图片输入</strong><span id="imageInputStatus">未连接</span></div>
             <div class="save-input"><strong>提示词输入</strong><span id="promptInputStatus">未连接</span></div>
           </div>
-          <label>保存分类<select id="saveCategory" aria-label="保存分类"><option value="">请先连接服务</option></select></label>
+          <div class="save-category-field">
+            <label for="saveCategoryTrigger">保存分类</label>
+            <select id="saveCategory" aria-hidden="true" tabindex="-1" hidden><option value="">请先连接服务</option></select>
+            <button id="saveCategoryTrigger" class="save-category-trigger" type="button" role="combobox" aria-label="保存分类" aria-haspopup="listbox" aria-expanded="false" aria-controls="saveCategoryMenu" disabled><span id="saveCategoryCaption" class="save-category-caption">请先连接服务</span></button>
+          </div>
           <div class="actions"><button id="saveAsset" class="btn primary" type="button">保存到分类</button><button id="forceSave" class="btn" type="button" hidden>仍然保存重复图片</button></div>
           <p id="saveNote" class="note" aria-live="polite">仅保存素材，不自动调用 AI 分析；保存分类与抽取范围互不影响。</p>
         </div>
@@ -133,6 +147,7 @@
     </div></div>
     <div class="footer-actions"><button id="random" class="btn primary" type="button" aria-label="运行，随机抽取提示词"><svg class="run-icon" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span>运行</span><span class="run-hint">· 随机抽取</span></button><button id="output" class="btn" type="button" disabled>输出到画布</button></div>
   </main>
+  <div id="saveCategoryMenu" class="save-category-menu" role="listbox" aria-label="保存分类" hidden></div>
   <script>
     (() => {
       'use strict';
@@ -141,7 +156,7 @@
       const STORAGE_KEY = 'hios.ai-prompt-library.api-key';
       const STORAGE_SCOPE = 'hios.ai-prompt-library.connection-scope';
       const $ = (id) => document.getElementById(id);
-      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output'), imageInputStatus:$('imageInputStatus'), promptInputStatus:$('promptInputStatus'), saveCategory:$('saveCategory'), save:$('saveAsset'), forceSave:$('forceSave'), saveNote:$('saveNote') };
+      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output'), imageInputStatus:$('imageInputStatus'), promptInputStatus:$('promptInputStatus'), saveCategory:$('saveCategory'), saveCategoryTrigger:$('saveCategoryTrigger'), saveCategoryCaption:$('saveCategoryCaption'), saveCategoryMenu:$('saveCategoryMenu'), save:$('saveAsset'), forceSave:$('forceSave'), saveNote:$('saveNote') };
       let nodeId = '';
       let pluginId = 'ai-prompt-library';
       let categories = [];
@@ -169,7 +184,7 @@
       function persist() { post('state', { state:stateForHost() }); }
       function setStatus(text, kind = '') { els.status.textContent = text; els.status.className = `status ${kind}`.trim(); }
       function showMessage(text = '', kind = 'info') { els.message.textContent = text; els.message.className = text ? `message show ${kind}` : 'message'; }
-      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next; els.forceSave.disabled = next; els.saveCategory.disabled = next || !categories.length; els.serverUrl.disabled = next; els.apiKey.disabled = next; els.clearKey.disabled = next; if (next && label) showMessage(label, 'info'); }
+      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next; els.forceSave.disabled = next; els.saveCategory.disabled = next || !categories.length; syncSaveCategory(); els.serverUrl.disabled = next; els.apiKey.disabled = next; els.clearKey.disabled = next; if (next && label) showMessage(label, 'info'); }
       function applyTheme(theme) {
         const mode = theme && theme.mode === 'dark' ? 'dark' : 'light';
         document.documentElement.dataset.theme = mode;
@@ -198,15 +213,111 @@
       function validId(value) { const id = Number(value); return value !== null && value !== '' && Number.isSafeInteger(id) && id > 0 ? id : null; }
       function currentSignature() { return `${String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, '')}\n${String(els.apiKey.value || '').trim()}`; }
       function clearDuplicate() { duplicateSnapshot = null; els.forceSave.hidden = true; }
+      // Native select popups use screen coordinates and can detach from a
+      // transformed canvas iframe. Render in this iframe's viewport instead,
+      // so the trigger and popup are scaled and moved together by the host.
+      let categoryMenuOpen = false, categoryMenuFrame = 0, categoryMenuIndex = 0, categoryMenuOptions = [], categoryMenuItems = [], categoryTyped = '', categoryTypedAt = 0;
+      function closeSaveCategoryMenu(restore = false) {
+        if (!categoryMenuOpen) return;
+        categoryMenuOpen = false; cancelAnimationFrame(categoryMenuFrame);
+        els.saveCategoryTrigger.setAttribute('aria-expanded','false');
+        els.saveCategoryTrigger.removeAttribute('aria-activedescendant');
+        els.saveCategoryMenu.hidden = true; els.saveCategoryMenu.replaceChildren();
+        categoryMenuOptions = []; categoryMenuItems = [];
+        if (restore && !els.saveCategoryTrigger.disabled) els.saveCategoryTrigger.focus({ preventScroll:true });
+      }
+      function syncSaveCategory() {
+        els.saveCategoryTrigger.disabled = els.saveCategory.disabled;
+        els.saveCategoryCaption.textContent = els.saveCategory.selectedOptions[0]?.label || '请选择保存分类';
+        if (els.saveCategory.disabled) closeSaveCategoryMenu();
+      }
+      function placeSaveCategoryMenu() {
+        if (!categoryMenuOpen) return;
+        const anchor = els.saveCategoryTrigger.getBoundingClientRect();
+        const scroll = document.querySelector('.scroll').getBoundingClientRect();
+        if (els.saveCategoryTrigger.disabled || !els.saveCategoryTrigger.getClientRects().length || anchor.bottom <= scroll.top || anchor.top >= scroll.bottom) { closeSaveCategoryMenu(); return; }
+        const width = document.documentElement.clientWidth, height = document.documentElement.clientHeight;
+        const margin = 6, gap = 4;
+        const menuWidth = Math.min(Math.max(anchor.width,160), Math.max(0,width - margin * 2));
+        const below = Math.max(0,height - anchor.bottom - margin - gap), above = Math.max(0,anchor.top - margin - gap);
+        const needed = Math.min(240,els.saveCategoryMenu.scrollHeight);
+        const up = below < needed && above > below;
+        els.saveCategoryMenu.style.width = `${menuWidth}px`;
+        els.saveCategoryMenu.style.maxHeight = `${Math.min(240,up ? above : below)}px`;
+        els.saveCategoryMenu.style.left = `${Math.max(margin,Math.min(anchor.left,width - menuWidth - margin))}px`;
+        const menuHeight = els.saveCategoryMenu.getBoundingClientRect().height;
+        els.saveCategoryMenu.style.top = `${up ? anchor.top - menuHeight - gap : anchor.bottom + gap}px`;
+        els.saveCategoryMenu.dataset.placement = up ? 'top' : 'bottom';
+        categoryMenuFrame = requestAnimationFrame(placeSaveCategoryMenu);
+      }
+      function highlightSaveCategory(index, scroll = true) {
+        if (!categoryMenuOpen || !categoryMenuItems.length) return;
+        categoryMenuIndex = Math.max(0,Math.min(index,categoryMenuItems.length - 1));
+        categoryMenuItems.forEach((item,i) => item.classList.toggle('is-active',i === categoryMenuIndex));
+        const item = categoryMenuItems[categoryMenuIndex];
+        els.saveCategoryTrigger.setAttribute('aria-activedescendant',item.id);
+        if (scroll) {
+          const box = els.saveCategoryMenu.getBoundingClientRect(), row = item.getBoundingClientRect();
+          if (row.top < box.top) els.saveCategoryMenu.scrollTop -= box.top - row.top;
+          else if (row.bottom > box.bottom) els.saveCategoryMenu.scrollTop += row.bottom - box.bottom;
+        }
+      }
+      function chooseSaveCategory(index) {
+        if (!categoryMenuOpen || !categoryMenuOptions[index]) return;
+        const value = categoryMenuOptions[index].value;
+        closeSaveCategoryMenu(true);
+        els.saveCategory.value = value;
+        els.saveCategory.dispatchEvent(new Event('change',{ bubbles:true }));
+      }
+      function openSaveCategoryMenu() {
+        if (els.saveCategory.disabled) return;
+        if (categoryMenuOpen) { closeSaveCategoryMenu(true); return; }
+        categoryMenuOptions = [...els.saveCategory.options].filter(option => !option.disabled && !option.hidden);
+        if (!categoryMenuOptions.length) return;
+        categoryMenuOpen = true; categoryTyped = ''; categoryTypedAt = 0;
+        categoryMenuItems = categoryMenuOptions.map((option,index) => {
+          const item = document.createElement('div');
+          item.id = `save-category-option-${index}`; item.className = 'save-category-option';
+          item.setAttribute('role','option'); item.setAttribute('aria-selected',String(option.value === els.saveCategory.value));
+          item.textContent = option.label;
+          item.addEventListener('pointerdown',event => event.preventDefault());
+          item.addEventListener('pointermove',() => highlightSaveCategory(index,false));
+          item.addEventListener('click',event => { event.stopPropagation(); chooseSaveCategory(index); });
+          els.saveCategoryMenu.append(item); return item;
+        });
+        els.saveCategoryTrigger.setAttribute('aria-expanded','true'); els.saveCategoryMenu.hidden = false;
+        placeSaveCategoryMenu();
+        highlightSaveCategory(Math.max(0,categoryMenuOptions.findIndex(option => option.value === els.saveCategory.value)));
+      }
+      function saveCategoryKeyboard(event) {
+        if (event.key === 'Escape') { if (categoryMenuOpen) { event.preventDefault(); closeSaveCategoryMenu(true); } return; }
+        if (event.key === 'Tab') { closeSaveCategoryMenu(); return; }
+        if (['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(event.key)) {
+          event.preventDefault();
+          if (!categoryMenuOpen) { openSaveCategoryMenu(); return; }
+          if (event.key === 'Enter' || event.key === ' ') { chooseSaveCategory(categoryMenuIndex); return; }
+          highlightSaveCategory(event.key === 'Home' ? 0 : event.key === 'End' ? categoryMenuItems.length - 1 : categoryMenuIndex + (event.key === 'ArrowUp' ? -1 : 1));
+        } else if (categoryMenuOpen && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+          event.preventDefault(); const now = Date.now();
+          categoryTyped = (now - categoryTypedAt > 700 ? '' : categoryTyped) + event.key.toLocaleLowerCase(); categoryTypedAt = now;
+          const index = categoryMenuOptions.findIndex(option => option.label.toLocaleLowerCase().startsWith(categoryTyped));
+          if (index >= 0) highlightSaveCategory(index);
+        }
+      }
       function renderSave() {
         const image = imageInput(); const prompt = promptInput();
         els.imageInputStatus.textContent = image ? '已连接一张图片' : '未连接';
         els.promptInputStatus.textContent = prompt.trim() ? prompt : '未连接或内容为空';
-        els.saveCategory.replaceChildren();
-        const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = categories.length ? '请选择保存分类' : '请先连接服务'; els.saveCategory.append(placeholder);
-        categories.forEach(item => { const option = document.createElement('option'); option.value = String(item.id); option.textContent = String(item.name || `分类 ${item.id}`); els.saveCategory.append(option); });
-        els.saveCategory.value = state.saveCategoryId ? String(state.saveCategoryId) : '';
-        els.saveCategory.disabled = busy || !categories.length;
+        const options = [{ value:'', label:categories.length ? '请选择保存分类' : '请先连接服务' }, ...categories.map(item => ({ value:String(item.id), label:String(item.name || `分类 ${item.id}`) }))];
+        const existing = [...els.saveCategory.options];
+        if (existing.length !== options.length || options.some((option,index) => existing[index].value !== option.value || existing[index].label !== option.label)) {
+          closeSaveCategoryMenu(); els.saveCategory.replaceChildren();
+          options.forEach(item => { const option = document.createElement('option'); option.value = item.value; option.textContent = item.label; els.saveCategory.append(option); });
+        }
+        const selected = state.saveCategoryId ? String(state.saveCategoryId) : '';
+        if (els.saveCategory.value !== selected) closeSaveCategoryMenu();
+        els.saveCategory.value = selected;
+        els.saveCategory.disabled = busy || !categories.length; syncSaveCategory();
         if (!duplicateSnapshot) els.saveNote.textContent = state.lastSavedAssetId ? `最近保存的素材 ID：${state.lastSavedAssetId}。仅保存，不自动调用 AI 分析。` : '仅保存素材，不自动调用 AI 分析；保存分类与抽取范围互不影响。';
       }
       function invalidateConnection() {
@@ -392,6 +503,11 @@
       els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',()=>randomPrompt(false)); els.output.addEventListener('click',emitSelected);
       els.save.addEventListener('click',()=>void saveAsset(false)); els.forceSave.addEventListener('click',()=>void saveAsset(true));
       els.saveCategory.addEventListener('change',()=>{ saveConnection(); state.saveCategoryId=validId(els.saveCategory.value); state.saveScope=currentScope(); clearDuplicate(); renderSave(); persist(); });
+      els.saveCategoryTrigger.addEventListener('click',event=>{ event.preventDefault(); event.stopPropagation(); openSaveCategoryMenu(); });
+      els.saveCategoryTrigger.addEventListener('keydown',saveCategoryKeyboard);
+      document.addEventListener('pointerdown',event=>{ if (categoryMenuOpen && !els.saveCategoryMenu.contains(event.target) && !els.saveCategoryTrigger.contains(event.target)) closeSaveCategoryMenu(); },true);
+      document.addEventListener('scroll',event=>{ if (categoryMenuOpen && event.target !== els.saveCategoryMenu && !els.saveCategoryMenu.contains(event.target)) closeSaveCategoryMenu(); },true);
+      window.addEventListener('blur',()=>closeSaveCategoryMenu());
       els.serverUrl.addEventListener('input',invalidateConnection); els.apiKey.addEventListener('input',invalidateConnection);
       els.serverUrl.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); }); els.apiKey.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); });
       els.count.addEventListener('change',()=>{ state.count=safeNumber(els.count.value,1,20,1); els.count.value=String(state.count); persist(); });
@@ -418,7 +534,7 @@
           void randomPrompt(true);
         }
       });
-      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; knownConnectionSignature=currentSignature(); renderResults(); renderSave(); post('ready',{version:'0.2.0'});
+      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; knownConnectionSignature=currentSignature(); renderResults(); renderSave(); post('ready',{version:'0.2.1'});
     })();
   </script>
 </body>
