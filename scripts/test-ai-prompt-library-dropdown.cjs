@@ -75,6 +75,8 @@ async function until(check, label) {
     assert.equal(await frame(`return d.querySelector('#saveCategoryTrigger').disabled`),true);
     await frame(`d.querySelector('#serverUrl').value=${JSON.stringify(origin)};d.querySelector('#apiKey').value='fixture-key';d.querySelector('#connect').click();`);
     await until(() => frame(`return d.querySelector('#status').textContent==='已连接' && !d.querySelector('#saveCategoryTrigger').disabled`),'connect');
+    await frame(`d.querySelector('#settingsToggle').click();`);
+    await frame(`d.querySelector('#saveToggle').click();`);
     assert.equal(await frame(`return d.querySelectorAll('#saveCategory option').length`),21);
 
     const themes = [

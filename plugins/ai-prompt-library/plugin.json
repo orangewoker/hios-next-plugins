@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "ai-prompt-library",
   "name": "AI 提示词库",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "连接自托管 AI Prompt Library，按分类保存图片和提示词，或随机抽取提示词输出到画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library",
@@ -44,7 +44,7 @@
       ],
       "defaultSize": {
         "width": 520,
-        "height": 610
+        "height": 1060
       },
       "defaultData": {
         "selectedCategoryIds": [],

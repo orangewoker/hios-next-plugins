@@ -79,7 +79,7 @@ async function until(check, label) {
   await win.loadURL(origin);
   await until(() => js('messages.some(m=>m.type==="ready")'), 'ready');
   const init = async inputs => { await js(`frames[0].postMessage({protocol:'hios-plugin-node/v1',pluginId:'ai-prompt-library',nodeId:'fixture',type:'init',payload:{state:{},inputs:${JSON.stringify(inputs)}}},'*')`); await delay(80); };
-  const select = async id => frame(`const el=d.querySelector('#saveCategory'),index=[...el.options].findIndex(o=>o.value===${JSON.stringify(id)});if(index<0)throw Error('missing category');d.querySelector('#saveCategoryTrigger').click();const option=d.querySelectorAll('#saveCategoryMenu [role="option"]')[index];if(!option)throw Error('category menu did not open');option.click();`);
+  const select = async id => frame(`if(!d.querySelector('#savePanel').classList.contains('open'))d.querySelector('#saveToggle').click();const el=d.querySelector('#saveCategory'),index=[...el.options].findIndex(o=>o.value===${JSON.stringify(id)});if(index<0)throw Error('missing category');d.querySelector('#saveCategoryTrigger').click();const option=d.querySelectorAll('#saveCategoryMenu [role="option"]')[index];if(!option)throw Error('category menu did not open');option.click();`);
   const save = async () => frame(`d.querySelector('#saveAsset').click()`);
   const count = () => requests.filter(item => item.url === '/api/v1/assets/upload').length;
   const waitCount = async n => { await until(() => count() === n, `upload ${n}`); await until(() => frame(`return !d.querySelector('#saveAsset').disabled`), 'save settled'); };
@@ -93,6 +93,7 @@ async function until(check, label) {
   assert.equal(invalidated.lastSavedAssetId, null, 'the saved ID belongs to the previous connection');
   await frame(`d.querySelector('#connect').click();`);
   await until(() => frame(`return d.querySelector('#status').textContent==='已连接'`), 'connect');
+  await frame(`d.querySelector('#settingsToggle').click();`);
   assert.equal(await frame(`return d.querySelectorAll('#saveCategory option').length`), 3);
 
   await save(); await delay(100);
@@ -121,12 +122,16 @@ async function until(check, label) {
   assert.ok(!JSON.stringify(state).includes(dataUrl));
   assert.ok(!JSON.stringify(state).includes('同时保存图片和文本'));
 
-  await frame(`w.localStorage.setItem('hios.ai-prompt-library.server-url','https://other.invalid');w.localStorage.setItem('hios.ai-prompt-library.api-key','other-key');w.localStorage.setItem('hios.ai-prompt-library.connection-scope','changed-in-another-node');`);
+  await frame(`const k='hios.ai-prompt-library.services-v1',c=JSON.parse(w.localStorage.getItem(k)),p=c.services[0];p.url='https://other.invalid';p.key='other-key';p.scope='changed-in-another-node';w.localStorage.setItem(k,JSON.stringify(c));`);
   await save(); await delay(100);
   assert.equal(count(), 3, 'a category from a different connection must not be saved');
-  assert.match(await frame(`return d.querySelector('#saveNote').textContent`), /重新选择保存分类/);
+  assert.match(await frame(`return d.querySelector('#saveNote').textContent`), /重新连接/);
+  assert.equal(await frame(`return d.querySelector('#saveCategory').value`), '', 'external profile change invalidates category');
+  await frame(`const k='hios.ai-prompt-library.services-v1',c=JSON.parse(w.localStorage.getItem(k)),p=c.services[0];p.url=${JSON.stringify(origin)};p.key='fixture-key';p.scope='restored-test-scope';w.localStorage.setItem(k,JSON.stringify(c));`);
+  await save(); await frame(`d.querySelector('#connect').click();`);
+  await until(() => frame(`return d.querySelector('#status').textContent==='已连接'`), 'reconnect after external change');
   await select('2');
-  assert.equal(await frame(`return w.localStorage.getItem('hios.ai-prompt-library.server-url')`), origin, 'category scope belongs to the current node connection');
+  assert.equal(await frame(`return JSON.parse(w.localStorage.getItem('hios.ai-prompt-library.services-v1')).services[0].url`), origin, 'category scope belongs to the current node connection');
 
   await init({ image:dataUrl,prompt_input:'重复图片' }); await save(); await waitCount(4);
   assert.equal(last().force, null); assert.equal(await frame(`return d.querySelector('#forceSave').hidden`), false);

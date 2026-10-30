@@ -55,7 +55,7 @@ async function until(check, label) {
   const frame = code => js(`(()=>{const w=frames[0],d=w.document;${code}})()`);
   await win.loadURL(origin);
   await until(() => js('messages.some(m=>m.type==="ready")'), 'ready');
-  assert.equal(await js('messages.find(m=>m.type==="ready").payload.version'), '0.2.1');
+  assert.equal(await js('messages.find(m=>m.type==="ready").payload.version'), '0.3.0');
   win.webContents.debugger.attach('1.3');
   await win.webContents.debugger.sendCommand('Emulation.setFocusEmulationEnabled', { enabled: true });
   const init = (theme, state = {}) => js(`frames[0].postMessage({protocol:'hios-plugin-node/v1',pluginId:'ai-prompt-library',nodeId:'fixture',type:'init',payload:{theme:${JSON.stringify(theme)},state:${JSON.stringify(state)}}},'*')`);

@@ -34,6 +34,7 @@
     .panel { overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 5px 18px rgba(29,48,67,.05); }
     .panel-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;color:var(--text);background:transparent;text-align:left; }
     .panel-head span { display:grid;gap:2px;min-width:0; }.panel-head strong { font-size:14px; }.panel-head small { color:var(--text-2);font-size:12px;font-weight:400; }
+    .panel-heading { display:flex;align-items:center;gap:4px; }.panel-heading .panel-head { flex:1;min-width:0; }.panel-heading > .btn { flex:none;margin-right:11px; }
     .chevron { color:var(--text-3);font-size:12px;transition:transform .15s ease; }.panel.open .chevron { transform:rotate(180deg); }
     .panel-body { display:none;padding:0 11px 11px; }.panel.open .panel-body { display:grid;gap:8px; }
     label { display:grid;gap:5px;min-width:0;color:var(--text-2);font-size:13px; }
@@ -101,8 +102,16 @@
     </header>
     <div class="scroll"><div class="stack">
       <section id="settingsPanel" class="panel open">
-        <button id="settingsToggle" class="panel-head" type="button"><span><strong>连接设置</strong><small>密钥仅保存在插件隔离存储中</small></span><b class="chevron">⌄</b></button>
-        <div class="panel-body">
+        <button id="settingsToggle" class="panel-head" type="button" aria-expanded="true" aria-controls="settingsBody"><span><strong>连接设置</strong><small id="settingsSummary">密钥仅保存在插件隔离存储中</small></span><b class="chevron">⌄</b></button>
+        <div id="settingsBody" class="panel-body">
+          <div class="save-category-field">
+            <label for="serviceTrigger">选择服务</label>
+            <select id="serviceSelect" aria-hidden="true" tabindex="-1" hidden></select>
+            <button id="serviceTrigger" class="save-category-trigger" type="button" role="combobox" aria-label="选择服务" aria-haspopup="listbox" aria-expanded="false" aria-controls="serviceMenu"><span id="serviceCaption" class="save-category-caption">请选择服务</span></button>
+          </div>
+          <div class="actions"><button id="addService" class="btn" type="button">新增服务</button><button id="deleteService" class="btn" type="button">删除服务</button></div>
+          <div id="deleteConfirm" class="actions" hidden><span class="note">删除此服务及其本机密钥？</span><button id="confirmDelete" class="btn" type="button">确认删除</button><button id="cancelDelete" class="btn" type="button">取消</button></div>
+          <label>服务名称<input id="serviceName" placeholder="例如：我的提示词库" autocomplete="off" /></label>
           <label>服务地址<input id="serverUrl" inputmode="url" placeholder="http://NAS-IP:8765" autocomplete="off" /></label>
           <label>访问密钥<div class="input-wrap"><input id="apiKey" class="secret" type="password" placeholder="填写 ComfyUI / API Key" autocomplete="off" /><button id="revealKey" class="reveal" type="button" aria-label="显示或隐藏密钥">显示</button></div></label>
           <div class="actions"><button id="connect" class="btn primary" type="button">连接并读取分类</button><button id="clearKey" class="btn" type="button">清除密钥</button></div>
@@ -110,9 +119,9 @@
         </div>
       </section>
 
-      <section class="panel open" aria-label="保存素材">
-        <div class="panel-head"><span><strong>保存到提示词库</strong><small>连接图片、提示词，或同时连接两者</small></span></div>
-        <div class="panel-body">
+      <section id="savePanel" class="panel" aria-label="保存素材">
+        <button id="saveToggle" class="panel-head" type="button" aria-expanded="false" aria-controls="saveBody"><span><strong>保存到提示词库</strong><small>连接图片、提示词，或同时连接两者</small></span><b class="chevron">⌄</b></button>
+        <div id="saveBody" class="panel-body">
           <div class="save-inputs">
             <div class="save-input"><strong>图片输入</strong><span id="imageInputStatus">未连接</span></div>
             <div class="save-input"><strong>提示词输入</strong><span id="promptInputStatus">未连接</span></div>
@@ -127,9 +136,9 @@
         </div>
       </section>
 
-      <section class="panel open">
-        <div class="panel-head"><span><strong>抽取范围</strong><small>不选择分类时使用全部授权分类</small></span><button id="reloadCategories" class="btn" type="button">刷新</button></div>
-        <div class="panel-body" style="display:grid">
+      <section id="drawPanel" class="panel open">
+        <div class="panel-heading"><button id="drawToggle" class="panel-head" type="button" aria-expanded="true" aria-controls="drawBody"><span><strong>抽取范围</strong><small>不选择分类时使用全部授权分类</small></span><b class="chevron">⌄</b></button><button id="reloadCategories" class="btn" type="button">刷新</button></div>
+        <div id="drawBody" class="panel-body">
           <div id="categories" class="categories"><div class="empty">连接服务后读取分类</div></div>
           <div class="run-row">
             <label>抽取数量<input id="count" type="number" min="1" max="20" step="1" value="1" /></label>
@@ -148,6 +157,7 @@
     <div class="footer-actions"><button id="random" class="btn primary" type="button" aria-label="运行，随机抽取提示词"><svg class="run-icon" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span>运行</span><span class="run-hint">· 随机抽取</span></button><button id="output" class="btn" type="button" disabled>输出到画布</button></div>
   </main>
   <div id="saveCategoryMenu" class="save-category-menu" role="listbox" aria-label="保存分类" hidden></div>
+  <div id="serviceMenu" class="save-category-menu" role="listbox" aria-label="选择服务" hidden></div>
   <script>
     (() => {
       'use strict';
@@ -155,8 +165,9 @@
       const STORAGE_URL = 'hios.ai-prompt-library.server-url';
       const STORAGE_KEY = 'hios.ai-prompt-library.api-key';
       const STORAGE_SCOPE = 'hios.ai-prompt-library.connection-scope';
+      const STORAGE_SERVICES = 'hios.ai-prompt-library.services-v1';
       const $ = (id) => document.getElementById(id);
-      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output'), imageInputStatus:$('imageInputStatus'), promptInputStatus:$('promptInputStatus'), saveCategory:$('saveCategory'), saveCategoryTrigger:$('saveCategoryTrigger'), saveCategoryCaption:$('saveCategoryCaption'), saveCategoryMenu:$('saveCategoryMenu'), save:$('saveAsset'), forceSave:$('forceSave'), saveNote:$('saveNote') };
+      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), settingsSummary:$('settingsSummary'), serviceSelect:$('serviceSelect'), serviceTrigger:$('serviceTrigger'), serviceCaption:$('serviceCaption'), serviceMenu:$('serviceMenu'), addService:$('addService'), deleteService:$('deleteService'), deleteConfirm:$('deleteConfirm'), confirmDelete:$('confirmDelete'), cancelDelete:$('cancelDelete'), serviceName:$('serviceName'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), savePanel:$('savePanel'), saveToggle:$('saveToggle'), drawPanel:$('drawPanel'), drawToggle:$('drawToggle'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output'), imageInputStatus:$('imageInputStatus'), promptInputStatus:$('promptInputStatus'), saveCategory:$('saveCategory'), saveCategoryTrigger:$('saveCategoryTrigger'), saveCategoryCaption:$('saveCategoryCaption'), saveCategoryMenu:$('saveCategoryMenu'), save:$('saveAsset'), forceSave:$('forceSave'), saveNote:$('saveNote') };
       let nodeId = '';
       let pluginId = 'ai-prompt-library';
       let categories = [];
@@ -164,27 +175,45 @@
       let connectionSignature = '';
       let knownConnectionSignature = '';
       let connectionDirty = false;
+      let activeProfileScope = '';
+      let operationEpoch = 0;
+      let hydrated = false;
+      let nameDirty = false;
       let inputs = {};
       let duplicateSnapshot = null;
       const pendingRequests = new Map();
-      let state = { selectedCategoryIds:[], saveCategoryId:null, lastSavedAssetId:null, saveScope:'', count:1, seed:0, autoOutput:true, selectedIndex:0, lastItems:[] };
+      let state = { serviceId:'', connectionScope:'', selectedCategoryIds:[], saveCategoryId:null, lastSavedAssetId:null, saveScope:'', settingsOpen:true, saveOpen:false, drawOpen:true, count:1, seed:0, autoOutput:true, selectedIndex:0, lastItems:[] };
 
       function post(type, payload = {}) { parent.postMessage({ protocol:PROTOCOL, nodeId, pluginId, type, payload }, '*'); }
       function safeNumber(value, min, max, fallback) { const number = Number(value); return Number.isFinite(number) ? Math.max(min, Math.min(max, Math.trunc(number))) : fallback; }
-      function normalizedBase() { const value = String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, ''); if (!/^https?:\/\//i.test(value)) throw new Error('服务地址必须以 http:// 或 https:// 开头'); return value; }
-      function headers(json = false) { const result = {}; const key = String(els.apiKey.value || '').trim(); if (key) result['X-API-Key'] = key; if (json) result['Content-Type'] = 'application/json'; return result; }
+      function normalizedBase(url = els.serverUrl.value) { const value = String(url || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, ''); if (!/^https?:\/\//i.test(value)) throw new Error('服务地址必须以 http:// 或 https:// 开头'); return value; }
+      function headers(key, json = false) { const result = {}; if (key) result['X-API-Key'] = key; if (json) result['Content-Type'] = 'application/json'; return result; }
       function newScope() { return Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2,'0')).join(''); }
-      function currentScope() { let scope = localStorage.getItem(STORAGE_SCOPE); if (!scope) { scope = newScope(); localStorage.setItem(STORAGE_SCOPE, scope); } return scope; }
-      function saveConnection() {
-        const url = String(els.serverUrl.value || '').trim(); const key = String(els.apiKey.value || '').trim();
-        if (url !== (localStorage.getItem(STORAGE_URL) || '') || key !== (localStorage.getItem(STORAGE_KEY) || '')) localStorage.setItem(STORAGE_SCOPE, newScope());
-        localStorage.setItem(STORAGE_URL, url); localStorage.setItem(STORAGE_KEY, key);
+      function readCatalog() {
+        try { const parsed=JSON.parse(localStorage.getItem(STORAGE_SERVICES) || 'null'); if (parsed && Array.isArray(parsed.services)) return parsed; } catch {}
+        return null;
       }
-      function stateForHost() { return { selectedCategoryIds:[...state.selectedCategoryIds], saveCategoryId:state.saveCategoryId, lastSavedAssetId:state.lastSavedAssetId, saveScope:state.saveScope, count:state.count, seed:state.seed, autoOutput:state.autoOutput, selectedIndex:state.selectedIndex, lastItems:state.lastItems.slice(0,20).map((item) => ({ asset_id:item.asset_id, category_id:item.category_id, category_name:String(item.category_name || ''), prompt:String(item.prompt || ''), thumbnail_url:String(item.thumbnail_url || '') })) }; }
+      function initializeCatalog() {
+        let catalog=readCatalog();
+        if (catalog) return catalog;
+        const url=localStorage.getItem(STORAGE_URL) || '', key=localStorage.getItem(STORAGE_KEY) || '';
+        const id=newScope(), legacy=!!(url || key);
+        const service={ id, name:legacy ? '原有服务' : '默认服务', url, key, scope:localStorage.getItem(STORAGE_SCOPE) || newScope() };
+        catalog={ version:1, defaultId:id, legacyId:legacy ? id : '', services:[service] };
+        localStorage.setItem(STORAGE_SERVICES,JSON.stringify(catalog));
+        // Remove the old copies only after the new catalog was written, so
+        // deleting a migrated service also removes its last stored key.
+        if (legacy) { localStorage.removeItem(STORAGE_URL); localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(STORAGE_SCOPE); }
+        return catalog;
+      }
+      function profileFor(id, catalog = readCatalog()) { return catalog?.services.find(item => item && item.id === id) || null; }
+      function profileSignature(profile) { return `${String(profile?.url || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, '')}\n${String(profile?.key || '').trim()}`; }
+      function stateForHost() { return { serviceId:state.serviceId, connectionScope:state.connectionScope, selectedCategoryIds:[...state.selectedCategoryIds], saveCategoryId:state.saveCategoryId, lastSavedAssetId:state.lastSavedAssetId, saveScope:state.saveScope, settingsOpen:state.settingsOpen, saveOpen:state.saveOpen, drawOpen:state.drawOpen, count:state.count, seed:state.seed, autoOutput:state.autoOutput, selectedIndex:state.selectedIndex, lastItems:state.lastItems.slice(0,20).map((item) => ({ asset_id:item.asset_id, category_id:item.category_id, category_name:String(item.category_name || ''), prompt:String(item.prompt || ''), thumbnail_url:String(item.thumbnail_url || '') })) }; }
       function persist() { post('state', { state:stateForHost() }); }
       function setStatus(text, kind = '') { els.status.textContent = text; els.status.className = `status ${kind}`.trim(); }
       function showMessage(text = '', kind = 'info') { els.message.textContent = text; els.message.className = text ? `message show ${kind}` : 'message'; }
-      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next; els.forceSave.disabled = next; els.saveCategory.disabled = next || !categories.length; syncSaveCategory(); els.serverUrl.disabled = next; els.apiKey.disabled = next; els.clearKey.disabled = next; if (next && label) showMessage(label, 'info'); }
+      function setPanel(panel, toggle, open) { panel.classList.toggle('open',open); toggle.setAttribute('aria-expanded',String(open)); }
+      function setBusy(next, label = '') { busy = next; const missing=!profileFor(state.serviceId); els.connect.disabled = next || missing; els.reload.disabled = next || missing; els.random.disabled = next || missing; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next || missing; els.forceSave.disabled = next || missing; els.saveCategory.disabled = next || !categories.length; syncSaveCategory(); els.serviceSelect.disabled=next; syncServiceMenu(); els.addService.disabled=next; els.deleteService.disabled=next || missing; els.confirmDelete.disabled=next; els.serviceName.disabled=next || missing; els.serverUrl.disabled=next || missing; els.apiKey.disabled=next || missing; els.revealKey.disabled=next || missing; els.clearKey.disabled=next || missing; if (next && label) showMessage(label, 'info'); }
       function applyTheme(theme) {
         const mode = theme && theme.mode === 'dark' ? 'dark' : 'light';
         document.documentElement.dataset.theme = mode;
@@ -192,9 +221,9 @@
         const tokens = theme && theme.tokens && typeof theme.tokens === 'object' ? theme.tokens : {};
         Object.entries(map).forEach(([key, css]) => { if (typeof tokens[key] === 'string' && tokens[key].trim()) document.documentElement.style.setProperty(css, tokens[key]); });
       }
-      async function request(path, options = {}) {
-        const base = normalizedBase();
-        const response = await fetch(base + path, { ...options, headers:{ ...headers(typeof options.body === 'string'), ...(options.headers || {}) } });
+      async function request(connection, path, options = {}) {
+        const base = normalizedBase(connection.url);
+        const response = await fetch(base + path, { ...options, headers:{ ...headers(connection.key, typeof options.body === 'string'), ...(options.headers || {}) } });
         let data = null; try { data = await response.json(); } catch { data = null; }
         if (!response.ok) { const detail = data && (data.detail || data.message); const message = typeof detail === 'string' ? detail : Array.isArray(detail) ? detail.map(item => item.msg || '').filter(Boolean).join('；') : ''; throw new Error(message || `请求失败（HTTP ${response.status}）`); }
         return data;
@@ -213,97 +242,138 @@
       function validId(value) { const id = Number(value); return value !== null && value !== '' && Number.isSafeInteger(id) && id > 0 ? id : null; }
       function currentSignature() { return `${String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, '')}\n${String(els.apiKey.value || '').trim()}`; }
       function clearDuplicate() { duplicateSnapshot = null; els.forceSave.hidden = true; }
-      // Native select popups use screen coordinates and can detach from a
-      // transformed canvas iframe. Render in this iframe's viewport instead,
-      // so the trigger and popup are scaled and moved together by the host.
-      let categoryMenuOpen = false, categoryMenuFrame = 0, categoryMenuIndex = 0, categoryMenuOptions = [], categoryMenuItems = [], categoryTyped = '', categoryTypedAt = 0;
-      function closeSaveCategoryMenu(restore = false) {
-        if (!categoryMenuOpen) return;
-        categoryMenuOpen = false; cancelAnimationFrame(categoryMenuFrame);
-        els.saveCategoryTrigger.setAttribute('aria-expanded','false');
-        els.saveCategoryTrigger.removeAttribute('aria-activedescendant');
-        els.saveCategoryMenu.hidden = true; els.saveCategoryMenu.replaceChildren();
-        categoryMenuOptions = []; categoryMenuItems = [];
-        if (restore && !els.saveCategoryTrigger.disabled) els.saveCategoryTrigger.focus({ preventScroll:true });
-      }
-      function syncSaveCategory() {
-        els.saveCategoryTrigger.disabled = els.saveCategory.disabled;
-        els.saveCategoryCaption.textContent = els.saveCategory.selectedOptions[0]?.label || '请选择保存分类';
-        if (els.saveCategory.disabled) closeSaveCategoryMenu();
-      }
-      function placeSaveCategoryMenu() {
-        if (!categoryMenuOpen) return;
-        const anchor = els.saveCategoryTrigger.getBoundingClientRect();
-        const scroll = document.querySelector('.scroll').getBoundingClientRect();
-        if (els.saveCategoryTrigger.disabled || !els.saveCategoryTrigger.getClientRects().length || anchor.bottom <= scroll.top || anchor.top >= scroll.bottom) { closeSaveCategoryMenu(); return; }
-        const width = document.documentElement.clientWidth, height = document.documentElement.clientHeight;
-        const margin = 6, gap = 4;
-        const menuWidth = Math.min(Math.max(anchor.width,160), Math.max(0,width - margin * 2));
-        const below = Math.max(0,height - anchor.bottom - margin - gap), above = Math.max(0,anchor.top - margin - gap);
-        const needed = Math.min(240,els.saveCategoryMenu.scrollHeight);
-        const up = below < needed && above > below;
-        els.saveCategoryMenu.style.width = `${menuWidth}px`;
-        els.saveCategoryMenu.style.maxHeight = `${Math.min(240,up ? above : below)}px`;
-        els.saveCategoryMenu.style.left = `${Math.max(margin,Math.min(anchor.left,width - menuWidth - margin))}px`;
-        const menuHeight = els.saveCategoryMenu.getBoundingClientRect().height;
-        els.saveCategoryMenu.style.top = `${up ? anchor.top - menuHeight - gap : anchor.bottom + gap}px`;
-        els.saveCategoryMenu.dataset.placement = up ? 'top' : 'bottom';
-        categoryMenuFrame = requestAnimationFrame(placeSaveCategoryMenu);
-      }
-      function highlightSaveCategory(index, scroll = true) {
-        if (!categoryMenuOpen || !categoryMenuItems.length) return;
-        categoryMenuIndex = Math.max(0,Math.min(index,categoryMenuItems.length - 1));
-        categoryMenuItems.forEach((item,i) => item.classList.toggle('is-active',i === categoryMenuIndex));
-        const item = categoryMenuItems[categoryMenuIndex];
-        els.saveCategoryTrigger.setAttribute('aria-activedescendant',item.id);
-        if (scroll) {
-          const box = els.saveCategoryMenu.getBoundingClientRect(), row = item.getBoundingClientRect();
-          if (row.top < box.top) els.saveCategoryMenu.scrollTop -= box.top - row.top;
-          else if (row.bottom > box.bottom) els.saveCategoryMenu.scrollTop += row.bottom - box.bottom;
+      // Both menus live inside the iframe, so canvas transforms scale the
+      // trigger and popup together instead of detaching a native select popup.
+      function createMenu(select, trigger, caption, menu, prefix) {
+        let open=false, frame=0, index=0, options=[], items=[], typed='', typedAt=0;
+        function close(restore=false) {
+          if (!open) return;
+          open=false; cancelAnimationFrame(frame); trigger.setAttribute('aria-expanded','false');
+          trigger.removeAttribute('aria-activedescendant'); menu.hidden=true; menu.replaceChildren(); options=[]; items=[];
+          if (restore && !trigger.disabled) trigger.focus({ preventScroll:true });
         }
-      }
-      function chooseSaveCategory(index) {
-        if (!categoryMenuOpen || !categoryMenuOptions[index]) return;
-        const value = categoryMenuOptions[index].value;
-        closeSaveCategoryMenu(true);
-        els.saveCategory.value = value;
-        els.saveCategory.dispatchEvent(new Event('change',{ bubbles:true }));
-      }
-      function openSaveCategoryMenu() {
-        if (els.saveCategory.disabled) return;
-        if (categoryMenuOpen) { closeSaveCategoryMenu(true); return; }
-        categoryMenuOptions = [...els.saveCategory.options].filter(option => !option.disabled && !option.hidden);
-        if (!categoryMenuOptions.length) return;
-        categoryMenuOpen = true; categoryTyped = ''; categoryTypedAt = 0;
-        categoryMenuItems = categoryMenuOptions.map((option,index) => {
-          const item = document.createElement('div');
-          item.id = `save-category-option-${index}`; item.className = 'save-category-option';
-          item.setAttribute('role','option'); item.setAttribute('aria-selected',String(option.value === els.saveCategory.value));
-          item.textContent = option.label;
-          item.addEventListener('pointerdown',event => event.preventDefault());
-          item.addEventListener('pointermove',() => highlightSaveCategory(index,false));
-          item.addEventListener('click',event => { event.stopPropagation(); chooseSaveCategory(index); });
-          els.saveCategoryMenu.append(item); return item;
-        });
-        els.saveCategoryTrigger.setAttribute('aria-expanded','true'); els.saveCategoryMenu.hidden = false;
-        placeSaveCategoryMenu();
-        highlightSaveCategory(Math.max(0,categoryMenuOptions.findIndex(option => option.value === els.saveCategory.value)));
-      }
-      function saveCategoryKeyboard(event) {
-        if (event.key === 'Escape') { if (categoryMenuOpen) { event.preventDefault(); closeSaveCategoryMenu(true); } return; }
-        if (event.key === 'Tab') { closeSaveCategoryMenu(); return; }
-        if (['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(event.key)) {
-          event.preventDefault();
-          if (!categoryMenuOpen) { openSaveCategoryMenu(); return; }
-          if (event.key === 'Enter' || event.key === ' ') { chooseSaveCategory(categoryMenuIndex); return; }
-          highlightSaveCategory(event.key === 'Home' ? 0 : event.key === 'End' ? categoryMenuItems.length - 1 : categoryMenuIndex + (event.key === 'ArrowUp' ? -1 : 1));
-        } else if (categoryMenuOpen && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-          event.preventDefault(); const now = Date.now();
-          categoryTyped = (now - categoryTypedAt > 700 ? '' : categoryTyped) + event.key.toLocaleLowerCase(); categoryTypedAt = now;
-          const index = categoryMenuOptions.findIndex(option => option.label.toLocaleLowerCase().startsWith(categoryTyped));
-          if (index >= 0) highlightSaveCategory(index);
+        function sync() { trigger.disabled=select.disabled; caption.textContent=select.selectedOptions[0]?.label || '请选择'; if (select.disabled) close(); }
+        function place() {
+          if (!open) return;
+          const anchor=trigger.getBoundingClientRect(), scroll=document.querySelector('.scroll').getBoundingClientRect();
+          if (trigger.disabled || !trigger.getClientRects().length || anchor.bottom<=scroll.top || anchor.top>=scroll.bottom) { close(); return; }
+          const width=document.documentElement.clientWidth, height=document.documentElement.clientHeight, margin=6, gap=4;
+          const menuWidth=Math.min(Math.max(anchor.width,160),Math.max(0,width-margin*2));
+          const below=Math.max(0,height-anchor.bottom-margin-gap), above=Math.max(0,anchor.top-margin-gap);
+          const up=below<Math.min(240,menu.scrollHeight) && above>below;
+          menu.style.width=`${menuWidth}px`; menu.style.maxHeight=`${Math.min(240,up ? above : below)}px`;
+          menu.style.left=`${Math.max(margin,Math.min(anchor.left,width-menuWidth-margin))}px`;
+          const menuHeight=menu.getBoundingClientRect().height;
+          menu.style.top=`${up ? anchor.top-menuHeight-gap : anchor.bottom+gap}px`; menu.dataset.placement=up ? 'top' : 'bottom';
+          frame=requestAnimationFrame(place);
         }
+        function highlight(next, scroll=true) {
+          if (!open || !items.length) return;
+          index=Math.max(0,Math.min(next,items.length-1)); items.forEach((item,i)=>item.classList.toggle('is-active',i===index));
+          const item=items[index]; trigger.setAttribute('aria-activedescendant',item.id);
+          if (scroll) { const box=menu.getBoundingClientRect(),row=item.getBoundingClientRect(); if (row.top<box.top) menu.scrollTop-=box.top-row.top; else if (row.bottom>box.bottom) menu.scrollTop+=row.bottom-box.bottom; }
+        }
+        function choose(next) {
+          if (!open || !options[next]) return;
+          const value=options[next].value; close(true); select.value=value; select.dispatchEvent(new Event('change',{bubbles:true}));
+        }
+        function show() {
+          if (select.disabled) return;
+          if (open) { close(true); return; }
+          options=[...select.options].filter(option=>!option.disabled && !option.hidden);
+          if (!options.length) return;
+          open=true; typed=''; typedAt=0;
+          items=options.map((option,i)=>{
+            const item=document.createElement('div'); item.id=`${prefix}-option-${i}`; item.className='save-category-option';
+            item.setAttribute('role','option'); item.setAttribute('aria-selected',String(option.value===select.value)); item.textContent=option.label;
+            item.addEventListener('pointerdown',event=>event.preventDefault()); item.addEventListener('pointermove',()=>highlight(i,false));
+            item.addEventListener('click',event=>{event.stopPropagation();choose(i);}); menu.append(item); return item;
+          });
+          trigger.setAttribute('aria-expanded','true'); menu.hidden=false; place(); highlight(Math.max(0,options.findIndex(option=>option.value===select.value)));
+        }
+        function keyboard(event) {
+          if (event.key==='Escape') { if (open) { event.preventDefault(); close(true); } return; }
+          if (event.key==='Tab') { close(); return; }
+          if (['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(event.key)) {
+            event.preventDefault(); if (!open) { show(); return; }
+            if (event.key==='Enter' || event.key===' ') { choose(index); return; }
+            highlight(event.key==='Home' ? 0 : event.key==='End' ? items.length-1 : index+(event.key==='ArrowUp' ? -1 : 1));
+          } else if (open && event.key.length===1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+            event.preventDefault(); const now=Date.now(); typed=(now-typedAt>700 ? '' : typed)+event.key.toLocaleLowerCase(); typedAt=now;
+            const match=options.findIndex(option=>option.label.toLocaleLowerCase().startsWith(typed)); if (match>=0) highlight(match);
+          }
+        }
+        trigger.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();show();}); trigger.addEventListener('keydown',keyboard);
+        document.addEventListener('pointerdown',event=>{if(open && !menu.contains(event.target) && !trigger.contains(event.target)) close();},true);
+        document.addEventListener('scroll',event=>{if(open && event.target!==menu && !menu.contains(event.target)) close();},true);
+        window.addEventListener('blur',()=>close());
+        return {close,sync};
       }
+      const saveMenu=createMenu(els.saveCategory,els.saveCategoryTrigger,els.saveCategoryCaption,els.saveCategoryMenu,'save-category');
+      const serviceMenu=createMenu(els.serviceSelect,els.serviceTrigger,els.serviceCaption,els.serviceMenu,'service');
+      function closeSaveCategoryMenu(restore=false) { saveMenu.close(restore); }
+      function syncSaveCategory() { saveMenu.sync(); }
+      function syncServiceMenu() { serviceMenu.sync(); }
+      function renderServices() {
+        const catalog=readCatalog(), services=catalog?.services || [];
+        const options=[{value:'',label:'请选择服务'},...services.map(item=>({value:item.id,label:String(item.name || '未命名服务')}))];
+        if (state.serviceId && !profileFor(state.serviceId,catalog)) options.push({value:state.serviceId,label:'原服务已删除，请重新选择',disabled:true});
+        const existing=[...els.serviceSelect.options];
+        if (existing.length!==options.length || options.some((item,i)=>existing[i].value!==item.value || existing[i].label!==item.label || existing[i].disabled!==!!item.disabled)) {
+          serviceMenu.close(); els.serviceSelect.replaceChildren();
+          options.forEach(item=>{const option=document.createElement('option');option.value=item.value;option.textContent=item.label;option.disabled=!!item.disabled;els.serviceSelect.append(option);});
+        }
+        els.serviceSelect.value=state.serviceId || ''; els.serviceSelect.disabled=busy; syncServiceMenu();
+        const profile=profileFor(state.serviceId,catalog);
+        els.settingsSummary.textContent=profile ? `${profile.name || '未命名服务'} · 密钥仅保存在插件隔离存储中` : '请选择或新增服务';
+      }
+      function loadProfile(profile) {
+        els.serviceName.value=String(profile?.name || ''); els.serverUrl.value=String(profile?.url || ''); els.apiKey.value=String(profile?.key || '');
+        els.apiKey.type='password'; els.revealKey.textContent='显示'; els.deleteConfirm.hidden=true;
+        activeProfileScope=String(profile?.scope || ''); knownConnectionSignature=profileSignature(profile); connectionDirty=false; nameDirty=false;
+      }
+      function clearConnectionData() {
+        operationEpoch++; connectionSignature=''; categories=[]; state.selectedCategoryIds=[]; state.saveCategoryId=null; state.lastSavedAssetId=null; state.saveScope=''; state.lastItems=[]; state.selectedIndex=0;
+        clearDuplicate(); closeSaveCategoryMenu(); renderCategories(); renderResults(); renderSave();
+      }
+      // Storage is shared across nodes. Re-read it before operations as well as
+      // on storage events; this also protects against edits during async work.
+      function reconcileProfile() {
+        const profile=profileFor(state.serviceId);
+        if (profile && String(profile.scope || '')===activeProfileScope && profileSignature(profile)===knownConnectionSignature) { if(!nameDirty)els.serviceName.value=String(profile.name || ''); renderServices(); return true; }
+        clearConnectionData(); state.connectionScope=String(profile?.scope || ''); loadProfile(profile); renderServices(); setBusy(busy); persist();
+        setStatus('未连接'); showMessage(profile ? '服务配置已在其他节点更改，请重新连接并选择分类。' : '原服务已删除，请选择或新增服务。','info'); return false;
+      }
+      function saveConnection() {
+        if (!reconcileProfile()) throw new Error('服务配置已更改，请检查后重新连接。');
+        const catalog=readCatalog(), profile=profileFor(state.serviceId,catalog);
+        if (!profile) throw new Error('请先选择或新增服务。');
+        const url=String(els.serverUrl.value || '').trim(), key=String(els.apiKey.value || '').trim();
+        const next={...profile,name:String(els.serviceName.value || '').trim() || '未命名服务',url,key};
+        if (profileSignature(next)!==profileSignature(profile)) {
+          // A host init may have arrived while a field was being edited;
+          // clear again before assigning a new scope, even if already dirty.
+          clearConnectionData();
+          next.scope=newScope(); state.connectionScope=next.scope;
+        }
+        catalog.services=catalog.services.map(item=>item.id===next.id ? next : item);
+        localStorage.setItem(STORAGE_SERVICES,JSON.stringify(catalog));
+        activeProfileScope=String(next.scope); knownConnectionSignature=profileSignature(next); connectionDirty=false; nameDirty=false; state.connectionScope=activeProfileScope;
+        els.serviceName.value=next.name; renderServices(); return next;
+      }
+      function connectionContext(requireConnected=false) {
+        if (!reconcileProfile()) throw new Error('服务配置已更改，请重新连接。');
+        const profile=profileFor(state.serviceId);
+        if (!profile) throw new Error('请先选择或新增服务。');
+        if (connectionDirty || currentSignature()!==profileSignature(profile) || state.connectionScope!==profile.scope) throw new Error('连接设置已更改，请重新连接。');
+        if (requireConnected && (!connectionSignature || connectionSignature!==profileSignature(profile))) throw new Error('请先连接服务并读取分类。');
+        return {id:profile.id,scope:profile.scope,url:profile.url,key:profile.key,signature:profileSignature(profile),epoch:operationEpoch};
+      }
+      function contextCurrent(context) {
+        const profile=profileFor(context.id);
+        return !!profile && state.serviceId===context.id && state.connectionScope===context.scope && profile.scope===context.scope && profileSignature(profile)===context.signature && currentSignature()===context.signature && !connectionDirty && operationEpoch===context.epoch;
+      }
+      function assertContext(context) { if (!contextCurrent(context)) throw new Error('服务配置已变化，本次结果未应用，请重新连接。'); }
       function renderSave() {
         const image = imageInput(); const prompt = promptInput();
         els.imageInputStatus.textContent = image ? '已连接一张图片' : '未连接';
@@ -322,12 +392,11 @@
       }
       function invalidateConnection() {
         if (connectionDirty || currentSignature() === knownConnectionSignature) return;
-        connectionDirty = true; connectionSignature = ''; categories = []; state.selectedCategoryIds = []; state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = '';
-        clearDuplicate(); renderCategories(); renderSave(); persist(); setStatus('未连接');
+        connectionDirty = true; clearConnectionData(); state.connectionScope=''; persist(); setStatus('未连接');
         showMessage('连接设置已更改，请重新连接并选择分类。', 'info');
       }
-      function snapshotForSave() { return { categoryId:state.saveCategoryId, prompt:promptInput(), image:imageInput(), signature:connectionSignature }; }
-      function sameSnapshot(a, b) { return a && b && a.categoryId === b.categoryId && a.prompt === b.prompt && a.image === b.image && a.signature === b.signature; }
+      function snapshotForSave() { return { categoryId:state.saveCategoryId, prompt:promptInput(), image:imageInput(), signature:connectionSignature, serviceId:state.serviceId, scope:state.connectionScope }; }
+      function sameSnapshot(a, b) { return a && b && a.categoryId === b.categoryId && a.prompt === b.prompt && a.image === b.image && a.signature === b.signature && a.serviceId===b.serviceId && a.scope===b.scope; }
       function hostRequest(type, payload, responseType) {
         const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
         return new Promise((resolve, reject) => {
@@ -388,9 +457,11 @@
       }
       async function saveAsset(force = false) {
         if (busy) return;
+        let connection;
+        try { connection=connectionContext(true); } catch (error) { const message=error instanceof Error ? error.message : String(error); showMessage(message,'error'); els.saveNote.textContent=message; return; }
         const snapshot = snapshotForSave();
-        if (!categories.length || !connectionSignature || currentSignature() !== connectionSignature) { showMessage('请先连接服务并读取分类。', 'error'); els.saveNote.textContent = '请先连接服务并读取分类。'; return; }
-        if (state.saveScope && state.saveScope !== currentScope()) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; clearDuplicate(); renderSave(); persist(); showMessage('连接设置已在其他节点更改，请重新选择保存分类。', 'error'); els.saveNote.textContent = '连接设置已在其他节点更改，请重新选择保存分类。'; return; }
+        if (!categories.length) { showMessage('请先连接服务并读取分类。', 'error'); els.saveNote.textContent = '请先连接服务并读取分类。'; return; }
+        if (state.saveScope !== connection.scope) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; clearDuplicate(); renderSave(); persist(); showMessage('连接设置已更改，请重新选择保存分类。', 'error'); els.saveNote.textContent = '连接设置已更改，请重新选择保存分类。'; return; }
         if (!snapshot.categoryId || !categories.some(item => Number(item.id) === snapshot.categoryId)) { showMessage('请选择保存分类。', 'error'); els.saveNote.textContent = '请选择保存分类。'; return; }
         if (!snapshot.image && !snapshot.prompt.trim()) { showMessage('请至少连接一张图片或一段非空提示词。', 'error'); els.saveNote.textContent = '请至少连接一张图片或一段非空提示词。'; return; }
         if (force && (!duplicateSnapshot || !sameSnapshot(snapshot, duplicateSnapshot))) { clearDuplicate(); renderSave(); showMessage('输入或分类已变化，请重新保存。', 'error'); return; }
@@ -398,7 +469,9 @@
         clearDuplicate(); setBusy(true, '正在保存素材…'); els.saveNote.textContent = '正在保存素材…';
         try {
           const file = retryFile || (snapshot.image ? await readImage(snapshot.image) : null);
-          const result = await request('/api/v1/assets/upload', { method:'POST', body:multipartBody(snapshot, file, force) });
+          assertContext(connection);
+          const result = await request(connection, '/api/v1/assets/upload', { method:'POST', body:multipartBody(snapshot, file, force) });
+          assertContext(connection);
           const items = result && Array.isArray(result.items) ? result.items : [];
           const duplicates = result && Array.isArray(result.duplicates) ? result.duplicates : [];
           const errors = result && Array.isArray(result.errors) ? result.errors : [];
@@ -418,6 +491,7 @@
           renderCategories(); renderSave(); setStatus('保存成功', 'ok');
           showMessage(`已保存到“${category ? category.name : '所选分类'}”，素材 #${id}。`, 'info');
         } catch (error) {
+          if (!contextCurrent(connection)) { reconcileProfile(); showMessage('服务配置已变化，本次结果未应用，请重新连接。','error'); return; }
           const message = error instanceof Error ? error.message : String(error);
           els.saveNote.textContent = `保存失败：${message}`; setStatus('保存失败', 'error'); showMessage(message, 'error');
         } finally { setBusy(false); }
@@ -430,7 +504,7 @@
           const name = document.createElement('span'); name.textContent=String(item.name || `分类 ${item.id}`);
           const count = document.createElement('em'); count.textContent=String(item.asset_count ?? 0);
           button.append(name,count);
-          button.addEventListener('click', () => { if (busy) return; const id=Number(item.id); state.selectedCategoryIds = state.selectedCategoryIds.includes(id) ? state.selectedCategoryIds.filter((value) => value !== id) : [...state.selectedCategoryIds,id]; renderCategories(); persist(); });
+          button.addEventListener('click', () => { if (busy) return; try { connectionContext(true); } catch (error) { showMessage(error instanceof Error ? error.message : String(error),'error'); return; } const id=Number(item.id); state.selectedCategoryIds = state.selectedCategoryIds.includes(id) ? state.selectedCategoryIds.filter((value) => value !== id) : [...state.selectedCategoryIds,id]; renderCategories(); persist(); });
           els.categories.append(button);
         });
       }
@@ -448,71 +522,131 @@
         });
       }
       function emitSelected() {
+        try { connectionContext(); } catch (error) { showMessage(error instanceof Error ? error.message : String(error),'error'); return; }
         const item = state.lastItems[state.selectedIndex];
         if (!item || !String(item.prompt || '').trim()) { showMessage('请先随机抽取并选择一条提示词', 'error'); return; }
         post('output', { output:{ kind:'text', portId:'prompt', value:String(item.prompt), name:`${item.category_name || '提示词'} #${item.asset_id || ''}`.trim(), metadata:{ assetId:item.asset_id, categoryId:item.category_id, categoryName:item.category_name, thumbnailUrl:fullUrl(item.thumbnail_url) } } });
         setStatus('已输出', 'ok'); showMessage('当前提示词已写入画布输出端口，可连接到下游节点。', 'info');
       }
       async function loadCategories(quiet = false) {
-        if (busy) return; setBusy(true, quiet ? '' : '正在连接提示词库…');
+        if (busy) return; setBusy(true, quiet ? '' : '正在连接提示词库…'); let connection;
         try {
           saveConnection();
-          if (state.saveScope && state.saveScope !== currentScope()) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; }
-          const health = await request('/api/v1/health');
-          const rows = await request('/api/v1/categories?enabled_only=true');
+          connection=connectionContext();
+          if (state.saveScope && state.saveScope !== connection.scope) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; }
+          const health = await request(connection, '/api/v1/health');
+          assertContext(connection);
+          const rows = await request(connection, '/api/v1/categories?enabled_only=true');
+          assertContext(connection);
           if (!Array.isArray(rows)) throw new Error('分类接口返回格式不正确');
           categories = rows.filter((item) => item && Number.isFinite(Number(item.id)));
           state.selectedCategoryIds = state.selectedCategoryIds.filter((id) => categories.some((item) => Number(item.id) === id));
           if (!categories.some((item) => Number(item.id) === state.saveCategoryId)) state.saveCategoryId = null;
           connectionSignature = currentSignature(); knownConnectionSignature = connectionSignature; connectionDirty = false; clearDuplicate();
-          renderCategories(); renderSave(); persist(); els.panel.classList.remove('open'); setStatus('已连接', 'ok'); showMessage(`服务连接正常，共读取 ${categories.length} 个分类。`, 'info');
+          renderCategories(); renderSave(); persist(); setStatus('已连接', 'ok'); showMessage(`服务连接正常，共读取 ${categories.length} 个分类。`, 'info');
           if (health && health.status !== 'ok') showMessage('服务已响应，但健康状态不是 ok。', 'error');
-        } catch (error) { categories=[]; connectionSignature=''; clearDuplicate(); renderCategories(); renderSave(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
+        } catch (error) { if (connection && !contextCurrent(connection)) { reconcileProfile(); showMessage('服务配置已变化，本次结果未应用，请重新连接。','error'); return; } categories=[]; connectionSignature=''; clearDuplicate(); renderCategories(); renderSave(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
         finally { setBusy(false); }
       }
       async function randomPrompt(forceOutput = false) {
         if (busy) return;
+        try { connectionContext(); } catch (error) { const message=error instanceof Error ? error.message : String(error); showMessage(message,'error'); if (forceOutput) post('error',{message}); return; }
         if (!categories.length) { await loadCategories(true); if (!categories.length) return; }
+        let connection; try { connection=connectionContext(true); } catch (error) { const message=error instanceof Error ? error.message : String(error); showMessage(message,'error'); if (forceOutput) post('error',{message}); return; }
         const ids = state.selectedCategoryIds.length ? state.selectedCategoryIds : categories.map((item)=>Number(item.id));
         state.count=safeNumber(els.count.value,1,20,1); state.seed=safeNumber(els.seed.value,0,2147483647,0); state.autoOutput=els.autoOutput.checked;
         setBusy(true,'正在随机抽取提示词…');
         try {
-          saveConnection();
-          const result=await request('/api/v1/random',{method:'POST',body:JSON.stringify({category_ids:ids,count:state.count,seed:state.seed})});
+          const result=await request(connection,'/api/v1/random',{method:'POST',body:JSON.stringify({category_ids:ids,count:state.count,seed:state.seed})});
+          assertContext(connection);
           const items=result && Array.isArray(result.items) ? result.items.filter((item)=>item && String(item.prompt || '').trim()) : [];
           if (!items.length) throw new Error('所选分类中没有可用提示词');
           state.lastItems=items; state.selectedIndex=0; renderResults(); persist(); setStatus('抽取完成','ok'); showMessage(`已抽取 ${items.length} 条提示词。`,'info'); if(forceOutput || state.autoOutput) emitSelected();
-        } catch(error) { setStatus('抽取失败','error'); showMessage(error instanceof Error?error.message:String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
+        } catch(error) { if (!contextCurrent(connection)) { reconcileProfile(); const message='服务配置已变化，本次结果未应用，请重新连接。'; showMessage(message,'error'); if (forceOutput) post('error',{message}); return; } setStatus('抽取失败','error'); showMessage(error instanceof Error?error.message:String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
         finally { setBusy(false); renderResults(); }
+      }
+      function selectService(id) {
+        if (busy || id===state.serviceId) { renderServices(); return; }
+        if (profileFor(state.serviceId)) {
+          try { saveConnection(); } catch (error) { renderServices(); showMessage(error instanceof Error ? error.message : String(error),'error'); return; }
+        }
+        const profile=profileFor(id); if (id && !profile) { renderServices(); return; }
+        clearConnectionData(); state.serviceId=id; state.connectionScope=String(profile?.scope || ''); loadProfile(profile);
+        renderServices(); setBusy(false); persist(); setStatus('未连接'); showMessage(profile ? '服务已切换，请连接并选择分类。' : '请选择或新增服务。','info');
+      }
+      function addService() {
+        if (busy) return;
+        if (profileFor(state.serviceId)) { try { saveConnection(); } catch (error) { showMessage(error instanceof Error ? error.message : String(error),'error'); return; } }
+        const catalog=readCatalog(); if (!catalog) return;
+        const service={id:newScope(),name:`服务 ${catalog.services.length+1}`,url:'',key:'',scope:newScope()};
+        catalog.services.push(service); if (!catalog.defaultId) catalog.defaultId=service.id;
+        localStorage.setItem(STORAGE_SERVICES,JSON.stringify(catalog)); selectService(service.id);
+        state.settingsOpen=true; setPanel(els.panel,els.settingsToggle,true); persist(); els.serviceName.focus();
+      }
+      function deleteService() {
+        if (busy || !reconcileProfile()) return;
+        const catalog=readCatalog(), id=state.serviceId; if (!profileFor(id,catalog)) return;
+        catalog.services=catalog.services.filter(item=>item.id!==id);
+        if (catalog.defaultId===id) catalog.defaultId=catalog.services[0]?.id || '';
+        localStorage.setItem(STORAGE_SERVICES,JSON.stringify(catalog));
+        clearConnectionData(); state.serviceId=''; state.connectionScope=''; loadProfile(null); renderServices(); setBusy(false); persist();
+        setStatus('未连接'); showMessage('服务及其本机密钥已删除，请选择或新增服务。','info');
       }
       function hydrate(payload) {
         const incoming=payload && payload.state && typeof payload.state==='object' ? payload.state : {};
-        const previous = snapshotForSave();
-        if (payload && Object.prototype.hasOwnProperty.call(payload, 'inputs')) inputs = payload.inputs && typeof payload.inputs === 'object' ? payload.inputs : {};
-        state={ ...state, ...incoming, selectedCategoryIds:Array.isArray(incoming.selectedCategoryIds)?incoming.selectedCategoryIds.map(Number).filter(Number.isFinite):state.selectedCategoryIds, lastItems:Array.isArray(incoming.lastItems)?incoming.lastItems.slice(0,20):state.lastItems };
-        state.saveCategoryId=validId(state.saveCategoryId); state.lastSavedAssetId=validId(state.lastSavedAssetId); state.saveScope=typeof state.saveScope==='string'?state.saveScope:'';
-        if ((state.saveCategoryId || state.lastSavedAssetId) && state.saveScope !== currentScope()) { state.saveCategoryId=null; state.lastSavedAssetId=null; state.saveScope=''; }
+        const previous=snapshotForSave(), oldId=state.serviceId, first=!hydrated, catalog=readCatalog();
+        if (payload && Object.prototype.hasOwnProperty.call(payload,'inputs')) inputs=payload.inputs && typeof payload.inputs==='object' ? payload.inputs : {};
+        const hasService=Object.prototype.hasOwnProperty.call(incoming,'serviceId');
+        const legacyData=!!(incoming.saveScope || incoming.saveCategoryId || incoming.lastSavedAssetId || (Array.isArray(incoming.selectedCategoryIds) && incoming.selectedCategoryIds.length) || (Array.isArray(incoming.lastItems) && incoming.lastItems.length));
+        state={...state,...incoming,selectedCategoryIds:Array.isArray(incoming.selectedCategoryIds) ? incoming.selectedCategoryIds.map(Number).filter(Number.isFinite) : state.selectedCategoryIds,lastItems:Array.isArray(incoming.lastItems) ? incoming.lastItems.slice(0,20) : state.lastItems};
+        if (hasService) state.serviceId=typeof incoming.serviceId==='string' ? incoming.serviceId : '';
+        else if (first && legacyData && catalog?.legacyId) state.serviceId=catalog.legacyId;
+        else if (first) state.serviceId=state.serviceId || catalog?.defaultId || '';
+        const profile=profileFor(state.serviceId,catalog);
+        if (first || oldId!==state.serviceId) {
+          if (!first || oldId!==state.serviceId) { operationEpoch++; connectionSignature=''; categories=[]; clearDuplicate(); }
+          loadProfile(profile);
+        }
+        state.saveCategoryId=validId(state.saveCategoryId); state.lastSavedAssetId=validId(state.lastSavedAssetId); state.saveScope=typeof state.saveScope==='string' ? state.saveScope : '';
+        if (first && !Object.prototype.hasOwnProperty.call(incoming,'connectionScope')) {
+          const legacyMatches=!hasService && !!catalog?.legacyId && state.serviceId===catalog.legacyId && (!state.saveScope || state.saveScope===profile?.scope);
+          state.connectionScope=profile && (!legacyData || legacyMatches) ? String(profile.scope || '') : '';
+        }
+        if (connectionDirty) {
+          clearConnectionData(); state.connectionScope='';
+        } else if (!profile || state.connectionScope!==profile.scope || (state.saveScope && state.saveScope!==profile.scope)) {
+          clearConnectionData(); state.connectionScope=String(profile?.scope || '');
+        } else if ((state.saveCategoryId || state.lastSavedAssetId) && state.saveScope!==profile.scope) {
+          state.saveCategoryId=null; state.lastSavedAssetId=null; state.saveScope='';
+        }
         state.count=safeNumber(state.count,1,20,1); state.seed=safeNumber(state.seed,0,2147483647,0); state.selectedIndex=safeNumber(state.selectedIndex,0,Math.max(0,state.lastItems.length-1),0); state.autoOutput=state.autoOutput!==false;
-        if (!sameSnapshot(previous, snapshotForSave())) clearDuplicate();
-        els.count.value=String(state.count); els.seed.value=String(state.seed); els.autoOutput.checked=state.autoOutput; renderCategories(); renderResults(); renderSave(); applyTheme(payload && payload.theme);
+        state.settingsOpen=state.settingsOpen!==false; state.saveOpen=state.saveOpen===true; state.drawOpen=state.drawOpen!==false;
+        if (!sameSnapshot(previous,snapshotForSave())) clearDuplicate();
+        els.count.value=String(state.count); els.seed.value=String(state.seed); els.autoOutput.checked=state.autoOutput;
+        setPanel(els.panel,els.settingsToggle,state.settingsOpen); setPanel(els.savePanel,els.saveToggle,state.saveOpen); setPanel(els.drawPanel,els.drawToggle,state.drawOpen);
+        hydrated=true; renderServices(); renderCategories(); renderResults(); renderSave(); setBusy(busy); applyTheme(payload && payload.theme);
       }
 
-      els.settingsToggle.addEventListener('click',()=>els.panel.classList.toggle('open'));
-      els.revealKey.addEventListener('click',()=>{ const reveal=els.apiKey.type==='password'; els.apiKey.type=reveal?'text':'password'; els.revealKey.textContent=reveal?'隐藏':'显示'; });
-      els.clearKey.addEventListener('click',()=>{ els.apiKey.value=''; invalidateConnection(); saveConnection(); localStorage.removeItem(STORAGE_KEY); setStatus('密钥已清除'); showMessage('本机保存的访问密钥已清除。','info'); });
+      els.settingsToggle.addEventListener('click',()=>{state.settingsOpen=!state.settingsOpen;setPanel(els.panel,els.settingsToggle,state.settingsOpen);persist();});
+      els.saveToggle.addEventListener('click',()=>{state.saveOpen=!state.saveOpen;setPanel(els.savePanel,els.saveToggle,state.saveOpen);if(!state.saveOpen)closeSaveCategoryMenu();persist();});
+      els.drawToggle.addEventListener('click',()=>{state.drawOpen=!state.drawOpen;setPanel(els.drawPanel,els.drawToggle,state.drawOpen);persist();});
+      els.serviceSelect.addEventListener('change',()=>selectService(els.serviceSelect.value));
+      els.addService.addEventListener('click',addService);
+      els.deleteService.addEventListener('click',()=>{els.deleteConfirm.hidden=false;});
+      els.cancelDelete.addEventListener('click',()=>{els.deleteConfirm.hidden=true;});
+      els.confirmDelete.addEventListener('click',deleteService);
+      els.revealKey.addEventListener('click',()=>{const reveal=els.apiKey.type==='password';els.apiKey.type=reveal?'text':'password';els.revealKey.textContent=reveal?'隐藏':'显示';});
+      els.clearKey.addEventListener('click',()=>{els.apiKey.value='';invalidateConnection();try{saveConnection();persist();setStatus('密钥已清除');showMessage('此服务的本机密钥已清除。','info');}catch(error){showMessage(error instanceof Error?error.message:String(error),'error');}});
       els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',()=>randomPrompt(false)); els.output.addEventListener('click',emitSelected);
       els.save.addEventListener('click',()=>void saveAsset(false)); els.forceSave.addEventListener('click',()=>void saveAsset(true));
-      els.saveCategory.addEventListener('change',()=>{ saveConnection(); state.saveCategoryId=validId(els.saveCategory.value); state.saveScope=currentScope(); clearDuplicate(); renderSave(); persist(); });
-      els.saveCategoryTrigger.addEventListener('click',event=>{ event.preventDefault(); event.stopPropagation(); openSaveCategoryMenu(); });
-      els.saveCategoryTrigger.addEventListener('keydown',saveCategoryKeyboard);
-      document.addEventListener('pointerdown',event=>{ if (categoryMenuOpen && !els.saveCategoryMenu.contains(event.target) && !els.saveCategoryTrigger.contains(event.target)) closeSaveCategoryMenu(); },true);
-      document.addEventListener('scroll',event=>{ if (categoryMenuOpen && event.target !== els.saveCategoryMenu && !els.saveCategoryMenu.contains(event.target)) closeSaveCategoryMenu(); },true);
-      window.addEventListener('blur',()=>closeSaveCategoryMenu());
+      els.saveCategory.addEventListener('change',()=>{try{const connection=connectionContext(true);state.saveCategoryId=validId(els.saveCategory.value);state.saveScope=connection.scope;clearDuplicate();renderSave();persist();}catch(error){renderSave();showMessage(error instanceof Error?error.message:String(error),'error');}});
       els.serverUrl.addEventListener('input',invalidateConnection); els.apiKey.addEventListener('input',invalidateConnection);
-      els.serverUrl.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); }); els.apiKey.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); });
-      els.count.addEventListener('change',()=>{ state.count=safeNumber(els.count.value,1,20,1); els.count.value=String(state.count); persist(); });
-      els.seed.addEventListener('change',()=>{ state.seed=safeNumber(els.seed.value,0,2147483647,0); els.seed.value=String(state.seed); persist(); });
-      els.autoOutput.addEventListener('change',()=>{ state.autoOutput=els.autoOutput.checked; persist(); });
+      els.serviceName.addEventListener('input',()=>{nameDirty=true;});
+      for (const field of [els.serviceName,els.serverUrl,els.apiKey]) field.addEventListener('change',()=>{try{invalidateConnection();saveConnection();persist();}catch(error){showMessage(error instanceof Error?error.message:String(error),'error');}});
+      els.count.addEventListener('change',()=>{state.count=safeNumber(els.count.value,1,20,1);els.count.value=String(state.count);persist();});
+      els.seed.addEventListener('change',()=>{state.seed=safeNumber(els.seed.value,0,2147483647,0);els.seed.value=String(state.seed);persist();});
+      els.autoOutput.addEventListener('change',()=>{state.autoOutput=els.autoOutput.checked;persist();});
+      window.addEventListener('storage',event=>{if(event.key===STORAGE_SERVICES || event.key===null){if(state.serviceId)reconcileProfile();else renderServices();}});
       window.addEventListener('message',(event)=>{
         const message=event.data;
         if(event.source!==parent||!message||message.protocol!==PROTOCOL||(message.pluginId&&message.pluginId!==pluginId))return;
@@ -534,7 +668,7 @@
           void randomPrompt(true);
         }
       });
-      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; knownConnectionSignature=currentSignature(); renderResults(); renderSave(); post('ready',{version:'0.2.1'});
+      const initialCatalog=initializeCatalog(); state.serviceId=initialCatalog.defaultId || ''; const initialProfile=profileFor(state.serviceId,initialCatalog); state.connectionScope=String(initialProfile?.scope || ''); loadProfile(initialProfile); renderServices(); renderCategories(); renderResults(); renderSave(); setBusy(false); post('ready',{version:'0.3.0'});
     })();
   </script>
 </body>

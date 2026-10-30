@@ -3,6 +3,15 @@
   "pluginId": "ai-prompt-library",
   "versions": [
     {
+      "version": "0.3.0",
+      "ref": "ai-prompt-library-v0.3.0",
+      "releasedAt": "2026-10-30",
+      "notes": [
+        "支持新增、选择、编辑和删除多个服务，原有连接自动迁移；不同节点可分别选择服务。",
+        "保存与抽取区域支持折叠，默认折叠保存区域；新建节点增大默认高度。"
+      ]
+    },
+    {
       "version": "0.2.1",
       "ref": "ai-prompt-library-v0.2.1",
       "releasedAt": "2026-10-30",
