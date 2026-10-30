@@ -16,7 +16,8 @@
     * { box-sizing:border-box; }
     html,body { width:100%;height:100%;margin:0;overflow:hidden; }
     body { color:var(--text);background:var(--bg);font-family:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC",sans-serif;font-size:14px;line-height:1.5; }
-    button,input { font:inherit; }
+    button,input,select { font:inherit; }
+    [hidden] { display:none !important; }
     button { border:0;cursor:pointer; }
     .app { height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto; }
     .top { display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-bottom:1px solid var(--border);background:var(--surface); }
@@ -39,6 +40,7 @@
     .field-row { display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:7px; }
     .input-wrap { position:relative; }
     input { width:100%;min-width:0;height:36px;padding:0 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;outline:0;font-size:14px; }
+    select { width:100%;min-width:0;height:36px;padding:0 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:14px; }
     /* Text entry keeps its normal border, including on older HIOS hosts. */
     input:focus { outline:none;box-shadow:none; }
     input::placeholder { color:var(--text-2);opacity:1; }
@@ -49,6 +51,8 @@
     .btn { min-height:36px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:5px 10px;color:var(--text);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600; }
     .btn:hover { color:var(--text);border-color:color-mix(in srgb,var(--accent) 42%,var(--border)); }
     .btn.primary { color:#fff;background:var(--accent);border-color:var(--accent); }
+    .run-icon { width:14px;height:14px;fill:currentColor; }
+    .run-hint { font-size:12px;font-weight:400;opacity:.85; }
     .btn.primary:hover { filter:brightness(1.06); }.btn:disabled { opacity:.42;cursor:not-allowed; }
     .note { margin:0;color:var(--text-2);font-size:12px;line-height:1.6;overflow-wrap:anywhere; }
     .categories { display:flex;flex-wrap:wrap;gap:5px; }
@@ -56,6 +60,11 @@
     .category:hover { border-color:color-mix(in srgb,var(--accent) 40%,var(--border)); }.category.active { color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 42%,var(--border)); }
     .category em { color:var(--text-2);font-size:12px;font-style:normal; }
     .empty { padding:12px;color:var(--text-2);background:var(--muted);border:1px dashed var(--border);border-radius:10px;text-align:center;font-size:13px; }
+    .save-inputs { display:grid;grid-template-columns:1fr 1fr;gap:7px; }
+    .save-input { min-width:0;padding:8px;background:var(--muted);border:1px solid var(--border);border-radius:9px; }
+    .save-input strong,.save-input span { display:block;overflow:hidden;text-overflow:ellipsis; }
+    .save-input strong { color:var(--text);font-size:13px; }
+    .save-input span { margin-top:3px;color:var(--text-2);font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3; }
     .run-row { display:grid;grid-template-columns:80px 100px minmax(0,1fr);gap:7px;align-items:end; }
     .auto { min-height:36px;display:flex;align-items:center;gap:6px;padding:6px 8px;color:var(--text-2);background:var(--control);border:1px solid var(--border);border-radius:9px;font-size:12px; }
     .auto input { width:14px;height:14px;padding:0;accent-color:var(--accent);box-shadow:none; }
@@ -77,7 +86,7 @@
 <body>
   <main class="app">
     <header class="top">
-      <div class="brand"><span class="brand-icon">✦</span><span><strong>AI 提示词库</strong><small>随机抽取 · 文本输出</small></span></div>
+      <div class="brand"><span class="brand-icon">✦</span><span><strong>AI 提示词库</strong><small>分类保存 · 随机抽取</small></span></div>
       <span id="status" class="status">未连接</span>
     </header>
     <div class="scroll"><div class="stack">
@@ -87,7 +96,20 @@
           <label>服务地址<input id="serverUrl" inputmode="url" placeholder="http://NAS-IP:8765" autocomplete="off" /></label>
           <label>访问密钥<div class="input-wrap"><input id="apiKey" class="secret" type="password" placeholder="填写 ComfyUI / API Key" autocomplete="off" /><button id="revealKey" class="reveal" type="button" aria-label="显示或隐藏密钥">显示</button></div></label>
           <div class="actions"><button id="connect" class="btn primary" type="button">连接并读取分类</button><button id="clearKey" class="btn" type="button">清除密钥</button></div>
-          <p class="note">填写服务根地址，不要附加 <code>/api/v1</code>。插件只调用健康检查、分类和随机抽取接口。</p>
+          <p class="note">填写服务根地址，不要附加 <code>/api/v1</code>。</p>
+        </div>
+      </section>
+
+      <section class="panel open" aria-label="保存素材">
+        <div class="panel-head"><span><strong>保存到提示词库</strong><small>连接图片、提示词，或同时连接两者</small></span></div>
+        <div class="panel-body">
+          <div class="save-inputs">
+            <div class="save-input"><strong>图片输入</strong><span id="imageInputStatus">未连接</span></div>
+            <div class="save-input"><strong>提示词输入</strong><span id="promptInputStatus">未连接</span></div>
+          </div>
+          <label>保存分类<select id="saveCategory" aria-label="保存分类"><option value="">请先连接服务</option></select></label>
+          <div class="actions"><button id="saveAsset" class="btn primary" type="button">保存到分类</button><button id="forceSave" class="btn" type="button" hidden>仍然保存重复图片</button></div>
+          <p id="saveNote" class="note" aria-live="polite">仅保存素材，不自动调用 AI 分析；保存分类与抽取范围互不影响。</p>
         </div>
       </section>
 
@@ -106,10 +128,10 @@
       <div id="message" class="message" role="status" aria-live="polite"></div>
       <section>
         <div class="result-head"><strong>候选提示词</strong><span id="resultCount">还没有抽取</span></div>
-        <div id="results" class="results"><div class="empty">点击“随机抽取”获得提示词</div></div>
+        <div id="results" class="results"><div class="empty">点击“运行”随机抽取提示词</div></div>
       </section>
     </div></div>
-    <div class="footer-actions"><button id="random" class="btn primary" type="button">✦ 随机抽取</button><button id="output" class="btn" type="button" disabled>输出到画布</button></div>
+    <div class="footer-actions"><button id="random" class="btn primary" type="button" aria-label="运行，随机抽取提示词"><svg class="run-icon" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span>运行</span><span class="run-hint">· 随机抽取</span></button><button id="output" class="btn" type="button" disabled>输出到画布</button></div>
   </main>
   <script>
     (() => {
@@ -117,24 +139,37 @@
       const PROTOCOL = 'hios-plugin-node/v1';
       const STORAGE_URL = 'hios.ai-prompt-library.server-url';
       const STORAGE_KEY = 'hios.ai-prompt-library.api-key';
+      const STORAGE_SCOPE = 'hios.ai-prompt-library.connection-scope';
       const $ = (id) => document.getElementById(id);
-      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output') };
+      const els = { status:$('status'), panel:$('settingsPanel'), settingsToggle:$('settingsToggle'), serverUrl:$('serverUrl'), apiKey:$('apiKey'), revealKey:$('revealKey'), clearKey:$('clearKey'), connect:$('connect'), reload:$('reloadCategories'), categories:$('categories'), count:$('count'), seed:$('seed'), autoOutput:$('autoOutput'), message:$('message'), results:$('results'), resultCount:$('resultCount'), random:$('random'), output:$('output'), imageInputStatus:$('imageInputStatus'), promptInputStatus:$('promptInputStatus'), saveCategory:$('saveCategory'), save:$('saveAsset'), forceSave:$('forceSave'), saveNote:$('saveNote') };
       let nodeId = '';
       let pluginId = 'ai-prompt-library';
       let categories = [];
       let busy = false;
-      let state = { selectedCategoryIds:[], count:1, seed:0, autoOutput:true, selectedIndex:0, lastItems:[] };
+      let connectionSignature = '';
+      let knownConnectionSignature = '';
+      let connectionDirty = false;
+      let inputs = {};
+      let duplicateSnapshot = null;
+      const pendingRequests = new Map();
+      let state = { selectedCategoryIds:[], saveCategoryId:null, lastSavedAssetId:null, saveScope:'', count:1, seed:0, autoOutput:true, selectedIndex:0, lastItems:[] };
 
       function post(type, payload = {}) { parent.postMessage({ protocol:PROTOCOL, nodeId, pluginId, type, payload }, '*'); }
       function safeNumber(value, min, max, fallback) { const number = Number(value); return Number.isFinite(number) ? Math.max(min, Math.min(max, Math.trunc(number))) : fallback; }
       function normalizedBase() { const value = String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, ''); if (!/^https?:\/\//i.test(value)) throw new Error('服务地址必须以 http:// 或 https:// 开头'); return value; }
       function headers(json = false) { const result = {}; const key = String(els.apiKey.value || '').trim(); if (key) result['X-API-Key'] = key; if (json) result['Content-Type'] = 'application/json'; return result; }
-      function saveConnection() { localStorage.setItem(STORAGE_URL, String(els.serverUrl.value || '').trim()); localStorage.setItem(STORAGE_KEY, String(els.apiKey.value || '').trim()); }
-      function stateForHost() { return { selectedCategoryIds:[...state.selectedCategoryIds], count:state.count, seed:state.seed, autoOutput:state.autoOutput, selectedIndex:state.selectedIndex, lastItems:state.lastItems.slice(0,20).map((item) => ({ asset_id:item.asset_id, category_id:item.category_id, category_name:String(item.category_name || ''), prompt:String(item.prompt || ''), thumbnail_url:String(item.thumbnail_url || '') })) }; }
+      function newScope() { return Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2,'0')).join(''); }
+      function currentScope() { let scope = localStorage.getItem(STORAGE_SCOPE); if (!scope) { scope = newScope(); localStorage.setItem(STORAGE_SCOPE, scope); } return scope; }
+      function saveConnection() {
+        const url = String(els.serverUrl.value || '').trim(); const key = String(els.apiKey.value || '').trim();
+        if (url !== (localStorage.getItem(STORAGE_URL) || '') || key !== (localStorage.getItem(STORAGE_KEY) || '')) localStorage.setItem(STORAGE_SCOPE, newScope());
+        localStorage.setItem(STORAGE_URL, url); localStorage.setItem(STORAGE_KEY, key);
+      }
+      function stateForHost() { return { selectedCategoryIds:[...state.selectedCategoryIds], saveCategoryId:state.saveCategoryId, lastSavedAssetId:state.lastSavedAssetId, saveScope:state.saveScope, count:state.count, seed:state.seed, autoOutput:state.autoOutput, selectedIndex:state.selectedIndex, lastItems:state.lastItems.slice(0,20).map((item) => ({ asset_id:item.asset_id, category_id:item.category_id, category_name:String(item.category_name || ''), prompt:String(item.prompt || ''), thumbnail_url:String(item.thumbnail_url || '') })) }; }
       function persist() { post('state', { state:stateForHost() }); }
       function setStatus(text, kind = '') { els.status.textContent = text; els.status.className = `status ${kind}`.trim(); }
       function showMessage(text = '', kind = 'info') { els.message.textContent = text; els.message.className = text ? `message show ${kind}` : 'message'; }
-      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; if (next && label) showMessage(label, 'info'); }
+      function setBusy(next, label = '') { busy = next; els.connect.disabled = next; els.reload.disabled = next; els.random.disabled = next; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next; els.forceSave.disabled = next; els.saveCategory.disabled = next || !categories.length; els.serverUrl.disabled = next; els.apiKey.disabled = next; els.clearKey.disabled = next; if (next && label) showMessage(label, 'info'); }
       function applyTheme(theme) {
         const mode = theme && theme.mode === 'dark' ? 'dark' : 'light';
         document.documentElement.dataset.theme = mode;
@@ -144,12 +179,138 @@
       }
       async function request(path, options = {}) {
         const base = normalizedBase();
-        const response = await fetch(base + path, { ...options, headers:{ ...headers(Boolean(options.body)), ...(options.headers || {}) } });
+        const response = await fetch(base + path, { ...options, headers:{ ...headers(typeof options.body === 'string'), ...(options.headers || {}) } });
         let data = null; try { data = await response.json(); } catch { data = null; }
-        if (!response.ok) { const detail = data && (data.detail || data.message); throw new Error(detail || `请求失败（HTTP ${response.status}）`); }
+        if (!response.ok) { const detail = data && (data.detail || data.message); const message = typeof detail === 'string' ? detail : Array.isArray(detail) ? detail.map(item => item.msg || '').filter(Boolean).join('；') : ''; throw new Error(message || `请求失败（HTTP ${response.status}）`); }
         return data;
       }
       function fullUrl(path) { try { return new URL(String(path || ''), normalizedBase() + '/').toString(); } catch { return ''; } }
+      function inputValue(value, keys) {
+        if (Array.isArray(value)) return inputValue(value[0], keys);
+        if (typeof value === 'string') return value;
+        if (value && typeof value === 'object') {
+          for (const key of keys) if (value[key] != null) { const result = inputValue(value[key], keys); if (result) return result; }
+        }
+        return '';
+      }
+      function imageInput() { return inputValue(inputs.image, ['source','dataUrl','url','value']).trim(); }
+      function promptInput() { return inputValue(inputs.prompt_input, ['text','value','content']); }
+      function validId(value) { const id = Number(value); return value !== null && value !== '' && Number.isSafeInteger(id) && id > 0 ? id : null; }
+      function currentSignature() { return `${String(els.serverUrl.value || '').trim().replace(/\/+$/, '').replace(/\/api\/v1$/i, '')}\n${String(els.apiKey.value || '').trim()}`; }
+      function clearDuplicate() { duplicateSnapshot = null; els.forceSave.hidden = true; }
+      function renderSave() {
+        const image = imageInput(); const prompt = promptInput();
+        els.imageInputStatus.textContent = image ? '已连接一张图片' : '未连接';
+        els.promptInputStatus.textContent = prompt.trim() ? prompt : '未连接或内容为空';
+        els.saveCategory.replaceChildren();
+        const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = categories.length ? '请选择保存分类' : '请先连接服务'; els.saveCategory.append(placeholder);
+        categories.forEach(item => { const option = document.createElement('option'); option.value = String(item.id); option.textContent = String(item.name || `分类 ${item.id}`); els.saveCategory.append(option); });
+        els.saveCategory.value = state.saveCategoryId ? String(state.saveCategoryId) : '';
+        els.saveCategory.disabled = busy || !categories.length;
+        if (!duplicateSnapshot) els.saveNote.textContent = state.lastSavedAssetId ? `最近保存的素材 ID：${state.lastSavedAssetId}。仅保存，不自动调用 AI 分析。` : '仅保存素材，不自动调用 AI 分析；保存分类与抽取范围互不影响。';
+      }
+      function invalidateConnection() {
+        if (connectionDirty || currentSignature() === knownConnectionSignature) return;
+        connectionDirty = true; connectionSignature = ''; categories = []; state.selectedCategoryIds = []; state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = '';
+        clearDuplicate(); renderCategories(); renderSave(); persist(); setStatus('未连接');
+        showMessage('连接设置已更改，请重新连接并选择分类。', 'info');
+      }
+      function snapshotForSave() { return { categoryId:state.saveCategoryId, prompt:promptInput(), image:imageInput(), signature:connectionSignature }; }
+      function sameSnapshot(a, b) { return a && b && a.categoryId === b.categoryId && a.prompt === b.prompt && a.image === b.image && a.signature === b.signature; }
+      function hostRequest(type, payload, responseType) {
+        const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => { pendingRequests.delete(requestId); reject(new Error('读取画布图片超时')); }, 30000);
+          pendingRequests.set(requestId, { resolve, reject, timer, responseType });
+          post(type, { ...payload, requestId });
+        });
+      }
+      function receiveHostResult(type, payload) {
+        const pending = pendingRequests.get(payload.requestId);
+        if (!pending || pending.responseType !== type) return;
+        pendingRequests.delete(payload.requestId); clearTimeout(pending.timer);
+        if (payload.error) pending.reject(new Error(String(payload.error))); else pending.resolve(payload);
+      }
+      async function readImage(source) {
+        if (!/^(?:data:image\/|hios-asset:|https?:\/\/)/i.test(source)) throw new Error('图片地址不受支持，请连接画布中的图片节点');
+        let blob;
+        try {
+          const response = await fetch(source, { credentials:'omit' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          blob = await response.blob();
+        } catch (error) {
+          if (/^hios-asset:/i.test(source)) {
+            const result = await hostRequest('asset-read', { source }, 'asset-result');
+            if (!result.dataUrl) throw new Error('宿主未返回画布图片');
+            blob = await (await fetch(result.dataUrl)).blob();
+          } else if (/^https?:\/\//i.test(source) && !/^https?:\/\/hios-asset\.localhost(?:[/:]|$)/i.test(source)) {
+            const reply = await hostRequest('network-request', { url:source, method:'GET', responseType:'base64' }, 'network-result');
+            const result = reply.result;
+            if (!result || !result.ok || result.encoding !== 'base64' || typeof result.body !== 'string') throw new Error(`读取图片失败${result && result.status ? `（HTTP ${result.status}）` : ''}`);
+            const binary = atob(result.body); const bytes = new Uint8Array(binary.length);
+            for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+            blob = new Blob([bytes]);
+          } else throw new Error(`读取画布图片失败：${error instanceof Error ? error.message : String(error)}`);
+        }
+        const bytes = new Uint8Array(await blob.slice(0, 12).arrayBuffer());
+        const png = bytes.length >= 8 && [137,80,78,71,13,10,26,10].every((value,index) => bytes[index] === value);
+        const jpeg = bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255;
+        const webp = bytes.length >= 12 && String.fromCharCode(...bytes.slice(0,4)) === 'RIFF' && String.fromCharCode(...bytes.slice(8,12)) === 'WEBP';
+        if (!png && !jpeg && !webp) throw new Error('仅支持有效的 JPG、PNG 和 WEBP 图片');
+        const ext = png ? 'png' : jpeg ? 'jpg' : 'webp';
+        return { blob:new Blob([blob], { type:png ? 'image/png' : jpeg ? 'image/jpeg' : 'image/webp' }), name:`image.${ext}` };
+      }
+      function multipartBody(snapshot, file, force) {
+        // Browsers normalize FormData text newlines to CRLF. Build the same
+        // multipart format as a Blob to preserve the connected prompt exactly.
+        let boundary;
+        do { const random = crypto.getRandomValues(new Uint8Array(16)); boundary = `----hios-${Array.from(random, byte => byte.toString(16).padStart(2,'0')).join('')}`; } while (snapshot.prompt.includes(`\r\n--${boundary}`));
+        const parts = [];
+        const field = (name, value) => { parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n`, String(value), '\r\n'); };
+        field('category_id', snapshot.categoryId);
+        field('mode', snapshot.prompt.trim() ? 'manual' : 'image_only');
+        if (snapshot.prompt.trim()) field('prompt_text', snapshot.prompt);
+        if (file) parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="files"; filename="${file.name}"\r\nContent-Type: ${file.blob.type}\r\n\r\n`, file.blob, '\r\n');
+        if (force) field('force', 'true');
+        parts.push(`--${boundary}--\r\n`);
+        return new Blob(parts, { type:`multipart/form-data; boundary=${boundary}` });
+      }
+      async function saveAsset(force = false) {
+        if (busy) return;
+        const snapshot = snapshotForSave();
+        if (!categories.length || !connectionSignature || currentSignature() !== connectionSignature) { showMessage('请先连接服务并读取分类。', 'error'); els.saveNote.textContent = '请先连接服务并读取分类。'; return; }
+        if (state.saveScope && state.saveScope !== currentScope()) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; clearDuplicate(); renderSave(); persist(); showMessage('连接设置已在其他节点更改，请重新选择保存分类。', 'error'); els.saveNote.textContent = '连接设置已在其他节点更改，请重新选择保存分类。'; return; }
+        if (!snapshot.categoryId || !categories.some(item => Number(item.id) === snapshot.categoryId)) { showMessage('请选择保存分类。', 'error'); els.saveNote.textContent = '请选择保存分类。'; return; }
+        if (!snapshot.image && !snapshot.prompt.trim()) { showMessage('请至少连接一张图片或一段非空提示词。', 'error'); els.saveNote.textContent = '请至少连接一张图片或一段非空提示词。'; return; }
+        if (force && (!duplicateSnapshot || !sameSnapshot(snapshot, duplicateSnapshot))) { clearDuplicate(); renderSave(); showMessage('输入或分类已变化，请重新保存。', 'error'); return; }
+        const retryFile = force ? duplicateSnapshot.file : null;
+        clearDuplicate(); setBusy(true, '正在保存素材…'); els.saveNote.textContent = '正在保存素材…';
+        try {
+          const file = retryFile || (snapshot.image ? await readImage(snapshot.image) : null);
+          const result = await request('/api/v1/assets/upload', { method:'POST', body:multipartBody(snapshot, file, force) });
+          const items = result && Array.isArray(result.items) ? result.items : [];
+          const duplicates = result && Array.isArray(result.duplicates) ? result.duplicates : [];
+          const errors = result && Array.isArray(result.errors) ? result.errors : [];
+          if (errors.length) throw new Error(errors.map(item => item.message || '图片保存失败').join('；'));
+          if (duplicates.length && !items.length) {
+            const id = validId(duplicates[0].asset_id);
+            const message = `图片已存在${id ? `（素材 #${id}）` : ''}，本次未保存。`;
+            if (sameSnapshot(snapshot, snapshotForSave())) { duplicateSnapshot = { ...snapshot, file }; els.forceSave.hidden = false; els.saveNote.textContent = `${message}如需重复保存，请点击“仍然保存重复图片”。`; }
+            else els.saveNote.textContent = `${message}输入已变化，请重新保存。`;
+            setStatus('图片重复', 'error'); showMessage(message, 'error'); return;
+          }
+          const saved = items[0]; const id = saved && validId(saved.id);
+          if (!id) throw new Error('服务未返回已保存的素材，请检查服务端结果');
+          state.lastSavedAssetId = id; persist();
+          const category = categories.find(item => Number(item.id) === snapshot.categoryId);
+          if (category) category.asset_count = Number(category.asset_count || 0) + 1;
+          renderCategories(); renderSave(); setStatus('保存成功', 'ok');
+          showMessage(`已保存到“${category ? category.name : '所选分类'}”，素材 #${id}。`, 'info');
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          els.saveNote.textContent = `保存失败：${message}`; setStatus('保存失败', 'error'); showMessage(message, 'error');
+        } finally { setBusy(false); }
+      }
       function renderCategories() {
         els.categories.replaceChildren();
         if (!categories.length) { const empty = document.createElement('div'); empty.className='empty'; empty.textContent='没有可用分类，或尚未连接服务'; els.categories.append(empty); return; }
@@ -158,7 +319,7 @@
           const name = document.createElement('span'); name.textContent=String(item.name || `分类 ${item.id}`);
           const count = document.createElement('em'); count.textContent=String(item.asset_count ?? 0);
           button.append(name,count);
-          button.addEventListener('click', () => { const id=Number(item.id); state.selectedCategoryIds = state.selectedCategoryIds.includes(id) ? state.selectedCategoryIds.filter((value) => value !== id) : [...state.selectedCategoryIds,id]; renderCategories(); persist(); });
+          button.addEventListener('click', () => { if (busy) return; const id=Number(item.id); state.selectedCategoryIds = state.selectedCategoryIds.includes(id) ? state.selectedCategoryIds.filter((value) => value !== id) : [...state.selectedCategoryIds,id]; renderCategories(); persist(); });
           els.categories.append(button);
         });
       }
@@ -166,7 +327,7 @@
         els.results.replaceChildren();
         els.output.disabled = busy || !state.lastItems.length;
         els.resultCount.textContent = state.lastItems.length ? `${state.lastItems.length} 条 · 当前第 ${Math.min(state.selectedIndex + 1,state.lastItems.length)} 条` : '还没有抽取';
-        if (!state.lastItems.length) { const empty=document.createElement('div'); empty.className='empty'; empty.textContent='点击“随机抽取”获得提示词'; els.results.append(empty); return; }
+        if (!state.lastItems.length) { const empty=document.createElement('div'); empty.className='empty'; empty.textContent='点击“运行”随机抽取提示词'; els.results.append(empty); return; }
         state.lastItems.forEach((item,index) => {
           const button=document.createElement('button'); button.type='button'; button.className=`result ${index===state.selectedIndex?'active':''}`;
           const thumb=document.createElement('span'); thumb.className='thumb'; const url=fullUrl(item.thumbnail_url); if(url){ const image=document.createElement('img'); image.src=url; image.alt=''; image.loading='lazy'; image.referrerPolicy='no-referrer'; image.onerror=()=>{ thumb.replaceChildren(document.createTextNode('✦')); }; thumb.append(image); } else thumb.textContent='✦';
@@ -185,14 +346,17 @@
         if (busy) return; setBusy(true, quiet ? '' : '正在连接提示词库…');
         try {
           saveConnection();
+          if (state.saveScope && state.saveScope !== currentScope()) { state.saveCategoryId = null; state.lastSavedAssetId = null; state.saveScope = ''; }
           const health = await request('/api/v1/health');
           const rows = await request('/api/v1/categories?enabled_only=true');
           if (!Array.isArray(rows)) throw new Error('分类接口返回格式不正确');
           categories = rows.filter((item) => item && Number.isFinite(Number(item.id)));
           state.selectedCategoryIds = state.selectedCategoryIds.filter((id) => categories.some((item) => Number(item.id) === id));
-          renderCategories(); persist(); setStatus('已连接', 'ok'); showMessage(`服务连接正常，共读取 ${categories.length} 个分类。`, 'info');
+          if (!categories.some((item) => Number(item.id) === state.saveCategoryId)) state.saveCategoryId = null;
+          connectionSignature = currentSignature(); knownConnectionSignature = connectionSignature; connectionDirty = false; clearDuplicate();
+          renderCategories(); renderSave(); persist(); els.panel.classList.remove('open'); setStatus('已连接', 'ok'); showMessage(`服务连接正常，共读取 ${categories.length} 个分类。`, 'info');
           if (health && health.status !== 'ok') showMessage('服务已响应，但健康状态不是 ok。', 'error');
-        } catch (error) { categories=[]; renderCategories(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
+        } catch (error) { categories=[]; connectionSignature=''; clearDuplicate(); renderCategories(); renderSave(); setStatus('连接失败','error'); showMessage(error instanceof Error ? error.message : String(error),'error'); post('error',{message:error instanceof Error?error.message:String(error)}); }
         finally { setBusy(false); }
       }
       async function randomPrompt(forceOutput = false) {
@@ -212,22 +376,31 @@
       }
       function hydrate(payload) {
         const incoming=payload && payload.state && typeof payload.state==='object' ? payload.state : {};
+        const previous = snapshotForSave();
+        if (payload && Object.prototype.hasOwnProperty.call(payload, 'inputs')) inputs = payload.inputs && typeof payload.inputs === 'object' ? payload.inputs : {};
         state={ ...state, ...incoming, selectedCategoryIds:Array.isArray(incoming.selectedCategoryIds)?incoming.selectedCategoryIds.map(Number).filter(Number.isFinite):state.selectedCategoryIds, lastItems:Array.isArray(incoming.lastItems)?incoming.lastItems.slice(0,20):state.lastItems };
+        state.saveCategoryId=validId(state.saveCategoryId); state.lastSavedAssetId=validId(state.lastSavedAssetId); state.saveScope=typeof state.saveScope==='string'?state.saveScope:'';
+        if ((state.saveCategoryId || state.lastSavedAssetId) && state.saveScope !== currentScope()) { state.saveCategoryId=null; state.lastSavedAssetId=null; state.saveScope=''; }
         state.count=safeNumber(state.count,1,20,1); state.seed=safeNumber(state.seed,0,2147483647,0); state.selectedIndex=safeNumber(state.selectedIndex,0,Math.max(0,state.lastItems.length-1),0); state.autoOutput=state.autoOutput!==false;
-        els.count.value=String(state.count); els.seed.value=String(state.seed); els.autoOutput.checked=state.autoOutput; renderCategories(); renderResults(); applyTheme(payload && payload.theme);
+        if (!sameSnapshot(previous, snapshotForSave())) clearDuplicate();
+        els.count.value=String(state.count); els.seed.value=String(state.seed); els.autoOutput.checked=state.autoOutput; renderCategories(); renderResults(); renderSave(); applyTheme(payload && payload.theme);
       }
 
       els.settingsToggle.addEventListener('click',()=>els.panel.classList.toggle('open'));
       els.revealKey.addEventListener('click',()=>{ const reveal=els.apiKey.type==='password'; els.apiKey.type=reveal?'text':'password'; els.revealKey.textContent=reveal?'隐藏':'显示'; });
-      els.clearKey.addEventListener('click',()=>{ els.apiKey.value=''; localStorage.removeItem(STORAGE_KEY); setStatus('密钥已清除'); showMessage('本机保存的访问密钥已清除。','info'); });
+      els.clearKey.addEventListener('click',()=>{ els.apiKey.value=''; invalidateConnection(); saveConnection(); localStorage.removeItem(STORAGE_KEY); setStatus('密钥已清除'); showMessage('本机保存的访问密钥已清除。','info'); });
       els.connect.addEventListener('click',()=>loadCategories(false)); els.reload.addEventListener('click',()=>loadCategories(false)); els.random.addEventListener('click',()=>randomPrompt(false)); els.output.addEventListener('click',emitSelected);
-      els.serverUrl.addEventListener('change',saveConnection); els.apiKey.addEventListener('change',saveConnection);
+      els.save.addEventListener('click',()=>void saveAsset(false)); els.forceSave.addEventListener('click',()=>void saveAsset(true));
+      els.saveCategory.addEventListener('change',()=>{ saveConnection(); state.saveCategoryId=validId(els.saveCategory.value); state.saveScope=currentScope(); clearDuplicate(); renderSave(); persist(); });
+      els.serverUrl.addEventListener('input',invalidateConnection); els.apiKey.addEventListener('input',invalidateConnection);
+      els.serverUrl.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); }); els.apiKey.addEventListener('change',()=>{ invalidateConnection(); saveConnection(); });
       els.count.addEventListener('change',()=>{ state.count=safeNumber(els.count.value,1,20,1); els.count.value=String(state.count); persist(); });
       els.seed.addEventListener('change',()=>{ state.seed=safeNumber(els.seed.value,0,2147483647,0); els.seed.value=String(state.seed); persist(); });
       els.autoOutput.addEventListener('change',()=>{ state.autoOutput=els.autoOutput.checked; persist(); });
       window.addEventListener('message',(event)=>{
         const message=event.data;
-        if(!message||message.protocol!==PROTOCOL)return;
+        if(event.source!==parent||!message||message.protocol!==PROTOCOL||(message.pluginId&&message.pluginId!==pluginId))return;
+        if(message.type==='asset-result'||message.type==='network-result'){ receiveHostResult(message.type,message.payload||{}); return; }
         nodeId=String(message.nodeId||message.payload?.nodeId||nodeId);
         pluginId=String(message.pluginId||message.payload?.pluginId||pluginId);
         if(message.type==='init'){
@@ -241,10 +414,11 @@
           // and always emit the selected prompt even when manual auto-output
           // is disabled. The output settles the host run promise immediately.
           hydrate(message.payload||{});
+          if (busy) { post('error', { message:'插件正在处理请求，请稍后再运行' }); return; }
           void randomPrompt(true);
         }
       });
-      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; renderResults(); post('ready',{version:'0.1.2'});
+      els.serverUrl.value=localStorage.getItem(STORAGE_URL)||''; els.apiKey.value=localStorage.getItem(STORAGE_KEY)||''; knownConnectionSignature=currentSignature(); renderResults(); renderSave(); post('ready',{version:'0.2.0'});
     })();
   </script>
 </body>

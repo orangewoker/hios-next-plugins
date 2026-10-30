@@ -3,6 +3,15 @@
   "pluginId": "ai-prompt-library",
   "versions": [
     {
+      "version": "0.2.0",
+      "ref": "ai-prompt-library-v0.2.0",
+      "releasedAt": "2026-10-30",
+      "notes": [
+        "新增图片、提示词输入，支持单独或同时保存到所选授权分类。",
+        "重复图片需确认后保存；工作流运行仍仅随机抽取提示词。"
+      ]
+    },
+    {
       "version": "0.1.2",
       "ref": "ai-prompt-library-v0.1.2",
       "releasedAt": "2026-10-07",

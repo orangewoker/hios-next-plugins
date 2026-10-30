@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "ai-prompt-library",
   "name": "AI 提示词库",
-  "version": "0.1.3",
-  "description": "连接自托管 AI Prompt Library，按分类随机抽取提示词并输出到 HIOS 画布工作流。",
+  "version": "0.2.0",
+  "description": "连接自托管 AI Prompt Library，按分类保存图片和提示词，或随机抽取提示词输出到画布。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library",
   "permissions": [
@@ -21,9 +21,20 @@
     {
       "id": "prompt.random",
       "title": "随机提示词库",
-      "description": "设置服务地址和访问密钥，选择分类后随机抽取并输出提示词。",
+      "description": "将输入的图片或提示词保存到指定分类，也可随机抽取提示词并输出。",
       "rendererEntry": "runtime/index.html",
-      "inputs": [],
+      "inputs": [
+        {
+          "id": "image",
+          "title": "图片",
+          "type": "image"
+        },
+        {
+          "id": "prompt_input",
+          "title": "待保存提示词",
+          "type": "text"
+        }
+      ],
       "outputs": [
         {
           "id": "prompt",
@@ -37,6 +48,8 @@
       },
       "defaultData": {
         "selectedCategoryIds": [],
+        "saveCategoryId": null,
+        "lastSavedAssetId": null,
         "count": 1,
         "seed": 0,
         "autoOutput": true,
