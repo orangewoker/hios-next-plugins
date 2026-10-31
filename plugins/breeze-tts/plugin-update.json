@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "breeze-tts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "files": [
     {
       "path": ".gitignore",
@@ -15,23 +15,23 @@
     },
     {
       "path": "README.md",
-      "size": 6608,
-      "sha256": "754c4d95837f9883381c4a0d34c4baa704e0da91a770df8c701ddefcb054c82e"
+      "size": 7015,
+      "sha256": "d0e28249687f8479a37a2f28d4dd0a322f209070c8590e88dd94a9d420c4aaf0"
     },
     {
       "path": "TEST_REPORT.md",
-      "size": 6158,
-      "sha256": "9a1890e2bf9c0484b5a7d11032b78fe5b85cd64bc4ed359b6c1748b8d3dfff99"
+      "size": 6938,
+      "sha256": "fddba453c482b7117ec831bc81e87e721010da3e21955f21e91c9ae0623e356e"
     },
     {
       "path": "app/app.js",
-      "size": 21432,
-      "sha256": "be1a994bc4c540a59429e12f54d2c35cf947ca7c3d7c7f0bf2192619796bf2c1"
+      "size": 22912,
+      "sha256": "f8ae4f16f55b009fdbb2c862597cd86fa025356412bf85a5d6fc1a1e91317192"
     },
     {
       "path": "app/index.html",
-      "size": 10459,
-      "sha256": "8a1245cf948cd4d29dd946301fa735eeaa8e0ee9ea7892fc5eb3cc43769af34e"
+      "size": 10522,
+      "sha256": "2a37a0a7d11e96ef0c66726913a2fb7b826aee8fac4eb716a1804585ff7b9bb0"
     },
     {
       "path": "app/style.css",
@@ -61,12 +61,12 @@
     {
       "path": "package.json",
       "size": 321,
-      "sha256": "ac8136808641a9c537bf65a4c80b665cf07b30baa557c90e2118955c684202d8"
+      "sha256": "fd137a33ca1e3d5627ff9b9a944db524983c6179658d2eddc210efe8311d8ebb"
     },
     {
       "path": "plugin.json",
       "size": 2481,
-      "sha256": "45ed04d3b2578b237e8ab016a3280c710d8832fca0475c35ad562378aee28388"
+      "sha256": "6dca66f7ebbd0f987087c45cf179477b3d9c37c9d59b68d2ed68f7ab3a26884c"
     },
     {
       "path": "scripts/browser-smoke.js",
@@ -115,8 +115,8 @@
     },
     {
       "path": "service/server.mjs",
-      "size": 12982,
-      "sha256": "78e12e266417a6d68360357d2724125ee2e936d855cd6b29422cd999f41e31ed"
+      "size": 13248,
+      "sha256": "9dfeaad5c18e92f0a3e0f406f627f968e3fc20f51b9fbba099998dbd748c7fda"
     },
     {
       "path": "service/storage.mjs",
@@ -162,6 +162,11 @@
       "path": "shared/hios-ui.js",
       "size": 2097,
       "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "shared/status.js",
+      "size": 1993,
+      "sha256": "6af9491257761d14b2429c3cca18ba251d29474536d62d5e302848d5bfadf046"
     },
     {
       "path": "shared/workshop.css",
@@ -210,8 +215,13 @@
     },
     {
       "path": "tests/server.test.mjs",
-      "size": 8886,
-      "sha256": "70af8788e3885b36ad4d77ba96b519fd630c82a4523a784529b200676c39d5dc"
+      "size": 10148,
+      "sha256": "6ea69af48ed03396b6675a0d25cd3a27dc3096d20950d874536b6dc3412ca74d"
+    },
+    {
+      "path": "tests/status.test.mjs",
+      "size": 4520,
+      "sha256": "fc4024c0163e0f2b6278b29ecf9e59d2aa12baa2490f39326e810a2ba3e20fe4"
     },
     {
       "path": "vendor/fflate.LICENSE",

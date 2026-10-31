@@ -3,10 +3,22 @@ import { WorkshopClient, loadConnection, saveConnection, fileDataUrl, referenceD
 import { enhanceSelects, enhanceFileInputs, syncSelects } from '../shared/controls.js';
 import { copyText } from '../shared/clipboard.js';
 import { HiosBridge } from '../shared/bridge.js';
+import { StatusMonitor } from '../shared/status.js';
 
 const $ = id => document.getElementById(id), bridge = new HiosBridge('app');
 let config = loadConnection(), client = new WorkshopClient(config, bridge), mode = 'design', active = null, playerUrl = '', currentPage = 'create', timer, initialized = false, hiddenWorkflow = false, restoredVoiceId = '';
 const workflowRuns = new Map();
+let closing = false, wasReady = false, pollEpoch = 0;
+function connectionFailed(error) {
+  wasReady = false; $('status').classList.remove('online'); $('status').querySelector('span').textContent = '连接失败 · 点此设置';
+  $('connection-message').textContent = `当前连接失败 · ${error.message}`;
+}
+const statusMonitor = new StatusMonitor(() => client, (status) => {
+  $('status').classList.add('online'); $('status').querySelector('span').textContent = status.badge;
+  $('connection-message').textContent = status.message;
+  if (status.ready && !wasReady) void refreshVoices().catch(() => {});
+  wasReady = status.ready;
+}, connectionFailed);
 const labels = { temperature: '采样温度', top_k: 'Top K', top_p: 'Top P', repetition_penalty: '重复惩罚', split_chars: '分句预算', max_new_tokens: '每段帧数上限' };
 const stageNames = { preparing: '准备中', downloading: '下载中', verifying: '校验中', extracting: '解压中', ready: '已就绪', paused: '已暂停', missing: '未下载', error: '失败', starting: '正在连接引擎', generating: '正在生成', failed: '失败', cancelled: '已取消', interrupted: '已中断', stopped: '未启动', loading: '模型加载中', external: '外部引擎' };
 for (const [key, label] of Object.entries(labels)) {
@@ -23,6 +35,7 @@ function page(name) {
   $('page-title').textContent = ({ create: '语音创作', voices: '音色库', models: '模型与服务', connection: '设置' })[name];
   if (name === 'voices') void refreshVoices().catch(() => {});
   if (name === 'models' && client.adminToken) void refreshManagement().catch(e => toast(e.message));
+  if (initialized && !hiddenWorkflow) void refreshStatus().catch(() => {});
 }
 document.querySelectorAll('.nav').forEach(x => x.onclick = () => page(x.dataset.page));
 $('status').onclick = () => page('connection');
@@ -55,21 +68,32 @@ document.querySelectorAll('[name=connection-mode]').forEach(el => el.onchange = 
   const previousMode = config.mode; config[previousMode === 'remote' ? 'remoteUrl' : 'localUrl'] = $('service-url').value;
   config.mode = el.value; fillConnection();
 });
+for (const id of ['service-url', 'access-key', 'service-port', 'sharing']) $(id).addEventListener('input', () => { $('connection-test-message').textContent = ''; });
+document.querySelectorAll('[name=connection-mode]').forEach(el => el.addEventListener('change', () => { $('connection-test-message').textContent = ''; }));
+async function refreshStatus() { return statusMonitor.refresh(); }
 async function connect() {
-  const h = await client.health();
-  if (h.protocol !== 'breeze-workshop/v1') throw new Error('此地址不是 Breeze 工坊服务，请填写工坊端口，不是原生引擎端口');
-  $('status').classList.add('online'); $('status').querySelector('span').textContent = `${config.mode === 'remote' ? '远程' : '本机'} · ${h.engineReady ? '模型就绪' : '模型未启动'}`;
+  const h = await refreshStatus();
   $('management').hidden = !client.adminToken; $('management-unavailable').hidden = Boolean(client.adminToken); $('share-info').hidden = !client.adminToken;
-  if (h.engineReady) await refreshVoices();
   await refreshHistory(); if (client.adminToken) await refreshManagement();
   return h;
 }
-$('test-connection').onclick = act(async () => { $('connection-message').textContent = '正在测试…'; const probe = new WorkshopClient(connectionForm(), bridge); const h = bridge.managed ? await bridge.workshop({ action: 'test-connection', config: connectionForm() }) : await probe.health(); if (h.protocol !== 'breeze-workshop/v1') throw new Error('不是工坊服务'); $('connection-message').textContent = `连接成功 · ${h.model} · ${h.engineReady ? '模型已就绪' : '服务在线，模型尚未启动'}`; });
+$('test-connection').onclick = act(async () => {
+  const button = $('test-connection'), draft = connectionForm(), probe = new WorkshopClient(draft, bridge);
+  button.disabled = true; $('connection-test-message').textContent = '正在测试填写的连接…';
+  try {
+    const h = bridge.managed ? await bridge.workshop({ action: 'test-connection', config: draft }) : await probe.health();
+    if (h.protocol !== 'breeze-workshop/v1') throw new Error('不是工坊服务');
+    // Test feedback is not a second, frozen model-status label.
+    $('connection-test-message').textContent = '填写的连接测试通过。修改连接后请保存；当前实际连接状态见上方。';
+    await refreshStatus().catch(() => {});
+  } catch (e) { $('connection-test-message').textContent = `填写的连接测试失败 · ${e.message}`; throw e; }
+  finally { button.disabled = false; }
+});
 $('save-connection').onclick = act(async () => {
   if (active) throw new Error('请先结束当前生成，再切换连接');
-  const next = connectionForm(); config = { ...next, ...await saveConnection(next, bridge) }; client = new WorkshopClient(config, bridge); await client.bootstrap(); config = { ...client.config }; if (!bridge.managed) await saveConnection(config); fillConnection();
+  const next = connectionForm(); statusMonitor.invalidate(); config = { ...next, ...await saveConnection(next, bridge) }; client = new WorkshopClient(config, bridge); wasReady = false; await client.bootstrap(); config = { ...client.config }; if (!bridge.managed) await saveConnection(config); fillConnection();
   $('management').hidden = !client.adminToken; $('management-unavailable').hidden = Boolean(client.adminToken);
-  try { await connect(); $('connection-message').textContent = '已保存，应用与画布节点将复用此连接。'; } catch (e) { $('status').classList.remove('online'); $('status').querySelector('span').textContent = '连接失败'; throw e; }
+  try { await connect(); $('connection-test-message').textContent = '已保存，应用与画布节点将复用此连接。'; } catch (e) { connectionFailed(e); throw e; }
 });
 $('copy-key').onclick = act(async () => {
   const button = $('copy-key'); button.disabled = true; $('manual-copy-key').value = ''; $('manual-copy-field').hidden = true;
@@ -104,7 +128,7 @@ $('generate').onclick = act(async () => {
   const request = buildRequest(input), controller = new AbortController(); active = controller; $('generate').disabled = true; $('cancel').hidden = false;
   try { const job = await client.synthesize(request, { signal: controller.signal, onProgress: j => $('generation-state').textContent = `${stageNames[j.status] || j.status} · 已生成 ${formatBytes(j.bytes)}` }); await setResult(job, controller.signal); await refreshHistory(); }
   catch (e) { $('generation-state').textContent = e.name === 'AbortError' ? '已取消生成' : e.message; throw e; }
-  finally { active = null; $('generate').disabled = false; $('cancel').hidden = true; }
+  finally { active = null; $('generate').disabled = false; $('cancel').hidden = true; void refreshStatus().catch(() => {}); }
 });
 $('cancel').onclick = () => active?.abort();
 async function refreshHistory() {
@@ -141,14 +165,14 @@ for (const [id, title] of [['runtime', 'Windows 推理运行库'], ['model', 'Br
 async function acceptLicense() { if (!$('license').checked) throw new Error('请先阅读并确认模型使用许可'); await client.request('/api/admin/license', { method: 'POST', body: { accept: true } }); }
 async function refreshManagement() {
   if (!client.adminToken) return;
-  const s = await client.request('/api/admin/status'); $('license').checked ||= s.licenseAccepted;
+  const target = client, s = await target.request('/api/admin/status'); if (target !== client || closing) return; $('license').checked ||= s.licenseAccepted;
   for (const id of ['runtime', 'model']) { const d = s.downloads[id]; $(`${id}-state`).textContent = `${stageNames[d.stage] || d.stage} · ${formatBytes(d.received)} / ${formatBytes(d.bytes)}`; $(`${id}-progress`).value = d.ready ? 1 : (d.received || 0) / d.bytes; $(`${id}-error`).textContent = d.error || ''; $(`${id}-get`).disabled = ['preparing', 'downloading', 'verifying', 'extracting'].includes(d.stage); $(`${id}-verify`).disabled = $(`${id}-get`).disabled; }
   $('engine-state').textContent = stageNames[s.engine.state] || s.engine.state; $('engine-error').textContent = s.engine.error || ''; $('data-dir').textContent = s.dataDir; $('logs').textContent = s.engine.logs.join('\n');
   $('start-engine').disabled = ['loading', 'ready'].includes(s.engine.state); $('stop-engine').disabled = s.engine.state === 'stopped';
   $('lan-addresses').value = s.urls.join('\n') || '未找到局域网网卡'; $('share-state').textContent = s.sharing ? '局域网已开放。请允许防火墙中的 TCP 服务端口。' : (bridge.managed ? '仅本机访问。可在设置中开启局域网共享并保存。' : '仅本机访问。需要共享时停止当前服务，再运行 start-lan.cmd。');
 }
-$('start-engine').onclick = act(async () => { await client.request('/api/admin/engine/start', { method: 'POST', body: { cpu: $('cpu').checked } }); $('engine-state').textContent = '正在加载模型…'; });
-$('stop-engine').onclick = act(async () => { await client.request('/api/admin/engine/stop', { method: 'POST', body: {} }); await refreshManagement(); });
+$('start-engine').onclick = act(async () => { await client.request('/api/admin/engine/start', { method: 'POST', body: { cpu: $('cpu').checked } }); statusMonitor.invalidate(); $('engine-state').textContent = '正在加载模型…'; await refreshStatus(); await refreshManagement(); });
+$('stop-engine').onclick = act(async () => { await client.request('/api/admin/engine/stop', { method: 'POST', body: {} }); statusMonitor.invalidate(); await refreshStatus(); await refreshManagement(); });
 
 const workflow = { id: 'tts', name: 'Breeze 语音合成', capabilities: ['audio', 'text'], runnable: true, fields: [
   { name: 'text', label: '朗读文本', type: 'textarea', required: true },
@@ -182,8 +206,13 @@ bridge.on(async (type, payload) => {
 });
 async function initConnection() {
   try { await client.bootstrap(); config = { ...client.config }; if (client.adminToken && !bridge.managed) await saveConnection(config); fillConnection(); await connect(); }
-  catch (e) { fillConnection(); $('connection-message').textContent = e.message; $('status').classList.remove('online'); $('status').querySelector('span').textContent = '连接失败 · 点此设置'; }
-  clearInterval(timer); timer = setInterval(() => { if (currentPage === 'models' && client.adminToken) void refreshManagement().catch(() => {}); }, 1800);
+  catch (e) { fillConnection(); connectionFailed(e); }
+  const epoch = ++pollEpoch; clearTimeout(timer);
+  const poll = async () => {
+    try { await refreshStatus(); if (['models', 'connection'].includes(currentPage) && client.adminToken) await refreshManagement(); } catch { /* Live status already reports connection errors. */ }
+    if (!closing && epoch === pollEpoch) timer = setTimeout(poll, 1800);
+  };
+  if (!closing) timer = setTimeout(poll, 1800);
 }
 enhanceSelects(); enhanceFileInputs(); fillConnection(); bridge.ready(); if (!bridge.embedded) { initialized = true; void initConnection(); }
-window.addEventListener('beforeunload', () => { active?.abort(); for (const c of workflowRuns.values()) c.abort(); clearInterval(timer); if (playerUrl) URL.revokeObjectURL(playerUrl); });
+window.addEventListener('beforeunload', () => { closing = true; statusMonitor.dispose(); active?.abort(); for (const c of workflowRuns.values()) c.abort(); clearTimeout(timer); if (playerUrl) URL.revokeObjectURL(playerUrl); });

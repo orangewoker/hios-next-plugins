@@ -27,13 +27,31 @@ test('standalone static UI, loopback bootstrap and API key checks', async t => {
   assert.equal((await f.request('/api/health', { headers: { Origin: 'https://evil.test' } })).status, 403);
   assert.equal((await fetch(f.base + '/api/bootstrap', { headers: { Origin: 'null' } })).status, 200);
   const denied = await (await fetch(f.base + '/api/bootstrap', { headers: { Origin: 'null' } })).json(); assert.equal(denied.adminToken, undefined);
-  const h = await (await f.request('/api/health')).json(); assert.equal(h.engineReady, true); assert.equal(h.protocol, 'breeze-workshop/v1');
+  const h = await (await f.request('/api/health')).json(); assert.equal(h.engineReady, true); assert.equal(h.engineState, 'ready'); assert.equal(h.protocol, 'breeze-workshop/v1');
   assert.equal((await f.request('/api/admin/status')).status, 403);
   const s = await f.request('/api/admin/status', { headers: { 'X-Breeze-Admin': f.adminToken } }); assert.equal(s.status, 200);
   assert.equal((await fetch(f.base + '/service/service.json')).status, 404);
   const hostStatus = await new Promise((ok, fail) => { const req = http.get(f.base + '/api/health', { headers: { Host: 'evil.test' } }, res => { res.resume(); ok(res.statusCode); }); req.on('error', fail); });
   assert.equal(hostStatus, 403);
 });
+test('health reports live engine lifecycle without exposing management data', async t => {
+  const f = await fixture(t); f.engine.external = false;
+  let ready = false; f.engine.health = async () => ready;
+  for (const state of ['stopped', 'loading', 'stopping', 'error', 'ready']) {
+    f.engine.state = state;
+    const h = await (await f.request('/api/health')).json();
+    assert.equal(h.engineReady, false); assert.equal(h.engineState, state === 'ready' ? 'unavailable' : state);
+    for (const secret of ['accessKey', 'adminToken', 'logs', 'dataDir', 'engineError']) assert.equal(h[secret], undefined);
+  }
+  let release; const starting = new Promise(r => { release = r; });
+  f.engine.state = 'stopped'; f.engine.start = () => starting;
+  try {
+    const r = await f.request('/api/admin/engine/start', { method: 'POST', headers: { 'X-Breeze-Admin': f.adminToken }, body: {} }); assert.equal(r.status, 202);
+    assert.equal((await (await f.request('/api/health')).json()).engineState, 'loading', 'preparing model files is not stopped');
+    ready = true; const h = await (await f.request('/api/health')).json(); assert.equal(h.engineReady, true); assert.equal(h.engineState, 'ready');
+  } finally { release(); }
+});
+
 test('job synthesizes real WAV container, idempotent submission, four-port metadata and persistence', async t => {
   const f = await fixture(t), body = { text: '你好，工坊。', idempotencyKey: 'test-idempotency-0001' };
   const submitted = await f.request('/api/jobs', { method: 'POST', body }); assert.equal(submitted.status, 202); const first = await submitted.json();
