@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "breeze-tts",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "files": [
     {
       "path": ".gitignore",
@@ -15,13 +15,13 @@
     },
     {
       "path": "README.md",
-      "size": 7015,
-      "sha256": "d0e28249687f8479a37a2f28d4dd0a322f209070c8590e88dd94a9d420c4aaf0"
+      "size": 7666,
+      "sha256": "aa5097d351a83c4cd881770d279cedcbf5e753d7410acf0981adf17748aadf48"
     },
     {
       "path": "TEST_REPORT.md",
-      "size": 6938,
-      "sha256": "fddba453c482b7117ec831bc81e87e721010da3e21955f21e91c9ae0623e356e"
+      "size": 7759,
+      "sha256": "c407e84cc608a576e98e575a8102f04a62ca19a5a6ff804db3db6e0dd17f52e4"
     },
     {
       "path": "app/app.js",
@@ -45,28 +45,28 @@
     },
     {
       "path": "node/index.html",
-      "size": 3655,
-      "sha256": "299daebdf30cbaf95c8b9843753914f0af593e8e8a62da1d1d7fa17e854a7836"
+      "size": 3846,
+      "sha256": "5175b2925c745ed2ccd9f609b22b3f33cec6274af087b3fb3dc6a028015dd84b"
     },
     {
       "path": "node/node.js",
-      "size": 8124,
-      "sha256": "575f4c193e5f3ed1196144869adbf762a6a659ad247d00ee282376465c312a51"
+      "size": 11045,
+      "sha256": "fc076c3c4865f6694fe856378682b45ebeb663b61db0eea3e1d4e23042cffd03"
     },
     {
       "path": "node/style.css",
-      "size": 1110,
-      "sha256": "44e1209dc9d11d0f978a1f28e08f6dc2b3d78d9f4f5232a920bb45fc846d3ecb"
+      "size": 1672,
+      "sha256": "7d43e126ccfa82eccc3876d1d8fa5ac54bf2b6c850d3fd09e7ca501df30f9544"
     },
     {
       "path": "package.json",
       "size": 321,
-      "sha256": "fd137a33ca1e3d5627ff9b9a944db524983c6179658d2eddc210efe8311d8ebb"
+      "sha256": "f1e1ff34fd16cf0ae54cd8a53df8e44de4ddfef8b57c89bee9db57c424689341"
     },
     {
       "path": "plugin.json",
       "size": 2481,
-      "sha256": "6dca66f7ebbd0f987087c45cf179477b3d9c37c9d59b68d2ed68f7ab3a26884c"
+      "sha256": "ccc4d1c32c11bd6d5815a1ec66c24f6cf2d8cf84a69f85e7e7bbd0cd333a5299"
     },
     {
       "path": "scripts/browser-smoke.js",
@@ -116,7 +116,7 @@
     {
       "path": "service/server.mjs",
       "size": 13248,
-      "sha256": "9dfeaad5c18e92f0a3e0f406f627f968e3fc20f51b9fbba099998dbd748c7fda"
+      "sha256": "a1f5784c2e51afad4e65cf1ef6dc7cf29550d85afefab7608949608cc6903002"
     },
     {
       "path": "service/storage.mjs",
@@ -147,6 +147,11 @@
       "path": "shared/core.js",
       "size": 4938,
       "sha256": "4353724b36de8193299600234615350d7ed45a52ccf6b03ced0c443c5b79014d"
+    },
+    {
+      "path": "shared/engine-control.js",
+      "size": 1651,
+      "sha256": "de9a3ec62c790c4f2b17a9a1b804ddb82caf936ec09ec7ca9a441a26f87d8319"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -202,6 +207,11 @@
       "path": "tests/downloads.test.mjs",
       "size": 3661,
       "sha256": "0c63eb98137270c74e21e15af21afd4bdc81eed5efa26ae2f22c6e91f85a63ff"
+    },
+    {
+      "path": "tests/engine-control.test.mjs",
+      "size": 3751,
+      "sha256": "ee1a0a453f98ebb8375b6fbf247e9b32e2d64d445ffb6e56ac722f866c54fef2"
     },
     {
       "path": "tests/engine.test.mjs",

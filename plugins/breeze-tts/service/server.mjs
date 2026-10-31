@@ -89,7 +89,7 @@ export async function createWorkshop({ dataDir, host = '127.0.0.1', port = 17860
         if (path === '/api/health' && req.method === 'GET') {
           const engineReady = await engine.health() && !engineStopping;
           const engineState = engineReady ? 'ready' : engineStopping ? 'stopping' : startTask ? 'loading' : (engine.state === 'ready' || engine.external) ? 'unavailable' : engine.state;
-          json(res, { service: 'breeze-tts', protocol: 'breeze-workshop/v1', version: '0.2.1', engineReady, engineState, model: 'Breeze-TTS-2-Q8_0', busy: Boolean(jobs.active || voiceBusy), sharing: host === '0.0.0.0' }); return;
+          json(res, { service: 'breeze-tts', protocol: 'breeze-workshop/v1', version: '0.2.2', engineReady, engineState, model: 'Breeze-TTS-2-Q8_0', busy: Boolean(jobs.active || voiceBusy), sharing: host === '0.0.0.0' }); return;
         }
         if (path === '/api/voices' && req.method === 'GET') { json(res, await engine.voices()); return; }
         if (path === '/api/voices' && req.method === 'POST') {

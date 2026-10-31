@@ -2,8 +2,49 @@ import { DEFAULT_FORM, PARAMS, buildRequest, applyInputs, inputValue, jobOutputs
 import { enhanceSelects, enhanceFileInputs, syncSelects } from '../shared/controls.js';
 import { HiosBridge } from '../shared/bridge.js';
 import { WorkshopClient, loadConnection, saveConnection, fileDataUrl, referenceData } from '../shared/client.js';
+import { StatusMonitor } from '../shared/status.js';
+import { EngineControl, engineButton } from '../shared/engine-control.js';
 const $ = id => document.getElementById(id), bridge = new HiosBridge('node');
 let config = loadConnection(), client = new WorkshopClient(config, bridge), active = null, features = {}, inputs = {}, state = {}, url = '', runNumber = 0;
+let lastStatus = null, wasReady = false, closing = false, connectionReady = false, engineMessage = false, timer, syncTask = null;
+const engineControl = new EngineControl();
+function renderEngineButton() {
+  const view = engineButton(lastStatus, client, { pending: engineControl.pending, generating: Boolean(active) }), button = $('toggle-engine');
+  button.hidden = !view.visible; button.disabled = view.disabled; button.textContent = view.label; button.title = view.title;
+  button.classList.toggle('hios-primary', view.action === 'start');
+  button.setAttribute('aria-label', view.action === 'start' ? '启动模型' : '停止模型');
+}
+function connectionFailed() { lastStatus = null; wasReady = false; $('connection-label').textContent = '连接失败'; renderEngineButton(); }
+const statusMonitor = new StatusMonitor(() => client, (status) => {
+  lastStatus = status; $('connection-label').textContent = status.badge;
+  if (status.ready && !wasReady) void voices().catch(() => {});
+  if (engineMessage && !active && ['ready', 'stopped', 'error'].includes(status.state)) message(status.ready ? '模型已就绪' : status.state === 'stopped' ? '模型已停止' : '模型启动失败，请在应用的「模型与服务」查看日志', status.state === 'error');
+  wasReady = status.ready; renderEngineButton();
+}, connectionFailed);
+async function syncConnection() {
+  if (syncTask) return syncTask;
+  syncTask = (async () => {
+    const next = new WorkshopClient(loadConnection(), bridge); await next.bootstrap(); if (closing) return;
+    const keys = ['mode', 'localUrl', 'remoteUrl', 'port', 'sharing', 'accessKey'];
+    if (!connectionReady || next.adminToken !== client.adminToken || keys.some(k => next.config[k] !== client.config[k])) {
+      statusMonitor.invalidate(); client = next; lastStatus = null; wasReady = false;
+      config = { ...client.config }; fillConnection(); connectionReady = true;
+    }
+    renderEngineButton();
+  })();
+  try { await syncTask; } finally { syncTask = null; }
+}
+async function refreshStatus() { await statusMonitor.refresh(); }
+$('toggle-engine').onclick = async () => {
+  try {
+    if (engineControl.pending) return;
+    await syncConnection(); await refreshStatus();
+    const task = engineControl.toggle(client, lastStatus, Boolean(active)); renderEngineButton();
+    const action = await task; statusMonitor.invalidate(); await refreshStatus();
+    engineMessage = true; message(action === 'start' ? (lastStatus?.ready ? '模型已就绪' : '模型正在启动 / 预热，可在这里点击停止') : '模型已停止');
+  } catch (e) { message(e.message, true); }
+  finally { renderEngineButton(); }
+};
 for (const key of Object.keys(PARAMS).filter(k => !['seed', 'cfg_scale'].includes(k))) {
   const label = document.createElement('label'); label.className = 'field'; const span = document.createElement('span'); span.textContent = ({ temperature: '采样温度', top_k: 'Top K', top_p: 'Top P', repetition_penalty: '重复惩罚', split_chars: '分句预算', max_new_tokens: '每段帧数上限' })[key];
   const input = document.createElement('input'); input.id = key; input.className = 'hios-control'; input.type = 'number'; input.value = DEFAULT_FORM[key]; input.min = PARAMS[key][0]; input.max = PARAMS[key][1]; input.step = PARAMS[key][2] ? '1' : '0.05'; label.append(span, input); $('advanced').append(label);
@@ -20,16 +61,16 @@ async function voices() {
   const data = await client.request('/api/voices'), current = $('voice_id').value || state.voice_id;
   $('voice_id').replaceChildren(new Option('使用参考音频', '')); for (const v of data) $('voice_id').add(new Option(v.id, v.id)); if (data.some(v => v.id === current)) $('voice_id').value = current; updateMode();
 }
-async function connect() { const h = await client.health(); if (h.protocol !== 'breeze-workshop/v1') throw new Error('不是工坊服务地址'); $('connection-label').textContent = `${config.mode === 'remote' ? '远程' : '本机'} · ${h.engineReady ? '就绪' : '模型未启动'}`; if (h.engineReady) await voices(); }
+async function connect() { await refreshStatus(); }
 $('connect').onclick = async () => { try { if (active) throw new Error('请先结束当前任务'); config = { ...config, mode: $('connection-mode').value, [$('connection-mode').value === 'remote' ? 'remoteUrl' : 'localUrl']: $('service-url').value.trim(), accessKey: $('access-key').value.trim() }; await saveConnection(config, bridge); client = new WorkshopClient(config, bridge); await client.bootstrap(); config = { ...client.config }; fillConnection(); await connect(); message('连接已保存'); } catch (e) { message(e.message, true); } };
 $('open-settings').onclick = () => bridge.post('open-app', { appId: 'studio', payload: { page: 'connection' } });
 $('refresh-voices').onclick = () => voices().catch(e => message(e.message, true));
 async function run(payload = {}) {
-  active?.abort(); const serial = ++runNumber, controller = new AbortController(); active = controller;
-  $('run').disabled = true; $('cancel').hidden = false; const runId = payload.runId || newId();
+  engineMessage = false; active?.abort(); const serial = ++runNumber, controller = new AbortController(); active = controller;
+  $('run').disabled = true; $('cancel').hidden = false; renderEngineButton(); const runId = payload.runId || newId();
   try {
     // Reload shared connection so changes made in the application take effect without remounting.
-    config = loadConnection(); client = new WorkshopClient(config, bridge); await client.bootstrap();
+    await syncConnection();
     const values = applyInputs(form(), payload.inputs || inputs);
     const ref = inputValue((payload.inputs || inputs).reference_audio) || $('reference').files[0];
     if (values.mode !== 'design' && !values.voice_id) values.reference = await referenceData(ref);
@@ -46,7 +87,7 @@ async function run(payload = {}) {
     if (features.outputBatch) bridge.post('output-batch', { runId, outputs }); else bridge.post('output', outputs[0]);
     message(`已生成 ${job.info.duration.toFixed(1)} 秒音频`);
   } catch (e) { if (serial === runNumber) { message(e.name === 'AbortError' ? '已取消' : e.message, true); bridge.post('error', { runId, message: e.name === 'AbortError' ? '已取消生成' : e.message }); } }
-  finally { if (serial === runNumber) { active = null; $('run').disabled = false; $('cancel').hidden = true; } }
+  finally { if (serial === runNumber) { active = null; $('run').disabled = false; $('cancel').hidden = true; renderEngineButton(); void refreshStatus().catch(() => {}); } }
 }
 $('run').onclick = () => run(); $('cancel').onclick = () => active?.abort();
 bridge.on((type, payload) => {
@@ -60,10 +101,16 @@ bridge.on((type, payload) => {
   if (type === 'cancel') active?.abort();
 });
 async function initConnection() {
-  try { await client.bootstrap(); config = { ...client.config }; if (!bridge.managed && client.adminToken) await saveConnection(config); fillConnection(); await connect(); }
-  catch (e) { fillConnection(); message(e.message, true); }
+  try { await syncConnection(); if (!bridge.managed && client.adminToken) await saveConnection(config); await connect(); }
+  catch (e) { fillConnection(); connectionFailed(); message(e.message, true); }
+  clearTimeout(timer);
+  const poll = async () => {
+    try { if (!active && !engineControl.pending) await syncConnection(); await refreshStatus(); } catch { connectionFailed(); /* Keep generation messages intact. */ }
+    if (!closing) timer = setTimeout(poll, 1800);
+  };
+  if (!closing) timer = setTimeout(poll, 1800);
 }
-restore({}); enhanceSelects(); enhanceFileInputs(); fillConnection(); bridge.ready();
+restore({}); enhanceSelects(); enhanceFileInputs(); fillConnection(); renderEngineButton(); bridge.ready();
 if (!bridge.embedded) await initConnection();
 window.addEventListener('storage', e => { if (e.key === 'hios.breeze.connection.v1' && !active) { config = loadConnection(); client = new WorkshopClient(config, bridge); fillConnection(); void connect().catch(e => message(e.message, true)); } });
-window.addEventListener('beforeunload', () => { active?.abort(); if (url) URL.revokeObjectURL(url); });
+window.addEventListener('beforeunload', () => { closing = true; statusMonitor.dispose(); clearTimeout(timer); active?.abort(); if (url) URL.revokeObjectURL(url); });
