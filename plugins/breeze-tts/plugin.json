@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 2,
+  "id": "breeze-tts",
+  "name": "Breeze TTS 语音工坊",
+  "version": "0.2.0",
+  "description": "Breeze TTS 2 Q8_0 语音工坊：HIOS 自动托管、本机或局域网远程连接，支持应用、画布和应用工作流。",
+  "author": "HIOS Next",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/breeze-tts",
+  "permissions": [
+    "network",
+    "filesystem",
+    "canvas",
+    "process"
+  ],
+  "capabilities": [
+    {
+      "id": "breeze.tts",
+      "title": "Breeze 语音合成",
+      "description": "音色设计、克隆与风格引导"
+    }
+  ],
+  "contributes": {
+    "apps": [
+      {
+        "id": "studio",
+        "title": "Breeze TTS 语音工坊",
+        "entry": "app/index.html",
+        "icon": "assets/icon.svg",
+        "category": "creative"
+      }
+    ],
+    "applicationWorkflows": [
+      {
+        "id": "tts",
+        "appId": "studio",
+        "title": "Breeze 语音合成",
+        "capabilities": [
+          "audio",
+          "text"
+        ]
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "breeze.tts",
+      "title": "Breeze 语音合成",
+      "rendererEntry": "node/index.html",
+      "defaultSize": {
+        "width": 420,
+        "height": 600
+      },
+      "inputs": [
+        {
+          "id": "text",
+          "title": "文本",
+          "type": "text"
+        },
+        {
+          "id": "reference_audio",
+          "title": "参考音频",
+          "type": "audio"
+        },
+        {
+          "id": "reference_text",
+          "title": "参考转录",
+          "type": "text"
+        },
+        {
+          "id": "instruction",
+          "title": "表达指令",
+          "type": "text"
+        },
+        {
+          "id": "settings",
+          "title": "参数",
+          "type": "json"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "audio",
+          "title": "音频",
+          "type": "audio"
+        },
+        {
+          "id": "transcript",
+          "title": "文本",
+          "type": "text"
+        },
+        {
+          "id": "info",
+          "title": "信息",
+          "type": "json"
+        },
+        {
+          "id": "duration",
+          "title": "时长",
+          "type": "number"
+        }
+      ],
+      "defaultData": {
+        "mode": "design",
+        "instruction": "温柔、自然、清晰的中文旁白。",
+        "seed": 42,
+        "cfg_scale": 1,
+        "split_chars": 300
+      }
+    }
+  ]
+}

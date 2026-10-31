@@ -1,0 +1,15 @@
+{
+  "name": "hios-breeze-tts",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node service/server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "sync-ui": "node scripts/sync-ui.mjs",
+    "package": "node scripts/package.mjs"
+  }
+}

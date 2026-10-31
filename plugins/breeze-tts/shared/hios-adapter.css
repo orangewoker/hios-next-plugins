@@ -1,0 +1,3 @@
+/* Opt-in adapter: breeze-tts. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.hios-control) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+/* Media and waveform geometry are not targeted. */

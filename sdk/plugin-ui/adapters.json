@@ -78,5 +78,9 @@
   "model-gallery": {
     "controls": ".hios-control,.filter-field select,.search",
     "css": "/* Media cards and pose angle controls keep their own geometry. */"
+  },
+  "breeze-tts": {
+    "controls": ".hios-control",
+    "css": "/* Media and waveform geometry are not targeted. */"
   }
 }

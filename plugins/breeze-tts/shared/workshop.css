@@ -1,0 +1,70 @@
+:root { font:13px 'Segoe UI','Microsoft YaHei',sans-serif; color:var(--hios-text); background:var(--hios-background); --muted:var(--hios-text-secondary,#808080); --line:var(--hios-border); --accent:var(--hios-accent); }
+* { box-sizing:border-box; } body { margin:0; } [hidden] { display:none!important; } button,input,textarea,select { font:inherit; color:inherit; } button { cursor:pointer; } a { color:var(--accent); text-underline-offset:3px; } button:disabled { cursor:default; opacity:.5; } textarea { resize:vertical; line-height:1.7; } h1,h2,h3,p { margin:0; } h2 { font-size:13px; font-weight:600; } .hios-control { width:100%; min-width:0; box-shadow:none!important; } .field { display:grid; gap:7px; min-width:0; margin:12px 0; } .field>span { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; } .field small,.hint { font-size:12px; color:var(--muted); line-height:1.7; } .hint { overflow-wrap:anywhere; } .inline,.actions { display:flex; align-items:center; gap:8px; } .inline > .hios-control:not(button) { flex:1; } .inline > button.hios-control { flex:0 0 36px; width:36px; } .inline > .breeze-select { flex:1 1 0; width:0; min-width:0; } .inline > .breeze-select > .select-trigger { width:100%; } .actions { flex-wrap:wrap; } .actions button { width:auto; } .two,.advanced { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; } summary { cursor:pointer; font-size:12px; color:var(--muted); padding:10px 0; } details { border-top:1px solid var(--line); } .section-heading { display:flex; gap:12px; align-items:center; justify-content:space-between; } .text-button { padding:4px 0; background:none; color:var(--accent); border:0; font-size:12px; } audio { width:100%; height:36px; } input[type=range],input[type=checkbox],input[type=radio],progress { accent-color:var(--accent); } .error-text,.error { color:var(--hios-negative,#c64e4e); font-size:12px; } .tiny-tag { display:inline-flex; font-size:10px; font-weight:500; padding:3px 6px; border:1px solid var(--line); border-radius:5px; color:var(--muted); } .empty { padding:18px 0; color:var(--muted); font-size:12px; line-height:1.7; } .check { display:flex; align-items:center; gap:7px; font-size:12px; line-height:1.7; } input[type=file] { font-size:11px; } :focus-visible { outline:2px solid var(--accent); outline-offset:2px; } .breeze-select { min-width:0; width:100%; } .select-trigger { display:flex; align-items:center; justify-content:space-between; gap:8px; text-align:left; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .select-menu { position:fixed; z-index:1000; overflow:auto; overscroll-behavior:contain; border:1px solid var(--line); border-radius:var(--hios-radius-control); padding:4px; background:var(--hios-surface); color:var(--hios-text); box-shadow:0 8px 24px #0003; } .select-menu [role=option] { padding:9px 10px; border-radius:max(3px,calc(var(--hios-radius-control) - 4px)); cursor:pointer; font-size:12px; overflow-wrap:anywhere; } .select-menu [aria-selected=true] { background:color-mix(in srgb,var(--accent) 13%,var(--hios-surface)); color:var(--accent); } .select-menu .highlighted { background:color-mix(in srgb,var(--accent) 20%,var(--hios-surface)); } .select-menu [aria-disabled=true] { opacity:.4; cursor:default; }
+@media(prefers-color-scheme:dark) { :root:not([data-theme]) { color-scheme:dark; --hios-background:#262626; --hios-surface:#303030; --hios-control:#222; --hios-text:#eee; --hios-border:#424242; --muted:#aaa; } }
+
+/* Keep the native file picker behavior, but theme its visible button as well. */
+input[type=file].hios-control { display:block; width:100%; color:var(--hios-text); line-height:1.5; }
+input[type=file]::file-selector-button {
+  margin:0 10px 0 0; padding:5px 10px;
+  border:1px solid var(--line); border-radius:max(3px,calc(var(--hios-radius-control) - 4px));
+  background:var(--hios-surface); color:var(--hios-text); font:inherit; cursor:pointer;
+}
+input[type=file]::file-selector-button:hover { background:color-mix(in srgb,var(--accent) 12%,var(--hios-surface)); border-color:var(--accent); }
+input[type=file]:disabled::file-selector-button { opacity:.5; cursor:default; }
+
+/* Use our own visible file controls instead of OS/browser themed sub-controls. */
+.file-picker.hios-control { display:flex; align-items:center; gap:10px; min-width:0; }
+.file-trigger {
+  flex:none; padding:5px 10px; font:inherit; white-space:nowrap;
+  color:var(--hios-text); background:var(--hios-surface); border:1px solid var(--line);
+  border-radius:max(3px,calc(var(--hios-radius-control) - 4px));
+}
+.file-trigger:hover { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,var(--hios-surface)); }
+.file-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; color:var(--muted); }
+input::placeholder, textarea::placeholder { color:var(--muted); opacity:.8; }
+input[type=number] { appearance:textfield; }
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { appearance:none; margin:0; }
+input[type=checkbox], input[type=radio] {
+  appearance:none; display:inline-grid; place-content:center; vertical-align:middle;
+  flex:0 0 16px; width:16px; height:16px; margin:0;
+  border:1px solid var(--line); background:var(--hios-control); cursor:pointer;
+}
+input[type=checkbox] { border-radius:4px; }
+input[type=radio] { border-radius:50%; }
+input[type=checkbox]:hover, input[type=radio]:hover { border-color:var(--accent); }
+input[type=checkbox]:checked { border-color:var(--accent); background:var(--accent); }
+input[type=checkbox]:checked::after { content:''; width:4px; height:8px; border:solid var(--hios-accent-contrast,white); border-width:0 2px 2px 0; transform:translateY(-1px) rotate(45deg); }
+input[type=radio]:checked { border-color:var(--accent); }
+input[type=radio]:checked::after { content:''; width:8px; height:8px; background:var(--accent); border-radius:50%; }
+input[type=checkbox]:disabled, input[type=radio]:disabled { opacity:.5; cursor:default; }
+input[type=range] { appearance:none; background:transparent; cursor:pointer; width:100%; }
+input[type=range]::-webkit-slider-runnable-track { height:5px; border:1px solid var(--line); border-radius:999px; background:var(--hios-control); }
+input[type=range]::-webkit-slider-thumb { appearance:none; width:14px; height:14px; margin-top:-5px; border:1px solid var(--accent); border-radius:50%; background:var(--accent); }
+input[type=range]::-moz-range-track { height:5px; border:1px solid var(--line); border-radius:999px; background:var(--hios-control); }
+input[type=range]::-moz-range-thumb { width:14px; height:14px; border:1px solid var(--accent); border-radius:50%; background:var(--accent); }
+progress { appearance:none; border:0; border-radius:999px; background:var(--hios-control); overflow:hidden; }
+progress::-webkit-progress-bar { background:var(--hios-control); border-radius:999px; }
+progress::-webkit-progress-value { background:var(--accent); border-radius:999px; }
+progress::-moz-progress-bar { background:var(--accent); border-radius:999px; }
+
+/* The host cannot style scrollbars inside the plugin frame. Theme both the
+   document scrollbar and nested textareas, popovers, lists and log panels. */
+:root {
+  --breeze-scroll-thumb:color-mix(in srgb,var(--hios-text) 35%,var(--hios-background));
+  --breeze-scroll-thumb-hover:color-mix(in srgb,var(--hios-accent) 65%,var(--hios-background));
+}
+:root::-webkit-scrollbar, *::-webkit-scrollbar { width:8px; height:8px; }
+:root::-webkit-scrollbar-track, *::-webkit-scrollbar-track,
+:root::-webkit-scrollbar-corner, *::-webkit-scrollbar-corner { background:transparent; }
+:root::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb {
+  background:var(--breeze-scroll-thumb); border:2px solid transparent;
+  background-clip:padding-box; border-radius:999px; min-height:24px;
+}
+:root::-webkit-scrollbar-thumb:hover, *::-webkit-scrollbar-thumb:hover,
+:root::-webkit-scrollbar-thumb:active, *::-webkit-scrollbar-thumb:active { background-color:var(--breeze-scroll-thumb-hover); }
+:root::-webkit-scrollbar-button, *::-webkit-scrollbar-button { display:none; width:0; height:0; }
+/* Non-Chromium browsers use the standard properties. Keep them unset in
+   Chromium/WebView2 so they do not override the custom thumb hover above. */
+@supports not selector(::-webkit-scrollbar) {
+  :root, * { scrollbar-width:thin; scrollbar-color:var(--breeze-scroll-thumb) transparent; }
+}

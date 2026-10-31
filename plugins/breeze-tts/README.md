@@ -1,0 +1,67 @@
+# Breeze TTS 语音工坊 · HIOS 插件
+
+首发 Breeze TTS 2 **Q8_0**；Qwen3-TTS 后续添加。本机推理或调用另一台电脑的服务。无多人平台、任务队列、额度、穿透或路由配置；忙时直接返回 409。
+
+## 在 HIOS 中安装和使用
+
+推荐 **HIOS Next ≥ 3.8.8**，在插件库安装「Breeze TTS 语音工坊」，或在插件管理中粘贴 [官方安装地址](https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/breeze-tts)。本地安装可在「插件 → 安装本地插件」中选择本目录；ZIP 包需先解压，选择包含 `plugin.json` 的目录。
+
+**开发版安装（HIOS 主程序源码仓库）**：仅把源码放进主程序仓库 `plugins/breeze-tts` 不代表已经安装。关闭开发版后，在 **HIOS 主程序仓库根目录**执行 `node scripts/install-dev-plugin.mjs`，再用 `npm run dev` 启动（这两个命令不适用于公开插件仓库）。脚本通过真实 PluginStore 安装到当前工作区的 `ls/plugins`，保留其他插件并备份注册表，不访问正式版数据；随后会校验应用和节点入口。它是显式安装步骤，不会在卸载后自动装回。源码修改后可再次执行该命令覆盖安装。
+
+1. 在应用中打开 **Breeze TTS 语音工坊**。本机服务由 HIOS 自带的 Node/Electron 运行时自动托管，不要求安装系统 Node、Python 或 CUDA Toolkit。
+2. **模型与服务**：确认模型许可，下载 Windows x64 Vulkan 运行库（约 74 MB）与 Q8_0 权重（3.57 GB），然后启动模型。支持暂停、续传、SHA-256 校验和修复。
+3. **语音创作**：音色设计、参考 WAV 克隆、风格引导。生成结果可试听、下载，并自动导入当前客户端的 HIOS 音频素材库。
+4. **设置**：本机/远程连接、远程服务地址和密钥、本机端口、允许局域网连接。修改端口/共享方式保存后服务会重启，需要重新启动模型。
+5. **画布**：添加「Breeze 语音合成」，使用画布运行按钮。节点仅保留创作参数与折叠高级参数；共享连接设置可直接跳转应用。
+6. **应用工作流**：选择 Breeze 语音合成。正文、模式、参考音频、转录、表达与所有采样参数均可配置，音频返回当前客户端的本地素材 URL。
+
+关闭面板不会关闭服务；禁用、覆盖安装、更新、卸载和退出 HIOS 时清理托管进程。端口冲突会明确报错，不接管不受 HIOS 管理的独立服务。默认仅监听本机，Breeze 原生引擎始终绑定 loopback，只有工坊端口可向局域网开放。
+
+## 电脑 A / 电脑 B
+
+**电脑 A**：本机模式下载并启动模型，在设置中开启局域网共享，复制服务地址和连接密钥。
+
+**电脑 B**：在应用设置中选远程模式，填写 A 的地址（如 `http://192.168.1.20:17860`）与密钥，测试并保存。B 不启动本机服务、不下载模型，也不需要本机显卡。模型与服务管理只在 A 上进行。也可以用浏览器打开 A 的地址。
+
+应用、节点、隐藏工作流共用连接。新版 HIOS 的远程密钥通过系统安全存储加密保存；Windows 使用 DPAPI。密钥不写入画布 state、工作流参数或插件包。另一台电脑的服务器文件路径不会作为输出地址传回；音频会被下载并导入 B 的素材库。
+
+## 设置分布
+
+| 位置 | 配置 |
+| --- | --- |
+| 应用 → 设置 | 本机/远程、地址和密钥、端口、局域网共享、复制服务信息 |
+| 应用 → 模型与服务 | 下载、暂停、校验修复、模型启停、强制 CPU、运行日志与数据目录 |
+| 应用 → 创作 / 节点 | 模式、正文、音色、参考 WAV、转录、表达、CFG、seed |
+| 高级生成参数 | temperature、top-k、top-p、重复惩罚、分句预算、每段帧数上限 |
+| 音色库 | 上传参考 WAV 与准确转录，保存至服务端供其他客户端复用 |
+
+所有下拉控件使用自定义主题化列表，支持键盘、焦点、选中态与实时换肤，不使用系统弹出菜单。首版不提供虚假的数值语速滑杆或 Qwen 可用入口。
+
+## 独立运行 / 兼容旧 HIOS
+
+独立服务需要 Node.js 22+：双击 `start-local.cmd`（仅本机）或 `start-lan.cmd`（局域网），打开 `http://127.0.0.1:17860/app/index.html`。
+
+CLI：`node service/server.mjs --lan --port 17860 --data-dir "D:\BreezeData"`。
+
+独立默认数据目录为 `%LOCALAPPDATA%\HIOS\breeze-tts`；HIOS 托管模式位于当前 HIOS 数据根目录的 `plugin-services/breeze-tts/data`，模型、历史、运行库和插件代码分离。
+
+旧 HIOS 没有宿主托管接口时，插件可连接已运行的独立工坊。独立浏览器连接存当前浏览器；旧宿主音频 data URL 上限对应 WAV 约 48 MiB。新版通过宿主直接下载导入（上限 512 MiB），不经过大体积 base64 IPC；节点超时设为 25 分钟。
+
+## 测试与打包
+
+- 插件目录：`npm test`（无 npm 运行依赖）。
+- 仓库根目录：`node --test tests/breeze-workshop-host.test.mjs`。
+- 真实 sidecar 链路：先 `npm run build:tauri:sidecar`，再 `node scripts/verify-breeze-sidecar.mjs`。使用隔离临时数据、真实插件安装/IPC/安全存储/素材协议；音频来自显式正弦音测试引擎。
+- UI SDK：`node scripts/sync-ui.mjs`。构建好的 HTML/JS/CSS 随插件发布，不要求安装器构建。
+- 打包：`npm run package`。ZIP 不含模型、运行库、连接密钥或个人音频。
+
+**未下载 3.57 GB 模型，尚未完成真实人声合成、显存和性能验证。** Windows 运行库下载/校验/解压及 `--help` 已验证。测试正弦音不代表真人声效果；生产路径不会自动降级为测试音。详细结果见 [TEST_REPORT.md](./TEST_REPORT.md)。
+
+首版本机自动安装仅支持 Windows x64（AVX2，Vulkan / CPU）；其他平台可作为远程客户端。实时流式试听、其他本机平台与 Qwen3-TTS 留待后续。
+
+## 来源与许可
+
+- 引擎：[Breeze-TTS-2.cpp v0.1.6](https://github.com/HoppouAI/Breeze-TTS-2.cpp/releases/tag/v0.1.6)，Apache-2.0。
+- Q8_0 固定 revision `81b22bad9f05b99970e30c5ee5e4bbc52fedf2f8`，SHA-256 `a02bcc4b69b0601032727f8040c4942149b1b73aa0f69022fe5aaa6a8f0ef879`。
+- 模型/衍生权重和自托管输出适用 [BreezeBlue Research and Non-Commercial License](https://huggingface.co/BreezeBlue/Breeze-TTS-2/blob/main/LICENSE)，商业用途需授权；当前为用户指定的内部开发名称。
+- `vendor/fflate.mjs` 为 MIT，附原 LICENSE；运行库随附其上游第三方许可。
