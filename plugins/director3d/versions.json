@@ -3,6 +3,17 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.8",
+      "ref": "director3d-v0.1.8",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "新增人偶位置/朝向、16关节姿态、镜像预设及纯色/天空环境编辑。",
+        "新增当前镜头静帧和16关节骨架参考图输出。",
+        "支持固定时间戳WebCodecs离线MP4导出，保留兼容录制回退。",
+        "界面跟随宿主主题，保持场景渲染独立。"
+      ]
+    },
+    {
       "version": "0.1.7",
       "ref": "director3d-v0.1.7",
       "releasedAt": "2026-10-28",

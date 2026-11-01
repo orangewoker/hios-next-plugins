@@ -7,12 +7,12 @@
     :dshModels="dshModels" :dshModelsLoading="dshModelsLoading" :dshModelsError="dshModelsError"
     :addingMannequin="busy" :exportingVideo="exportingVideo" :exportingImage="exportingImage" :exportProgress="exportProgress"
     @selectPlan="doc.selectedPlanId = $event" @loadModels="loadModels" @loadDshModels="loadDshModels" @generate="generate" @addMannequin="addMannequin" @removeMannequin="removeMannequin"
-    @exportImage="exportImage" @exportVideo="exportVideo" @editInstruction="doc.prompt = $event" @close="post('close')">
+    @exportReference="exportReference" @exportImage="exportImage" @exportVideo="exportVideo" @editInstruction="doc.prompt = $event" @close="post('close')">
     <template #toolbar>
       <div class="hios-toolbar">
         <button :disabled="busy" @click="newProject">新建工程</button>
         <button :disabled="busy" @click="makeCameraPlan">关键帧生成运镜</button>
-        <button :disabled="busy" @click="openJson">场景 JSON</button>
+        <button :disabled="busy" @click="poseOpen=true">姿态参考</button><button :disabled="busy" @click="openJson">场景 JSON</button>
         <button :disabled="busy" @click="fileInput?.click()">导入工程</button>
         <button :disabled="busy" @click="exportProject">导出工程</button>
         <button v-if="busy" @click="cancel">取消任务</button>
@@ -24,6 +24,7 @@
       <small class="reference-summary">{{ references.length ? `已连接 ${references.length} 项参考（最多使用 4 张图片）` : '连接画布文字 / 图片节点作为参考；也可手动布景与运镜。' }}</small>
     </template>
   </SceneEditor>
+  <PoseEditor v-if="poseOpen" :document="doc" :busy="busy" @close="poseOpen=false" @apply="applyPose" />
   <input ref="fileInput" hidden type="file" accept=".director3d,.json" @change="importLocal" />
   <ElDialog v-model="jsonOpen" title="编辑完整工程 JSON" width="85%" append-to-body>
     <p>支持基础几何体与 16 关节人偶；确认时校验结构与真实渲染，失败不会覆盖工程。</p>
@@ -35,6 +36,8 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { ElDialog, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import SceneEditor from './sceneEditor.vue';
+import PoseEditor from './PoseEditor.vue';
+import { renderSkeleton } from './referenceImage';
 import { initialDocument, documentSchema, type DirectorDocument } from './document';
 import { createMannequinObject, createStage, disposeStage, getSceneLighting } from './scene';
 import { directorPlanSchema, prepareSceneAnimation, type DirectorGeneration } from './sceneAnimation';
@@ -52,6 +55,7 @@ const loaded = ref(false), status = ref('正在连接 HIOS…'), busy = ref(fals
 const models = ref<NodeAiModel[]>([]), tasks = ref<DirectorGeneration[]>([]), references = ref<unknown[]>([]);
 const dshModels = ref<DshModelCatalog | null>(null), dshModelsLoading = ref(false), dshModelsError = ref('');
 const exportingVideo = ref(false), exportingImage = ref(''), exportProgress = ref(0);
+const poseOpen = ref(false);
 const jsonOpen = ref(false), jsonText = ref(''), fileInput = ref<HTMLInputElement>();
 let documentKey = crypto.randomUUID();
 let initialized = false, disposed = false, restoring = false, timer: ReturnType<typeof setTimeout> | undefined;
@@ -326,6 +330,8 @@ async function exportVideo(aspect: number) {
     finally { exportingVideo.value = false; }
   });
 }
+function applyPose(next: DirectorDocument) { void edit(async()=>{ next.selectedPlanId=''; await commit(next,controller!.signal); poseOpen.value=false; }); }
+async function exportReference(anchor: CameraAnchor, aspect:number, skeleton:boolean) { await edit(async()=>{ const file=skeleton ? await renderSkeleton(plain(doc.value.scene),anchor,aspect,controller!.signal) : await renderImage(plain(doc.value.scene),anchor,aspect,0,controller!.signal,undefined,plain(lighting.value),plain(doc.value.sceneSettings)); await output(file,'image',true); }); }
 function exportProject() { void edit(async () => { await output(new File([JSON.stringify(doc.value, null, 2)], '场景.director3d', { type: 'application/x-hios-director3d' }), 'file', false); }); }
 function openJson() { jsonText.value = JSON.stringify(doc.value, null, 2); jsonOpen.value = true; }
 function applyJson() { void edit(async () => { if (jsonText.value.length > 4_000_000) throw new Error('工程文件过大'); await commit(documentSchema.parse(JSON.parse(jsonText.value)), controller!.signal); jsonOpen.value = false; }); }

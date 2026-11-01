@@ -1,3 +1,4 @@
+import { renderOfflineVideo } from './offlineVideo';
 import { createStage, disposeStage, type LightingSettings, type SceneDocument, type SceneSettings } from "./scene";
 import { applyCamera, prepareMotion, sampleMotion, type CameraAnchor } from "./motion";
 import { prepareSceneAnimation, type DirectorPlan } from "./sceneAnimation";
@@ -21,6 +22,7 @@ export async function renderImage(scene: SceneDocument, anchor: CameraAnchor, as
 
 export async function renderVideo(scene: SceneDocument, plan: DirectorPlan, aspect: number, signal: AbortSignal, onProgress: (value: number) => void, lighting?: LightingSettings, settings?: SceneSettings, fallback = false): Promise<File> {
   signal.throwIfAborted();
+  if (!fallback) { const file = await renderOfflineVideo(scene,plan,aspect,signal,onProgress,lighting,settings); if(file) return file; }
   const candidates = fallback ? ['video/webm;codecs=vp8', 'video/webm'] : ["video/mp4;codecs=avc1.420028", "video/mp4", "video/webm;codecs=vp8", "video/webm"];
   const mimeType = typeof MediaRecorder !== "undefined" && candidates.find(type => MediaRecorder.isTypeSupported(type));
   if (!mimeType) throw new Error("当前浏览器不支持视频导出，请更新浏览器或桌面 WebView2 运行时");

@@ -46,7 +46,7 @@
             <span>正在载入场景</span>
           </div>
         </div>
-        <div class="playbackBar">
+        <div class="playbackBar"><el-button :disabled="!ready || exportingVideo" @click="exportReference(false)">静帧参考</el-button><el-button :disabled="!ready || exportingVideo" @click="exportReference(true)">骨架参考</el-button>
           <el-popover trigger="click" placement="top-start" :width="280">
             <template #reference>
               <el-button :icon="IconSettings" :disabled="!ready" aria-label="场景设置">设置</el-button>
@@ -207,7 +207,7 @@ const props = defineProps<{
   exportingImage: string;
   exportProgress?: number;
 }>();
-const emit = defineEmits<{ editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; loadDshModels: []; close: []; addMannequin: []; removeMannequin: [objectId: string]; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
+const emit = defineEmits<{ exportReference:[anchor:CameraAnchor,aspect:number,skeleton:boolean]; editInstruction: [value: string]; selectPlan: [id: string]; generate: []; loadModels: []; loadDshModels: []; close: []; addMannequin: []; removeMannequin: [objectId: string]; exportVideo: [aspect: number]; exportImage: [anchor: CameraAnchor, aspect: number, time: number] }>();
 const anchors = defineModel<CameraAnchor[]>("anchors", { default: () => [] });
 const lighting = defineModel<LightingSettings>("lighting", { required: true });
 const sceneSettings = defineModel<SceneSettings>("sceneSettings", { required: true });
@@ -489,6 +489,7 @@ watch(sceneSettings, value => {
 watch(() => [lightingDraft.value.azimuth, lightingDraft.value.elevation], ([azimuth, elevation]) => {
   if (runtime) applyLighting(runtime, { ...lighting.value, azimuth: azimuth!, elevation: elevation! });
 });
+function exportReference(skeleton:boolean) { if(!runtime || !ready.value)return; pausePlayback(); emit('exportReference',anchorSchema.parse({...captureCamera(runtime),time:0}),sceneAspect.value,skeleton); }
 function addAnchor() {
   if (!ready.value || !runtime) return;
   if (anchors.value.length >= 100) return void ElMessage.warning("最多记录 100 个关键帧");
