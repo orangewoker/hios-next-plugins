@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.8",
+  "version": "0.2.10",
   "files": [
     {
       "path": "README.md",
@@ -25,13 +25,13 @@
     },
     {
       "path": "plugin.json",
-      "size": 1499,
-      "sha256": "d20bf3cee14f2197fd0aca9ffce7cd108d99416ecf6692747ebdd86718d9ba5c"
+      "size": 1500,
+      "sha256": "259fa3f27e558074653cee474d7705f91274427693298f3b3abd817bb4e17b1a"
     },
     {
       "path": "runtime/index.html",
-      "size": 1552,
-      "sha256": "2a1af4d7a1dd93e4f795ddfa9d861a1635abe0add5a11f452b5267a9dbd6162d"
+      "size": 1701,
+      "sha256": "e81913c3b86c3a27e1fd3d4b5e9e29d0dcf1f702d171f76c69fcc4b7627bf9bf"
     },
     {
       "path": "runtime/node.js",
@@ -50,8 +50,8 @@
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 808,
-      "sha256": "5d67120459629a056a9f04e2d0fb8caff6e5ccce75f919dba9479321d363d114"
+      "size": 1117,
+      "sha256": "2fa644a6a7f4fffd88a0b07c5fe466c09656f395aa4c54932e141a7926c411b1"
     },
     {
       "path": "shared/hios-ui.css",
@@ -65,8 +65,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2668,
-      "sha256": "cc3e1caff17c911e79db9c63721941e99ca351c19895696b70ab6a2aab3b6284"
+      "size": 3145,
+      "sha256": "b78a1006d105862de3bf71e84c81137022f32a2c82f184f3bac964f8431c0ce4"
     }
   ]
 }

@@ -3,6 +3,15 @@
   "pluginId": "k2-prompt-generator",
   "versions": [
     {
+      "version": "0.2.10",
+      "ref": "k2-prompt-generator-v0.2.10",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "修复节点主题接入及按钮、标题、面板颜色。",
+        "补齐发布文件增量校验清单。"
+      ]
+    },
+    {
       "version": "0.2.9",
       "ref": "k2-prompt-generator-v0.2.9",
       "releasedAt": "2026-11-01",
