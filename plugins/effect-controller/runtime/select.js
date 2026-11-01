@@ -26,10 +26,12 @@ function place() {
   if (!active) return;
   const {select,trigger} = active;
   if (!select.isConnected || select.disabled || select.hidden || !trigger.getClientRects().length) return close();
-  const r = trigger.getBoundingClientRect();
-  const app = document.getElementById('app').getBoundingClientRect();
+  const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+  const rect = element => { const r=element.getBoundingClientRect(); return {left:r.left/zoom,top:r.top/zoom,bottom:r.bottom/zoom,width:r.width/zoom}; };
+  const r = rect(trigger);
+  const app = rect(document.getElementById('app'));
   if (r.bottom <= app.top || r.top >= app.bottom) return close();
-  const width = document.documentElement.clientWidth, height = document.documentElement.clientHeight;
+  const width = innerWidth/zoom, height = innerHeight/zoom;
   const below = Math.max(0,height-r.bottom-10), above = Math.max(0,r.top-10);
   const up = below < Math.min(160,menu.scrollHeight) && above > below;
   const maxHeight = Math.min(280,up?above:below);
@@ -37,7 +39,7 @@ function place() {
   menu.style.width = `${menuWidth}px`;
   menu.style.maxHeight = `${maxHeight}px`;
   menu.style.left = `${Math.max(6,Math.min(r.left,width-menuWidth-6))}px`;
-  menu.style.top = `${up?r.top-menu.getBoundingClientRect().height-4:r.bottom+4}px`;
+  menu.style.top = `${up?r.top-menu.getBoundingClientRect().height/zoom-4:r.bottom+4}px`;
   menu.dataset.placement = up?'top':'bottom';
   frame = requestAnimationFrame(place);
 }

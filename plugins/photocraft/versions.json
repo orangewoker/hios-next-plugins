@@ -3,6 +3,14 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.5.4",
+      "ref": "photocraft-v0.5.4",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "修复节点内部高清缩放导致的下拉菜单错位；节点自适应布局变化时保持菜单贴合控件。"
+      ]
+    },
+    {
       "version": "0.5.3",
       "ref": "photocraft-v0.5.3",
       "releasedAt": "2026-10-28",

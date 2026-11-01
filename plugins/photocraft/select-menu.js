@@ -35,12 +35,20 @@ export function installSelectMenus() {
         };
         menu.append(item); if (!item.disabled) items.push(item);
       }
-      const r = button.getBoundingClientRect();
-      menu.style.width = `${Math.min(Math.max(r.width, 150), innerWidth - 16)}px`;
-      const above = r.top > innerHeight - r.bottom;
-      menu.style.maxHeight = `${Math.max(32, Math.min(280, (above ? r.top : innerHeight - r.bottom) - 8))}px`;
-      menu.style.left = `${Math.max(8, Math.min(r.left, innerWidth - menu.offsetWidth - 8))}px`;
-      menu.style.top = `${above ? Math.max(4, r.top - menu.offsetHeight - 4) : r.bottom + 4}px`;
+      let positionFrame = 0;
+      const position = () => {
+        if (!button.isConnected || button.disabled || !button.getClientRects().length) { close(); return; }
+        const zoom=Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1;
+        const raw=button.getBoundingClientRect(), r={left:raw.left/zoom,top:raw.top/zoom,bottom:raw.bottom/zoom,width:raw.width/zoom};
+        const width=innerWidth/zoom, height=innerHeight/zoom;
+        menu.style.width = `${Math.min(Math.max(r.width, 150), width - 16)}px`;
+        const above = r.top > height - r.bottom;
+        menu.style.maxHeight = `${Math.max(0, Math.min(280, (above ? r.top : height - r.bottom) - 8))}px`;
+        menu.style.left = `${Math.max(8, Math.min(r.left, width - menu.offsetWidth - 8))}px`;
+        menu.style.top = `${above ? Math.max(4, r.top - menu.offsetHeight - 4) : r.bottom + 4}px`;
+        positionFrame=requestAnimationFrame(position);
+      };
+      position();
       const dismiss = e => { if (!menu.contains(e.target) && !button.contains(e.target)) close(); };
       const key = e => {
         if (e.key === 'Escape') { e.preventDefault(); close(); button.focus(); }
@@ -51,6 +59,7 @@ export function installSelectMenus() {
         }
       };
       close = () => {
+        cancelAnimationFrame(positionFrame);
         menu.remove(); button.setAttribute('aria-expanded', 'false');
         document.removeEventListener('pointerdown', dismiss, true);
         document.removeEventListener('keydown', key, true);

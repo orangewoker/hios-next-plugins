@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "pluginId": "ai-prompt-library",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "files": [
     {
       "path": "README.md",
-      "size": 5182,
-      "sha256": "2faa246f1df0d8c174591367839bbf8a7ec9c3a925924db5f03da80ccf2d6faa"
+      "size": 5892,
+      "sha256": "b54ac4b6b3372009f265f3e039d7e86105b1b34a84316e0f35437255662d4811"
     },
     {
       "path": "plugin.json",
       "size": 1612,
-      "sha256": "de926a75d8b91e73ff9b549e71d3eeb3f07ac1277d998358790a1b3e4b444bac"
+      "sha256": "b3fda55df783538cc62c098553a5ed06b38aa0de6906f1e5be15e0aa2896bea6"
     },
     {
       "path": "runtime/index.html",
-      "size": 66709,
-      "sha256": "1905dc04ed0984ff1d050612de80ffc31e4445f5c14d746938043e8cf63126b3"
+      "size": 73243,
+      "sha256": "5dd35f2b423b22bf5bd9b96150c3e724a9bb8fe9fdd733f0725c17b740dc1445"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -35,8 +35,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1972,
-      "sha256": "fa5622b093ef6155b72c96a0a7aa7288ad68301c3f94ce53d60f8bfc8803e7a3"
+      "size": 2386,
+      "sha256": "beab4253a08c3251755f34aa8318e8b18f256c780ba19d5e67f066be1c8c4c5c"
     }
   ]
 }

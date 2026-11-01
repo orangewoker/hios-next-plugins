@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "breeze-tts",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "files": [
     {
       "path": ".gitignore",
@@ -66,7 +66,7 @@
     {
       "path": "plugin.json",
       "size": 2481,
-      "sha256": "ccc4d1c32c11bd6d5815a1ec66c24f6cf2d8cf84a69f85e7e7bbd0cd333a5299"
+      "sha256": "fd6dc505fa8569b847516ac5708b297ff955bba96c48637298f596fc9f1b6da6"
     },
     {
       "path": "scripts/browser-smoke.js",
@@ -140,8 +140,8 @@
     },
     {
       "path": "shared/controls.js",
-      "size": 6790,
-      "sha256": "027f1f9edc64181cd13c8a637a040025ef1f93f21540f92d4d9c02ddfda9dd69"
+      "size": 7232,
+      "sha256": "9e522fccc1af8f8307ec668e85860623982f83bc9e3a72cf464d54a6252ce971"
     },
     {
       "path": "shared/core.js",
@@ -242,6 +242,11 @@
       "path": "vendor/fflate.mjs",
       "size": 90922,
       "sha256": "b7ca4450b19559a1d50eb381adcee94b82449674be4cd17789d9beba7e6122a1"
+    },
+    {
+      "path": "versions.json",
+      "size": 333,
+      "sha256": "1800167e9f0792530a4f1d8e3b77de78f3a2627f083bed82cbee2b46d562f74c"
     }
   ]
 }

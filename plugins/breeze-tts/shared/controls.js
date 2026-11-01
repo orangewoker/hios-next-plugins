@@ -31,19 +31,28 @@ export function enhanceSelects(root = document) {
     wrap.append(button); document.body.append(menu);
     let cursor = 0, prefix = '', prefixTime = 0;
     const options = () => [...select.options];
+    let positionFrame = 0;
     const position = () => {
-      const r = button.getBoundingClientRect(), height = Math.min(menu.scrollHeight, 240, innerHeight - 16);
-      menu.style.width = `${Math.min(Math.max(r.width, 160), innerWidth - 16)}px`;
-      menu.style.left = `${Math.max(8, Math.min(r.left, innerWidth - menu.offsetWidth - 8))}px`;
-      menu.style.top = `${Math.max(8, r.bottom + height + 6 > innerHeight && r.top > height ? r.top - height - 4 : Math.min(r.bottom + 4, innerHeight - height - 8))}px`;
-      menu.style.maxHeight = `${Math.max(48, Math.min(240, innerHeight - parseFloat(menu.style.top) - 8))}px`;
+      cancelAnimationFrame(positionFrame);
+      if (menu.hidden) return;
+      if (!button.isConnected || button.disabled || !button.getClientRects().length) { close(); return; }
+      const zoom=Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1;
+      const raw=button.getBoundingClientRect(), r={left:raw.left/zoom,top:raw.top/zoom,bottom:raw.bottom/zoom,width:raw.width/zoom};
+      const width=innerWidth/zoom, height=innerHeight/zoom;
+      const below=Math.max(0,height-r.bottom-12), above=Math.max(0,r.top-12);
+      const up=below<Math.min(menu.scrollHeight,240)&&above>below;
+      menu.style.width=`${Math.min(Math.max(r.width,160),width-16)}px`;
+      menu.style.maxHeight=`${Math.min(240,up?above:below)}px`;
+      menu.style.left=`${Math.max(8,Math.min(r.left,width-menu.offsetWidth-8))}px`;
+      menu.style.top=`${up?r.top-menu.offsetHeight-4:r.bottom+4}px`;
+      positionFrame=requestAnimationFrame(position);
     };
     const paint = () => {
       [...menu.children].forEach((el, i) => { el.classList.toggle('highlighted', i === cursor); el.setAttribute('aria-selected', String(options()[i]?.selected || false)); });
       button.setAttribute('aria-activedescendant', menu.children[cursor]?.id || '');
       menu.children[cursor]?.scrollIntoView({ block: 'nearest' });
     };
-    const close = (focus = false) => { menu.hidden = true; button.setAttribute('aria-expanded', 'false'); button.removeAttribute('aria-activedescendant'); if (opened?.button === button) opened = null; if (focus) button.focus(); };
+    const close = (focus = false) => { cancelAnimationFrame(positionFrame); menu.hidden = true; button.setAttribute('aria-expanded', 'false'); button.removeAttribute('aria-activedescendant'); if (opened?.button === button) opened = null; if (focus) button.focus(); };
     const choose = i => { if (options()[i]?.disabled) return; select.selectedIndex = i; select.dispatchEvent(new Event('input', { bubbles: true })); select.dispatchEvent(new Event('change', { bubbles: true })); sync(); close(true); };
     const sync = () => {
       button.textContent = select.selectedOptions[0]?.textContent || '请选择'; button.disabled = select.disabled;

@@ -3,6 +3,15 @@
   "pluginId": "ai-prompt-library",
   "versions": [
     {
+      "version": "0.3.1",
+      "ref": "ai-prompt-library-v0.3.1",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "修复节点内部高清缩放导致的下拉菜单错位；节点自适应布局变化时保持菜单贴合控件。",
+        "保存区域增加分类刷新与新建分类；新增管理员登录、退出、过期提示，凭证仅保留在当前节点会话。"
+      ]
+    },
+    {
       "version": "0.3.0",
       "ref": "ai-prompt-library-v0.3.0",
       "releasedAt": "2026-10-30",

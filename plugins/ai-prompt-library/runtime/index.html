@@ -115,12 +115,22 @@
           <label>服务地址<input id="serverUrl" inputmode="url" placeholder="http://NAS-IP:8765" autocomplete="off" /></label>
           <label>访问密钥<div class="input-wrap"><input id="apiKey" class="secret" type="password" placeholder="填写 ComfyUI / API Key" autocomplete="off" /><button id="revealKey" class="reveal" type="button" aria-label="显示或隐藏密钥">显示</button></div></label>
           <div class="actions"><button id="connect" class="btn primary" type="button">连接并读取分类</button><button id="clearKey" class="btn" type="button">清除密钥</button></div>
+          <details id="adminLoginPanel">
+            <summary>管理员登录</summary>
+            <div class="panel-body">
+              <label>管理员账号<input id="adminUsername" autocomplete="username" placeholder="提示词库管理员账号" /></label>
+              <label>管理员密码<input id="adminPassword" type="password" autocomplete="current-password" placeholder="提示词库管理员密码" /></label>
+              <div class="actions"><button id="adminLogin" class="btn primary" type="button">登录</button><button id="adminLogout" class="btn" type="button" hidden>退出登录</button></div>
+              <p id="adminLoginStatus" class="note" role="status">未登录。登录后可新建分类，也可直接读取和保存素材。</p>
+              <p class="note">密码不保存；登录仅在当前节点会话有效，重开画布后需重新登录。</p>
+            </div>
+          </details>
           <p class="note">填写服务根地址，不要附加 <code>/api/v1</code>。</p>
         </div>
       </section>
 
       <section id="savePanel" class="panel" aria-label="保存素材">
-        <button id="saveToggle" class="panel-head" type="button" aria-expanded="false" aria-controls="saveBody"><span><strong>保存到提示词库</strong><small>连接图片、提示词，或同时连接两者</small></span><b class="chevron">⌄</b></button>
+        <div class="panel-heading"><button id="saveToggle" class="panel-head" type="button" aria-expanded="false" aria-controls="saveBody"><span><strong>保存到提示词库</strong><small>连接图片、提示词，或同时连接两者</small></span><b class="chevron">⌄</b></button><button id="refreshSaveCategories" class="btn" type="button">刷新</button></div>
         <div id="saveBody" class="panel-body">
           <div class="save-inputs">
             <div class="save-input"><strong>图片输入</strong><span id="imageInputStatus">未连接</span></div>
@@ -131,7 +141,7 @@
             <select id="saveCategory" aria-hidden="true" tabindex="-1" hidden><option value="">请先连接服务</option></select>
             <button id="saveCategoryTrigger" class="save-category-trigger" type="button" role="combobox" aria-label="保存分类" aria-haspopup="listbox" aria-expanded="false" aria-controls="saveCategoryMenu" disabled><span id="saveCategoryCaption" class="save-category-caption">请先连接服务</span></button>
           </div>
-          <div class="actions"><button id="saveAsset" class="btn primary" type="button">保存到分类</button><button id="forceSave" class="btn" type="button" hidden>仍然保存重复图片</button></div>
+          <div class="actions"><input id="newCategoryName" aria-label="新分类名称" placeholder="新分类名称" maxlength="200"><button id="createCategory" class="btn" type="button" title="需要服务端允许创建分类的管理权限">新建分类</button></div><div class="actions"><button id="saveAsset" class="btn primary" type="button">保存到分类</button><button id="forceSave" class="btn" type="button" hidden>仍然保存重复图片</button></div>
           <p id="saveNote" class="note" aria-live="polite">仅保存素材，不自动调用 AI 分析；保存分类与抽取范围互不影响。</p>
         </div>
       </section>
@@ -177,6 +187,14 @@
       let connectionDirty = false;
       let activeProfileScope = '';
       let operationEpoch = 0;
+      let adminSession = null;
+      function resetAdmin(message='未登录。登录后可新建分类，也可直接读取和保存素材。') {
+        adminSession=null; $('adminPassword').value=''; $('adminLogout').hidden=true;
+        $('adminLoginStatus').textContent=message;
+      }
+      function sessionFor(connection) {
+        return adminSession && adminSession.id===connection.id && adminSession.scope===connection.scope && adminSession.signature===connection.signature ? adminSession : null;
+      }
       let hydrated = false;
       let nameDirty = false;
       let inputs = {};
@@ -213,7 +231,7 @@
       function setStatus(text, kind = '') { els.status.textContent = text; els.status.className = `status ${kind}`.trim(); }
       function showMessage(text = '', kind = 'info') { els.message.textContent = text; els.message.className = text ? `message show ${kind}` : 'message'; }
       function setPanel(panel, toggle, open) { panel.classList.toggle('open',open); toggle.setAttribute('aria-expanded',String(open)); }
-      function setBusy(next, label = '') { busy = next; const missing=!profileFor(state.serviceId); els.connect.disabled = next || missing; els.reload.disabled = next || missing; els.random.disabled = next || missing; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next || missing; els.forceSave.disabled = next || missing; els.saveCategory.disabled = next || !categories.length; syncSaveCategory(); els.serviceSelect.disabled=next; syncServiceMenu(); els.addService.disabled=next; els.deleteService.disabled=next || missing; els.confirmDelete.disabled=next; els.serviceName.disabled=next || missing; els.serverUrl.disabled=next || missing; els.apiKey.disabled=next || missing; els.revealKey.disabled=next || missing; els.clearKey.disabled=next || missing; if (next && label) showMessage(label, 'info'); }
+      function setBusy(next, label = '') { busy = next; const missing=!profileFor(state.serviceId); for (const id of ['adminLogin','adminLogout','adminUsername','adminPassword']) $(id).disabled=next || missing; els.connect.disabled = next || missing; els.reload.disabled = next || missing; $('refreshSaveCategories').disabled = next || missing; $('createCategory').disabled = next || missing; $('newCategoryName').disabled = next || missing; els.random.disabled = next || missing; els.output.disabled = next || !state.lastItems.length; els.save.disabled = next || missing; els.forceSave.disabled = next || missing; els.saveCategory.disabled = next || !categories.length; syncSaveCategory(); els.serviceSelect.disabled=next; syncServiceMenu(); els.addService.disabled=next; els.deleteService.disabled=next || missing; els.confirmDelete.disabled=next; els.serviceName.disabled=next || missing; els.serverUrl.disabled=next || missing; els.apiKey.disabled=next || missing; els.revealKey.disabled=next || missing; els.clearKey.disabled=next || missing; if (next && label) showMessage(label, 'info'); }
       function applyTheme(theme) {
         const mode = theme && theme.mode === 'dark' ? 'dark' : 'light';
         document.documentElement.dataset.theme = mode;
@@ -223,7 +241,13 @@
       }
       async function request(connection, path, options = {}) {
         const base = normalizedBase(connection.url);
-        const response = await fetch(base + path, { ...options, headers:{ ...headers(connection.key, typeof options.body === 'string'), ...(options.headers || {}) } });
+        const session=sessionFor(connection);
+        const auth=session ? {Authorization:`Bearer ${session.token}`} : headers(connection.key);
+        const response = await fetch(base + path, { ...options, redirect:'error', headers:{ ...auth, ...(typeof options.body==='string' ? {'Content-Type':'application/json'} : {}), ...(options.headers || {}) } });
+        if (response.status===401 && session && adminSession===session) {
+          clearConnectionData(); resetAdmin('登录已过期，请重新登录。'); setStatus('登录已过期','error'); persist();
+          throw new Error('管理员登录已过期，请重新登录。');
+        }
         let data = null; try { data = await response.json(); } catch { data = null; }
         if (!response.ok) { const detail = data && (data.detail || data.message); const message = typeof detail === 'string' ? detail : Array.isArray(detail) ? detail.map(item => item.msg || '').filter(Boolean).join('；') : ''; throw new Error(message || `请求失败（HTTP ${response.status}）`); }
         return data;
@@ -255,15 +279,18 @@
         function sync() { trigger.disabled=select.disabled; caption.textContent=select.selectedOptions[0]?.label || '请选择'; if (select.disabled) close(); }
         function place() {
           if (!open) return;
-          const anchor=trigger.getBoundingClientRect(), scroll=document.querySelector('.scroll').getBoundingClientRect();
+          // DOMRect includes document zoom; fixed CSS offsets use layout pixels.
+          const zoom=Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1;
+          const logical=element=>{const r=element.getBoundingClientRect();return {left:r.left/zoom,top:r.top/zoom,bottom:r.bottom/zoom,width:r.width/zoom};};
+          const anchor=logical(trigger), scroll=logical(document.querySelector('.scroll'));
           if (trigger.disabled || !trigger.getClientRects().length || anchor.bottom<=scroll.top || anchor.top>=scroll.bottom) { close(); return; }
-          const width=document.documentElement.clientWidth, height=document.documentElement.clientHeight, margin=6, gap=4;
+          const width=innerWidth/zoom, height=innerHeight/zoom, margin=6, gap=4;
           const menuWidth=Math.min(Math.max(anchor.width,160),Math.max(0,width-margin*2));
           const below=Math.max(0,height-anchor.bottom-margin-gap), above=Math.max(0,anchor.top-margin-gap);
           const up=below<Math.min(240,menu.scrollHeight) && above>below;
           menu.style.width=`${menuWidth}px`; menu.style.maxHeight=`${Math.min(240,up ? above : below)}px`;
           menu.style.left=`${Math.max(margin,Math.min(anchor.left,width-menuWidth-margin))}px`;
-          const menuHeight=menu.getBoundingClientRect().height;
+          const menuHeight=menu.getBoundingClientRect().height/zoom;
           menu.style.top=`${up ? anchor.top-menuHeight-gap : anchor.bottom+gap}px`; menu.dataset.placement=up ? 'top' : 'bottom';
           frame=requestAnimationFrame(place);
         }
@@ -271,7 +298,7 @@
           if (!open || !items.length) return;
           index=Math.max(0,Math.min(next,items.length-1)); items.forEach((item,i)=>item.classList.toggle('is-active',i===index));
           const item=items[index]; trigger.setAttribute('aria-activedescendant',item.id);
-          if (scroll) { const box=menu.getBoundingClientRect(),row=item.getBoundingClientRect(); if (row.top<box.top) menu.scrollTop-=box.top-row.top; else if (row.bottom>box.bottom) menu.scrollTop+=row.bottom-box.bottom; }
+          if (scroll) { const box=menu.getBoundingClientRect(),row=item.getBoundingClientRect(); if (row.top<box.top) menu.scrollTop-=(box.top-row.top)/(Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1); else if (row.bottom>box.bottom) menu.scrollTop+=(row.bottom-box.bottom)/(Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1); }
         }
         function choose(next) {
           if (!open || !options[next]) return;
@@ -328,11 +355,13 @@
         els.settingsSummary.textContent=profile ? `${profile.name || '未命名服务'} · 密钥仅保存在插件隔离存储中` : '请选择或新增服务';
       }
       function loadProfile(profile) {
+        resetAdmin(); $('adminUsername').value='';
         els.serviceName.value=String(profile?.name || ''); els.serverUrl.value=String(profile?.url || ''); els.apiKey.value=String(profile?.key || '');
         els.apiKey.type='password'; els.revealKey.textContent='显示'; els.deleteConfirm.hidden=true;
         activeProfileScope=String(profile?.scope || ''); knownConnectionSignature=profileSignature(profile); connectionDirty=false; nameDirty=false;
       }
       function clearConnectionData() {
+        resetAdmin();
         operationEpoch++; connectionSignature=''; categories=[]; state.selectedCategoryIds=[]; state.saveCategoryId=null; state.lastSavedAssetId=null; state.saveScope=''; state.lastItems=[]; state.selectedIndex=0;
         clearDuplicate(); closeSaveCategoryMenu(); renderCategories(); renderResults(); renderSave();
       }
@@ -528,6 +557,53 @@
         post('output', { output:{ kind:'text', portId:'prompt', value:String(item.prompt), name:`${item.category_name || '提示词'} #${item.asset_id || ''}`.trim(), metadata:{ assetId:item.asset_id, categoryId:item.category_id, categoryName:item.category_name, thumbnailUrl:fullUrl(item.thumbnail_url) } } });
         setStatus('已输出', 'ok'); showMessage('当前提示词已写入画布输出端口，可连接到下游节点。', 'info');
       }
+      async function loginAdmin() {
+        if (busy) return;
+        const username=$('adminUsername').value.trim(), password=$('adminPassword').value;
+        if (!username || !password) { $('adminLoginStatus').textContent='请输入管理员账号和密码。'; return; }
+        let connection, loggedIn=false;
+        try {
+          saveConnection(); clearConnectionData(); persist(); connection=connectionContext();
+          setBusy(true); $('adminLoginStatus').textContent='正在登录…';
+          const response=await fetch(normalizedBase(connection.url)+'/api/v1/auth/login',{
+            method:'POST',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})
+          });
+          let result; try { result=await response.json(); } catch { throw new Error('登录接口返回格式不正确。'); }
+          assertContext(connection);
+          if (!response.ok) throw new Error(response.status===401 ? '账号或密码错误。' : `登录失败（HTTP ${response.status}）。`);
+          if (result?.role!=='admin') throw new Error('该账号不是管理员，请使用管理员账号登录。');
+          if (typeof result.access_token!=='string' || !result.access_token.trim()) throw new Error('登录接口未返回有效凭证。');
+          adminSession={id:connection.id,scope:connection.scope,signature:connection.signature,token:result.access_token};
+          $('adminLogout').hidden=false; $('adminLoginStatus').textContent=`已登录：${username}（管理员）`;
+          loggedIn=true;
+        } catch(error) { if (!connection || contextCurrent(connection)) resetAdmin(error instanceof Error?error.message:'登录失败，请重试。'); }
+        finally { $('adminPassword').value=''; setBusy(false); }
+        if (loggedIn) await loadCategories();
+      }
+      $('adminLogin').addEventListener('click',loginAdmin);
+      $('adminPassword').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();void loginAdmin();}});
+      $('adminLogout').addEventListener('click',()=>{
+        if (busy) return; clearConnectionData(); persist(); setStatus('未连接');
+        resetAdmin('已退出管理员登录；可重新登录，或使用访问密钥连接。');
+      });
+      $('refreshSaveCategories').addEventListener('click',()=>loadCategories());
+      $('createCategory').addEventListener('click',async()=>{
+        if (busy) return;
+        const name=$('newCategoryName').value.trim();
+        if (!name) { showMessage('请输入新分类名称。','error'); $('newCategoryName').focus(); return; }
+        let connection;
+        try {
+          connection=connectionContext(true); setBusy(true,'正在新建分类…');
+          const created=await request(connection,'/api/v1/categories',{method:'POST',body:JSON.stringify({name})});
+          assertContext(connection);
+          const id=validId(created?.id); if (!id) throw new Error('分类接口未返回有效分类 ID');
+          categories=categories.filter(item=>Number(item.id)!==id); categories.push(created);
+          state.saveCategoryId=id; state.saveScope=connection.scope;
+          $('newCategoryName').value=''; clearDuplicate(); renderCategories(); renderSave(); persist();
+          showMessage('分类已创建并选为保存分类。','info');
+        } catch(error) { showMessage(error instanceof Error?error.message:String(error),'error'); }
+        finally { setBusy(false); }
+      });
       async function loadCategories(quiet = false) {
         if (busy) return; setBusy(true, quiet ? '' : '正在连接提示词库…'); let connection;
         try {

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "effect-controller",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "files": [
     {
       "path": "README.md",
@@ -15,8 +15,8 @@
     },
     {
       "path": "plugin.json",
-      "size": 1071,
-      "sha256": "5e73c4327cc85993c3f7176219498d76ad4221c89c477c621df258e80c3e49e9"
+      "size": 1177,
+      "sha256": "d5c16be41cf2a7aa1798732f05fa4198901c5ac514ac47d4ae8508fa9fd4e245"
     },
     {
       "path": "runtime/index.html",
@@ -30,8 +30,8 @@
     },
     {
       "path": "runtime/select.js",
-      "size": 6986,
-      "sha256": "2d34e0c8313795cef3edb9835bf12a989bcfbf44d3524ce24d1cfeafae545732"
+      "size": 7155,
+      "sha256": "0c8601f50099234913da20a6095e1ca97f8e4bce4246ed22befca8b4bc05fa65"
     },
     {
       "path": "runtime/style.css",
@@ -65,8 +65,8 @@
     },
     {
       "path": "versions.json",
-      "size": 878,
-      "sha256": "6f115d48b626a14dadc00ced371d92d108f853577ae6fde1c9d1abfe1615c009"
+      "size": 1145,
+      "sha256": "0986b8e97225bb32371acd697b6c7839348149d6dc0619220f8ecf66dd3e20be"
     }
   ]
 }

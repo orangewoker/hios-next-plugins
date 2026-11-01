@@ -59,3 +59,10 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-lib
 ## 兼容要求
 
 需要支持第三方插件 `image` / `text` 输入端口和 `text` 输出端口的 HIOS Next 版本，以及支持 `manual` / `image_only` 模式的 AI Prompt Library 服务端。旧服务端仍可用于原有随机抽取，但不支持新保存功能。
+
+
+### 管理员登录
+
+在节点的「连接设置 → 管理员登录」中输入提示词库服务的管理员账号和密码，点击「登录」。登录成功后会自动读取分类，无需另外填写访问密钥；登录期间请求使用 Bearer 凭证，不同时发送普通 ComfyUI 密钥。之后可展开「保存到提示词库」新建分类并保存素材。
+
+密码不保存，登录凭证仅保留在当前节点内存，不写入画布状态、localStorage 或 sessionStorage。重新打开画布需要重新登录。退出登录、切换服务或修改地址/密钥会清除授权及旧分类选择；凭证过期会提示重新登录。不登录时仍可沿用原有访问密钥方式。

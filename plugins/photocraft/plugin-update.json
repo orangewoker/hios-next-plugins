@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -126,7 +126,7 @@
     {
       "path": "plugin.json",
       "size": 1934,
-      "sha256": "d54ed2fab6a1dd1289a87dc11753626860e48019d93cc698faa35fd09c0a42a9"
+      "sha256": "7f535d4942334cc584f5bb662fbb24f5015c23722822294a61e91b822e5e6a6a"
     },
     {
       "path": "runtime/index.html",
@@ -145,8 +145,8 @@
     },
     {
       "path": "select-menu.js",
-      "size": 5082,
-      "sha256": "5ce751d2a282a7d38ed627484f26b39748731a6180035297ce95abb7f0f9308e"
+      "size": 5605,
+      "sha256": "0e257757d24c47765d0b62f196b3c7f14937fb3245585215197f428debf953a9"
     },
     {
       "path": "shared.js",
@@ -185,8 +185,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4108,
-      "sha256": "44ba086693fe762b92c4d70a516ef3eff2b5f4df34ce146cf25891b5baef33e5"
+      "size": 4368,
+      "sha256": "bfee69ba0c563fa9682bb64f7d9c2a9c47d30f2e6d8ebd7a76ca6b9bf0178773"
     },
     {
       "path": "web/build.json",

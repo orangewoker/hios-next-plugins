@@ -3,6 +3,14 @@
   "pluginId": "effect-controller",
   "versions": [
     {
+      "version": "1.0.2",
+      "ref": "effect-controller-v1.0.2",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "修复节点内部高清缩放导致的下拉菜单错位；节点自适应布局变化时保持菜单贴合控件。"
+      ]
+    },
+    {
       "version": "1.0.1",
       "ref": "effect-controller-v1.0.1",
       "releasedAt": "2026-10-28",

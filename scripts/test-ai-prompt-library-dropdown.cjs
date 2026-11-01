@@ -14,6 +14,9 @@ app.setPath('userData', fs.mkdtempSync(path.join(os.tmpdir(), 'hios-prompt-dropd
 const categories = Array.from({ length:20 }, (_, i) => ({ id:i + 1, name:`分类 ${i + 1}`, asset_count:i }));
 const server = http.createServer((req, res) => {
   if (req.url === '/api/v1/health') { res.setHeader('Content-Type','application/json'); res.end('{"status":"ok"}'); return; }
+  if (req.url === '/api/v1/categories' && req.method === 'POST') {
+    let body='';req.on('data',part=>body+=part);req.on('end',()=>{const item={id:21,name:JSON.parse(body).name};categories.push(item);res.setHeader('Content-Type','application/json');res.end(JSON.stringify(item));});return;
+  }
   if (req.url.startsWith('/api/v1/categories')) { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(categories)); return; }
   if (req.url === '/plugin') { res.setHeader('Content-Type','text/html;charset=utf-8'); res.end(fs.readFileSync(path.join(plugin,'runtime/index.html'))); return; }
   if (/^\/shared\/hios-(?:ui\.(?:css|js)|adapter\.css)$/.test(req.url)) {
@@ -128,6 +131,25 @@ async function until(check, label) {
     const recolored = await metrics(); assert.equal(recolored.background,recolored.surface); aligned(recolored);
     await key('Escape');
 
+    // Reproduce host supersampling: iframe backing surface AND document zoom.
+    // Canvas-only transforms did not catch the double-scaled popup coordinates.
+    for (const zoom of [2,4]) {
+      await js(`{const f=document.querySelector('iframe');f.style.width='${440*zoom}px';f.style.height='${610*zoom}px';f.style.transform='scale(${1/zoom})';f.style.transformOrigin='0 0';frames[0].document.documentElement.style.zoom='${zoom}';}`);
+      await frame(`d.querySelector('.scroll').scrollTop=0;`); await delay(80);
+      for (const id of ['saveCategory','service']) {
+        if(id==='service') { await frame(`if(!d.querySelector('#settingsPanel').classList.contains('open'))d.querySelector('#settingsToggle').click();`);await delay(80); }
+        await frame(`d.querySelector('#${id}Trigger').scrollIntoView({block:'center'});`);await delay(80);
+        await frame(`d.querySelector('#${id}Trigger').click();`);await delay(80);
+        const info=await frame(`const a=d.querySelector('#${id}Trigger').getBoundingClientRect(),m=d.querySelector('#${id}Menu').getBoundingClientRect();return {left:a.left,ml:m.left,width:a.width,mw:m.width,top:a.top,bottom:a.bottom,mt:m.top,mb:m.bottom,hidden:d.querySelector('#${id}Menu').hidden};`);
+        assert.equal(info.hidden,false);assert.ok(Math.abs(info.left-info.ml)<1,JSON.stringify(info));assert.ok(Math.abs(info.width-info.mw)<1,JSON.stringify(info));
+        assert.ok(Math.min(Math.abs(info.mt-info.bottom-4*zoom),Math.abs(info.top-info.mb-4*zoom))<1,JSON.stringify(info));
+        await frame(`d.querySelector('#${id}Trigger').dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));`);
+        if(id==='service')await frame(`d.querySelector('#settingsToggle').click();`);
+      }
+    }
+    await js(`{const f=document.querySelector('iframe');f.style.cssText='';frames[0].document.documentElement.style.zoom='';}`);
+    await frame(`d.querySelector('.scroll').scrollTop=0;`);await delay(80);
+
     // A short node must open upward, keeping all visible content in the iframe.
     await js(`{const n=document.querySelector('#node');n.style.transform='none';n.style.height='410px';}`);
     win.setContentSize(700,600);
@@ -149,6 +171,13 @@ async function until(check, label) {
     assert.equal(await visible(),false,'scrolling the node closes the menu');
     await open(); await frame(`w.__suppressTestBlur=false;w.dispatchEvent(new w.Event('blur'));`);
     assert.equal(await visible(),false,'window blur closes the menu');
+
+    await frame(`w.__suppressTestBlur=true;d.querySelector('#newCategoryName').value='新建测试';d.querySelector('#createCategory').click();`);
+    await until(()=>frame(`return d.querySelector('#saveCategory').value==='21' && !d.querySelector('#createCategory').disabled`),'create category');
+    assert.equal(await frame(`return d.querySelector('#saveCategoryCaption').textContent`),'新建测试');
+    await frame(`d.querySelector('#refreshSaveCategories').click()`);
+    await until(()=>frame(`return !d.querySelector('#refreshSaveCategories').disabled`),'refresh save categories');
+    assert.equal(await frame(`return d.querySelector('#saveCategory').value`),'21');
 
     console.log(`PASS: 3 themes, 5 canvas zoom levels with real pointer selection, edge placement, keyboard, scrolling and state. Screenshots: ${output}`);
     server.close(); app.exit(0);
