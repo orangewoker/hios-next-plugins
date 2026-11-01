@@ -17,8 +17,9 @@
 
   function serializeState() {
     return {
-      version: 2,
-      mode: window.MODE || 'SFW',
+      version: 3,
+      generatorState: window.serializeState(),
+      mode: window.detectMode(),
       intlMode: !!window.intlMode,
       restrictLock: !!window.restrictLock,
       autoTrim: document.getElementById('autoTrim')?.checked !== false,
@@ -94,22 +95,7 @@
     if (!command || typeof command !== 'object' || !command.id || command.id === lastCommandId) return;
     lastCommandId = String(command.id);
     if (command.action === 'randomize' && typeof window.randomizeAll === 'function') {
-      // 画布“应用随机”只代理应用的“全部随机”按钮；模式、国际版和限制锁定
-      // 属于用户设置，不能因为随机字段而被改写。
-      const settings = {
-        mode: window.MODE,
-        intlMode: !!window.intlMode,
-        restrictLock: !!window.restrictLock,
-      };
-      window.randomizeAll();
-      window.MODE = settings.mode;
-      window.intlMode = settings.intlMode;
-      window.restrictLock = settings.restrictLock;
-      const intl = document.getElementById('intlMode');
-      const restrict = document.getElementById('restrictLock');
-      if (intl) intl.checked = settings.intlMode;
-      if (restrict) restrict.checked = settings.restrictLock;
-      if (typeof window.updateModeUI === 'function') window.updateModeUI(true);
+      if (typeof window.unlockAndRandomizeAll === 'function') window.unlockAndRandomizeAll(); else window.randomizeAll();
       setTimeout(() => generateAndSync(true), 0);
     }
   }
@@ -120,43 +106,9 @@
 
   function applyState(input) {
     const state = input && typeof input === 'object' ? input : {};
-    if (typeof state.restrictLock === 'boolean') {
-      window.restrictLock = state.restrictLock;
-      const lock = document.getElementById('restrictLock');
-      if (lock) lock.checked = state.restrictLock;
-    }
-    if (typeof state.intlMode === 'boolean') {
-      window.intlMode = state.intlMode;
-      const intl = document.getElementById('intlMode');
-      if (intl) intl.checked = state.intlMode;
-    }
-    if (state.mode === 'NSFW' || state.mode === 'SFW') window.MODE = state.mode;
-    if (typeof state.autoTrim === 'boolean') {
-      const trim = document.getElementById('autoTrim');
-      if (trim) trim.checked = state.autoTrim;
-    }
-    if (typeof window.updateModeUI === 'function') window.updateModeUI(true);
-
-    const inputValues = state.values && typeof state.values === 'object' ? state.values : {};
-    Object.entries(inputValues).forEach(([id, value]) => {
-      const element = document.getElementById(id);
-      if (element && typeof value === 'string') element.value = value;
-    });
-    if (typeof window.populateClothItems === 'function') window.populateClothItems(window.v('clothCat'));
-    if (typeof window.populatePoseItems === 'function') window.populatePoseItems(window.v('poseCat'));
-    Object.entries(inputValues).forEach(([id, value]) => {
-      const element = document.getElementById(id);
-      if (element && typeof value === 'string' && Array.from(element.options || []).some((option) => option.value === value)) element.value = value;
-    });
-    window.lockedFields = state.lockedFields && typeof state.lockedFields === 'object' ? { ...state.lockedFields } : {};
-    Object.entries(window.lockedFields).forEach(([id, locked]) => {
-      const button = document.getElementById(`lock_${id}`);
-      if (!button) return;
-      button.classList.toggle('on', !!locked);
-      button.textContent = locked ? '🔒' : '🔓';
-    });
-    if (typeof window.applyAgeBody === 'function') window.applyAgeBody();
-    if (typeof window.autoIdentity === 'function' && !inputValues.identity) window.autoIdentity();
+    const saved = state.generatorState || (state.vals ? state : null);
+    if (saved) window.applyState(saved);
+    else if (state.values) window.applyState({ vals: state.values, locked: state.lockedFields || {}, modes: {} });
     generateAndSync(false);
   }
 
@@ -166,7 +118,7 @@
     changeTimer = setTimeout(() => generateAndSync(false), 0);
   }, true);
 
-  ['genBtn', 'randAll'].forEach((id) => {
+  ['genOut', 'randAll'].forEach((id) => {
     document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(true), 0));
   });
   document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
@@ -174,8 +126,10 @@
     document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
   });
   document.addEventListener('click', (event) => {
-    if (event.target?.id?.startsWith('lock_')) setTimeout(() => generateAndSync(false), 0);
+    if (event.target?.closest?.('button')) setTimeout(() => generateAndSync(false), 0);
   }, true);
+
+  document.addEventListener('input', () => { clearTimeout(changeTimer); changeTimer = setTimeout(() => generateAndSync(false), 250); });
 
   window.addEventListener('message', (event) => {
     if (!event.data || event.data.protocol !== protocol) return;
@@ -196,3 +150,4 @@
 
   post('ready');
 })();
+

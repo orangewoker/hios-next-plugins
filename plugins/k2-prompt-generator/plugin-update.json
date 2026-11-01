@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "files": [
     {
       "path": "README.md",
@@ -10,13 +10,13 @@
     },
     {
       "path": "app/bridge.js",
-      "size": 7915,
-      "sha256": "e755d09c3956711dc848ce9a31a42445ed4392da9139a3a5f4d9ac8ff44ac796"
+      "size": 5606,
+      "sha256": "805b5ca77a849efe6bb73ef93d75e318d1770e0bed6eaffc487ac9989482ef98"
     },
     {
       "path": "app/index.html",
-      "size": 11056,
-      "sha256": "6c98a470931d2d179f1bcb47847aa30f6e6560d0b8d0b4bdcd5c35c92dd6ef64"
+      "size": 70836,
+      "sha256": "7c8fb5f4b194327bd2d2e91ea15be303820367ec9b0cc4a9f9ea16bb31c2e9ab"
     },
     {
       "path": "assets/icon.svg",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "259fa3f27e558074653cee474d7705f91274427693298f3b3abd817bb4e17b1a"
+      "sha256": "351db8833099a29f590e7c65b814a97eecd1cc3cf0452f8e842b52f03af0c857"
     },
     {
       "path": "runtime/index.html",
@@ -45,13 +45,13 @@
     },
     {
       "path": "shared/generator.js",
-      "size": 100492,
-      "sha256": "afa73551677f94ee1f8f1a91bc4b283b81beec1ea5d582c12fc2f015354f45c5"
+      "size": 633732,
+      "sha256": "27e93373ec6d71168a6d6fa7bd9aa535c3ca6174ea33181674394c318187d36c"
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 1117,
-      "sha256": "2fa644a6a7f4fffd88a0b07c5fe466c09656f395aa4c54932e141a7926c411b1"
+      "size": 1626,
+      "sha256": "e8635c50698bc28a5c563c5ec19b726f66362006b04ff4874e6b663ae5699f96"
     },
     {
       "path": "shared/hios-ui.css",
@@ -65,8 +65,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3145,
-      "sha256": "b78a1006d105862de3bf71e84c81137022f32a2c82f184f3bac964f8431c0ce4"
+      "size": 3443,
+      "sha256": "1b6840e2563a96cc8f97aae4c3795c7e63858d65277f86fe78a0048463aacd1c"
     }
   ]
 }

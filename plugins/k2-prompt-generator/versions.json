@@ -3,6 +3,15 @@
   "pluginId": "k2-prompt-generator",
   "versions": [
     {
+      "version": "0.2.11",
+      "ref": "k2-prompt-generator-v0.2.11",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "生成器更新至用户提供的v0.4.23。",
+        "适配新版存档、生成按钮和画布同步，保留浅色/深色/自定义主题。"
+      ]
+    },
+    {
       "version": "0.2.10",
       "ref": "k2-prompt-generator-v0.2.10",
       "releasedAt": "2026-11-01",

@@ -3,6 +3,16 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.10",
+      "ref": "director3d-v0.1.10",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "改为3D视口直接旋转关节、移动和旋转人偶。",
+        "复用小珠光/VNCCS双骨骼IK算法，支持拖动手脚、撤销重做和快捷视角。",
+        "保留工程保存、主题和静帧/骨架/视频导出；附上游许可。"
+      ]
+    },
+    {
       "version": "0.1.9",
       "ref": "director3d-v0.1.9",
       "releasedAt": "2026-11-01",

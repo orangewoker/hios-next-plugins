@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "director3d",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "files": [
     {
       "path": ".gitignore",
@@ -24,6 +24,11 @@
       "sha256": "ff4832a4dfa01518ee5ac4ca917f0499cb377283550537c590be575c03f0e087"
     },
     {
+      "path": "XZG-POSE-NOTICES.md",
+      "size": 2703,
+      "sha256": "52b9ad45c03e3e5bd31fea9da26a775acf3032a07f15156f72ee2f41859fd9af"
+    },
+    {
       "path": "app.html",
       "size": 254,
       "sha256": "f75b180a85ad484e5b7a3e3caab7e81600701c358ada2ee66afe7ce0c82de960"
@@ -40,28 +45,33 @@
     },
     {
       "path": "package-lock.json",
-      "size": 82863,
-      "sha256": "971f0964b4dbf37058bf87cd00d157e9a4ef8161bbc7e5a08ea691f7e1ca6589"
+      "size": 82865,
+      "sha256": "f0621ab31ff8fb84f06e772d3a2cd010b9c8a8120db46d7ca6077a2f1b6208b7"
     },
     {
       "path": "package.json",
-      "size": 769,
-      "sha256": "0319f3383632a9f436f7b248d5d5cc47412fd7d47fb34ee4119edad9eecf9cf5"
+      "size": 770,
+      "sha256": "2082a3f0a322d8049cfff2d18db0b7012e3525008a588b38617c2cfb43ff116b"
     },
     {
       "path": "plugin.json",
-      "size": 1791,
-      "sha256": "73cffb13ec8ea50694f882dc1158994dc5773b192b1a067250d175a809a6963a"
+      "size": 1792,
+      "sha256": "be0c488c078f687fdacd76650c00188209bc08af73474b326671e05781639158"
     },
     {
       "path": "runtime/app.html",
       "size": 578,
-      "sha256": "2a1fd020b7cff57975808920aec68aca0c989dc233f0979ba0d4230e62a48cab"
+      "sha256": "f5398a9702e28a7adf90c6be9ec6db4de03df14043e5e766d947c1f561b3cc27"
     },
     {
       "path": "runtime/assets/FBXLoader-BdffXVWL.js",
       "size": 46040,
       "sha256": "b86d18c0323dbe477d2d0d531b47474e5b73b8d7f4d170bf8cbb3aa6e7821875"
+    },
+    {
+      "path": "runtime/assets/FBXLoader-CO7hTIQJ.js",
+      "size": 46040,
+      "sha256": "0dd4a7345ebee5a0166cd9f732c1bd506b8e3fe2dcaba76997cf1d3bb9953ffd"
     },
     {
       "path": "runtime/assets/FBXLoader-DatBW8T0.js",
@@ -72,6 +82,11 @@
       "path": "runtime/assets/PLYLoader-CBbqa8Wp.js",
       "size": 6699,
       "sha256": "eb57461ad6a51e3903ae0100bd437e2999df6c40a24306ff320c2886b0a34c21"
+    },
+    {
+      "path": "runtime/assets/PLYLoader-Cd21PyWp.js",
+      "size": 6699,
+      "sha256": "300e3dc4ad24954c86283bf030736d454bbfa798623aae3385a09bf83d5e7d53"
     },
     {
       "path": "runtime/assets/PLYLoader-D1uuXnvQ.js",
@@ -87,6 +102,16 @@
       "path": "runtime/assets/STLLoader-B_r0IISu.js",
       "size": 2934,
       "sha256": "24856f4aed182160d509cd0490d8c9ec9bedd06328be85ceaced12495c2387aa"
+    },
+    {
+      "path": "runtime/assets/STLLoader-C7PblzBQ.js",
+      "size": 2934,
+      "sha256": "d8eab7f63110fed2ce925126c59b68a79b1242e11e32aaca6bcf56d5fd391077"
+    },
+    {
+      "path": "runtime/assets/USDLoader-CAUY090N.js",
+      "size": 66927,
+      "sha256": "0873c58959ef07ff8dfdb67f021f5d12a7bfa7edfc7c28ab0807b3063b79ba84"
     },
     {
       "path": "runtime/assets/USDLoader-CmKVLXUi.js",
@@ -109,6 +134,11 @@
       "sha256": "18f99c23076ed2caa7df63b9f73c86c14faa197cdde42dff59f32c19346cbf6d"
     },
     {
+      "path": "runtime/assets/index-CBseta3j.js",
+      "size": 7625,
+      "sha256": "2f97eb512236e58ed1504785a36b0b8879144e413a84baa3ecd50f4daa888b05"
+    },
+    {
       "path": "runtime/assets/index-v2qfVkFc.js",
       "size": 7625,
       "sha256": "1ebdb7f23a0386b84fedfb078e5e8046a6911192c98074cf238b19ae70bcbc18"
@@ -117,6 +147,16 @@
       "path": "runtime/assets/main-BBBEsQG2.css",
       "size": 381262,
       "sha256": "ffa47e011f933d999768f76bca121909e24f6ebc3a2b22fad2d4b3d33929d47c"
+    },
+    {
+      "path": "runtime/assets/main-BbZUF9PT.js",
+      "size": 2343782,
+      "sha256": "9bef5c6ace2aaa5de1d078dcbc1ec571e98a80ac6abfa2f21f18f18f908a4234"
+    },
+    {
+      "path": "runtime/assets/main-BrBjVk-7.css",
+      "size": 382104,
+      "sha256": "67f01a4b2c914b9756fcbf8852c00e0e23494ce4f539859f6e7d9bc6be1b0da9"
     },
     {
       "path": "runtime/assets/main-Ct3lz3K0.js",
@@ -139,6 +179,11 @@
       "sha256": "493f3bfc87c4e8fd937a51e691dacb710c422081f860cbe4c00fa72f80a7966d"
     },
     {
+      "path": "runtime/assets/sdfText-DX4vYbEm.js",
+      "size": 118638,
+      "sha256": "64e1fe6d417fc95e8f0853398f67ca1991128c559c78ba0abb1220c08f7cb9aa"
+    },
+    {
       "path": "runtime/assets/sdfText-vZyYuB9V.js",
       "size": 118638,
       "sha256": "20924890d44a2760d5fe4ba742d9b22e266a943a79fa3ccfd5ab8e2bbaacb53e"
@@ -154,9 +199,14 @@
       "sha256": "1a4855a9483d1052b91c80ae2edd8e8032fcd58509b79c44243c14acec36d35e"
     },
     {
+      "path": "runtime/assets/tjzArchive-OYpwism5.js",
+      "size": 11435,
+      "sha256": "027e98aa4244ed4eb6d0b16e3a2777916d5d463591a3521060ac78c6282aebe9"
+    },
+    {
       "path": "runtime/index.html",
       "size": 578,
-      "sha256": "2a1fd020b7cff57975808920aec68aca0c989dc233f0979ba0d4230e62a48cab"
+      "sha256": "f5398a9702e28a7adf90c6be9ec6db4de03df14043e5e766d947c1f561b3cc27"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -180,8 +230,8 @@
     },
     {
       "path": "src/PoseEditor.vue",
-      "size": 4443,
-      "sha256": "a355153289f741eb012b2d38cd97ad154c0b667b48f5b40fe68c805f36235a0a"
+      "size": 15221,
+      "sha256": "0b81f5a87c6d275164d30f6fef716ca01cc906e192cb628724fc751991562fde"
     },
     {
       "path": "src/agentPrompt.ts",
@@ -259,6 +309,11 @@
       "sha256": "53fb8d6aa3ab2d558aa2b61c16c3e53c2193bdc719b8c62166167e7271dac140"
     },
     {
+      "path": "src/poseInteraction.ts",
+      "size": 3258,
+      "sha256": "d1e5c4dad5691e01dfb923dc49f186aa1b5feb02a417f88a046be070cb372c37"
+    },
+    {
       "path": "src/referenceImage.ts",
       "size": 2173,
       "sha256": "29b872f91270de22394e7d5b057a3d4a6fbadb1e8e52e85d3e6755054524abf1"
@@ -289,14 +344,39 @@
       "sha256": "13fb715ceccbd7636a632a5121eeb92f7160eebc9d9ea470a603bb37179b1df7"
     },
     {
+      "path": "src/vendor/xzg-pose/ATTRIBUTION.md",
+      "size": 2570,
+      "sha256": "76962615f2927a5b0faade84ae19fa208aa66a7ba2fe909c39fa099f3b3f1a70"
+    },
+    {
+      "path": "src/vendor/xzg-pose/LICENSE",
+      "size": 1067,
+      "sha256": "eb067508882e612f646174b5948a398f291f663e8f54a5474dd1da2c07dcbbfd"
+    },
+    {
+      "path": "src/vendor/xzg-pose/LICENSE.xiaozhuguang",
+      "size": 1069,
+      "sha256": "9d82ac2d67200132eebafc85b5a0f0f45f24ec71f72c408cd61a30493aebaa71"
+    },
+    {
+      "path": "src/vendor/xzg-pose/analytic-ik.d.ts",
+      "size": 334,
+      "sha256": "83109ef2ee12e8696a7525c8e8df6e0d7a4c724de93a7dcf5551231f46daf825"
+    },
+    {
+      "path": "src/vendor/xzg-pose/analytic-ik.js",
+      "size": 7591,
+      "sha256": "6c6129d3fd447627d2399fde9c3d4bc1e73c7bd86919b8e5ae1ac92eb44e796f"
+    },
+    {
       "path": "tsconfig.json",
       "size": 324,
       "sha256": "744e7fd45bc39e78150e6d6ed9611264180ab1f1f771150fb2aaa40295313b5d"
     },
     {
       "path": "versions.json",
-      "size": 3575,
-      "sha256": "691fcb7038973824fc505e5cc486e064ae7263729d439c348bb3046e6faced6f"
+      "size": 3972,
+      "sha256": "d8439fb94afa6e8956ce42d481b88d83de8a49efd539dfd4f4fb69ec467a868f"
     },
     {
       "path": "vite.config.mjs",
