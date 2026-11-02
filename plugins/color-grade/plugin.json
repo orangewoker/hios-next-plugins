@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "color-grade",
+  "name": "调色",
+  "version": "0.2.4",
+  "description": "GPU 实时调色、本地 AI 皮肤识别、蒙版修正、深度景深与点击对焦。",
+  "author": "HIOS Next",
+  "permissions": ["canvas", "filesystem"],
+  "contributes": { "apps": [{ "id": "editor", "title": "调色", "description": "打开图片并进行本地调色", "entry": "app/index.html", "category": "design" }] },
+  "nodes": [{
+    "id": "image.grade", "title": "调色", "description": "接入图片，选择预设或微调参数，运行后输出调色结果。",
+    "rendererEntry": "runtime/index.html",
+    "inputs": [{ "id": "image", "title": "原图", "type": "image", "required": true }],
+    "outputs": [{ "id": "image", "title": "调色结果", "type": "image" }],
+    "hidePortLabels": true,
+    "defaultSize": { "width": 560, "height": 720 },
+    "defaultData": {}
+  }]
+}
+
+

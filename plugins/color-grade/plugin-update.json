@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "color-grade",
+  "version": "0.2.4",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 5332,
+      "sha256": "908f73f50d5ee7c93a01be6d561a28d99cf13924f70ca005ad08194eb101cd7c"
+    },
+    {
+      "path": "THIRD_PARTY.md",
+      "size": 1502,
+      "sha256": "14754f6ccda4c0eb6a1102acff9be26f112f18ce00090d176bce5e9849e88588"
+    },
+    {
+      "path": "app/index.html",
+      "size": 5068,
+      "sha256": "670404918b37967d58126b94f470282b2e6639e71ceab610efa5dc44d8427867"
+    },
+    {
+      "path": "assets/checksums.json",
+      "size": 2033,
+      "sha256": "31905354bf2afa712d969c2dc8351ff002986b1aa94fc609628fbb2195c5dc3a"
+    },
+    {
+      "path": "assets/models/depth/config.json",
+      "size": 36,
+      "sha256": "a4bb37095b5cac2cd052a0cbb4c62e2802fd7acde1a755196e81f0b351ed5e46"
+    },
+    {
+      "path": "assets/models/depth/onnx/model_quantized.onnx",
+      "size": 27258801,
+      "sha256": "fcf51f1b230362b28690bb9d1809bf0431f29cad20534e3f589bd7285547f20d"
+    },
+    {
+      "path": "assets/models/depth/preprocessor_config.json",
+      "size": 436,
+      "sha256": "b7106e3822a52ce1fdabceea7c0e013009f5709d609a5b744c90e6599fcf4b3b"
+    },
+    {
+      "path": "assets/models/skin/selfie_multiclass_256x256.tflite",
+      "size": 16371837,
+      "sha256": "c6748b1253a99067ef71f7e26ca71096cd449baefa8f101900ea23016507e0e0"
+    },
+    {
+      "path": "assets/vendor/transformers/ort-wasm-simd-threaded.jsep.mjs",
+      "size": 44484,
+      "sha256": "08fb86ec433c78bfb032c5d84a68b8e8e5a8d81268fa39e24314179a5767a5b9"
+    },
+    {
+      "path": "assets/vendor/transformers/ort-wasm-simd-threaded.jsep.wasm",
+      "size": 21596019,
+      "sha256": "c46655e8a94afc45338d4cb2b840475f88e5012d524509916e505079c00bfa39"
+    },
+    {
+      "path": "assets/vendor/transformers/transformers.web.min.js",
+      "size": 888173,
+      "sha256": "aa5002b70e789798da263f5f99c62bd3e8fcd0c119258a493c40c180648365fa"
+    },
+    {
+      "path": "assets/vendor/vision/vision_bundle.mjs",
+      "size": 137809,
+      "sha256": "3252b10e0fd26c4095e4b6ee545c1c898120b3a3813388ecd4876abe6f1399a9"
+    },
+    {
+      "path": "assets/vendor/vision/wasm/vision_wasm_internal.js",
+      "size": 204284,
+      "sha256": "4a97e2520ba506c680ecd6ba6acfb146888afa0e2746d57f205352bc6ebb82eb"
+    },
+    {
+      "path": "assets/vendor/vision/wasm/vision_wasm_internal.wasm",
+      "size": 9574032,
+      "sha256": "f00ec4731faa23b3e714d00e88d4d10e2df5c0a427d3a2b4ae6e3526fdd14ef7"
+    },
+    {
+      "path": "assets/vendor/vision/wasm/vision_wasm_nosimd_internal.js",
+      "size": 204137,
+      "sha256": "927def7b465c51b86e4b3060f93646aca4e27121f4b8fc0483786e407ea9cf1f"
+    },
+    {
+      "path": "assets/vendor/vision/wasm/vision_wasm_nosimd_internal.wasm",
+      "size": 9448638,
+      "sha256": "3821ea9b1f7fb8c549ef2a064ef5c85750bf375c545a49fd6eea0df44a95f1f4"
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "size": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "licenses/Depth-Anything-V2.txt",
+      "size": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "licenses/MediaPipe-Apache-2.0.txt",
+      "size": 12331,
+      "sha256": "8707eef0533987efc5b155d64761eeb6e20793f50b9bd1a68dad1cf4719d0ed8"
+    },
+    {
+      "path": "licenses/ONNX-Runtime-MIT.txt",
+      "size": 1073,
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c"
+    },
+    {
+      "path": "plugin.json",
+      "size": 911,
+      "sha256": "4b95620e054552a450c7d8230e26d90984780455f11ff3417620ba57f5c19e26"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 5069,
+      "sha256": "0c534a3618db2f5543b1eec4e586a33dae68be13b4338a31b904e9da792142a4"
+    },
+    {
+      "path": "shared/analysis.mjs",
+      "size": 4078,
+      "sha256": "40a6eda35cd6bcdee4b6dcaecc5a68f665fd932ee95019b6a06e96b3eb54f7f7"
+    },
+    {
+      "path": "shared/depth-worker.mjs",
+      "size": 1025,
+      "sha256": "d490a49278d7c49614527f43196646078a93df506d4bb948eeb22227d2d03d9a"
+    },
+    {
+      "path": "shared/editor.css",
+      "size": 8585,
+      "sha256": "9c8b630287f22ce3dd7bc45acdd69199c116127e2b420ed7b335de2909d34bf0"
+    },
+    {
+      "path": "shared/editor.mjs",
+      "size": 31302,
+      "sha256": "fe4ceafc690702843fcbddd02fa340a9fce053a788be10f99319e7265a106999"
+    },
+    {
+      "path": "shared/engine.mjs",
+      "size": 9234,
+      "sha256": "c2e95ea4a6e605ae1249c151f8559699fabc89992f0ef8399623a04403e328cb"
+    },
+    {
+      "path": "shared/errors.mjs",
+      "size": 542,
+      "sha256": "7b492f95246050c382c72b0cac77b4fa691f1adf45cd4134be0f3d5dd7f6ae10"
+    },
+    {
+      "path": "shared/gpu.mjs",
+      "size": 8414,
+      "sha256": "5b04c84a923201c5a02d54af2cd91c5d68106856ab48d038b437266675c229bb"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 275,
+      "sha256": "d658b9d7b187e8d5e3485135a08e43a06062b9d0a9bc18d304349d1092e3bc47"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "shared/select.mjs",
+      "size": 3354,
+      "sha256": "9f9eabe216b4bae6e5fe7c3aaa3dfea097c593be390fd2fc741d7676cd86b248"
+    },
+    {
+      "path": "shared/view.mjs",
+      "size": 5161,
+      "sha256": "87f737bb0ff2add093c3b660ae7852e476e5c9558b3fa3e3757e0ecf7569b948"
+    },
+    {
+      "path": "shared/worker.mjs",
+      "size": 286,
+      "sha256": "10b01a1cefaa305033b68bf0790f942bd2fd05936740538579d699a8cae5a0dc"
+    }
+  ]
+}
