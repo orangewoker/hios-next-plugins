@@ -1,6 +1,6 @@
 {
   "name": "@hios/pdf-dwg-viewer",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "private": true,
   "type": "module",
   "description": "Sandboxed HIOS canvas plugin for local PDF, DWG and DXF preview.",

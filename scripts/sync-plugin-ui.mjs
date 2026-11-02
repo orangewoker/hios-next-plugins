@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { renderGlass } from '../sdk/plugin-ui/glass.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const plugins = process.argv[2] ? path.resolve(process.argv[2]) : path.join(root, 'plugins');
 const sdk = path.join(root, 'sdk/plugin-ui');
@@ -12,16 +13,22 @@ for (const [id, config] of Object.entries(adapters)) {
   const entries = new Set([data.rendererEntry, ...(data.nodes || []).map(n => n.rendererEntry), ...(data.contributes?.apps || []).map(a => a.entry)].filter(x => x?.endsWith('.html')));
   if (!entries.size) continue;
   fs.mkdirSync(path.join(dir, 'shared'), { recursive: true });
-  for (const name of ['hios-ui.css', 'hios-ui.js']) fs.copyFileSync(path.join(sdk, name), path.join(dir, 'shared', name));
+  for (const name of ['hios-ui.css', 'hios-ui.js', 'hios-glass.js']) fs.copyFileSync(path.join(sdk, name), path.join(dir, 'shared', name));
+  fs.writeFileSync(path.join(dir, 'shared/hios-glass.css'), renderGlass(config));
   const selectors = config.controls || '.hios-control';
   const css = `/* Opt-in adapter: ${id}. Never targets canvas, SVG, media or positioning handles. */\n:root body :is(${selectors}) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }\n${config.css || ''}\n`;
   fs.writeFileSync(path.join(dir, 'shared/hios-adapter.css'), css);
   for (const entry of entries) {
     const file = path.join(dir, entry);
     let html = fs.readFileSync(file, 'utf8').replace(/<!-- hios-ui:start -->[\s\S]*?<!-- hios-ui:end -->\s*/g, '');
+    html = html.replace(/<link\b[^>]*href=["'][^"']*\/(?:hios-ui|hios-adapter|hios-glass)\.css["'][^>]*>\s*/gi,'').replace(/<script\b[^>]*src=["'][^"']*\/(?:hios-ui|hios-glass)\.js["'][^>]*>\s*<\/script>\s*/gi,'');
     const base = /<base\s+href=["']\.\.\//i.test(html) ? 'shared/' : path.relative(path.dirname(file), path.join(dir, 'shared')).replaceAll('\\', '/') + '/';
-    const include = `<!-- hios-ui:start --><link rel="stylesheet" href="${base}hios-ui.css"><link rel="stylesheet" href="${base}hios-adapter.css"><script src="${base}hios-ui.js" data-plugin-id="${id}"></script><!-- hios-ui:end -->\n`;
-    html = html.replace(/<\/head>/i, `${include}</head>`);
+    const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+    const ranges = escape(config.glass?.ranges || '');
+    const include = `<!-- hios-ui:start --><link rel="stylesheet" href="${base}hios-ui.css"><link rel="stylesheet" href="${base}hios-adapter.css"><link rel="stylesheet" href="${base}hios-glass.css"><script src="${base}hios-ui.js" data-plugin-id="${id}"></script><script src="${base}hios-glass.js" data-ranges="${ranges}"></script><!-- hios-ui:end -->\n`;
+    // Keep an editor's accepted local material AFTER the shared SDK on every sync.
+    if (config.glass?.local && /<link\b[^>]*href=["'][^"']*\/glass\.css["'][^>]*>/i.test(html)) html = html.replace(/<link\b[^>]*href=["'][^"']*\/glass\.css["'][^>]*>/i, match => include + match);
+    else html = html.replace(/<\/head>/i, `${include}</head>`);
     fs.writeFileSync(file, html);
   }
   console.log(`${id}: ${entries.size} UI entries`);

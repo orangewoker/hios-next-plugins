@@ -2,7 +2,7 @@
 (() => {
   const pluginId = document.currentScript?.dataset.pluginId;
   let origin, identity;
-  const colors = {background:'background',surface:'surface',muted:'muted',control:'control',text:'text',textSecondary:'text-secondary',textMuted:'text-muted',border:'border',accent:'accent',accentSoft:'accent-soft',positive:'positive',negative:'negative'};
+  const colors = {background:'background',surface:'surface',muted:'muted',control:'control',text:'text',textSecondary:'text-secondary',textMuted:'text-muted',border:'border',accent:'accent',accentContrast:'accent-contrast',accentSoft:'accent-soft',positive:'positive',negative:'negative'};
   const dimensions = {radiusControl:'radius-control',radiusPanel:'radius-panel',controlHeight:'control-height',gap:'gap',padding:'padding'};
   window.addEventListener('message', event => {
     const msg = event.data;

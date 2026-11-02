@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "dx-cut",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "files": [
     {
       "path": "LICENSE",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 8477,
-      "sha256": "ac6d88b7c4b5427ab8c6a1093a503bf14d11cbb7f56de651978e210285ee6aed"
+      "size": 8745,
+      "sha256": "78dc48e27e0e9971883640c3f7327df802380ba19644a7f622819e4e507f69f7"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -106,7 +106,7 @@
     {
       "path": "plugin.json",
       "size": 1192,
-      "sha256": "f3d4ea127c9626c441a62ed70f995b0b41086dcd73ce829d7c3eb822c51bd6ab"
+      "sha256": "1f6c2460322fc4dd9bec1250141b9f9c1ad290244c8229f49722b62085e47021"
     },
     {
       "path": "provenance.json",
@@ -750,13 +750,23 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 654,
-      "sha256": "c66add86860ad4cbef915aa43e88696dd6ab05f2ea02a5c41d2f1b258d796cc8"
+      "size": 829,
+      "sha256": "35e3831fce445c67e4f69b929cd8abfd34e5e02b337d1223afcde044b9fc1c0a"
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 315,
-      "sha256": "8729b7ffcc967203735d94022c4d6e9e7f250bd998e8e20bbfb8c5eba63c945a"
+      "size": 564,
+      "sha256": "31d0231ebfddc3258c3728f61695a1606776b51d49ac1ba37dc7a1bd462f43a5"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 12841,
+      "sha256": "664a00819177a978b455a99c0d8b5c3d9b41511f8fab8341f52a9972f2fae261"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -770,8 +780,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2975,
-      "sha256": "6b11223ead1efa173f7dcc6d6305c8f2ec79f90a8f8e2b9a58671861fbd186bb"
+      "size": 3357,
+      "sha256": "8c49d1f4fc2b1f913904ca78379a1be24d00ddd25ae3c66c69144615d78f4c2e"
     }
   ]
 }

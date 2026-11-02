@@ -1,3 +1,5 @@
 /* Opt-in adapter: dx-cut. Never targets canvas, SVG, media or positioning handles. */
 :root body :is(.hios-cut-toolbar button,.hios-cut-toolbar select,.titlebar button,.modal button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
 :root[data-theme]{--accent:var(--hios-accent)}
+/* Existing app rules use important: keep overrides inside property fields only. */
+:root body .inspector input[type=range]{background:transparent!important}:root body .inspector input[type=checkbox]:checked{background:var(--hios-accent)!important}

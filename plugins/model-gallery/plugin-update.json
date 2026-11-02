@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "model-gallery",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": [
     {
       "path": "README.md",
-      "size": 5579,
-      "sha256": "10f632faf8c28cbf7f1b5db909fe356beea1bf32c15960749f364c5d55bb916d"
+      "size": 5847,
+      "sha256": "519dd29cd00c5e08abd98b67e8474a1c235a4da2e1a7f163e85e5d7550b2138e"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -51,7 +51,7 @@
     {
       "path": "plugin.json",
       "size": 1613,
-      "sha256": "e67c81db9783bbf6a586f1b5420a4ecfb7dc3bab5803058b7fa260f19fd3b32d"
+      "sha256": "078bd6cac064ccc2c7c1bd755acd21521080576187df57ec92c832a7ed72956f"
     },
     {
       "path": "runtime/gallery-core.mjs",
@@ -70,8 +70,8 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 4195,
-      "sha256": "608a89824f40a0b5f932f272994f231067dbdc9549b61733ca7a8e6c529f5ebf"
+      "size": 4312,
+      "sha256": "21a6891745b45749794f3552d25ed281ce4ccf2e8f3eab541479e887830988d3"
     },
     {
       "path": "runtime/themed-select.mjs",
@@ -94,6 +94,16 @@
       "sha256": "ea6a771fce589c44ef9e09702fc9b65af467700cc86666cff162b90f4acc8e2e"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 9581,
+      "sha256": "fbcee5e541e92371207cd3f438a67c5df2cf94f2ac21e786251cafe1d90d98f6"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
       "size": 1566,
       "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
@@ -102,6 +112,11 @@
       "path": "shared/hios-ui.js",
       "size": 2097,
       "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "versions.json",
+      "size": 465,
+      "sha256": "5e56f1256b45b086f3baffe858da6175e0baa71eb6892750d7846cf7d2fca6a5"
     }
   ]
 }

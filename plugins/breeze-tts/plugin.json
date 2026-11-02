@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "breeze-tts",
   "name": "Breeze TTS 语音工坊",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Breeze TTS 2 Q8_0 语音工坊：HIOS 自动托管、本机或局域网远程连接，支持应用、画布和应用工作流。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/breeze-tts",

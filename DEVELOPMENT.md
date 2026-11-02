@@ -192,3 +192,7 @@ PhotoCraft 0.4.0 分层使用 `pipeline:local-layers/v1`，由通用视觉和图
 有 filesystem 权限的已启用插件可通过 resource-directory list/restore 使用 `managed:<pack id>`。这些目录由宿主管理，不能用 remove 删除授权。插件卸载不清理下载缓存，重装可复用。安装进度/取消属于宿主插件管理接口，不开放给 iframe。
 
 可选 `packs[].mirrors` 支持最多三个无凭据和参数的 HTTPS 基址，路径为 `<base>/<owner>/<repo>/<commit>/library/<file>`。镜像和源站均必须通过大小与 Git blob 哈希验证；镜像地址不影响缓存标识。
+
+## 液态玻璃材质发布
+
+控件材质使用显式选择器接入。详见 `sdk/plugin-ui/GLASS.md`；同步后运行 `node scripts/check-plugin-ui.mjs` 与 `node --test tests/plugin-glass.test.mjs`。每插件递增版本并重建暂存字节增量清单。

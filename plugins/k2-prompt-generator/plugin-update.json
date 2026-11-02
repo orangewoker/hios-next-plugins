@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "files": [
     {
       "path": "README.md",
-      "size": 998,
-      "sha256": "b2820a26b93a879b0d595227bf93bc4aa505169498cf826d4698c983d4aab5f3"
+      "size": 1267,
+      "sha256": "88e49d5dd08dfeed12ca28211025b30761eeca190f11b6174f62bdb5b7e26797"
     },
     {
       "path": "app/bridge.js",
@@ -15,8 +15,8 @@
     },
     {
       "path": "app/index.html",
-      "size": 70836,
-      "sha256": "7c8fb5f4b194327bd2d2e91ea15be303820367ec9b0cc4a9f9ea16bb31c2e9ab"
+      "size": 71003,
+      "sha256": "521c9128fe6ea2280840e48ffe64f1de135689e4021cdfc3c8152476c261d08e"
     },
     {
       "path": "assets/icon.svg",
@@ -26,12 +26,12 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "f0017009589458499d9c685d5adbbf75edc06a72673a3d18efc505ce437144db"
+      "sha256": "217c6f5ee81bf76be8d28c7549b9aeeef01a8e81c52c13ec629a3b024586a67b"
     },
     {
       "path": "runtime/index.html",
-      "size": 1701,
-      "sha256": "e81913c3b86c3a27e1fd3d4b5e9e29d0dcf1f702d171f76c69fcc4b7627bf9bf"
+      "size": 1868,
+      "sha256": "0817e383e6b8963c7178cf545ef098e159fcf5a9f5b3cde98a9abba508a0a544"
     },
     {
       "path": "runtime/node.js",
@@ -54,6 +54,16 @@
       "sha256": "e8635c50698bc28a5c563c5ec19b726f66362006b04ff4874e6b663ae5699f96"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 10544,
+      "sha256": "819f1ff64acd543f578d39c5aef766a1b59ceda17c9ebfeebf06e94b5b1a8a49"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
       "size": 1566,
       "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
@@ -65,8 +75,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3443,
-      "sha256": "1b6840e2563a96cc8f97aae4c3795c7e63858d65277f86fe78a0048463aacd1c"
+      "size": 3840,
+      "sha256": "548c5e914d5473b8227dca9bd9670ecd97cdc5e8a757611f09abb6eee37f937b"
     }
   ]
 }

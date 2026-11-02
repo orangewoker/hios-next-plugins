@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "watermark-master",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "files": [
     {
       "path": "README.md",
-      "size": 1872,
-      "sha256": "6d4192f188fa5b0fe37868aa64ff565ad027493480f90f3ca714c46cddbcabe7"
+      "size": 2140,
+      "sha256": "40c0fdc3b0e66cb4c8872fbcea2cb25d90b9a1f7a26ed804c7eb684c6d3e10ca"
     },
     {
       "path": "assets/Anton-Regular.ttf",
@@ -21,17 +21,27 @@
     {
       "path": "plugin.json",
       "size": 1933,
-      "sha256": "2cb66b0205ecf2f0ee3ad5e9222c2371a5dff44e3eb0115beac58160eb533fe0"
+      "sha256": "6b64221d2b71079906c50d404961b7da9124cbd49c9b6fd89509c4fae534938c"
     },
     {
       "path": "runtime/index.html",
-      "size": 32159,
-      "sha256": "f45f0f96b775bbda1de297a124afdfe8940eed38cd391fde1c214646b8d12b3c"
+      "size": 32276,
+      "sha256": "2d8f1bbac223376807710e34719ae681635e983001a78300e3d474edd1fc6a05"
     },
     {
       "path": "shared/hios-adapter.css",
       "size": 854,
       "sha256": "64ee4289def9cd869b96b3c64bcde916173a214de105e443954743ad225553a3"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 9962,
+      "sha256": "f59c6751f88489ca2665032ba8c11df8100ac9dbd8feb4bdd643fc1eecf37eb8"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -45,8 +55,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2283,
-      "sha256": "9972502766b43c1231b0dd3e39636eec063a915d08e41791b9b65ce8c059b103"
+      "size": 2675,
+      "sha256": "61a335dbcc2d5507cd12e1d068d5aff5a93336de055b75d10e79399cbc5b14e2"
     }
   ]
 }

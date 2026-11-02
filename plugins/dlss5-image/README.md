@@ -1,5 +1,11 @@
 # DLSS 5 图片增强
 
+## 0.1.7 液态玻璃更新
+
+- 按钮、输入框、设置滑块、开关与菜单统一为液态玻璃材质，适配深色、浅色及彩色宿主主题。
+- 保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。
+
+
 需要 HIOS Next 桌面版 **2.6.3 或更新版本**。在“插件管理”中安装 `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dlss5-image`，以后可在插件管理中在线更新。
 
 HIOS 图片增强应用和画布节点共用本地图片处理链。需自行安装 [Visual Enhancer](https://github.com/Merserk/dlss5-visual-enhancer)，在应用中选择 `VE_CLI.exe`。运行库不随 HIOS 分发。

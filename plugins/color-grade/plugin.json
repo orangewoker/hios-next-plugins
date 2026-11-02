@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "color-grade",
   "name": "调色",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "本地 AI 多人五官识别、保纹理磨皮、液化、局部颜色、参考图追色与景深。",
   "author": "HIOS Next",
   "permissions": [

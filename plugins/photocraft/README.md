@@ -1,5 +1,12 @@
 # PhotoCraft for HIOS Next
 
+## 0.5.5 液态玻璃更新
+
+- 按钮、输入框、设置滑块、开关与菜单统一为液态玻璃材质，适配深色、浅色及彩色宿主主题。
+- 保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。
+- 此次统一 HTML 工具栏与菜单，WASM 引擎内部自绘控件保持不变。
+
+
 可选安装的 PhotoCraft Rust/WASM 编辑器插件，不内置、不随 HIOS 安装包分发，不依赖远程网站、外部 exe 或界面截图。上游：[storytold/photocraft](https://github.com/storytold/photocraft)，固定版本 `b1794c6e0608ccfc887213dcf58398977c5cb75e`。
 
 ## 安装与卸载

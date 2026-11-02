@@ -1,5 +1,11 @@
 # 条形码工作室 · HIOS Next
 
+## 0.1.4 液态玻璃更新
+
+- 按钮、输入框、设置滑块、开关与菜单统一为液态玻璃材质，适配深色、浅色及彩色宿主主题。
+- 保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。
+
+
 独立 HIOS 应用插件，不是 Codex 插件，也不是内置应用。安装同一个插件即可同时获得应用入口与画布节点，无需重新打包 HIOS。
 
 安装地址：https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio

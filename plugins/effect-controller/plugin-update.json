@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "effect-controller",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "files": [
     {
       "path": "README.md",
-      "size": 3411,
-      "sha256": "f9814a236ebab3898c6473c614d8509c64ab09cf34e651d484585305643492fb"
+      "size": 3679,
+      "sha256": "6dc7e33d46bc194bc5cbdb10b9ff3c7ea5ad52c6041783769e0a565bbad69812"
     },
     {
       "path": "assets/icon.svg",
@@ -16,12 +16,12 @@
     {
       "path": "plugin.json",
       "size": 1177,
-      "sha256": "d5c16be41cf2a7aa1798732f05fa4198901c5ac514ac47d4ae8508fa9fd4e245"
+      "sha256": "882500fcdf505782fb965b26bf529bc49a973da3314204308e0418e94c012a22"
     },
     {
       "path": "runtime/index.html",
-      "size": 3551,
-      "sha256": "1bb8b74f2f9e031e50b3220bdddf72cefdd9191f1bef8ea5c54a5c109d4488d9"
+      "size": 3695,
+      "sha256": "809769b94ab2c1f51a2e630becb1ed986baaf619cc4875a04b8bc4910f309ec2"
     },
     {
       "path": "runtime/node.js",
@@ -54,6 +54,16 @@
       "sha256": "1b5ddb4c06abdb323372c82aa793746e37411c35c63c5eea4de7c50eacdc95a2"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 10027,
+      "sha256": "a8c81f12d972dda3a433e45e51596f1f2c5c6397b37a936fd06138aff63b54d0"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
       "size": 1566,
       "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
@@ -65,8 +75,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1145,
-      "sha256": "0986b8e97225bb32371acd697b6c7839348149d6dc0619220f8ecf66dd3e20be"
+      "size": 1538,
+      "sha256": "63bf0c72b115b027973912d346f2c8c601aabf403e121293d76f73e6687a4be2"
     }
   ]
 }

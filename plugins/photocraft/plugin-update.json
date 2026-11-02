@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "size": 7814,
-      "sha256": "92141688f072359590365d7f18d2a95310b9a1961be012fc8ba9c3b817decea3"
+      "size": 8168,
+      "sha256": "1789ae1cd19668d45de2c299a775bd9953d4df198ee157815da5f6197653e2fd"
     },
     {
       "path": "THIRD_PARTY/assets/dict/LICENSE-SCOWL.txt",
@@ -80,8 +80,8 @@
     },
     {
       "path": "app/index.html",
-      "size": 4693,
-      "sha256": "874e8ef59a82017813c090237e6ec25749aca03efd8b0aa86706e32e42b585cb"
+      "size": 4804,
+      "sha256": "bef0783e06a729d9397aa11fc6cab991d830e1445387b89d694674323c2864a6"
     },
     {
       "path": "assets/icon.svg",
@@ -126,12 +126,12 @@
     {
       "path": "plugin.json",
       "size": 1934,
-      "sha256": "7f535d4942334cc584f5bb662fbb24f5015c23722822294a61e91b822e5e6a6a"
+      "sha256": "e832452c27ae0660373d7fc946ae242d37f47c6891f96c6893d75207b454903d"
     },
     {
       "path": "runtime/index.html",
-      "size": 4697,
-      "sha256": "95bba36a94bc622e0049e820b3ac7c15cef2b1307315ca21fbec27547c060335"
+      "size": 4808,
+      "sha256": "0cf88a8862fe5031bb52f2aa9776519b2fab8195bc7e13f6f2cf9275ed659fa1"
     },
     {
       "path": "runtime/style.css",
@@ -157,6 +157,16 @@
       "path": "shared/hios-adapter.css",
       "size": 297,
       "sha256": "6955da35332fcdfc9d372d3a1bea2d1ea53c55aaaaaa1f666dd78b509f1fb956"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 9501,
+      "sha256": "2b3e7f264213fc9ef0d1b3ec52ad77c096e33a5531704b207c245d72305eb7dd"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -185,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4368,
-      "sha256": "bfee69ba0c563fa9682bb64f7d9c2a9c47d30f2e6d8ebd7a76ca6b9bf0178773"
+      "size": 4849,
+      "sha256": "8d1d67e75029076fd1b6be21aebef8cffac351afcdf9b1de596d92530b6cdf6f"
     },
     {
       "path": "web/build.json",

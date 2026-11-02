@@ -1,3 +1,4 @@
+import {syncRangeStyles} from './glass.mjs';
 import {colorStatsLab} from './match.mjs';
 import {mountPortrait} from './portrait-ui.mjs';
 import {detectPortraits,portraitRegions} from './portrait-analysis.mjs';
@@ -67,7 +68,7 @@ async function computeMatch(){if(!originalPixels){$('matchStatus').textContent='
 portraitUI=mountPortrait({getState:()=>state,mutate,bindSlider,setTool,getTool:()=>tool,retry:()=>{faceError='';faceReady=false;void ensureFaces();},overlay:view.overlay});
 function bindSlider(el,get,set){el.oninput=()=>{if(gesture===null)gesture=snapshot();set(Number(el.value));dirty();syncValues();};el.onchange=()=>{if(gesture!==null){push(gesture);gesture=null;}emit();};el.ondblclick=()=>{const parts=el.id.split('-');if(parts.length===2&&defaults()[parts[0]])mutate(()=>{state[parts[0]][parts[1]]=defaults()[parts[0]][parts[1]];state.modified=true;});};}
 bindSlider($('intensity'),()=>state.intensity,v=>{state.intensity=v;});
-function syncValues(){$('enable-match').checked=state.match.enabled;$('matchSkin').checked=state.match.skinOnly;$('matchStrength').value=state.match.strength;$('matchStrengthValue').value=state.match.strength;portraitUI?.sync();if(isWarp(tool)){view.radius=state.portrait.brush/100;view.refreshBrush();}
+function syncValues(){queueMicrotask(()=>syncRangeStyles());$('enable-match').checked=state.match.enabled;$('matchSkin').checked=state.match.skinOnly;$('matchStrength').value=state.match.strength;$('matchStrengthValue').value=state.match.strength;portraitUI?.sync();if(isWarp(tool)){view.radius=state.portrait.brush/100;view.refreshBrush();}
   $('intensity').value=state.intensity;$('intensityValue').value=state.intensity;
   $('presetHint').textContent=state.modified?'预设已修改 · 双击滑块重置参数':'基于原图处理，不叠加滤镜';
   $('skinMode').value=state.skin.mode;
@@ -222,7 +223,7 @@ window.addEventListener('beforeunload',()=>{if(initialized)emit();previewWorker.
 if(parent===window){initialized=true;mergePresets();document.body.classList.toggle('wide',app);$('expand').hidden=true;$('export').hidden=false;$('runHint').hidden=true;}
 if(app)$('empty').querySelector('p').textContent='打开 PNG、JPEG 或 WebP，原图不会被覆盖';
 for(const select of [$('preset'),$('skinMode')])selectControls.push(themedSelect(select));
-document.querySelector('header strong').textContent='调色 · v0.3.0';
-sync();post('ready',{version:'0.2.2'});
+document.querySelector('header strong').textContent='调色 · v0.3.1';
+sync();post('ready',{version:'0.3.1'});
 
 

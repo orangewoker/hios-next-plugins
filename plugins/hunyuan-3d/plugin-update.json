@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "hunyuan-3d",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "files": [
     {
       "path": "README.md",
-      "size": 3083,
-      "sha256": "8a6308596f6e2144e496539b28101d2ff31f51e5a1d2b3eaac726d6ceb349176"
+      "size": 3351,
+      "sha256": "595c0434ca2c56ff445b682bd6c4fdbae987b8d36236715dbd6ef8843c05de0b"
     },
     {
       "path": "app/assets/index-CrLfN1zB.css",
@@ -20,8 +20,8 @@
     },
     {
       "path": "app/index.html",
-      "size": 631,
-      "sha256": "d4957e7aeee556c16345e586842607c13a643a069a931d46806e5ac5e324c509"
+      "size": 810,
+      "sha256": "f369b629058d17abc1a7af2c2f8df4526fde0713d148b80a3587ceeb7c607e1d"
     },
     {
       "path": "assets/icon.svg",
@@ -31,12 +31,12 @@
     {
       "path": "package.json",
       "size": 627,
-      "sha256": "665ca676a91aa80728c2c9d56e67b34021147db6bb987df1becad0b1f2fbdd42"
+      "sha256": "455e3e2c511e19f770d96d913a8c0b1e8154a88448ce83e9b2dd796ec5dfa8b3"
     },
     {
       "path": "plugin.json",
       "size": 1521,
-      "sha256": "ea15a1ddceb7d0cbb3a71c8132e575eb580a72ca73c999cd89b25f3f1f057bc1"
+      "sha256": "08e342a9281bfa1c00942992a187a35ced8631ae516f0dacc72fcf0addd672cd"
     },
     {
       "path": "runtime/assets/index-CXskUVvc.js",
@@ -50,13 +50,23 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 2652,
-      "sha256": "2586e47771a387448c7da166f01b56dde3dfb0e4e988ad5771f6344639737f6f"
+      "size": 2831,
+      "sha256": "9ff894f2983148667f3f0334cf363020f1a8045f96014d8eb76a24b0fa26d62e"
     },
     {
       "path": "shared/hios-adapter.css",
       "size": 2152,
       "sha256": "654c24ee5a4d7bc2983bfa24d590106a5d9b12b3ad98ea9784264d8d9a71abab"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 12383,
+      "sha256": "617d18f15ad4a810ca456b27e4470344920b6bb251f5b8ec9f9b4114def5fd43"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -150,8 +160,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1615,
-      "sha256": "bb12ef93e9e488d7736065e0fe81d29c9867f04db6278e547bd5fab42e1f6c54"
+      "size": 2001,
+      "sha256": "9f4e8130a7887b8aadedce5d76a0a1152e2a62cf41a280d9f339da65ee72f117"
     },
     {
       "path": "vite.config.ts",

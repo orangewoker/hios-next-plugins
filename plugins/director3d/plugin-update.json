@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "director3d",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "files": [
     {
       "path": ".gitignore",
@@ -15,8 +15,8 @@
     },
     {
       "path": "README.md",
-      "size": 5162,
-      "sha256": "47f792c8b6ab8f66570151d4b8637506c4f16c63f7c5ed6a91aedf525c39dc17"
+      "size": 5431,
+      "sha256": "9ab39e6cec5b1708df475358ef91a53d2e4c722977d33864d4204b1a46a5f468"
     },
     {
       "path": "THIRD_PARTY_NOTICES.txt",
@@ -46,22 +46,22 @@
     {
       "path": "package-lock.json",
       "size": 82865,
-      "sha256": "f0621ab31ff8fb84f06e772d3a2cd010b9c8a8120db46d7ca6077a2f1b6208b7"
+      "sha256": "6e7738c6b828c29c28b22c05a19d4816fa3f7cbafeff79cc7c76314682062b78"
     },
     {
       "path": "package.json",
       "size": 770,
-      "sha256": "2082a3f0a322d8049cfff2d18db0b7012e3525008a588b38617c2cfb43ff116b"
+      "sha256": "6016ad3538da047d20dc923f951e2a51bb76fe33bc9821b58dff12ad85963c87"
     },
     {
       "path": "plugin.json",
       "size": 1792,
-      "sha256": "be0c488c078f687fdacd76650c00188209bc08af73474b326671e05781639158"
+      "sha256": "211c6a400183128a199f09a503abab0ef06fea4a682af922fc0e146df4947f33"
     },
     {
       "path": "runtime/app.html",
-      "size": 578,
-      "sha256": "f5398a9702e28a7adf90c6be9ec6db4de03df14043e5e766d947c1f561b3cc27"
+      "size": 695,
+      "sha256": "21c225b7b6a1dc0978b08887cf2bf2b0b702d554c0c772f8ec0a04b309cb14f5"
     },
     {
       "path": "runtime/assets/FBXLoader-BdffXVWL.js",
@@ -205,13 +205,23 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 578,
-      "sha256": "f5398a9702e28a7adf90c6be9ec6db4de03df14043e5e766d947c1f561b3cc27"
+      "size": 695,
+      "sha256": "21c225b7b6a1dc0978b08887cf2bf2b0b702d554c0c772f8ec0a04b309cb14f5"
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 1941,
-      "sha256": "202716a5f4f64c5c06616fbd3790d1123f857ed60d8c16280fad7f0f6ca2c760"
+      "size": 3531,
+      "sha256": "6887963cf86a27d574bfb121ba6839c3b1955d1ed604db483ceb468bbbec3ad3"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 9399,
+      "sha256": "5bdc330d853c12f0f265c554ed2b6cc795771c05e343edb37fc3f0357208b335"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -375,8 +385,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3972,
-      "sha256": "d8439fb94afa6e8956ce42d481b88d83de8a49efd539dfd4f4fb69ec467a868f"
+      "size": 4360,
+      "sha256": "63a5528bc0afa2fb2fa4880d09da2685700b2f325bd3134d22ffae7494ddf2d6"
     },
     {
       "path": "vite.config.mjs",

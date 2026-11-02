@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "pluginId": "ai-prompt-library",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": [
     {
       "path": "README.md",
-      "size": 5892,
-      "sha256": "b54ac4b6b3372009f265f3e039d7e86105b1b34a84316e0f35437255662d4811"
+      "size": 6160,
+      "sha256": "2e88e013414fe7308603a758bf1a70e5461c9146fbe5a3ecff7af886140f4633"
     },
     {
       "path": "plugin.json",
       "size": 1612,
-      "sha256": "b3fda55df783538cc62c098553a5ed06b38aa0de6906f1e5be15e0aa2896bea6"
+      "sha256": "f251234466650795337762ca470ba3bcc4b321c5205bb5fb452c2bb91a29b51d"
     },
     {
       "path": "runtime/index.html",
-      "size": 73243,
-      "sha256": "5dd35f2b423b22bf5bd9b96150c3e724a9bb8fe9fdd733f0725c17b740dc1445"
+      "size": 73360,
+      "sha256": "7998ba9eaad5181630759ebc4ea7186603a363456c8b0629c0dc6c08d25402e9"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -24,19 +24,29 @@
       "sha256": "0e1401b7dc7d4eae407dc23a9519aa94783e1afe3b7f4f6fa9bc3e2eba27b95b"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 9623,
+      "sha256": "645b360365ffc88c6e35beb507190434e8d297590a47c8af68b2230b5610cd36"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "versions.json",
-      "size": 2386,
-      "sha256": "beab4253a08c3251755f34aa8318e8b18f256c780ba19d5e67f066be1c8c4c5c"
+      "size": 2779,
+      "sha256": "3285e610be636f8926d2917344153a702794020ebd65f644ee53daebb5b170fe"
     }
   ]
 }

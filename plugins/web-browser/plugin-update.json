@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "pluginId": "web-browser",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": [
     {
       "path": "README.md",
-      "size": 1563,
-      "sha256": "d1d6470b5c478f8ba44341e2825a7b77829fcd2387ff4b06ce4e5cc69734ecac"
+      "size": 1931,
+      "sha256": "1a12a8afd1edcb90520e6adc817f99645c1b574a04e4e6081c068b5c246ac35f"
     },
     {
       "path": "plugin.json",
       "size": 1338,
-      "sha256": "6d4209f806653316b5f68f68d01631c4af75fa869c6e1e450fff91b681722795"
+      "sha256": "fc212ecc731dd8229de33a865898634b104a6dd7b76511dd808728e76e49e4e7"
     },
     {
       "path": "runtime/index.html",
-      "size": 1157,
-      "sha256": "556ab18b516e0cba51163dfede024fcb22b43136e05cc451c6f9ea90fff9f5a0"
+      "size": 1373,
+      "sha256": "78aaf55b7a05dd741c0af435917dbc1d98f291d322b3558200320cb38b2258ed"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -24,19 +24,29 @@
       "sha256": "12b187f3bc9129b243b1352fad1d53bcf866a5d6a786df93bb98e6ec15ba85ab"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 8223,
+      "sha256": "cd06772d4ad8548f77d607417bb14b717ca613ac4dce4b4e0ae1c7650382e24b"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "versions.json",
-      "size": 3183,
-      "sha256": "8513fef60080e51acc1a11e7cf0c1d6a61e0fbcd3418df2e3b8c7eeccd3c59c4"
+      "size": 3679,
+      "sha256": "3860a8485ae64587f61cdc4a864c7ec56ad39064294655301399f7da30683fa6"
     }
   ]
 }

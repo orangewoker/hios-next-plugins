@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "pluginId": "puzzle-grid",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "files": [
     {
       "path": "README.md",
-      "size": 1098,
-      "sha256": "2dc665c8669a610c0e34a633ecfb0b7a959144e6072c471430a78e16aa2aaa8a"
+      "size": 1366,
+      "sha256": "3c06bd22e60ea12a68a7b6ba758764ef3c1cacf6470027d59b89eb5c06b55cd2"
     },
     {
       "path": "plugin.json",
       "size": 1534,
-      "sha256": "95cb0985519d471e5184ed747c6c0adebef2e31d939367e31c22f6c87b765b5e"
+      "sha256": "107cd7d8d98ceacd77944e154ccff42aa8d13b2d01287e9cc8332498778abb84"
     },
     {
       "path": "runtime/index.html",
-      "size": 22837,
-      "sha256": "bc662142923d671ba6f62dc7640c91509549ed54ab308ecb10eb4c0ac0232072"
+      "size": 22981,
+      "sha256": "03de42a2ba47efc7d947544c644ae933ea86cf4264d8bd2570a47a6874b23d9e"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -24,19 +24,29 @@
       "sha256": "43012ad0d76ff3336635d6464a15cea9bca9cc82a6f0f33f963b5176d1d227da"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 9882,
+      "sha256": "cb65ac640111c9af8430a0b0835471623898f1aad951d4c710215df8cc1c3c8a"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
-      "size": 1538,
-      "sha256": "d3a9d91ebdcd58911d36113bccca327ef31252f58b1393ca74595e9d023c7805"
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2064,
-      "sha256": "72da33752d98178ed879bdcbae7f98741253e7c69bc170084688420de2e0b493"
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
       "path": "versions.json",
-      "size": 1704,
-      "sha256": "f9ff17e283b8f9c3726f0d882e93cd4fad5709db7e84c94c1e176e125c72d729"
+      "size": 2091,
+      "sha256": "5ad9d2ddbe72f4cf7f64999a6e3fac963c85654d2b82198d206725ad6781eabd"
     }
   ]
 }

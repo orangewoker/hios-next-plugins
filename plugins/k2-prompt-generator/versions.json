@@ -3,6 +3,15 @@
   "pluginId": "k2-prompt-generator",
   "versions": [
     {
+      "version": "0.2.13",
+      "ref": "k2-prompt-generator-v0.2.13",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "按钮、输入框、设置滑块、开关与菜单统一为液态玻璃材质，适配深色、浅色及彩色宿主主题。",
+        "保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。"
+      ]
+    },
+    {
       "version": "0.2.11",
       "ref": "k2-prompt-generator-v0.2.11",
       "releasedAt": "2026-11-01",

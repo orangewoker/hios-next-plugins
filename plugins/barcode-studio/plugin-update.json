@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "barcode-studio",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "files": [
     {
       "path": ".gitignore",
@@ -15,8 +15,8 @@
     },
     {
       "path": "README.md",
-      "size": 3088,
-      "sha256": "c106201cbc1549d049030fa1273b0baad205ecbae89d45cc06a7e7148ec3a1cd"
+      "size": 3356,
+      "sha256": "19b1f577e3fc0336e0cd9f1dbc06fb5571914b802694f77d727599a81f5729ff"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1352,
-      "sha256": "145975740555999327994798097422216794d873a5dbda019c58b39c1f485ead"
+      "sha256": "5cc9cbf40dfceef6d781df6550b42f472951c78453d27b4f82073311c6e496f2"
     },
     {
       "path": "provenance.json",
@@ -45,13 +45,23 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 623,
-      "sha256": "2aff1c3970ead404dbabfcaee7253a05072f4b16cd0e6f02640315920c059864"
+      "size": 763,
+      "sha256": "335f0ee7f5ffc62c2da9f68d9f7721006fcaa4d412fa3ea59595f432ae53c943"
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 546,
-      "sha256": "4768333d228b39cfeb4a9f772ac589fbb231a4b59af27a0f88a7ce6ce4894d48"
+      "size": 890,
+      "sha256": "dae9f58169c13ba5ccba7046964106af3eecf4bd1ca022a5fca2094e828210d4"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 9395,
+      "sha256": "4dfed14391b17a1f19c7b9dafd358caa04c02b4d8f06549d47ca5088f9cdacf0"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
     },
     {
       "path": "shared/hios-ui.css",
@@ -135,8 +145,8 @@
     },
     {
       "path": "versions.json",
-      "size": 302,
-      "sha256": "1c9ba9f86013c554b5623fe531112fea5d8af5d0dbf8b67d8112b47757874bd2"
+      "size": 692,
+      "sha256": "b517979d442edda6bb8322457cc737dce0a86ba5dda948719227b4ec09091bbb"
     }
   ]
 }

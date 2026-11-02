@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "pdf-dwg-viewer",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "files": [
     {
       "path": "LICENSE",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 2571,
-      "sha256": "6ed92a713d78a1e9cce9c80d3ceb293160580a99caa63301fbdf784b59419e9b"
+      "size": 2839,
+      "sha256": "62a5183b072034e36a850f0d3519a1b1b3559c2c3b868abef06a7b94f9d2b725"
     },
     {
       "path": "THIRD_PARTY-CAD-VIEWER-LICENSE.txt",
@@ -46,17 +46,17 @@
     {
       "path": "package-lock.json",
       "size": 46709,
-      "sha256": "1040f1ec34a264dee85dc88fea209baf740ab6069ba5b89a707a41c831a0f822"
+      "sha256": "de2aae3a18e65e875e21490d8016feeb3412348992242fd45da71156e2d2c38c"
     },
     {
       "path": "package.json",
       "size": 539,
-      "sha256": "0418c7bd57b33c91f85c9dfd14404adddd71e9a315986345f8508b764cfc263f"
+      "sha256": "45b3d65dd4be5ee7e8becb123c94ba50a185f9d7651cea0aa00577f98a9579aa"
     },
     {
       "path": "plugin.json",
       "size": 1768,
-      "sha256": "3ca8c7e44675f82a13f2d176cbe257038b83f9ab58fc55a1894819f1d7cd4701"
+      "sha256": "79b47bf3546e965d2ada3fa94cda54ba44f8f2c437ab9773dfe88cc902d19aea"
     },
     {
       "path": "runtime/assets/index-C8d6z2g8.js",
@@ -75,8 +75,8 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 3697,
-      "sha256": "9bf47c52e472485faba658a5867d672739824e96c4b61727a0fe1dc837f939f1"
+      "size": 3814,
+      "sha256": "71b4674c29c6deb072f538784f8c87b08b8c00eac94d1886b028fe34d800ddf7"
     },
     {
       "path": "runtime/pdf.worker.min.mjs",
@@ -114,6 +114,16 @@
       "sha256": "61117d256929519913963d5e90fb22ab9ecc070749ed097941fa579df43338af"
     },
     {
+      "path": "shared/hios-glass.css",
+      "size": 8357,
+      "sha256": "9f0664dfcc507d459eb048ae6a454aaa4c46e4ceb27aa4e0be5d85148a810ff4"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
       "path": "shared/hios-ui.css",
       "size": 1566,
       "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
@@ -140,8 +150,8 @@
     },
     {
       "path": "versions.json",
-      "size": 593,
-      "sha256": "f22952b5aee88ab872f26ceff1814878f32955f64f9889aa2312419909672f90"
+      "size": 983,
+      "sha256": "d7c91f38a80c1861f4aa0f6bfed2fa54dc29620c28c20fe2a45af580e2ee76d3"
     },
     {
       "path": "vite.config.ts",
