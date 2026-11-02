@@ -81,9 +81,9 @@
     post('state', { state: snapshot.state });
   }
 
-  function generateAndSync(emitAsOutput) {
+  // Generator event handlers own generation; persistence must not fill blank fields.
+  function syncState(emitAsOutput) {
     try {
-      if (typeof window.generate === 'function') window.generate();
       if (emitAsOutput) emitOutput();
       else emitState();
     } catch (error) {
@@ -96,7 +96,7 @@
     lastCommandId = String(command.id);
     if (command.action === 'randomize' && typeof window.randomizeAll === 'function') {
       if (typeof window.unlockAndRandomizeAll === 'function') window.unlockAndRandomizeAll(); else window.randomizeAll();
-      setTimeout(() => generateAndSync(true), 0);
+      setTimeout(() => syncState(true), 0);
     }
   }
 
@@ -106,30 +106,29 @@
 
   function applyState(input) {
     const state = input && typeof input === 'object' ? input : {};
+    const trim = document.getElementById('autoTrim');
+    if (trim && typeof state.autoTrim === 'boolean') trim.checked = state.autoTrim;
     const saved = state.generatorState || (state.vals ? state : null);
     if (saved) window.applyState(saved);
     else if (state.values) window.applyState({ vals: state.values, locked: state.lockedFields || {}, modes: {} });
-    generateAndSync(false);
+    syncState(false);
   }
 
   let changeTimer = 0;
   document.addEventListener('change', () => {
     clearTimeout(changeTimer);
-    changeTimer = setTimeout(() => generateAndSync(false), 0);
+    changeTimer = setTimeout(() => syncState(false), 0);
   }, true);
 
   ['genOut', 'randAll'].forEach((id) => {
-    document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(true), 0));
-  });
-  document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
-  ['mSFW', 'mNSFW'].forEach((id) => {
-    document.getElementById(id)?.addEventListener('click', () => setTimeout(() => generateAndSync(false), 0));
+    document.getElementById(id)?.addEventListener('click', () => setTimeout(() => syncState(true), 0));
   });
   document.addEventListener('click', (event) => {
-    if (event.target?.closest?.('button')) setTimeout(() => generateAndSync(false), 0);
+    const button = event.target?.closest?.('button');
+    if (button && !['genOut', 'randAll'].includes(button.id)) setTimeout(() => syncState(false), 0);
   }, true);
 
-  document.addEventListener('input', () => { clearTimeout(changeTimer); changeTimer = setTimeout(() => generateAndSync(false), 250); });
+  document.addEventListener('input', () => { clearTimeout(changeTimer); changeTimer = setTimeout(() => syncState(false), 250); });
 
   window.addEventListener('message', (event) => {
     if (!event.data || event.data.protocol !== protocol) return;

@@ -14,7 +14,7 @@ const save = (key, value) => { try { localStorage.setItem(`model-gallery.${key}`
 const favorites = Object.fromEntries(KINDS.map(k => [k, new Set(stored(`favorites.${k}`, []))]));
 const recent = Object.fromEntries(KINDS.map(k => [k, stored(`recent.${k}`, [])]));
 const clone = value => JSON.parse(JSON.stringify(value));
-function normalized(value) { return { schema: 1, selections: {}, libraries: {}, enabled: { portrait: true, costume: true, pose: true }, addToCanvas: false, ...clone(value || {}) }; }
+function normalized(value) { return { schema: 1, selections: {}, libraries: {}, enabled: { portrait: true, costume: true, pose: true }, addToCanvas: false, saveAssets: false, ...clone(value || {}) }; }
 function post(type, payload = {}) { parent.postMessage({ protocol: P, nodeId, pluginId, type, payload }, hostOrigin); }
 function notify(message) { clearTimeout(toastTimer); $('status').textContent = message; toastTimer = setTimeout(() => { $('status').textContent = ''; }, 7000); }
 function request(type, payload = {}) {
@@ -45,8 +45,9 @@ function renderCompact() {
     if (item) row.append(button('清空', () => { const next = clone(state); delete next.selections[k]; commit(next); }, 'text-button'));
     slot.append(pick, row, element('div', 'slot-caption', item ? `${item.id}${item.angle ? ' · ' + item.angle : ''}` : '尚未选择')); $('slots').append(slot);
   }
-  $('output-count').textContent = `本次输出 ${outputKinds(state).length} 张独立图片`;
+  $('output-count').textContent = `${state.saveAssets ? '保存原图' : '本次预览'} · ${outputKinds(state).length} 张`;
   $('add-canvas').checked = Boolean(state.addToCanvas);
+  $('save-assets').checked = Boolean(state.saveAssets);
 }
 
 async function readCatalog(k, directory) {
@@ -156,7 +157,7 @@ async function showPreview(item) {
     $('preview-stage').replaceChildren(img);
   } catch (error) { if (serial === previewSerial && error.name !== 'AbortError') dimensions.textContent = '大图无法读取，请检查图库完整性；仍可查看缩略图。'; }
 }
-async function storeImage(k, row, lib, thumb = false) {
+async function storeImage(k, row, lib, thumb = false, lifetime = 'persistent') {
   const path = thumb ? row.thumb : row.full, response = await fetch(lib.base + path);
   if (!response.ok) throw Error(`${LABELS[k]}${thumb ? '缩略图' : '原图'}缺失：${path}`);
   const bytes = new Uint8Array(await response.arrayBuffer());
@@ -165,7 +166,7 @@ async function storeImage(k, row, lib, thumb = false) {
   const mime = path.endsWith('.webp') ? 'image/webp' : /\.jpe?g$/.test(path) ? 'image/jpeg' : 'image/png';
   const bitmap = await createImageBitmap(new Blob([bytes], { type: mime })); const width = bitmap.width, height = bitmap.height; bitmap.close();
   const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lib.id}:${k}:${path}`)))].map(b => b.toString(16).padStart(2,'0')).join('');
-  const result = await request('file-store', { key: hash, name: `${LABELS[k]}-${row.id}${thumb ? '-thumb' : ''}.${path.split('.').pop()}`, mime, bytes, ...(thumb ? { purpose: 'draft' } : {}) });
+  const result = await request('file-store', { key: hash, name: `${LABELS[k]}-${row.id}${thumb ? '-thumb' : ''}.${path.split('.').pop()}`, mime, bytes, lifetime, ...(thumb ? { purpose: 'draft' } : {}) });
   return { source: canonicalUrl(result.url), width, height, mime };
 }
 async function usePreview() {
@@ -224,6 +225,8 @@ async function run(payload) {
   const serial = ++runSerial, snapshot = normalized(payload.state || state), kinds = outputKinds(snapshot);
   if (!features.outputBatch || !payload.runId) { post('error', { message: '请更新 HIOS，以使用多端口批量图片输出' }); return; }
   if (!kinds.length) { post('error', { message: '请至少选择并勾选一张参考图' }); return; }
+  if (!snapshot.saveAssets && !features.sessionMedia) { post('error', { runId: payload.runId, message: '请更新 HIOS 以使用本次预览，或勾选保存到资产库' }); return; }
+  const lifetime = snapshot.saveAssets ? 'persistent' : 'session';
   notify(`正在准备 ${kinds.length} 张原图…`);
   try {
     const outputs = [];
@@ -232,16 +235,17 @@ async function run(payload) {
       if (serial !== runSerial) return;
       if (selected.libraryId !== lib.id) throw Error(`${LABELS[k]}已更换图库，请重新选择图片`);
       const row = lib.byId.get(selected.id); if (!row) throw Error(`${LABELS[k]} ID 已不在当前索引中：${selected.id}`);
-      const result = await storeImage(k, row, lib);
+      const result = await storeImage(k, row, lib, false, lifetime);
       if (serial !== runSerial) return;
-      outputs.push({ kind: 'image', portId: k, ...result, name: `${LABELS[k]}-${row.id}.png`, metadata: { role: k, originalId: row.id, angle: row.angle, libraryId: lib.id, addToCanvas: Boolean(snapshot.addToCanvas) } });
+      outputs.push({ kind: 'image', lifetime, portId: k, ...result, name: `${LABELS[k]}-${row.id}.png`, metadata: { role: k, originalId: row.id, angle: row.angle, libraryId: lib.id, addToCanvas: Boolean(snapshot.addToCanvas) } });
     }
-    post('output-batch', { runId: payload.runId, outputs }); notify(`已提交 ${outputs.length} 张原图，等待宿主保存`);
+    post('output-batch', { runId: payload.runId, outputs }); notify(snapshot.saveAssets ? `已提交 ${outputs.length} 张原图，等待宿主保存` : `已输出 ${outputs.length} 张本次预览，不保存到资产库；重新打开画布后清空`);
   } catch (error) { if (serial === runSerial) { post('error', { runId: payload.runId, message: error.message }); notify(error.message); } }
 }
 function resetFilters() { filters[kind] = defaults(kind); $('search').value = ''; shown = 60; renderFilters(); renderGrid(); }
 $('open').onclick = () => open();
 $('add-canvas').onchange = event => commit({ ...state, addToCanvas: event.target.checked });
+$('save-assets').onchange = event => commit({ ...state, saveAssets: event.target.checked });
 $('settings-toggle').onclick = showSettings;
 $('settings-close').onclick = () => $('settings').close();
 $('source-info').onclick = () => $('notices').showModal();

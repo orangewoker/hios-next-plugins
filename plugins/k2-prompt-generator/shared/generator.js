@@ -5546,8 +5546,16 @@ function applyState(st){
   sockUnlock=!!m.sockUnlock;
   personNsfwOn=!!m.personNsfwOn;
   if(m.poseMode) poseMode=m.poseMode;
-  Object.keys(st.vals).forEach(function(id){ var e=$(id); if(e) e.value=st.vals[id]===undefined?'':st.vals[id]; });
-  populateEye(); /* 眼神随存档情绪串联还原，冲突值自动回落适配项 */
+  function restoreValues(ids){
+    ids.forEach(function(id){
+      var e=$(id); if(!e || !Object.prototype.hasOwnProperty.call(st.vals,id)) return;
+      var value=st.vals[id]===undefined?'':st.vals[id];
+      // Missing options may belong to another category; restore after rebuilding its pool.
+      if(e.tagName==='SELECT' && !Array.from(e.options).some(function(o){return o.value===value;})) return;
+      e.value=value;
+    });
+  }
+  restoreValues(Object.keys(st.vals));
   Object.keys(st.locked||{}).forEach(function(k){ locked[k]=!!st.locked[k]; });
   Object.keys(st.custom||{}).forEach(function(k){ customEnabled[k]=st.custom[k]; });
   Object.keys(st.secOff||{}).forEach(function(k){ secOff[k]=st.secOff[k]; });
@@ -5561,7 +5569,18 @@ function applyState(st){
   setPersonNsfwVisible(personNsfwOn);
   var ssw=$('sockUnlockSwitch'); if(ssw){ ssw.textContent=sockUnlock?'🧦 袜子·已解锁':'🧦 袜子·随风格'; ssw.classList.toggle('on', sockUnlock); }
   var selCat=$('clothCat'); if(selCat) populateClothItems(selCat.value);
+  refreshModeUI();
+  populateEye();
+  populatePoseItems(v('poseCat'));
+  populateLingerieItems(v('lingerieCat'));
+  populateSimPick(v('simCat'));
+  populateSfwPick(v('sfwSimCat'));
   repopulateStyleSelects();
+  restoreValues(Object.keys(st.vals));
+  // Hand details depend on the restored pose, not just its category.
+  populateHandExtras();
+  restoreValues(['poseExtra']);
+  syncSimFields(); syncSfwFields();
   applyLockUi(); applyCustomUi();
   updateSectionOffBtns();
   updateNsfwMasterBtn(); updateStyleHint();

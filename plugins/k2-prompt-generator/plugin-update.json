@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "files": [
     {
       "path": "README.md",
@@ -10,8 +10,8 @@
     },
     {
       "path": "app/bridge.js",
-      "size": 5606,
-      "sha256": "805b5ca77a849efe6bb73ef93d75e318d1770e0bed6eaffc487ac9989482ef98"
+      "size": 5521,
+      "sha256": "af81707e1384e2f0251e67dc0cbd755dbe80052887874d7726484609cbaee94c"
     },
     {
       "path": "app/index.html",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "351db8833099a29f590e7c65b814a97eecd1cc3cf0452f8e842b52f03af0c857"
+      "sha256": "f0017009589458499d9c685d5adbbf75edc06a72673a3d18efc505ce437144db"
     },
     {
       "path": "runtime/index.html",
@@ -45,8 +45,8 @@
     },
     {
       "path": "shared/generator.js",
-      "size": 633732,
-      "sha256": "27e93373ec6d71168a6d6fa7bd9aa535c3ca6174ea33181674394c318187d36c"
+      "size": 634384,
+      "sha256": "e2d10582dd8e7984aa0bba9033a411115247c0f49bc26a29afc5f0aa45c604e9"
     },
     {
       "path": "shared/hios-adapter.css",
