@@ -13,3 +13,9 @@ All processing is local. No user image is sent to these distribution sites.
 Downloaded 2026-11-02. Exact bundled bytes are recorded in `assets/checksums.json`. These weights are not modified. Shader/editor code is separate from the model distributions. License texts are in `licenses/`; bundled JavaScript retains vendor license banners. The runtime has remote model loading disabled.
 
 Source model classes: background, hair, body-skin, face-skin, clothes, other-accessories. Skin uses classes 2+3, subject uses 1-background. Models may produce classification/depth errors and the UI offers manual skin correction and depth preview.
+
+## Face landmarks (0.3.0)
+
+MediaPipe Face Landmarker float16 v1 task: https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task . MediaPipe model distribution, Apache-2.0; license text included in licenses/MediaPipe-Apache-2.0.txt. Downloaded 2026-11-02.
+
+Pixel Cake was reviewed for general architecture only. Its workspace declares UNLICENSED. No Pixel Cake implementation code or model weights are included. Portrait shaders, control mapping, skin smoothing and Lab statistics transfer were independently implemented.

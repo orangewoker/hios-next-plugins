@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "pluginId": "color-grade",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "files": [
     {
       "path": "README.md",
-      "size": 5332,
-      "sha256": "908f73f50d5ee7c93a01be6d561a28d99cf13924f70ca005ad08194eb101cd7c"
+      "size": 6881,
+      "sha256": "67ffe98131576c609e64374322ba3d5b000e393e615188f25324111de19d4605"
     },
     {
       "path": "THIRD_PARTY.md",
-      "size": 1502,
-      "sha256": "14754f6ccda4c0eb6a1102acff9be26f112f18ce00090d176bce5e9849e88588"
+      "size": 2077,
+      "sha256": "997b3cae2e7890bc2b82217bd08d980135302edec143aa0f9a73817d61546cf9"
     },
     {
       "path": "app/index.html",
@@ -20,8 +20,8 @@
     },
     {
       "path": "assets/checksums.json",
-      "size": 2033,
-      "sha256": "31905354bf2afa712d969c2dc8351ff002986b1aa94fc609628fbb2195c5dc3a"
+      "size": 2193,
+      "sha256": "fd299dabf3d56ca1ee0aa114d9a963f1e51b148360f766ea14ba51b3a8e1ab12"
     },
     {
       "path": "assets/models/depth/config.json",
@@ -37,6 +37,11 @@
       "path": "assets/models/depth/preprocessor_config.json",
       "size": 436,
       "sha256": "b7106e3822a52ce1fdabceea7c0e013009f5709d609a5b744c90e6599fcf4b3b"
+    },
+    {
+      "path": "assets/models/face/face_landmarker.task",
+      "size": 3758596,
+      "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
     },
     {
       "path": "assets/models/skin/selfie_multiclass_256x256.tflite",
@@ -105,8 +110,8 @@
     },
     {
       "path": "plugin.json",
-      "size": 911,
-      "sha256": "4b95620e054552a450c7d8230e26d90984780455f11ff3417620ba57f5c19e26"
+      "size": 1172,
+      "sha256": "d71e37f21ba97a79f00524cf45d342c9ac7c1a69624266bdba7fffbc0d7f1ddd"
     },
     {
       "path": "runtime/index.html",
@@ -125,18 +130,18 @@
     },
     {
       "path": "shared/editor.css",
-      "size": 8585,
-      "sha256": "9c8b630287f22ce3dd7bc45acdd69199c116127e2b420ed7b335de2909d34bf0"
+      "size": 8990,
+      "sha256": "3a65062c6e57b38536159405c36b77dc89975d11d23c2240bc0b251e5fda9aac"
     },
     {
       "path": "shared/editor.mjs",
-      "size": 31302,
-      "sha256": "fe4ceafc690702843fcbddd02fa340a9fce053a788be10f99319e7265a106999"
+      "size": 39106,
+      "sha256": "30e32b33421fa1ef31bd289b85d70ec5424c2904f157769b26a333a7db9988ee"
     },
     {
       "path": "shared/engine.mjs",
-      "size": 9234,
-      "sha256": "c2e95ea4a6e605ae1249c151f8559699fabc89992f0ef8399623a04403e328cb"
+      "size": 9758,
+      "sha256": "5609083a98c8d30d5ca3f4ad887e7f5539565e166018afc52305de3d95046dcf"
     },
     {
       "path": "shared/errors.mjs",
@@ -145,8 +150,8 @@
     },
     {
       "path": "shared/gpu.mjs",
-      "size": 8414,
-      "sha256": "5b04c84a923201c5a02d54af2cd91c5d68106856ab48d038b437266675c229bb"
+      "size": 9386,
+      "sha256": "56019ceccd2bd3776b8537cafbf3d10b9f701332ed86069f17404a1984810e17"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -164,14 +169,39 @@
       "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
     },
     {
+      "path": "shared/match.mjs",
+      "size": 2989,
+      "sha256": "a7c31a57556c561b841b2c48d1ab7a137c3fa24bcc9ff49a562c845a9933d29a"
+    },
+    {
+      "path": "shared/portrait-analysis.mjs",
+      "size": 2821,
+      "sha256": "7dc3c81ec90815dbd25bca46874cd46ba95b417fb588c4cb17090abe6ea82f66"
+    },
+    {
+      "path": "shared/portrait-gpu.mjs",
+      "size": 3272,
+      "sha256": "419147f062fcba01b628758e47f54a810d8026980d008f7883eef84deb3c1e4d"
+    },
+    {
+      "path": "shared/portrait-state.mjs",
+      "size": 3908,
+      "sha256": "87379442da247339b3faea1db12c24b1faa06131e249033e1132bafd73aae563"
+    },
+    {
+      "path": "shared/portrait-ui.mjs",
+      "size": 6350,
+      "sha256": "4fc8f889bbec1f062731d38a07bdd5187e76cb8468e03eaf7c54d5acabf21776"
+    },
+    {
       "path": "shared/select.mjs",
       "size": 3354,
       "sha256": "9f9eabe216b4bae6e5fe7c3aaa3dfea097c593be390fd2fc741d7676cd86b248"
     },
     {
       "path": "shared/view.mjs",
-      "size": 5161,
-      "sha256": "87f737bb0ff2add093c3b660ae7852e476e5c9558b3fa3e3757e0ecf7569b948"
+      "size": 5355,
+      "sha256": "23c598e1db6ce252a039150ab851409cb7103c44972885b374a302d79c87bb31"
     },
     {
       "path": "shared/worker.mjs",

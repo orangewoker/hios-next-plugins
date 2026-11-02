@@ -1,5 +1,7 @@
+import {normalizeMatch} from './match.mjs';
+import {portraitDefaults,normalizePortrait} from './portrait-state.mjs';
 // Pure, deterministic sRGB engine. Never modifies the source buffer.
-export const SCHEMA = 2;
+export const SCHEMA = 3;
 export const FIELDS = {
   basic: [['exposure','曝光',-2,2,.05],['temperature','色温',-100,100,1],['tint','色调',-100,100,1],['contrast','对比度',-100,100,1],['highlights','高光',-100,100,1],['shadows','阴影',-100,100,1]],
   skin: [['yellow','去黄',0,100,1],['red','去红',0,100,1],['light','提亮',0,100,1],['cool','冷白',0,100,1],['blood','保留血色',0,100,1]],
@@ -11,14 +13,15 @@ export function defaults() {
     skin:{enabled:false,mode:'ai',yellow:0,red:0,light:0,cool:0,blood:70},
     color:{enabled:true,saturation:0,vibrance:0,reds:0,oranges:0,yellows:0,greens:0,blues:0},
     depth:{enabled:false,aperture:2.8,strength:50,range:12,foreground:true,protect:true,focus:[.5,.4]},
-    strokes:[],analysisSource:'',adaptive:false,
-    open:{basic:true,skin:false,color:false,depth:false},customPresets:[],source:''};
+    match:normalizeMatch(),portrait:portraitDefaults(),strokes:[],analysisSource:'',adaptive:false,
+    open:{basic:true,skin:false,color:false,depth:false,portrait:false},customPresets:[],source:''};
 }
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const num=(v,fallback,a,b)=>Number.isFinite(v)?clamp(v,a,b):fallback;
 export function normalize(raw={}) {
   const d=defaults();
   if (!raw || typeof raw!=='object') return d;
+  d.portrait=normalizePortrait(raw.portrait);d.match=normalizeMatch(raw.match);
   d.intensity=num(raw.intensity,100,0,100);
   d.preset=typeof raw.preset==='string'?raw.preset.slice(0,80):'original';
   d.modified=raw.modified===true;
@@ -43,7 +46,7 @@ export function normalize(raw={}) {
 }
 export function settings(raw) {
   const s=normalize({...raw,customPresets:[]});
-  return {basic:s.basic,skin:s.skin,color:s.color,intensity:s.intensity,adaptive:s.adaptive};
+  return {basic:s.basic,skin:s.skin,color:s.color,intensity:s.intensity,adaptive:s.adaptive,portrait:{...portraitDefaults(),enabled:s.portrait.enabled,faces:Array.from({length:4},()=>({...s.portrait.faces[s.portrait.selected]}))}};
 }
 export const PRESETS = [
   {id:'original',name:'原图 / 重置调色',category:'基础',settings:{}},
@@ -59,7 +62,7 @@ export const PRESETS = [
 ];
 export function applyPreset(state,preset) {
   const s=normalize(state),p=settings(preset.settings);
-  return {...s,...p,preset:preset.id,modified:false};
+  return {...s,...p,portrait:{...p.portrait,warps:s.portrait.warps,selected:s.portrait.selected,brush:s.portrait.brush,power:s.portrait.power},preset:preset.id,modified:false};
 }
 export function sourceFrom(v) {
   if(Array.isArray(v))return sourceFrom(v[0]);

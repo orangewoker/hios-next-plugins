@@ -6,7 +6,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 
 | 插件 | 版本 | 安装 URL |
 | --- | --- | --- |
-| 调色（应用 + 画布节点） | 0.2.4 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/color-grade`（本地 AI 选肤、调色与模拟景深；内置离线模型） |
+| 调色（应用 + 画布节点） | 0.3.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/color-grade`（本地 AI 多人五官、磨皮、液化、参考图追色与景深；内置离线模型） |
 | Breeze TTS 语音工坊（应用 + 画布节点） | 0.2.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/breeze-tts`（需 HIOS Next ≥ 3.8.8；本机 Q8_0 或局域网远程连接，模型另行下载） |
 | 模特（人物 / 服装 / 姿势参考图库） | 0.3.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/model-gallery`（需 HIOS ≥ 3.8.1；插件与素材独立下载，已有图库直接复用） |
 | 效果控制器（画布提示词节点） | 1.0.1 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/effect-controller`（本地生成提示词；已验证 HIOS Next 3.6.6，无需额外主程序更新） |
