@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "dx-cut",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "files": [
     {
       "path": "LICENSE",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 5673,
-      "sha256": "ec35ca375cd33b2de71a9064e86649013c1561b36d2bc0ea9739ac4320e674f0"
+      "size": 8163,
+      "sha256": "a0c7c0dfb92bc5b589afabf938906caa3c1f9492b29771548b4e0cc731fa8ffa"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -106,7 +106,7 @@
     {
       "path": "plugin.json",
       "size": 1192,
-      "sha256": "3491ac6f642f82453a5af547e2b65879103d75e3a64ebff78bfb2c49f9a09786"
+      "sha256": "3d808b15eeee438557acf44d1024a9e54f580e85c0ef3e115c235f4639717ae9"
     },
     {
       "path": "provenance.json",
@@ -114,14 +114,14 @@
       "sha256": "d3f3e3cbcb2911f9c2e44197da1f026e608187c3149941de38d3cf4dd51740f4"
     },
     {
-      "path": "runtime/assets/index-Vpccwh1N.js",
-      "size": 492875,
-      "sha256": "bee949ef96a81c5e9e34a15baf7d3080d938305b206b0acbe7f95165113b9910"
+      "path": "runtime/assets/index-CL-3kM4A.js",
+      "size": 500097,
+      "sha256": "c3cd3ba0daae99a7b2c78e99a18b334a3e031fdd157af22af44950650af1ac03"
     },
     {
-      "path": "runtime/assets/index-gS2Ehw55.css",
-      "size": 83544,
-      "sha256": "e96ccc589266ef5987edc5f4b066cdf9d55c3028ceff6d5de4b1928250017378"
+      "path": "runtime/assets/index-ZgPDp5fQ.css",
+      "size": 83878,
+      "sha256": "7c7508197e8152a3d03ebbcb901e7ebd184c575f49a2c1b27f09d66b86acad0c"
     },
     {
       "path": "runtime/builtin-assets/LICENSE.txt",
@@ -751,7 +751,7 @@
     {
       "path": "runtime/index.html",
       "size": 654,
-      "sha256": "9547f64642b512aca60bd7c3984a47e8fb96a4fa1afde8c77e1314fcf97371b5"
+      "sha256": "f4bc2afabe70500ee22e781479cb1332b8c11b3524c687e2286041bd7d6ca07d"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -770,8 +770,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1613,
-      "sha256": "47119328241571332d75bc9817a7c3aff03b7176be22685cd99125b91a144c8d"
+      "size": 2493,
+      "sha256": "e18b17a9c6cc99bca24c2ec1f936b5e38db40f7b87c1e55c3237ecba57494370"
     }
   ]
 }
