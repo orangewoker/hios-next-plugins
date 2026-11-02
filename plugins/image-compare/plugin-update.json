@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "pluginId": "image-compare",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "files": [
     {
       "path": "README.md",
-      "size": 2210,
-      "sha256": "a7b82198d15618e6ba235f1c24284ee33591e85d4b5816117a1a4e0cd0e6218a"
+      "size": 2485,
+      "sha256": "fbc1fa0a39ec9c043d9b1abbe9587d8639aa0974df3fee117753fd0f4c75e69e"
     },
     {
       "path": "plugin.json",
       "size": 1430,
-      "sha256": "3bce03731afc5703bcb25926c37834b681ac5851e8eeb4982fdebe510bce9dc0"
+      "sha256": "94e8770771ee92c1af38ce893e289e28bddf185c85520c90dcf0ad113dce9807"
     },
     {
       "path": "runtime/index.html",
@@ -25,8 +25,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 8259,
-      "sha256": "2af6e45778ee0aa88b287159ac9b840cc8768d0afb804b78bdab3faa2083143c"
+      "size": 6194,
+      "sha256": "33d39bdee23a5eb7ee72be0ff0ff6c913964a2fe48f7262b4e12ca1ab18ec0cf"
     },
     {
       "path": "shared/hios-glass.js",
@@ -45,8 +45,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2649,
-      "sha256": "8321fb5b8c36cf8ab85b52eb21af0f966a45827c68024acd022a89db8d8c3776"
+      "size": 3037,
+      "sha256": "2d210024437b3897e192984b9fff804be7d97c783b350072a67e02a269f69412"
     }
   ]
 }

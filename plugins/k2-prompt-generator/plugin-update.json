@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "files": [
     {
       "path": "README.md",
-      "size": 1267,
-      "sha256": "88e49d5dd08dfeed12ca28211025b30761eeca190f11b6174f62bdb5b7e26797"
+      "size": 1542,
+      "sha256": "596500c804a8b99e8d501caa36b275a75d8b69cf657485a638759d010fbd4ca6"
     },
     {
       "path": "app/bridge.js",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "217c6f5ee81bf76be8d28c7549b9aeeef01a8e81c52c13ec629a3b024586a67b"
+      "sha256": "64e6997717fdfb841a3c8a41f8ec1615f44c0ceb52628cc494dfbba97e6160ef"
     },
     {
       "path": "runtime/index.html",
@@ -55,8 +55,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 10544,
-      "sha256": "819f1ff64acd543f578d39c5aef766a1b59ceda17c9ebfeebf06e94b5b1a8a49"
+      "size": 8317,
+      "sha256": "05c7d77ad14b1bf040cde8d3e524cb869d40e9e320b49a8ecfb9f3213ab17c3b"
     },
     {
       "path": "shared/hios-glass.js",
@@ -75,8 +75,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3840,
-      "sha256": "548c5e914d5473b8227dca9bd9670ecd97cdc5e8a757611f09abb6eee37f937b"
+      "size": 4234,
+      "sha256": "5be9cbc98485275d98630a00ee9bb372b972b29002de871a8e633f627dbb7928"
     }
   ]
 }

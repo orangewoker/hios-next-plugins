@@ -3,6 +3,15 @@
   "pluginId": "watermark-master",
   "versions": [
     {
+      "version": "0.1.9",
+      "ref": "watermark-master-v0.1.9",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "恢复实色圆角按钮、输入框和面板，移除液态玻璃高光、透明与模糊；保留现有滑块。",
+        "下拉菜单改为不透明独立浮层材质，隔离选项与普通按钮样式，区分选中和悬停状态。"
+      ]
+    },
+    {
       "version": "0.1.8",
       "ref": "watermark-master-v0.1.8",
       "releasedAt": "2026-11-02",

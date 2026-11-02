@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "breeze-tts",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "files": [
     {
       "path": ".gitignore",
@@ -15,8 +15,8 @@
     },
     {
       "path": "README.md",
-      "size": 7934,
-      "sha256": "03ef4cbc210f3fbfd750ab0124561add6d92881912d4fc65d0305e3203caf8f5"
+      "size": 8208,
+      "sha256": "db0632dd179da7b58ef388f7504aa0ca9317978eb7d37339233436f3b51ad54e"
     },
     {
       "path": "TEST_REPORT.md",
@@ -61,12 +61,12 @@
     {
       "path": "package.json",
       "size": 321,
-      "sha256": "08a60a7e200695ce00e4c86313db3f38b454d15f288bf111d9e785fe9b475b9b"
+      "sha256": "058d35bbfd830d0daf1c3c166607e8b4718818559781fecd5d696f0d5d98363c"
     },
     {
       "path": "plugin.json",
       "size": 2481,
-      "sha256": "6c57817c7fb95bacdb6259785d1e58670809ef8c19365d9d2630084161009d23"
+      "sha256": "d0e6e5a92a965f292d10fed3dc4c22cd9ac4c43d2160decccd7c0d72ff35b9d9"
     },
     {
       "path": "scripts/browser-smoke.js",
@@ -160,8 +160,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 10027,
-      "sha256": "5bd1da42412a0095c7353b51dae5736f234675343162a1e77a42a7d99138b2b1"
+      "size": 7808,
+      "sha256": "fa687dca55efbab10fea08886bbc78a3d4c51531a8bd3f3c223d01dcdd2506b9"
     },
     {
       "path": "shared/hios-glass.js",
@@ -255,8 +255,8 @@
     },
     {
       "path": "versions.json",
-      "size": 719,
-      "sha256": "bdf9c0bbd56ed81ff0473a478a34bde92334c7c815e4e25aab45baf4e4259933"
+      "size": 1102,
+      "sha256": "8f04e51c430177479c101f27f239f76afa228b3ce7503ff10216f027f8e88cad"
     }
   ]
 }

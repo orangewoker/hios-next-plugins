@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "compute-cloud",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "files": [
     {
       "path": "README.md",
-      "size": 2364,
-      "sha256": "239b20e9d58cdae09559a654fbcf296f5d25181e3358eebc02bec360aa4e8805"
+      "size": 2638,
+      "sha256": "4a6a65e987d9d979b5d4ac4655a7cb55e5d5644156db67cb9602c31ab7bce184"
     },
     {
       "path": "app/app.js",
@@ -31,7 +31,7 @@
     {
       "path": "plugin.json",
       "size": 1347,
-      "sha256": "fcfdfb5de649c19544e5c82b1eca137b68c29bc7bd3569f554fa5f35210b5518"
+      "sha256": "3ea729a7bad983698190d241696630bcb0b03741bda8a0bb2311ca8a5560ad32"
     },
     {
       "path": "shared/client.js",
@@ -50,8 +50,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 10030,
-      "sha256": "b482bc9b41aa65dc64a0b387832abf39652ba66f8ad728b6dfef1d9731622086"
+      "size": 7866,
+      "sha256": "9f637e7fd3075c0badcf26f36a82484fc5ffc52bf79620eeaddeaa9c2b0f8925"
     },
     {
       "path": "shared/hios-glass.js",
@@ -85,8 +85,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1391,
-      "sha256": "a4795a24f84e7e75d85d0f6ef9519ca95ab1628d33332c557ead2849f3926f76"
+      "size": 1777,
+      "sha256": "508dc53b224f107f5b3a933a8c0fa0e658b0e283f12a3d8b59fc4f336bd9f27b"
     }
   ]
 }

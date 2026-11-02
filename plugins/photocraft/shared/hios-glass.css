@@ -1,39 +1,20 @@
-/* HIOS Liquid Glass material. Opt-in selectors are compiled per plugin. */
-:root {
-  --hios-glass-edge:color-mix(in srgb,var(--hios-border) 65%,white 35%);
-  --hios-glass-surface:color-mix(in srgb,var(--hios-surface) 76%,transparent);
-  --hios-glass-control:color-mix(in srgb,var(--hios-surface) 64%,transparent);
-  --hios-glass-shine:#ffffffc2;
-  --hios-glass-shadow:0 3px 10px #17223b0c,0 1px 2px #17223b10;
-  --hios-glass-thumb:#fff;
-  --hios-glass-track:color-mix(in srgb,var(--hios-text) 11%,transparent);
-}
-:root[data-theme=dark] {
-  --hios-glass-edge:color-mix(in srgb,var(--hios-border) 72%,white 28%);
-  --hios-glass-shine:#ffffff30;
-  --hios-glass-shadow:0 4px 14px #0003,0 1px 2px #0004;
-  --hios-glass-thumb:#e9edf3;
-}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl) {
-  border:1px solid var(--hios-glass-edge);border-radius:999px;
-  background:var(--hios-glass-control);color:var(--hios-text);
-  background-image:linear-gradient(165deg,#ffffff30,transparent 48%,#ffffff08);
-  box-shadow:inset 0 1px 0 var(--hios-glass-shine),inset 0 -1px 0 #00000004,var(--hios-glass-shadow);
-  transition:background-color .16s,border-color .16s,box-shadow .16s;
-}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):hover:not(:disabled):not([aria-disabled=true]) {background-color:color-mix(in srgb,var(--hios-surface) 92%,var(--hios-accent) 8%);border-color:color-mix(in srgb,var(--hios-accent) 32%,var(--hios-glass-edge));}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):active:not(:disabled):not([aria-disabled=true]) {box-shadow:inset 0 1px 4px #0002;}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):is(.active,.selected,.on,[aria-pressed=true],[aria-selected=true],[aria-expanded=true]) {background-color:color-mix(in srgb,var(--hios-accent) 14%,var(--hios-surface));border-color:color-mix(in srgb,var(--hios-accent) 55%,var(--hios-glass-edge));color:var(--hios-accent);}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])) {border-radius:12px;border-color:var(--hios-glass-edge);background:var(--hios-glass-control);color:var(--hios-text);box-shadow:inset 0 1px 2px #00000006,inset 0 1px 0 var(--hios-glass-shine);}
+/* Solid themed controls. Historical filename retained for installed plugin compatibility. */
+:root {--hios-shadow-button:0 1px 2px #00000012;--hios-glass-edge:var(--hios-border);--hios-glass-surface:var(--hios-surface);--hios-glass-control:var(--hios-control);--hios-glass-shine:transparent;--hios-glass-shadow:none;--hios-glass-thumb:#fff;--hios-glass-track:color-mix(in srgb,var(--hios-text) 11%,transparent);}
+:root[data-theme=dark] {--hios-glass-thumb:#e9edf3;}
+:root body :is(:is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):not(:where(.select-menu [role=option]))) {border:1px solid var(--hios-border);border-radius:12px;background:var(--hios-control);color:var(--hios-text);background-image:none;box-shadow:0 1px 2px #00000012;transition:background-color .16s,border-color .16s;}
+:root body :is(:is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):not(:where(.select-menu [role=option]))):hover:not(:disabled):not([aria-disabled=true]) {background:color-mix(in srgb,var(--hios-control) 90%,var(--hios-text) 10%);}
+:root body :is(:is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):not(:where(.select-menu [role=option]))):is(.active,.selected,.on,[aria-pressed=true]) {background:color-mix(in srgb,var(--hios-accent) 14%,var(--hios-control));border-color:var(--hios-accent);color:var(--hios-accent);}
+:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])) {border-radius:12px;border-color:var(--hios-border);background:var(--hios-control);color:var(--hios-text);box-shadow:none;}
 :root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color]))::placeholder {color:var(--hios-text-muted,var(--hios-text-secondary,#777));opacity:1;}
-:root body :is(.ai-toolbar .primary) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);border-color:color-mix(in srgb,var(--hios-accent) 80%,white);box-shadow:inset 0 1px 0 #ffffff66,0 3px 10px color-mix(in srgb,var(--hios-accent) 24%,transparent);}
+:root body :is(.ai-toolbar .primary) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);border-color:var(--hios-accent);box-shadow:0 1px 2px #00000012;}
 :root body :is(.ai-toolbar .primary):hover:not(:disabled) {background:color-mix(in srgb,var(--hios-accent) 92%,var(--hios-text) 8%);color:var(--hios-accent-contrast,#fff);}
-:root body :not(*) {border-radius:20px;border-color:var(--hios-glass-edge);background:var(--hios-glass-surface);box-shadow:inset 0 1px 0 var(--hios-glass-shine),0 3px 10px #17223b05;}
-/* Blur only bounded navigation/floating surfaces, never artwork or full editor panes. */
-:root body :is(.ai-toolbar) {background:var(--hios-glass-surface);box-shadow:inset 0 1px 0 var(--hios-glass-shine);-webkit-backdrop-filter:blur(20px) saturate(145%);backdrop-filter:blur(20px) saturate(145%);}
-:root body :is(.ai-popover,.select-menu) {background:color-mix(in srgb,var(--hios-surface) 88%,transparent);color:var(--hios-text);border:1px solid var(--hios-glass-edge);border-radius:18px;box-shadow:inset 0 1px 0 var(--hios-glass-shine),0 12px 36px #0003;-webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);}
-:root body :is(.select-menu [role=option]) {border-radius:11px;border-color:transparent;background:transparent;color:var(--hios-text);box-shadow:none;}
-:root body :is(.select-menu [role=option]):is(:hover,:focus-visible,.active,.is-active,.selected,[aria-selected=true]) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);box-shadow:inset 0 1px 0 #ffffff30;}
+:root body :not(*) {border-radius:20px;border-color:var(--hios-border);background:var(--hios-surface);box-shadow:none;}
+/* No filters: backdrop-filter creates containing blocks and compositing artifacts in scaled WebViews. */
+:root body :is(.ai-toolbar) {background:var(--hios-surface);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;}
+:root body :is(.ai-popover,.select-menu) {background:var(--hios-surface);color:var(--hios-text);border:1px solid var(--hios-border);border-radius:12px;box-shadow:0 6px 18px #00000026;-webkit-backdrop-filter:none;backdrop-filter:none;background-image:none;}
+:root body :is(.select-menu [role=option]) {border-radius:7px!important;border:0!important;background:transparent;color:var(--hios-text);box-shadow:none!important;background-image:none!important;}
+:root body :is(.select-menu [role=option]):is(.active,.is-active,.selected,[aria-selected=true]) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);box-shadow:none;}
+:root body :is(.select-menu [role=option]):hover:not(.active):not(.selected):not([aria-selected=true]),:root body :is(.select-menu [role=option]):focus-visible:not(.active):not(.selected):not([aria-selected=true]) {background:color-mix(in srgb,var(--hios-accent) 15%,var(--hios-surface));color:var(--hios-text);box-shadow:none;}
 /* Preserve native range semantics, widths, event handlers and keyboard behavior. */
 :root body :not(*) {appearance:none;-webkit-appearance:none;min-width:0;height:28px;min-height:0;padding:0;background:transparent;border:0;border-radius:999px;box-shadow:none;--range-fill:50%;}
 :root body :not(*)::-webkit-slider-runnable-track {height:7px;border-radius:999px;background:linear-gradient(to right,var(--hios-accent) 0 var(--range-fill),var(--hios-glass-track) var(--range-fill) 100%);box-shadow:inset 0 1px 2px #00000012;}
@@ -43,18 +24,8 @@
 :root body :not(*)::-moz-range-track {height:7px;border-radius:999px;background:var(--hios-glass-track);}
 :root body :not(*)::-moz-range-progress {height:7px;border-radius:999px;background:var(--hios-accent);}
 :root body :not(*)::-moz-range-thumb {width:27px;height:21px;border:1px solid #ffffffaa;border-radius:12px;background:var(--hios-glass-thumb);box-shadow:0 2px 5px #0003;}
-/* Only settings toggles opt in; selection checkboxes keep their original semantics/geometry. */
-:root body :not(*) {appearance:none;-webkit-appearance:none;position:relative;display:inline-block;vertical-align:middle;box-sizing:border-box;width:32px!important;min-width:32px;height:20px;min-height:20px;margin:0;padding:0;flex-shrink:0;border:1px solid color-mix(in srgb,var(--hios-border) 70%,transparent);border-radius:999px;background:var(--hios-glass-track);box-shadow:inset 0 1px 2px #0000000c;transition:background-color .18s,border-color .18s;}
-:root body :not(*)::before {content:'';position:absolute;box-sizing:border-box;width:16px;height:16px;left:1px;top:1px;border-radius:50%;background:var(--hios-glass-thumb);box-shadow:0 1px 3px #0003,inset 0 1px 0 white;transition:transform .18s;}
-:root body :not(*):checked {background:var(--hios-accent);border-color:transparent;}
-:root body :not(*):checked::before {transform:translateX(12px);}
-:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl,:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])):focus-visible {outline:2px solid var(--hios-accent);outline-offset:3px;}
+
+:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl,:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])):focus-visible {outline:2px solid var(--hios-accent);outline-offset:2px;}
 :root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl,:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])):is(:disabled,[aria-disabled=true]) {opacity:.4;cursor:default;box-shadow:none;}
-@supports not (backdrop-filter:blur(1px)) {:root body :is(.ai-popover,.select-menu),:root body :is(.ai-toolbar),:root body :not(*) {background:var(--hios-surface);}}
-@media(prefers-reduced-motion:reduce) {:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl,:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])),:root body :not(*)::before {transition:none!important;}}
-@media(forced-colors:active) {
-  :root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl),:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])),:root body :is(.ai-popover,.select-menu) {border:1px solid ButtonText;box-shadow:none;}
-  :root body :not(*),:root body :not(*) {appearance:auto;-webkit-appearance:auto;}
-  :root body :not(*)::before {display:none;}
-  :root body :not(*)::-webkit-slider-thumb {appearance:auto;-webkit-appearance:auto;}
-}
+@media(prefers-reduced-motion:reduce) {:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl,:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])) {transition:none!important;}}
+@media(forced-colors:active) {:root body :is(:is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(button,summary),.ai-toolbar .select-trigger,.ai-toolbar summary,#webgl):not(:where(.select-menu [role=option]))),:root body :is(:is(.ai-toolbar button,.ai-popover button,.ai-prompt):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select),.ai-toolbar input:not([type=checkbox]):not([type=range]):not([type=color])),:root body :is(.ai-popover,.select-menu) {border:1px solid ButtonText;box-shadow:none;}:root body :not(*) {appearance:auto;-webkit-appearance:auto;}:root body :not(*)::-webkit-slider-thumb {appearance:auto;-webkit-appearance:auto;}}

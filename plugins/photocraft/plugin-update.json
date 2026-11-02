@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "size": 8168,
-      "sha256": "1789ae1cd19668d45de2c299a775bd9953d4df198ee157815da5f6197653e2fd"
+      "size": 8442,
+      "sha256": "1eff0ed5d6df5a6e7f0dfd75d11dfa5322bc1f19b8ddc846760dc429a160c3b5"
     },
     {
       "path": "THIRD_PARTY/assets/dict/LICENSE-SCOWL.txt",
@@ -126,7 +126,7 @@
     {
       "path": "plugin.json",
       "size": 1934,
-      "sha256": "e832452c27ae0660373d7fc946ae242d37f47c6891f96c6893d75207b454903d"
+      "sha256": "23f64c904f72a27408d6c2363c81599021a42f8abaf9eea7087d42ce5a2aa9cf"
     },
     {
       "path": "runtime/index.html",
@@ -160,8 +160,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 9501,
-      "sha256": "2b3e7f264213fc9ef0d1b3ec52ad77c096e33a5531704b207c245d72305eb7dd"
+      "size": 7570,
+      "sha256": "56ff1fb677af23ae7f0e7a590edf0beafd2e99b3d32cdacb8e9e80aff63e3bf7"
     },
     {
       "path": "shared/hios-glass.js",
@@ -195,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4849,
-      "sha256": "8d1d67e75029076fd1b6be21aebef8cffac351afcdf9b1de596d92530b6cdf6f"
+      "size": 5232,
+      "sha256": "8daacdaa9aa3eb1eeeba881fbe4b677a0454c37c392b8fd2ed4ecc0a7e992582"
     },
     {
       "path": "web/build.json",

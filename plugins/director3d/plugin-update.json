@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "director3d",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "files": [
     {
       "path": ".gitignore",
@@ -15,8 +15,8 @@
     },
     {
       "path": "README.md",
-      "size": 5431,
-      "sha256": "9ab39e6cec5b1708df475358ef91a53d2e4c722977d33864d4204b1a46a5f468"
+      "size": 5706,
+      "sha256": "35f1c2375d4d050da0b448f4c42cec9b2c849d22438f81286e42f1f89e97a60d"
     },
     {
       "path": "THIRD_PARTY_NOTICES.txt",
@@ -46,17 +46,17 @@
     {
       "path": "package-lock.json",
       "size": 82865,
-      "sha256": "6e7738c6b828c29c28b22c05a19d4816fa3f7cbafeff79cc7c76314682062b78"
+      "sha256": "30b6047c42a85354dd8d85c7d4a14ea9c9d3cd191ee72414762abf5addc1e8ff"
     },
     {
       "path": "package.json",
       "size": 770,
-      "sha256": "6016ad3538da047d20dc923f951e2a51bb76fe33bc9821b58dff12ad85963c87"
+      "sha256": "99432b8492b4f0eb3ca6fabc80c82d895aa4dec3514d475cdc69b8c206f8f611"
     },
     {
       "path": "plugin.json",
       "size": 1792,
-      "sha256": "211c6a400183128a199f09a503abab0ef06fea4a682af922fc0e146df4947f33"
+      "sha256": "fa16fd1b52b6572362059679d3e9cfe71d4c2eab3616391c26e9f0df17403a83"
     },
     {
       "path": "runtime/app.html",
@@ -210,13 +210,13 @@
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 3531,
-      "sha256": "6887963cf86a27d574bfb121ba6839c3b1955d1ed604db483ceb468bbbec3ad3"
+      "size": 3246,
+      "sha256": "92537ee011b82f8f62d773fc46d1c526abe5ab082581bec54aa31cc9ff0b2e06"
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 9399,
-      "sha256": "5bdc330d853c12f0f265c554ed2b6cc795771c05e343edb37fc3f0357208b335"
+      "size": 7557,
+      "sha256": "c9067bab69cc1b0cb13925af21ca69175fb5554d7693bb01439244483de0b82d"
     },
     {
       "path": "shared/hios-glass.js",
@@ -385,8 +385,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4360,
-      "sha256": "63a5528bc0afa2fb2fa4880d09da2685700b2f325bd3134d22ffae7494ddf2d6"
+      "size": 4745,
+      "sha256": "26d02f4d08389bfbb75f108ffb118a54f0c0ef119fd61aa138be1d62b0e7a6a2"
     },
     {
       "path": "vite.config.mjs",

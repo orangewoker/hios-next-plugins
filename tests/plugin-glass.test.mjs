@@ -11,7 +11,8 @@ test('every plugin opts into bounded material; no global artwork/geometry reset'
     assert.ok(!css.includes(':--'),id);
     assert.ok(!/\b(?:canvas|svg|img|video)\s*\{/.test(css),id);
     if(config.glass.local)continue;
-    for(const feature of ['prefers-reduced-motion','forced-colors','@supports not','--hios-accent-contrast','--range-fill'])assert.ok(css.includes(feature),id+' '+feature);
+    for(const feature of ['prefers-reduced-motion','forced-colors','--hios-accent-contrast','--range-fill'])assert.ok(css.includes(feature),id+' '+feature);
+    assert.ok(!/backdrop-filter\s*:\s*blur/.test(css),id+': no composited glass');
   }
   assert.ok(!adapters['image-compare'].glass.ranges,'comparison divider is not a settings slider');
   assert.ok(!adapters['watermark-master'].glass.buttons.includes('anchors'),'placement geometry remains original');

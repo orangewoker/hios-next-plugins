@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "color-grade",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": [
     {
       "path": "README.md",
-      "size": 7218,
-      "sha256": "9beed56972aa359b987082d44a232a87cf77ad688d5128262f1a5aa2f1389ee4"
+      "size": 7492,
+      "sha256": "a5dd515d174e2ce1573fe98d33afe6e6d23d5ebbc399929dbec4e22d1875cc5d"
     },
     {
       "path": "THIRD_PARTY.md",
@@ -111,7 +111,7 @@
     {
       "path": "plugin.json",
       "size": 1172,
-      "sha256": "6c99d9baecdd107cc8ff488acccf54945b5e88d6b16fef1fd366622aa5f30b7e"
+      "sha256": "aa889b67c65c52a762738a3f2e634541474f49325cb47100a8c811f71a1257f3"
     },
     {
       "path": "runtime/index.html",
@@ -136,7 +136,7 @@
     {
       "path": "shared/editor.mjs",
       "size": 39189,
-      "sha256": "970cb5f193d80402b3b1ecc8872a4ceab20190b1bf31dafa8813dd552082ab8e"
+      "sha256": "4050406ad622fc1fa37c0cf144bc8cfbbac787c580d10f439b188d5e4cf1a709"
     },
     {
       "path": "shared/engine.mjs",
@@ -150,8 +150,8 @@
     },
     {
       "path": "shared/glass.css",
-      "size": 8773,
-      "sha256": "df0dcd405fd5453eae90ce3f9d0dd4998851b56ebe9d08a60ba472cfd4715407"
+      "size": 3409,
+      "sha256": "7b398da9e61af8518369c1a336da581a0ee09bb6298a1e40124f9231783fd660"
     },
     {
       "path": "shared/glass.mjs",
@@ -230,8 +230,8 @@
     },
     {
       "path": "versions.json",
-      "size": 539,
-      "sha256": "56b62a0ed6dd2caf7c69e799abf3f534d31210a3e99437cc031617fc996454ac"
+      "size": 923,
+      "sha256": "726d45d7844bf8442dd22310e0b0bc62df549e421b88f945b885095604bd867e"
     }
   ]
 }

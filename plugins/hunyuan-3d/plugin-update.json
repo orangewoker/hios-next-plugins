@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "hunyuan-3d",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "files": [
     {
       "path": "README.md",
-      "size": 3351,
-      "sha256": "595c0434ca2c56ff445b682bd6c4fdbae987b8d36236715dbd6ef8843c05de0b"
+      "size": 3625,
+      "sha256": "0d05ced6db80271417b76a0ae396cf3606e49f9d1e85c1c1a43d1be1259b94a8"
     },
     {
       "path": "app/assets/index-CrLfN1zB.css",
@@ -31,12 +31,12 @@
     {
       "path": "package.json",
       "size": 627,
-      "sha256": "455e3e2c511e19f770d96d913a8c0b1e8154a88448ce83e9b2dd796ec5dfa8b3"
+      "sha256": "5fb35a93b2821ea76834aede5e85fc16dcbf6dcd76ccf3915c92aedb0f7da632"
     },
     {
       "path": "plugin.json",
       "size": 1521,
-      "sha256": "08e342a9281bfa1c00942992a187a35ced8631ae516f0dacc72fcf0addd672cd"
+      "sha256": "df8c5487216748a52fc6c4a635d075b4cc1002eda700fca9dc7c0b971f18ddf6"
     },
     {
       "path": "runtime/assets/index-CXskUVvc.js",
@@ -60,8 +60,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 12383,
-      "sha256": "617d18f15ad4a810ca456b27e4470344920b6bb251f5b8ec9f9b4114def5fd43"
+      "size": 9567,
+      "sha256": "73085ced6afc7aa9b1de0306dd33be3a53ebd9b92ead8538901a03c6d960cb38"
     },
     {
       "path": "shared/hios-glass.js",
@@ -160,8 +160,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2001,
-      "sha256": "9f4e8130a7887b8aadedce5d76a0a1152e2a62cf41a280d9f339da65ee72f117"
+      "size": 2384,
+      "sha256": "8fa7e34ad25f569d684bf41aea4eb47bb56ef67d1757d7073b616f6b60bd4f68"
     },
     {
       "path": "vite.config.ts",

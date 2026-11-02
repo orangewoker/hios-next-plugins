@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "pdf-dwg-viewer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "files": [
     {
       "path": "LICENSE",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 2839,
-      "sha256": "62a5183b072034e36a850f0d3519a1b1b3559c2c3b868abef06a7b94f9d2b725"
+      "size": 3113,
+      "sha256": "4b76d3f920d41f8c90407bff1c9c8d7cc9ff12b77d1e319fd088c34ebc140be8"
     },
     {
       "path": "THIRD_PARTY-CAD-VIEWER-LICENSE.txt",
@@ -46,17 +46,17 @@
     {
       "path": "package-lock.json",
       "size": 46709,
-      "sha256": "de2aae3a18e65e875e21490d8016feeb3412348992242fd45da71156e2d2c38c"
+      "sha256": "3b17868c04547ca067777872fc0d911aa233bed7ab31ef1637a6027f60ca83fe"
     },
     {
       "path": "package.json",
       "size": 539,
-      "sha256": "45b3d65dd4be5ee7e8becb123c94ba50a185f9d7651cea0aa00577f98a9579aa"
+      "sha256": "0b36850c0b422bdc536b57d3c6e751f20feb9415bc214717af64598da052d7e8"
     },
     {
       "path": "plugin.json",
       "size": 1768,
-      "sha256": "79b47bf3546e965d2ada3fa94cda54ba44f8f2c437ab9773dfe88cc902d19aea"
+      "sha256": "cf99a4b4a9fea5e2adff1e51e5fe032c4b264221c342336184a722906baa1808"
     },
     {
       "path": "runtime/assets/index-C8d6z2g8.js",
@@ -115,8 +115,8 @@
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 8357,
-      "sha256": "9f0664dfcc507d459eb048ae6a454aaa4c46e4ceb27aa4e0be5d85148a810ff4"
+      "size": 6279,
+      "sha256": "e3e4ecc2b3ff73db5d3b6e4250e21cfe75f3f38fc4b972c01a65650fe4721589"
     },
     {
       "path": "shared/hios-glass.js",
@@ -150,8 +150,8 @@
     },
     {
       "path": "versions.json",
-      "size": 983,
-      "sha256": "d7c91f38a80c1861f4aa0f6bfed2fa54dc29620c28c20fe2a45af580e2ee76d3"
+      "size": 1370,
+      "sha256": "678432946f24483d9f5f71f026645a2325a3c6159a4f5fa6fe33b5132d90371d"
     },
     {
       "path": "vite.config.ts",

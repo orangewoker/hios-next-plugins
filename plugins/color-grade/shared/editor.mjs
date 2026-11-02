@@ -223,7 +223,7 @@ window.addEventListener('beforeunload',()=>{if(initialized)emit();previewWorker.
 if(parent===window){initialized=true;mergePresets();document.body.classList.toggle('wide',app);$('expand').hidden=true;$('export').hidden=false;$('runHint').hidden=true;}
 if(app)$('empty').querySelector('p').textContent='打开 PNG、JPEG 或 WebP，原图不会被覆盖';
 for(const select of [$('preset'),$('skinMode')])selectControls.push(themedSelect(select));
-document.querySelector('header strong').textContent='调色 · v0.3.1';
-sync();post('ready',{version:'0.3.1'});
+document.querySelector('header strong').textContent='调色 · v0.3.2';
+sync();post('ready',{version:'0.3.2'});
 
 
