@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "compute-cloud",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "files": [
     {
       "path": "README.md",
@@ -10,8 +10,8 @@
     },
     {
       "path": "app/app.js",
-      "size": 31897,
-      "sha256": "e70df038cb17dcad85d6e4143c847e637df36a239a8bf6ba7bd4897764ac5a7e"
+      "size": 32297,
+      "sha256": "462a0434be1740f01f6b7c6997110c5ebc95a09c840e1de594699d67cba0f6b4"
     },
     {
       "path": "app/index.html",
@@ -31,12 +31,12 @@
     {
       "path": "plugin.json",
       "size": 1347,
-      "sha256": "3ea729a7bad983698190d241696630bcb0b03741bda8a0bb2311ca8a5560ad32"
+      "sha256": "39889a7921ef1b5f6434aadcf2b6c7542a695d40ea64a276f43753ac801d867f"
     },
     {
       "path": "shared/client.js",
-      "size": 2680,
-      "sha256": "e48680ff7706aceddf148fb67fdb14da23fba270fbf141d46380d0cf7cbcacfa"
+      "size": 3117,
+      "sha256": "12a22c3e8163423c8e0e2081ee3b7cd9f2f3b3aeda0d1d604044254fa3980add"
     },
     {
       "path": "shared/core.js",
@@ -70,8 +70,8 @@
     },
     {
       "path": "shared/storage.js",
-      "size": 3265,
-      "sha256": "4e0686c632cfc9e3485ddec01e8a7ba6e0da232ca9f377cda82db2a44eaf34a6"
+      "size": 4161,
+      "sha256": "ed6a90b9353efe4a57b67454be331b944a0b5af4cd287a568e423826178ff341"
     },
     {
       "path": "tests/core.test.mjs",
@@ -85,8 +85,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1777,
-      "sha256": "508dc53b224f107f5b3a933a8c0fa0e658b0e283f12a3d8b59fc4f336bd9f27b"
+      "size": 2149,
+      "sha256": "a8075734a1c8f11092174c32a82f53c4b01303d76967778aa94bf79cb9de0c37"
     }
   ]
 }

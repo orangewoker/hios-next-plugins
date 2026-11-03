@@ -133,7 +133,10 @@
       syncFromApp();
       post('loaded');
     }
-    if (event.data.type === 'run') runAndOutput();
+    // The canvas run button is the K2 execution trigger. Ask the application
+    // to randomize first, then emit the newly generated prompt when the app
+    // publishes its updated snapshot.
+    if (event.data.type === 'run') requestAppRandom();
   });
 
   syncFromApp();

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "files": [
     {
       "path": "README.md",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "64e6997717fdfb841a3c8a41f8ec1615f44c0ceb52628cc494dfbba97e6160ef"
+      "sha256": "f4ec1417d2597c2f74cab798ea4cb75203d8f29866f39e2cb1f3c99b553a6922"
     },
     {
       "path": "runtime/index.html",
@@ -35,13 +35,13 @@
     },
     {
       "path": "runtime/node.js",
-      "size": 5739,
-      "sha256": "e67e8ac8f1a8e1c45d1a988c0ba2409ee551795f2630c0db14d65cd5dfff5829"
+      "size": 5937,
+      "sha256": "2d112e60a4d634bfe6b0485d10731639fda0f5786a2dfc2db895f65303c6de32"
     },
     {
       "path": "runtime/style.css",
-      "size": 1804,
-      "sha256": "efbeb0db1ffb9d5f99e93730cfafe8711f1e62b0b40a64dfdf0a53bb7f11b37c"
+      "size": 2258,
+      "sha256": "9bb189c25e620ded6098ee40d2b65efa5bc4d28cd202d61857820ec3a2aba255"
     },
     {
       "path": "shared/generator.js",
@@ -75,8 +75,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4234,
-      "sha256": "5be9cbc98485275d98630a00ee9bb372b972b29002de871a8e633f627dbb7928"
+      "size": 4556,
+      "sha256": "7d8ddf19b0db7d36105b9c3b24c2e5e3be009b2b990ffef85f8d28516b09110c"
     }
   ]
 }

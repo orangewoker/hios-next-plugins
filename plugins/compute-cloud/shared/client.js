@@ -46,11 +46,15 @@ export function readFileAsDataUrl(file) {
 }
 
 export async function sourceAsApiValue(source) {
+  if (Array.isArray(source)) return Promise.all(source.map(sourceAsApiValue));
   const value = String(source || '').trim();
   if (!value) return '';
-  if (/^data:/i.test(value) || /^https?:\/\//i.test(value)) return value;
-  if (/^(?:hios-asset:|blob:|file:)/i.test(value)) {
-    const response = await fetch(value);
+  const hostAsset = /^https?:\/\/hios-asset\.localhost(?:\/|$)/i.test(value);
+  if (/^data:/i.test(value) || (/^https?:\/\//i.test(value) && !hostAsset)) return value;
+  if (hostAsset || /^(?:hios-asset:|blob:|file:)/i.test(value)) {
+    const tauriPlugin = typeof window !== 'undefined' && window.location?.hostname === 'hios-plugin.localhost';
+    const url = tauriPlugin && /^hios-asset:\/\//i.test(value) ? value.replace(/^hios-asset:\/\//i, 'http://hios-asset.localhost/') : value;
+    const response = await fetch(url);
     if (!response.ok) throw new Error(`无法读取画布素材（HTTP ${response.status}）`);
     return readFileAsDataUrl(await response.blob());
   }

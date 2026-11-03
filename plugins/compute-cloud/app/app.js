@@ -11,7 +11,7 @@ import {
   validateAndBuildBody,
 } from '../shared/core.js';
 import { createTask, downloadResult, fetchWorkflowMetadata, queryTask, readFileAsDataUrl, sourceAsApiValue } from '../shared/client.js';
-import { clearFinishedTasks, clearToken, loadConfig, loadTasks, loadToken, removeTask, saveConfig, saveTask, saveToken, watchStorage } from '../shared/storage.js';
+import { connectHostStorage, clearFinishedTasks, clearToken, loadConfig, loadTasks, loadToken, removeTask, saveConfig, saveTask, saveToken, watchStorage } from '../shared/storage.js';
 
 const APP_PROTOCOL = 'hios-plugin-app/v1';
 const $ = (id) => document.getElementById(id);
@@ -553,7 +553,7 @@ $('toggleToken').onclick = () => { const visible = $('token').type === 'text'; $
 $('clearToken').onclick = () => { clearToken(); $('token').value = ''; refreshConnectionStatus(); setMessage($('settingsMessage'), 'Token 已清除。'); };
 $('clearFinished').onclick = () => { clearFinishedTasks(); renderTasks(); toast('已清理完成和失败的任务'); };
 watchStorage(() => { config = loadConfig(); workflows = config.workflows; refreshConnectionStatus(); });
-window.addEventListener('message', (event) => { const message = event.data; if (!message || message.protocol !== APP_PROTOCOL) return; if (message.type === 'init') applyTheme(message.payload?.theme); else if (message.type === 'application-workflow-request') void handleApplicationWorkflowRequest(message.payload || {}); });
+window.addEventListener('message', (event) => { const message = event.data; if (event.source !== parent || !message || message.protocol !== APP_PROTOCOL) return; if (message.type === 'init') { applyTheme(message.payload?.theme); connectHostStorage(message.payload?.state, (storage) => post('state', { state: { storage } })); config = loadConfig(); workflows = config.workflows; selectedWorkflowId = config.defaultWorkflowId; loadSettingsForm(); renderWorkflowOptions(); renderWorkflowList(); renderRunForm(true); renderTasks(); refreshConnectionStatus(); } else if (message.type === 'application-workflow-request') void handleApplicationWorkflowRequest(message.payload || {}); });
 
 post('ready', { version: '0.2.1' });
-void initialize();
+if (parent === window) void initialize();

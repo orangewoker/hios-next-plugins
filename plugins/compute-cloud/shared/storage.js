@@ -4,6 +4,24 @@ const CONFIG_KEY = 'compute-cloud.config.v1';
 const TOKEN_KEY = 'compute-cloud.token.v1';
 const TASK_KEY = 'compute-cloud.tasks.v1';
 const CHANNEL_NAME = 'compute-cloud-config';
+let persistState = null;
+function publishState() {
+  if (persistState) persistState({ config: loadConfig(), tasks: loadTasks(), rememberedToken: localStorage.getItem(TOKEN_KEY) || '' });
+}
+export function connectHostStorage(state, save) {
+  const stored = state?.storage;
+  if (stored && typeof stored === 'object') {
+    if (stored.config && typeof stored.config === 'object') localStorage.setItem(CONFIG_KEY, JSON.stringify(stored.config));
+    if (Array.isArray(stored.tasks)) localStorage.setItem(TASK_KEY, JSON.stringify(stored.tasks));
+    if (typeof stored.rememberedToken === 'string') {
+      if (stored.rememberedToken) localStorage.setItem(TOKEN_KEY, stored.rememberedToken);
+      else localStorage.removeItem(TOKEN_KEY);
+    }
+  }
+  persistState = save;
+  publishState();
+}
+
 
 function parse(value, fallback) {
   try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
@@ -25,6 +43,7 @@ export function saveConfig(config) {
   const next = { ...loadConfig(), ...(config || {}) };
   localStorage.setItem(CONFIG_KEY, JSON.stringify(next));
   try { new BroadcastChannel(CHANNEL_NAME).postMessage({ type: 'config', config: next }); } catch { /* Optional. */ }
+  publishState();
   return next;
 }
 
@@ -36,12 +55,14 @@ export function saveToken(token, remember = false) {
   const value = String(token || '').trim();
   if (value) sessionStorage.setItem(TOKEN_KEY, value); else sessionStorage.removeItem(TOKEN_KEY);
   if (remember && value) localStorage.setItem(TOKEN_KEY, value); else localStorage.removeItem(TOKEN_KEY);
+  publishState();
   try { new BroadcastChannel(CHANNEL_NAME).postMessage({ type: 'token-changed' }); } catch { /* Optional. */ }
 }
 
 export function clearToken() {
   sessionStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TOKEN_KEY);
+  publishState();
 }
 
 export function loadTasks() {
@@ -55,18 +76,21 @@ export function saveTask(task) {
   const next = [{ ...task, updatedAt: Date.now() }, ...current.filter((item) => String(item.taskId || '') !== id)].slice(0, 80);
   localStorage.setItem(TASK_KEY, JSON.stringify(next));
   try { new BroadcastChannel(CHANNEL_NAME).postMessage({ type: 'tasks' }); } catch { /* Optional. */ }
+  publishState();
   return next;
 }
 
 export function removeTask(taskId) {
   const next = loadTasks().filter((item) => String(item.taskId || '') !== String(taskId || ''));
   localStorage.setItem(TASK_KEY, JSON.stringify(next));
+  publishState();
   return next;
 }
 
 export function clearFinishedTasks() {
   const next = loadTasks().filter((item) => !item.terminal);
   localStorage.setItem(TASK_KEY, JSON.stringify(next));
+  publishState();
   return next;
 }
 

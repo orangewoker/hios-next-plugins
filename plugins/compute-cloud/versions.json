@@ -3,6 +3,15 @@
   "pluginId": "compute-cloud",
   "versions": [
     {
+      "version": "0.2.7",
+      "ref": "compute-cloud-v0.2.7",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "配置、任务和记住的凭据迁移至宿主状态，修复更新或更换运行来源后设置丢失。",
+        "修复 Tauri 画布本地素材与数组素材提交，避免将本地资源地址直接发送到服务。"
+      ]
+    },
+    {
       "version": "0.2.6",
       "ref": "compute-cloud-v0.2.6",
       "releasedAt": "2026-11-02",

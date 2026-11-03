@@ -3,6 +3,15 @@
   "pluginId": "k2-prompt-generator",
   "versions": [
     {
+      "version": "0.2.15",
+      "ref": "k2-prompt-generator-v0.2.15",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "画布运行先触发一次新的提示词生成，再输出最新结果；保留设置与依赖选择恢复。",
+        "修复节点内容滚动与结果区布局。"
+      ]
+    },
+    {
       "version": "0.2.14",
       "ref": "k2-prompt-generator-v0.2.14",
       "releasedAt": "2026-11-02",
