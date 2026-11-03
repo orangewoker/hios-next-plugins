@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "pdf-dwg-viewer",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "files": [
     {
       "path": "LICENSE",
@@ -46,17 +46,17 @@
     {
       "path": "package-lock.json",
       "size": 46709,
-      "sha256": "3b17868c04547ca067777872fc0d911aa233bed7ab31ef1637a6027f60ca83fe"
+      "sha256": "498225bc7265c84895de59a7af2c712c765140da2409654fe75e84107e8cc0f7"
     },
     {
       "path": "package.json",
       "size": 539,
-      "sha256": "0b36850c0b422bdc536b57d3c6e751f20feb9415bc214717af64598da052d7e8"
+      "sha256": "54c4f7f46f87bc257611735a29462a386bc8c6d9f8ea81b8bf0bea712348398f"
     },
     {
       "path": "plugin.json",
       "size": 1768,
-      "sha256": "cf99a4b4a9fea5e2adff1e51e5fe032c4b264221c342336184a722906baa1808"
+      "sha256": "e94b42fe6d903fefc637ab12c77929d45d3e4cbb79ba2c01e8bd742a83200ea9"
     },
     {
       "path": "runtime/assets/index-C8d6z2g8.js",
@@ -125,13 +125,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "src/main.ts",
@@ -150,8 +150,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1370,
-      "sha256": "678432946f24483d9f5f71f026645a2325a3c6159a4f5fa6fe33b5132d90371d"
+      "size": 1631,
+      "sha256": "0edf5ed7c81cc766aab121234e6fb67c411990230b7609644f7596d61ec489cc"
     },
     {
       "path": "vite.config.ts",

@@ -3,6 +3,14 @@
   "pluginId": "barcode-studio",
   "versions": [
     {
+      "version": "0.1.6",
+      "ref": "barcode-studio-v0.1.6",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "画布节点标题、内容底色和运行区域统一，去除拼接色差；保留编辑画布及控件层次。"
+      ]
+    },
+    {
       "version": "0.1.5",
       "ref": "barcode-studio-v0.1.5",
       "releasedAt": "2026-11-02",

@@ -3,6 +3,14 @@
   "pluginId": "effect-controller",
   "versions": [
     {
+      "version": "1.0.5",
+      "ref": "effect-controller-v1.0.5",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "画布节点标题、内容底色和运行区域统一，去除拼接色差；保留编辑画布及控件层次。"
+      ]
+    },
+    {
       "version": "1.0.4",
       "ref": "effect-controller-v1.0.4",
       "releasedAt": "2026-11-02",

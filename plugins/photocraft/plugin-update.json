@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -126,7 +126,7 @@
     {
       "path": "plugin.json",
       "size": 1934,
-      "sha256": "23f64c904f72a27408d6c2363c81599021a42f8abaf9eea7087d42ce5a2aa9cf"
+      "sha256": "1d99b0ee2b4f662284fd04ef13726697f6655aefa56b3c92c26a88ddd151d12e"
     },
     {
       "path": "runtime/index.html",
@@ -170,13 +170,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "vendor/LICENSE-ag-psd",
@@ -195,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 5232,
-      "sha256": "8daacdaa9aa3eb1eeeba881fbe4b677a0454c37c392b8fd2ed4ecc0a7e992582"
+      "size": 5489,
+      "sha256": "19d8b4ab00d825e249f90976f1717fd827513dea3509919ebfa6950335752787"
     },
     {
       "path": "web/build.json",

@@ -8,3 +8,4 @@
 :root *::-webkit-scrollbar-track, :root *::-webkit-scrollbar-corner { background: transparent; }
 :root *::-webkit-scrollbar-thumb { background: var(--hios-scroll-thumb); border-radius: 999px; }
 :root *::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+:root body .wrap>.settings{padding:12px;gap:12px;border-radius:14px} :root body .settings label{min-width:0;font-size:12px;line-height:1.5} :root body .effect-controls>.settings{padding:0;background:transparent;box-shadow:none}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "compute-cloud",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "files": [
     {
       "path": "README.md",
@@ -31,7 +31,7 @@
     {
       "path": "plugin.json",
       "size": 1347,
-      "sha256": "39889a7921ef1b5f6434aadcf2b6c7542a695d40ea64a276f43753ac801d867f"
+      "sha256": "415d1913c53037f6760eb13f56a2ba8b6e296ca00c9e23da3f96955e54ae7548"
     },
     {
       "path": "shared/client.js",
@@ -60,13 +60,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "shared/storage.js",
@@ -85,8 +85,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2149,
-      "sha256": "a8075734a1c8f11092174c32a82f53c4b01303d76967778aa94bf79cb9de0c37"
+      "size": 2409,
+      "sha256": "d433d7b372ac1bdd04e844c8b145536258ceef9691135853025ce5d03f62bf0e"
     }
   ]
 }

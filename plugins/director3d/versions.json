@@ -3,6 +3,14 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.16",
+      "ref": "director3d-v0.1.16",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "画布节点标题、内容底色和运行区域统一，去除拼接色差；保留编辑画布及控件层次。"
+      ]
+    },
+    {
       "version": "0.1.15",
       "ref": "director3d-v0.1.15",
       "releasedAt": "2026-11-03",

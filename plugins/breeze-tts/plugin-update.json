@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "breeze-tts",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "files": [
     {
       "path": ".gitignore",
@@ -61,12 +61,12 @@
     {
       "path": "package.json",
       "size": 321,
-      "sha256": "058d35bbfd830d0daf1c3c166607e8b4718818559781fecd5d696f0d5d98363c"
+      "sha256": "76f1cfcf6763be47aac6d2658278a32460a203f8bf7f958747928915e208ea50"
     },
     {
       "path": "plugin.json",
       "size": 2481,
-      "sha256": "d0e6e5a92a965f292d10fed3dc4c22cd9ac4c43d2160decccd7c0d72ff35b9d9"
+      "sha256": "42670a2ed3aa6d218c01d2c81b24fc6c30c00fbb11d486d10694bb271d97628d"
     },
     {
       "path": "scripts/browser-smoke.js",
@@ -170,13 +170,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "shared/status.js",
@@ -255,8 +255,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1102,
-      "sha256": "8f04e51c430177479c101f27f239f76afa228b3ce7503ff10216f027f8e88cad"
+      "size": 1359,
+      "sha256": "b140924b42716051a35ae2763a3864a8b13a60938959f0e5ad525ce83894193d"
     }
   ]
 }

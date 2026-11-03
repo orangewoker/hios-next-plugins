@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "effect-controller",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "files": [
     {
       "path": "README.md",
@@ -16,7 +16,7 @@
     {
       "path": "plugin.json",
       "size": 1177,
-      "sha256": "d8665e297f9142752a26c68c58d643a70221132518f18333ae2506840742d98d"
+      "sha256": "e3e2ff848060bf3fd00d6299f41045ab818b0977affcb85e235a756151f210c0"
     },
     {
       "path": "runtime/index.html",
@@ -65,18 +65,18 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "versions.json",
-      "size": 1928,
-      "sha256": "2f446d5e507a0387a8c80a073f989d1683f4fa1f13c8067345e456cb54f32fb7"
+      "size": 2192,
+      "sha256": "1d039a18545b96e3922807aec0458c621cc574a39c76ca99aba996f6b5c053ea"
     }
   ]
 }

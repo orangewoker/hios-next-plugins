@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "hunyuan-3d",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "files": [
     {
       "path": "README.md",
@@ -31,12 +31,12 @@
     {
       "path": "package.json",
       "size": 627,
-      "sha256": "5fb35a93b2821ea76834aede5e85fc16dcbf6dcd76ccf3915c92aedb0f7da632"
+      "sha256": "bb148cf96f79012332c2d20ed365ddfe3ba929177c6465e567ffe25ca5f19798"
     },
     {
       "path": "plugin.json",
       "size": 1521,
-      "sha256": "df8c5487216748a52fc6c4a635d075b4cc1002eda700fca9dc7c0b971f18ddf6"
+      "sha256": "5e9e85f3e76961ebbe414b24e443d20e53a657236dc9e9629277a27728b66abe"
     },
     {
       "path": "runtime/assets/index-CXskUVvc.js",
@@ -70,13 +70,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "src/App.tsx",
@@ -160,8 +160,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2384,
-      "sha256": "8fa7e34ad25f569d684bf41aea4eb47bb56ef67d1757d7073b616f6b60bd4f68"
+      "size": 2641,
+      "sha256": "298eaf821766a03ecba09b4461cdaeeaf90449ea9366bb30df5a6e5bd48b0ef4"
     },
     {
       "path": "vite.config.ts",

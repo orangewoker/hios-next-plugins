@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "dx-cut",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "files": [
     {
       "path": "LICENSE",
@@ -106,7 +106,7 @@
     {
       "path": "plugin.json",
       "size": 1192,
-      "sha256": "94272709dccf74f293dcd9079fadcce95f8cd067ad9410a8168d7a6492e63109"
+      "sha256": "fcd601a878d4980a5d1c8bf26752b89218d06593f1e95ff55abb81438c4413d3"
     },
     {
       "path": "provenance.json",
@@ -770,18 +770,18 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "versions.json",
-      "size": 3736,
-      "sha256": "245962c2e2e932d9b35a763df46796aab7662be0950d48e5b052527ad681e91b"
+      "size": 3989,
+      "sha256": "9c8a703f8710649c48e645841a021fb5d81d0b642fb205ae2478e92159810cc7"
     }
   ]
 }

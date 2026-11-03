@@ -16,9 +16,10 @@
     if (origin === undefined) { if (msg.type !== 'init') return; origin = event.origin; identity = key; }
     const el = document.documentElement;
     el.dataset.theme = theme.mode;
+    el.dataset.hiosSurface = msg.protocol === 'hios-plugin-node/v1' ? 'node' : 'app';
     el.style.colorScheme = theme.mode;
     for (const [name, variable] of Object.entries(colors)) {
-      const value = theme.tokens?.[name];
+      const value = theme.tokens?.[el.dataset.hiosSurface === 'node' && name === 'background' ? 'surface' : name];
       if (typeof value === 'string' && !/var\(|url\(/i.test(value) && CSS.supports('color', value)) el.style.setProperty(`--hios-${variable}`, value);
       else el.style.removeProperty(`--hios-${variable}`);
     }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "barcode-studio",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "files": [
     {
       "path": ".gitignore",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1352,
-      "sha256": "3138570adab8222b9c86a996ae2b92c6b0f5f5aed1ee46dd60ef524f914704e2"
+      "sha256": "b5ab0deff558813eba63462443f2319653a142de3f8d59641e1bb4df5d58b2ba"
     },
     {
       "path": "provenance.json",
@@ -65,13 +65,13 @@
     },
     {
       "path": "shared/hios-ui.css",
-      "size": 1566,
-      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
     },
     {
       "path": "shared/hios-ui.js",
-      "size": 2097,
-      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
     },
     {
       "path": "source/index.html",
@@ -145,8 +145,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1079,
-      "sha256": "26d21afc69ef1f2b420586ac59945a2ee3f50a308038c040589fc910b26258ae"
+      "size": 1340,
+      "sha256": "84516343bc5d40430b3061f0a602641e37e2b64e375d1d9ee41ea216f44dd603"
     }
   ]
 }
