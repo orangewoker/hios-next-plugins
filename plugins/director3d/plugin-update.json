@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "director3d",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "files": [
     {
       "path": ".gitignore",
@@ -46,42 +46,42 @@
     {
       "path": "package-lock.json",
       "size": 82865,
-      "sha256": "93f847daaba19537d49b1d19b5cd17b31a75cb2b9ed7618f9487899570916ed8"
+      "sha256": "3e07347ff467dd93ed2ed706aa0565270e653eda9117b113a9d228512c462262"
     },
     {
       "path": "package.json",
       "size": 770,
-      "sha256": "373f62abc9bde82a5fa27311588aaef374539b10ffdf99cbf40a2301e13904dd"
+      "sha256": "050a0c636b6c600cac1dd52db99c04ce8e2bbdbd7044354b3ffef4082259140c"
     },
     {
       "path": "plugin.json",
       "size": 1792,
-      "sha256": "23e1d256530823b38b730da333819b9ebfeeb9a5d821f5dde1385aa97879ede5"
+      "sha256": "e5fe39fbf7cd7e56ff107e44e8e732c31962f43ff99c7278c67b7758fabee13b"
     },
     {
       "path": "runtime/app.html",
       "size": 695,
-      "sha256": "10ee1ffc0ab6ed2ccdb40ac112c191b9e89c2963378072ef0f62db476b258af2"
+      "sha256": "ec3b66bd0bd6590d7f8e8076049a4cf1c5809bd76768bcec21fdb80ff91d97a4"
     },
     {
-      "path": "runtime/assets/FBXLoader-simQi06M.js",
+      "path": "runtime/assets/FBXLoader-CzcNb-1x.js",
       "size": 46040,
-      "sha256": "7b22b2b777ce6e7d8d5f7fbc54c8a8fcb881349be16fb5445a6ae4924b3ba263"
+      "sha256": "8cdf891e35b604f6ab5436146350f7398009f7040e5bc2dc34d0a8808aafb300"
     },
     {
-      "path": "runtime/assets/PLYLoader-DDfFQpKd.js",
+      "path": "runtime/assets/PLYLoader-oUY3yXpw.js",
       "size": 6699,
-      "sha256": "590b46b294c632e5c95015af31eec3b1f6f527983e50f95e3242bb41a3d3511f"
+      "sha256": "2989c6da1534954daf16fb30076f25153aac02c6862aa8711e6c21e19ffdfb45"
     },
     {
-      "path": "runtime/assets/STLLoader-wrY1qbXf.js",
+      "path": "runtime/assets/STLLoader-5prfUjRl.js",
       "size": 2934,
-      "sha256": "6e60ef14b5886f53d4d60101334efc9ad7803a4a77512a8769b5388e9519e8df"
+      "sha256": "de86229903ed972f8f87b5b0d87d7b72b554b55b01cd6e9aa2670a70fccf1951"
     },
     {
-      "path": "runtime/assets/USDLoader-Domv7Q3h.js",
+      "path": "runtime/assets/USDLoader-D0yK-xGO.js",
       "size": 66927,
-      "sha256": "cff814fb665817a23d0ef0687f6fe622739af686969fc1911224d30fd42f295e"
+      "sha256": "0928dec396ad8073cb05ba5d13370def97827553fb7db55cf8e229374fe816ce"
     },
     {
       "path": "runtime/assets/fflate.module-eaDUqR-S.js",
@@ -89,34 +89,34 @@
       "sha256": "1a33028cee84c011b42d0dfed16ac93cd7348ec2ddcc44cc6c4d2851bb98e445"
     },
     {
-      "path": "runtime/assets/index-2qw7HoC_.js",
+      "path": "runtime/assets/index-2je1b62d.js",
       "size": 7625,
-      "sha256": "1d07fd76f71de29d13b7f403c55758e2b7d2b7ce8dfe5b46c85c879d591f201f"
+      "sha256": "f268598dc3c7d6ed583a8db9baadea69e054836acbe9ef58d62d3e2f43c1470b"
     },
     {
-      "path": "runtime/assets/main-CzJrM3G4.js",
-      "size": 2346982,
-      "sha256": "0cef1a3bb9e2da57700c5c398f83fc1ee10597f186aab20efe58229f6f7a0b11"
+      "path": "runtime/assets/main-B5d1rgmX.js",
+      "size": 2347062,
+      "sha256": "8c7c0ca5f729a39a593e45da963bb1512df52d48b341ff22b4e73e35a54ba628"
     },
     {
-      "path": "runtime/assets/main-Dt-9Qdgr.css",
-      "size": 382577,
-      "sha256": "ef9ac91a08228ce65e653533f0ac1d58d705d1dff23ceea81a1422f05db6c88f"
+      "path": "runtime/assets/main-CHBkLVTr.css",
+      "size": 382046,
+      "sha256": "5cc08d192cec825b8e2f4e16c62db8702874aa085d5e607424f74f31149fee3d"
     },
     {
-      "path": "runtime/assets/sdfText-CcFX08Ac.js",
+      "path": "runtime/assets/sdfText-DMaXHEBF.js",
       "size": 118638,
-      "sha256": "435e48853fc1e6e08c8be6dab15710aaddab5950a7bbbdf25d13c3ce69900a2b"
+      "sha256": "9d71b2b70385cb634b097e0a239eee74d42033ea5f15dc1df16b7d4181316851"
     },
     {
-      "path": "runtime/assets/tjzArchive-CjMd84_n.js",
+      "path": "runtime/assets/tjzArchive-ym30vZhT.js",
       "size": 11435,
-      "sha256": "3e5ed8b27d665599e70a8d57f3b533e3022674a3f4ce762bb4d72b51d4c39a9e"
+      "sha256": "f2c00355b1c970131f20cb9ed403c97040de9e191cd79daf3a388c2e4d823fc2"
     },
     {
       "path": "runtime/index.html",
       "size": 695,
-      "sha256": "10ee1ffc0ab6ed2ccdb40ac112c191b9e89c2963378072ef0f62db476b258af2"
+      "sha256": "ec3b66bd0bd6590d7f8e8076049a4cf1c5809bd76768bcec21fdb80ff91d97a4"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -170,8 +170,8 @@
     },
     {
       "path": "src/directorPanel.vue",
-      "size": 10320,
-      "sha256": "ec83f771687f0124761ceeb26fa912027a2fc992e7feea64ef342b6b36dffe25"
+      "size": 10144,
+      "sha256": "e4ff43d27d50a12a96b44a0e09b209185385311c79729812b169cd8384ddfd31"
     },
     {
       "path": "src/directorTour.vue",
@@ -195,8 +195,8 @@
     },
     {
       "path": "src/hios.css",
-      "size": 2353,
-      "sha256": "88717418ce6116d1a75fce595fa82ab89938099e4156d05072b18d97ab32dccd"
+      "size": 2429,
+      "sha256": "1f7f77b88a50f77cea937547e9fe57eca9afebe5df0d63718593a7556d8d4d62"
     },
     {
       "path": "src/hostTypes.ts",
@@ -295,8 +295,8 @@
     },
     {
       "path": "versions.json",
-      "size": 5207,
-      "sha256": "c0816d7346e704748ae7699f96c7c5913e7e985e7a99d15552a05404acdbade4"
+      "size": 5507,
+      "sha256": "56f255c99640993a81816790ade541c9643d320ba5d9ef61136d2308df9bdef3"
     },
     {
       "path": "vite.config.mjs",

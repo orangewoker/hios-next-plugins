@@ -38,18 +38,20 @@
             <option label="DSH 智能体" value="dsh">DSH 智能体</option>
             <option label="内置模型" value="builtin">内置模型</option>
           </select>
-          <el-select v-if="aiEngine === 'builtin'" v-model="model" class="modelSelect" size="small" :loading="modelsLoading" filterable placeholder="选择内置模型" aria-label="内置模型" @visibleChange="$event && emit('loadModels')">
-            <el-option-group v-for="provider in modelGroups" :key="provider.id" :label="`内置模型 · ${provider.label}`">
-              <el-option v-for="item in provider.models" :key="item.modelId" :label="item.label" :value="JSON.stringify([item.providerId, item.modelId])" />
-            </el-option-group>
-          </el-select>
-          <el-select v-else v-model="dshModel" class="modelSelect" size="small" :loading="dshModelsLoading" filterable placeholder="DSH 默认模型" aria-label="DSH 智能体模型" @visibleChange="$event && emit('loadDshModels')">
-            <el-option v-for="option in savedDshOptions" :key="option.value" :label="option.label" :value="option.value" />
-            <el-option :label="`DSH 默认模型${dshModels?.default?.model ? ' · ' + dshModels.default.model : ''}`" value="" />
-            <el-option-group v-for="provider in dshModels?.groups || []" :key="provider.id" :label="`DSH 智能体 · ${provider.name}`">
-              <el-option v-for="item in provider.models" :key="item.id" :label="item.name || item.id" :value="JSON.stringify({ provider: provider.id, model: item.id })" />
-            </el-option-group>
-          </el-select>
+          <select v-if="aiEngine === 'builtin'" v-model="model" class="modelSelect" aria-label="内置模型" @focus="emit('loadModels')">
+            <option value="" disabled>{{ modelsLoading ? '正在加载模型…' : '选择内置模型' }}</option>
+            <optgroup v-for="provider in modelGroups" :key="provider.id" :label="`内置模型 · ${provider.label}`">
+              <option v-for="item in provider.models" :key="item.modelId" :value="JSON.stringify([item.providerId, item.modelId])">{{ item.label }}</option>
+            </optgroup>
+          </select>
+          <select v-else v-model="dshModel" class="modelSelect" aria-label="DSH 智能体模型" :aria-busy="dshModelsLoading" @focus="emit('loadDshModels')">
+            <option value="">DSH 默认模型{{ dshModels?.default?.model ? ' · ' + dshModels.default.model : '' }}</option>
+            <option v-for="option in savedDshOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+            <optgroup v-for="provider in dshModels?.groups || []" :key="provider.id" :label="`DSH 智能体 · ${provider.name}`">
+              <option v-for="item in provider.models" :key="item.id" :value="JSON.stringify({ provider: provider.id, model: item.id })">{{ item.name || item.id }}</option>
+            </optgroup>
+          </select>
+          <button v-if="aiEngine === 'dsh'" type="button" class="refreshModels" :disabled="dshModelsLoading" @click="emit('loadDshModels')">{{ dshModelsLoading ? '加载中…' : '刷新模型' }}</button>
         </div>
         <el-button class="sendButton" type="primary" round :disabled="initializing || !prompt.trim() || (aiEngine === 'builtin' && !model)" aria-label="生成动画" @click="sendInstruction">
           <icon-sparkles :size="14" /><span>生成方案</span>
@@ -61,7 +63,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { ElButton, ElOption, ElOptionGroup, ElSelect } from "element-plus";
+import { ElButton } from "element-plus";
 import { IconLoader2, IconSparkles, IconMovie, IconCheck, IconAlertCircle, IconArrowBackUp } from "@tabler/icons-vue";
 import type { DshModelCatalog, NodeAiModel } from "./hostTypes";
 import { groupNodeModels } from "./groupNodeModels";
@@ -163,43 +165,20 @@ function sendInstruction() {
     }
 
     .inputActions {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
       gap: 8px;
       padding: 4px;
 
-      .modelControls {
-        display: flex;
-        flex: 1;
-        min-width: 0;
-        gap: 6px;
-      }
-
-      .engineSelect {
-        flex: 0 0 104px;
-        width: 104px;
-      }
-
-      .modelSelect {
-        flex: 1;
-        min-width: 0;
-      }
-
-      :deep(.engineSelect .el-select__wrapper),
-      :deep(.modelSelect .el-select__wrapper) {
-        background: transparent;
-        box-shadow: none;
-        border-radius: var(--el-border-radius-base);
-
-        &:hover:not(.is-disabled) { background: var(--el-fill-color-light); }
-        &.is-focused { box-shadow: 0 0 0 1px var(--el-color-primary-light-5) inset; }
-      }
-
-      :deep(.engineSelect .el-select__selected-item),
-      :deep(.modelSelect .el-select__selected-item) { color: var(--el-text-color-regular); }
+      .modelControls { display: contents; }
+      .engineSelect { grid-column: 1; grid-row: 2; width: 110px; }
+      .modelSelect { grid-column: 1 / -1; grid-row: 1; width: 100%; min-width: 0; }
+      .refreshModels { grid-column: 1 / -1; grid-row: 3; justify-self: start; border: 0; background: transparent; color: var(--el-text-color-secondary); font: inherit; font-size: 11px; padding: 2px; }
+      select:focus-visible { outline: 2px solid var(--el-color-primary); outline-offset: 2px; }
 
       .sendButton {
+        grid-column: 2; grid-row: 2;
         flex-shrink: 0;
         padding: 0 12px;
         height: 32px;

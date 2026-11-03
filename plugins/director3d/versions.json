@@ -3,6 +3,15 @@
   "pluginId": "director3d",
   "versions": [
     {
+      "version": "0.1.14",
+      "ref": "director3d-v0.1.14",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "修复 DSH 与内置模型选择框，使用原生控件。",
+        "模型选择独占整行，增加刷新入口，保留模型选择和工程恢复。"
+      ]
+    },
+    {
       "version": "0.1.13",
       "ref": "director3d-v0.1.13",
       "releasedAt": "2026-11-03",
