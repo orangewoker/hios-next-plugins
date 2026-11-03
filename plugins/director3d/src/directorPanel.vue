@@ -34,10 +34,10 @@
       <p v-if="aiEngine === 'dsh' && dshModelsError" class="dshError" role="alert">{{ dshModelsError }}</p>
       <div class="inputActions">
         <div class="modelControls">
-          <el-select v-model="aiEngine" class="engineSelect" size="small" aria-label="AI 执行方式">
-            <el-option label="DSH 智能体" value="dsh" />
-            <el-option label="内置模型" value="builtin" />
-          </el-select>
+          <select v-model="aiEngine" class="engineSelect" aria-label="AI 执行方式">
+            <option label="DSH 智能体" value="dsh">DSH 智能体</option>
+            <option label="内置模型" value="builtin">内置模型</option>
+          </select>
           <el-select v-if="aiEngine === 'builtin'" v-model="model" class="modelSelect" size="small" :loading="modelsLoading" filterable placeholder="选择内置模型" aria-label="内置模型" @visibleChange="$event && emit('loadModels')">
             <el-option-group v-for="provider in modelGroups" :key="provider.id" :label="`内置模型 · ${provider.label}`">
               <el-option v-for="item in provider.models" :key="item.modelId" :label="item.label" :value="JSON.stringify([item.providerId, item.modelId])" />

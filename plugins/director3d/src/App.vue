@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loaded" class="boot"><h2>3D 导演台</h2><p>{{ status }}</p><button @click="post('ready')">重试连接</button></div>
-  <SceneEditor v-else v-model:anchors="doc.anchors" v-model:prompt="doc.prompt" v-model:model="doc.model"
+  <SceneEditor v-else ref="editor" v-model:anchors="doc.anchors" v-model:prompt="doc.prompt" v-model:model="doc.model"
     v-model:aiEngine="doc.aiEngine" v-model:dshModel="doc.dshModel"
     v-model:lighting="lighting" v-model:sceneSettings="doc.sceneSettings" :scene="doc.scene" :result="selected"
     :plans="doc.plans" :selectedPlanId="doc.selectedPlanId" :tasks="tasks" :models="models" :modelsLoading="modelsLoading"
@@ -10,6 +10,9 @@
     @exportReference="exportReference" @exportImage="exportImage" @exportVideo="exportVideo" @editInstruction="doc.prompt = $event" @close="post('close')">
     <template #toolbar>
       <div class="hios-toolbar">
+        <label><input v-model="autoSave" type="checkbox" />自动保存</label>
+        <button :disabled="busy" @click="saveProject">保存</button>
+        <label>运行输出 <select v-model="runOutput" aria-label="运行输出"><option value="preview">预览图</option><option value="skeleton">骨架图</option><option value="video">视频</option></select></label>
         <button :disabled="busy" @click="newProject">新建工程</button>
         <button :disabled="busy" @click="makeCameraPlan">关键帧生成运镜</button>
         <button :disabled="busy" @click="poseOpen=true">姿态参考</button><button :disabled="busy" @click="openJson">场景 JSON</button>
@@ -49,6 +52,12 @@ import type { DshModelCatalog, NodeAiModel } from './hostTypes';
 import { connect, post, request, storeFile, assetUrl } from './bridge';
 
 const doc = ref<DirectorDocument>(initialDocument());
+const editor = ref<InstanceType<typeof SceneEditor>>();
+const autoSave = ref(false);
+const runOutput = ref<'preview' | 'skeleton' | 'video'>('preview');
+let savedDocumentUrl = '';
+function postPreferences() { post('state', { state: { version: 1, documentKey, documentUrl: savedDocumentUrl, autoSave: autoSave.value, runOutput: runOutput.value } }); }
+function saveProject() { clearTimeout(timer); void persist(doc.value).catch(fail); }
 const lighting = computed({ get: () => doc.value.lighting || getSceneLighting(doc.value.scene), set: value => { doc.value.lighting = value; } });
 const selected = computed(() => doc.value.plans.find(p => p.id === doc.value.selectedPlanId));
 const loaded = ref(false), status = ref('正在连接 HIOS…'), busy = ref(false), modelsLoading = ref(false);
@@ -79,6 +88,9 @@ const disconnect = connect((type, p) => {
     theme(p); references.value = Object.values(p.inputs || {}).flat();
     if (initialized || restoring) return;
     restoring = true;
+    autoSave.value = p.state?.autoSave === true;
+    if (['preview', 'skeleton', 'video'].includes(p.state?.runOutput)) runOutput.value = p.state.runOutput;
+    savedDocumentUrl = p.state?.documentUrl || '';
     if (typeof p.state?.documentKey === 'string' && /^[a-zA-Z0-9_-]{8,80}$/.test(p.state.documentKey)) documentKey = p.state.documentKey;
     void (async () => {
       try {
@@ -95,7 +107,8 @@ const disconnect = connect((type, p) => {
   }
   if (type === 'run') {
     if (!loaded.value || busy.value) { post('error', { message: '导演台尚未就绪或正在执行任务' }); return; }
-    void exportVideo(16 / 9);
+    if (runOutput.value === 'video') void exportVideo(editor.value?.getAspect() ?? 16 / 9);
+    else if (!editor.value?.runReference(runOutput.value === 'skeleton')) post('error', { message: '场景尚未就绪，请稍后运行' });
   }
 });
 function persist(snapshot: DirectorDocument, signal?: AbortSignal) {
@@ -106,7 +119,8 @@ function persist(snapshot: DirectorDocument, signal?: AbortSignal) {
     const result = await storeFile(new Blob([JSON.stringify(copy)], { type: 'application/x-hios-director3d' }), '场景.director3d', documentKey, 'draft');
     if (disposed) throw new Error('导演台已关闭');
     signal?.throwIfAborted();
-    post('state', { state: { version: 1, documentKey, documentUrl: result.url } });
+    savedDocumentUrl = result.url;
+    postPreferences();
     status.value = '已保存';
     return result;
   });
@@ -114,9 +128,17 @@ function persist(snapshot: DirectorDocument, signal?: AbortSignal) {
 }
 watch(doc, () => {
   if (!initialized || disposed) return;
-  clearTimeout(timer); status.value = '待保存…';
+  clearTimeout(timer); status.value = autoSave.value ? '待保存…' : '未保存';
+  if (!autoSave.value) return;
   timer = setTimeout(() => { void persist(doc.value).catch(fail); }, 800);
 }, { deep: true });
+watch(autoSave, enabled => {
+  clearTimeout(timer);
+  if (!initialized) return;
+  postPreferences();
+  if (enabled) saveProject();
+});
+watch(runOutput, () => { if (initialized) postPreferences(); });
 
 async function loadModels() {
   if (modelsLoading.value) return;
@@ -156,7 +178,7 @@ async function validatePreview(next: DirectorDocument, signal: AbortSignal) {
 }
 async function commit(next: DirectorDocument, signal: AbortSignal) {
   next = documentSchema.parse(next); await validatePreview(next, signal); signal.throwIfAborted();
-  clearTimeout(timer); await persist(next, signal); doc.value = next;
+  clearTimeout(timer); if (autoSave.value) await persist(next, signal); doc.value = next;
 }
 function cancel() {
   controller?.abort(new Error('用户取消任务'));
@@ -284,7 +306,7 @@ async function newProject() {
   if (busy.value || !loaded.value) return;
   try {
     await ElMessageBox.confirm(
-      '当前工程已自动保存。新建工程会清空场景、人偶、关键帧和方案；如需保留，请先导出工程。',
+      '新建工程会清空场景、人偶、关键帧和方案；如需保留，请先保存或导出工程。',
       '新建 3D 导演台工程',
       { type: 'warning', confirmButtonText: '新建工程', cancelButtonText: '取消', closeOnClickModal: false },
     );
@@ -331,7 +353,16 @@ async function exportVideo(aspect: number) {
   });
 }
 function applyPose(next: DirectorDocument) { void edit(async()=>{ next.selectedPlanId=''; await commit(next,controller!.signal); poseOpen.value=false; }); }
-async function exportReference(anchor: CameraAnchor, aspect:number, skeleton:boolean) { await edit(async()=>{ const file=skeleton ? await renderSkeleton(plain(doc.value.scene),anchor,aspect,controller!.signal) : await renderImage(plain(doc.value.scene),anchor,aspect,0,controller!.signal,undefined,plain(lighting.value),plain(doc.value.sceneSettings)); await output(file,'image',true); }); }
+async function exportReference(anchor: CameraAnchor, aspect:number, skeleton:boolean) {
+  await edit(async () => {
+    try {
+      const file = skeleton
+        ? await renderSkeleton(plain(doc.value.scene), anchor, aspect, controller!.signal, plain(selected.value), anchor.time ?? 0)
+        : await renderImage(plain(doc.value.scene), anchor, aspect, anchor.time ?? 0, controller!.signal, plain(selected.value), plain(lighting.value), plain(doc.value.sceneSettings));
+      await output(file, 'image', true);
+    } catch (e) { post('error', { message: errorText(e) }); throw e; }
+  });
+}
 function exportProject() { void edit(async () => { await output(new File([JSON.stringify(doc.value, null, 2)], '场景.director3d', { type: 'application/x-hios-director3d' }), 'file', false); }); }
 function openJson() { jsonText.value = JSON.stringify(doc.value, null, 2); jsonOpen.value = true; }
 function applyJson() { void edit(async () => { if (jsonText.value.length > 4_000_000) throw new Error('工程文件过大'); await commit(documentSchema.parse(JSON.parse(jsonText.value)), controller!.signal); jsonOpen.value = false; }); }
