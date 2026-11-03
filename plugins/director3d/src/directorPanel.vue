@@ -41,14 +41,14 @@
           <select v-if="aiEngine === 'builtin'" v-model="model" class="modelSelect" aria-label="内置模型" @focus="emit('loadModels')">
             <option value="" disabled>{{ modelsLoading ? '正在加载模型…' : '选择内置模型' }}</option>
             <optgroup v-for="provider in modelGroups" :key="provider.id" :label="`内置模型 · ${provider.label}`">
-              <option v-for="item in provider.models" :key="item.modelId" :value="JSON.stringify([item.providerId, item.modelId])">{{ item.label }}</option>
+              <option v-for="item in provider.models" :key="item.modelId" :value="JSON.stringify([item.providerId, item.modelId])">{{ provider.label }} · {{ item.label }}</option>
             </optgroup>
           </select>
           <select v-else v-model="dshModel" class="modelSelect" aria-label="DSH 智能体模型" :aria-busy="dshModelsLoading" @focus="emit('loadDshModels')">
-            <option value="">DSH 默认模型{{ dshModels?.default?.model ? ' · ' + dshModels.default.model : '' }}</option>
+            <option value="">DSH 默认模型{{ dshModels?.default?.model ? ' · ' + dshModels.default.provider + ' / ' + dshModels.default.model : '' }}</option>
             <option v-for="option in savedDshOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
             <optgroup v-for="provider in dshModels?.groups || []" :key="provider.id" :label="`DSH 智能体 · ${provider.name}`">
-              <option v-for="item in provider.models" :key="item.id" :value="JSON.stringify({ provider: provider.id, model: item.id })">{{ item.name || item.id }}</option>
+              <option v-for="item in provider.models" :key="item.id" :value="JSON.stringify({ provider: provider.id, model: item.id })">{{ provider.name || provider.id }} · {{ item.name || item.id }}</option>
             </optgroup>
           </select>
           <button v-if="aiEngine === 'dsh'" type="button" class="refreshModels" :disabled="dshModelsLoading" @click="emit('loadDshModels')">{{ dshModelsLoading ? '加载中…' : '刷新模型' }}</button>
@@ -81,7 +81,7 @@ const savedDshOptions = computed(() => {
   if (!dshModel.value || (props.dshModels?.groups || []).some(group => group.models.some(item => JSON.stringify({ provider: group.id, model: item.id }) === dshModel.value))) return [];
   try {
     const saved = JSON.parse(dshModel.value) as { provider?: string; model?: string };
-    return [{ value: dshModel.value, label: `已保存 · ${saved.model || 'DSH 模型'}` }];
+    return [{ value: dshModel.value, label: `已保存 · ${saved.provider || '未知供应商'} / ${saved.model || 'DSH 模型'}` }];
   } catch {
     return [{ value: dshModel.value, label: `已保存 · ${dshModel.value}` }];
   }

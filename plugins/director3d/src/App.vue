@@ -331,9 +331,10 @@ function makeCameraPlan() { void edit(async () => {
   await commit(next, controller!.signal);
 }); }
 async function output(file: File, kind: 'image' | 'video' | 'file', addToCanvas: boolean) {
-  const result = await storeFile(file, file.name);
-  post('output', { output: { kind, portId: kind, source: result.url, name: file.name, mime: file.type, metadata: { addToCanvas } } });
-  status.value = `已导出：${file.name}`;
+  const lifetime = kind === 'image' ? 'session' as const : undefined;
+  const result = await storeFile(file, file.name, crypto.randomUUID(), undefined, lifetime);
+  post('output', { output: { kind, portId: kind, source: result.url, lifetime, name: file.name, mime: file.type, metadata: { addToCanvas } } });
+  status.value = kind === 'image' ? `本次预览（未保存）：${file.name}` : `已导出：${file.name}`;
 }
 async function exportImage(anchor: CameraAnchor, aspect: number, time: number, addToCanvas = true) {
   await edit(async () => {
