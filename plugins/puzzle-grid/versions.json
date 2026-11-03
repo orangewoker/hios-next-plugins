@@ -3,6 +3,14 @@
   "pluginId": "puzzle-grid",
   "versions": [
     {
+      "version": "0.2.7",
+      "ref": "puzzle-grid-v0.2.7",
+      "releasedAt": "2026-11-03",
+      "notes": [
+        "统一节点运行按钮的图标与文字，保留拼图输出流程。"
+      ]
+    },
+    {
       "version": "0.2.6",
       "ref": "puzzle-grid-v0.2.6",
       "releasedAt": "2026-11-02",

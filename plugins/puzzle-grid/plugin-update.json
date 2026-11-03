@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "puzzle-grid",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "files": [
     {
       "path": "README.md",
@@ -11,12 +11,12 @@
     {
       "path": "plugin.json",
       "size": 1534,
-      "sha256": "d9cde9969d1e4038b63737f009608750a76b154b1aacfe7e3129660f080b236e"
+      "sha256": "521f438f997ee6508fdf539ac7408ff3e11e6a43f4ca0839644f479b64cd6f89"
     },
     {
       "path": "runtime/index.html",
-      "size": 22981,
-      "sha256": "03de42a2ba47efc7d947544c644ae933ea86cf4264d8bd2570a47a6874b23d9e"
+      "size": 23120,
+      "sha256": "c65942e36613acb42ce5927f6c9c148636cfc9bd08c1106d068b1548388b02a0"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -45,8 +45,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2475,
-      "sha256": "a6fb7dd10718bc8b576655b90f77ed0848b77eaa625d8e70200629102ddbc834"
+      "size": 2691,
+      "sha256": "aa76cce594568d652829089f9aa35a76124d83e7fe12ddb543197774bb9e265b"
     }
   ]
 }
