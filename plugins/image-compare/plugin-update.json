@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "image-compare",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "files": [
     {
       "path": "README.md",
@@ -11,12 +11,12 @@
     {
       "path": "plugin.json",
       "size": 1430,
-      "sha256": "dab3b4da37b8ff528201610f92abb142ffc6e014c2613155b743a387880a416f"
+      "sha256": "e01742c5563e967a21b41b6358adea39c43b52130b8c9704103576c3dbefd2e5"
     },
     {
       "path": "runtime/index.html",
-      "size": 17192,
-      "sha256": "0b1af0db6ac566267e4dce5397dbc1ed3a30e9e33e693ba53d6e9e709afbe92c"
+      "size": 17194,
+      "sha256": "6b5ad1d853b9b83d2b9bbd19666b47558c03e6dd6df014c9b9b5691a288995cd"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -45,8 +45,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3299,
-      "sha256": "6aa2626ab7f26fb759659fdad17c5d67940a7dd6a857c5f75f4e690669360b2e"
+      "size": 3559,
+      "sha256": "b79df951b94663da37e2ddfb81e81843533814fcea9dc3d8acdf9dcfd66b2158"
     }
   ]
 }
