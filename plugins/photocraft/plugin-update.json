@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -31,7 +31,7 @@
     {
       "path": "README.md",
       "size": 8454,
-      "sha256": "a3628cbd274ea5eab3008fb2d475488bcecd47ba6a677b7b1e2a1bd79a9fac3e"
+      "sha256": "63a42c5c4004ed4abcd23c328d3c7027e5eed31480c5721733ee468d406fe997"
     },
     {
       "path": "THIRD_PARTY/assets/dict/LICENSE-SCOWL.txt",
@@ -80,8 +80,8 @@
     },
     {
       "path": "app/index.html",
-      "size": 4725,
-      "sha256": "a12031338186166234e706a698553314bc45d6240bf16cf441131cac6e01df8d"
+      "size": 4779,
+      "sha256": "f1ffa9d58ae1ce671a9d4d8f853831f325c01e3bd5a3e00812ed53c49cdf3bc6"
     },
     {
       "path": "assets/icon.svg",
@@ -126,17 +126,17 @@
     {
       "path": "plugin.json",
       "size": 1937,
-      "sha256": "5325dc647c9a97bf5fd5831bb84769968ce907346f55c7faa8741acead5ff91f"
+      "sha256": "913dce219f3dc4821998abec9eb1ca0e8968f9f6a75b08e4dcd3652e8adef06b"
     },
     {
       "path": "runtime/index.html",
-      "size": 4729,
-      "sha256": "e3f06bd9d754bcd807e113b3cb7205af834436fbebb3688a7aae299913113ca4"
+      "size": 4783,
+      "sha256": "b64817fe40f666a087582147ea09555e6c412aef28054a67a25e2afe3bd4eb41"
     },
     {
       "path": "runtime/style.css",
-      "size": 7387,
-      "sha256": "42ba8880163a66b6a9e6a56c8666ffa13e507549d59066f2e34f905e0e23519c"
+      "size": 7571,
+      "sha256": "298f2716bf546003213b7b3aa347704c2d8e1a01caa0b0e4c1094ccc99fc02c4"
     },
     {
       "path": "runtime/theme.css",
@@ -150,8 +150,8 @@
     },
     {
       "path": "shared.js",
-      "size": 26449,
-      "sha256": "69da14998ac4951a83514afb1d2b30c489c9c4947e4e1ada836d9edf2e754090"
+      "size": 26705,
+      "sha256": "105809e63175a1c3c1d41fecb852febf8aa54c5aa3fcfe592da12b99ca67decf"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -195,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 5866,
-      "sha256": "169562d9182a2eada367e20b7e680aa6ed0d052af020f50fb0a51f03fcc10ef1"
+      "size": 6205,
+      "sha256": "9245fd2008dcd1c67aa5a8dfa0e0a6711b2342f0bffc17dfdacc98fd5b248a34"
     },
     {
       "path": "web/build.json",

@@ -36,9 +36,9 @@ https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/photocraft
 
 顶部仅保留 PhotoCraft 原生菜单，HIOS 的打开、保存、导出格式、全屏和重载统一收纳到底部“文档”菜单，不再额外占用标题栏。应用页使用紧凑返回栏并自适应填满剩余窗口；画布节点保留宿主标题用于拖动、删除，使用宿主“运行”输出结果。
 
-### AI 工具栏与原生分层（0.5.8）
+### AI 工具栏与原生分层（0.5.9）
 
-需要 HIOS Next **4.1.2 或更新版本**。
+需要 HIOS Next **4.1.3 或更新版本**。
 
 - 底部分层打开与画布共用的原生面板：`vision.analyze` 规划、`image.edit` 逐层生成、本地 BiRefNet 透明处理。背景补全跳过抠图。
 - 在面板内选择模型、2–8 层或自定义图层，支持预览、取消后续生成及单层重试。

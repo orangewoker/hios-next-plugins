@@ -154,6 +154,7 @@ async function theme(value) {
   await request('theme', palette); currentTheme = palette;
 }
 async function initialize(payload) {
+  if (payload.features?.nativeLayerSplit) nativeLayerSplit = true;
   if (!initialized) {
     state = payload.state && typeof payload.state === 'object' ? { ...payload.state } : {};
     state.documentKey ||= crypto.randomUUID(); remember();
@@ -297,21 +298,22 @@ function aiModels() {
   aiOptions('aiModel',aiChoices.filter(c=>c.routeId===$('aiRoute').value && c.modes.includes(aiMode())).map(c=>[c.model,c.model]), state.aiSettings?.model);
 }
 function aiRoutes() {
-  const choices=aiChoices.filter(c=>c.modes.includes(aiMode()));
+  $('aiModelOptions').hidden=aiMode()==='psd';
+  const choices=aiMode()==='psd' ? [] : aiChoices.filter(c=>c.modes.includes(aiMode()));
   const routes=[...new Map(choices.map(c=>[c.routeId,[c.routeId,c.routeName]])).values()];
   aiOptions('aiRoute',routes,state.aiSettings?.routeId); aiModels();
   $('aiLayerOptions').hidden=true;
   $('aiRoute').disabled=aiMode()==='psd'; $('aiModel').disabled=aiMode()==='psd';
   $('aiPrompt').hidden=aiMode()==='psd';
   $('aiHint').textContent=aiMode()==='psd' ? '使用 HIOS 原生分层面板：视觉规划、逐层生图、本地 BiRefNet 透明处理。层数和模型在面板内选择，支持单层重试；确认后导入独立图层。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
-  $('aiStart').textContent=aiMode()==='psd' ? '分层' : '生成';
-  if (aiMode()==='psd') aiMessage('点击分层，在原生面板中选择视觉与图片编辑模型');
+  $('aiStart').textContent=aiMode()==='psd' ? '打开分层面板' : '生成';
+  if (aiMode()==='psd') aiMessage('点击「打开分层面板」，选择视觉分析和图片编辑模型');
   else if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
   else aiMessage('AI 路由已就绪');
 }
 async function aiCatalog() {
-  try { const catalog=await aiHost({action:'catalog'}); nativeLayerSplit=catalog.nativeLayerSplit === true; aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }
-  catch(e) { aiMessage(e.message,true); }
+  try { const catalog=await aiHost({action:'catalog'}); nativeLayerSplit=nativeLayerSplit || catalog.nativeLayerSplit === true; aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }
+  catch(e) { if (aiMode()!=='psd' || !nativeLayerSplit) aiMessage(e.message,true); }
 }
 function aiSettings() {
   state.aiSettings={mode:$('aiMode').value,scope:$('aiScope').value,routeId:$('aiRoute').value,model:$('aiModel').value,layers:Number($('aiLayers').value)||3,prompt:$('aiPrompt').value}; remember();
@@ -339,7 +341,7 @@ async function captureAI() {
 }
 function aiRunning(running) {
   $('aiStart').disabled=running; $('aiCancel').disabled=!running; $('aiCancel').hidden=!running; $('aiProgress').hidden=!running;
-  $('aiStart').textContent=aiMode()==='psd' ? (running?'分层中…':'分层') : (running?'生成中…':'生成');
+  $('aiStart').textContent=aiMode()==='psd' ? (running?'分层面板已打开…':'打开分层面板') : (running?'生成中…':'生成');
   for (const id of ['aiCapture','aiMode','aiScope','aiRoute','aiModel','aiLayers','aiPrompt']) $(id).disabled=running;
 }
 async function applyAI(asNewDocument = false) {
@@ -424,7 +426,8 @@ async function startAI() {
 async function initializeAI() {
   const s=state.aiSettings;
   if (s) { $('aiMode').value=s.mode||'psd'; $('aiScope').value=s.scope||'canvas'; $('aiLayers').value=s.layers||3; $('aiPrompt').value=s.prompt||''; }
-  await aiCatalog();
+  aiRoutes();
+  void aiCatalog();
   if (state.aiJob) {
     if (state.aiJob.output) { $('aiResultActions').hidden=false; $('aiApply').disabled=!!state.aiJob.applied; }
     if (state.aiJob.id) void watchAI();
