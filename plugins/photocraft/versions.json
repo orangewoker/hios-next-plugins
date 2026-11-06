@@ -3,6 +3,15 @@
   "pluginId": "photocraft",
   "versions": [
     {
+      "version": "0.5.8",
+      "ref": "photocraft-v0.5.8",
+      "releasedAt": "2026-11-06",
+      "notes": [
+        "一键分层复用 HIOS 原生语义分层面板，支持逐层生图、本地 BiRefNet 透明处理、预览和单层重试。",
+        "确认后导入可编辑透明图层，保留原图层；需 HIOS Next 4.1.2 或更新版本。"
+      ]
+    },
+    {
       "version": "0.5.7",
       "ref": "photocraft-v0.5.7",
       "releasedAt": "2026-11-03",

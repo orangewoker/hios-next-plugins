@@ -20,10 +20,10 @@
 <select id="aiModel" aria-label="AI 模型" title="AI 模型"><option value="">选择模型</option></select>
 <span class="ai-divider" aria-hidden="true"></span>
 <select id="aiScope" aria-label="作用范围" title="作用范围"><option value="canvas">整个画布</option><option value="selection">选区</option><option value="layer">当前图层</option></select>
-<label id="aiLayerOptions" class="ai-layer-count" title="目标层数，默认背景、文字、主体"><input id="aiLayers" aria-label="分层数量" type="number" min="2" max="30" value="3"><span>层</span></label>
+<label id="aiLayerOptions" class="ai-layer-count" title="目标层数，默认背景、文字、主体"><input id="aiLayers" aria-label="分层数量" type="number" min="2" max="8" value="3"><span>层</span></label>
 <input id="aiPrompt" class="ai-prompt" aria-label="提示词" maxlength="12000" placeholder="描述要生成或修改的内容" hidden>
 <button id="aiStart">分层</button><button id="aiCancel" hidden disabled>取消</button>
-<details class="ai-more"><summary title="刷新模型、范围预览">更多</summary><div class="ai-popover"><button id="aiRefresh">刷新路由模型</button><button id="aiCapture">预览当前范围</button><span id="aiBounds">尚未捕获</span><img id="aiPreview" hidden alt="发送给模型的范围预览"><small id="aiHint">默认 3 层：背景、文字、主体。使用所选路由的 PSD 任务接口；旧服务使用内置 GPT 模型。仅下载 PSD，不下载 ZIP，可等待超过 5 分钟。</small></div></details>
+<details class="ai-more"><summary title="刷新模型、范围预览">更多</summary><div class="ai-popover"><button id="aiRefresh">刷新路由模型</button><button id="aiCapture">预览当前范围</button><span id="aiBounds">尚未捕获</span><img id="aiPreview" hidden alt="发送给模型的范围预览"><small id="aiHint">使用 HIOS 原生分层面板选择模型与图层，生成透明素材后导入可编辑图层。</small></div></details>
 <details id="aiResultActions" class="ai-more" hidden><summary>结果</summary><div class="ai-popover"><button id="aiApply">导入原范围</button><button id="aiOpenResult">作为新文档打开</button><button id="aiDownload">下载结果</button></div></details>
 <button id="expand" class="fullscreen-toggle" title="全屏编辑" aria-label="全屏编辑" aria-pressed="false">⛶</button>
 <button id="export" class="primary" disabled>导出文件</button>

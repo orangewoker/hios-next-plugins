@@ -19,7 +19,7 @@ let nodeId = '', pluginId = 'photocraft', origin = '*', state = {}, initialized 
 let bindings, runtimeReady = false, doc = null, lastDocKey = '', savedDocKey = '';
 let starting, initTask = Promise.resolve(), saving = null, saveTimer = 0, currentTheme = '';
 const requests = new Map(), hostRequests = new Map(), seenInputs = new Set();
-let aiProtocol = '', aiInitialized = false, aiChoices = [], aiCapture = null, aiTimer = 0, aiPreviewUrl = '', aiBusy = false;
+let nativeLayerSplit = false, aiProtocol = '', aiInitialized = false, aiChoices = [], aiCapture = null, aiTimer = 0, aiPreviewUrl = '', aiBusy = false;
 const status = (message, error = false) => { $('status').textContent = message; $('status').classList.toggle('error', error); };
 const post = (type, payload = {}) => parent.postMessage({ protocol, pluginId, nodeId, type, payload }, origin);
 const remember = () => post('state', { state });
@@ -280,7 +280,7 @@ post('ready', { version: '0.3.0' });
 function aiHost(payload) {
   return new Promise((resolve, reject) => {
     const requestId = crypto.randomUUID();
-    const timer = setTimeout(() => { hostRequests.delete(requestId); reject(new Error('AI 宿主未响应，请更新 HIOS 到支持插件 AI 的版本')); }, 30000);
+    const timer = payload.action === 'native-layer-split' ? 0 : setTimeout(() => { hostRequests.delete(requestId); reject(new Error('AI 宿主未响应，请更新 HIOS 到支持插件 AI 的版本')); }, 30000);
     hostRequests.set(requestId, {resolve,reject,timer}); post('ai-request', {requestId,...payload});
   });
 }
@@ -300,15 +300,17 @@ function aiRoutes() {
   const choices=aiChoices.filter(c=>c.modes.includes(aiMode()));
   const routes=[...new Map(choices.map(c=>[c.routeId,[c.routeId,c.routeName]])).values()];
   aiOptions('aiRoute',routes,state.aiSettings?.routeId); aiModels();
-  $('aiLayerOptions').hidden=aiMode()!=='psd';
+  $('aiLayerOptions').hidden=true;
+  $('aiRoute').disabled=aiMode()==='psd'; $('aiModel').disabled=aiMode()==='psd';
   $('aiPrompt').hidden=aiMode()==='psd';
-  $('aiHint').textContent=aiMode()==='psd' ? '分层可能超过 5 分钟，最多等待 30 分钟。本地组装 PSD；请在更多中选择图片编辑模型。每层可能产生一次图片调用，文字为像素层。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
+  $('aiHint').textContent=aiMode()==='psd' ? '使用 HIOS 原生分层面板：视觉规划、逐层生图、本地 BiRefNet 透明处理。层数和模型在面板内选择，支持单层重试；确认后导入独立图层。' : '结果作为新图层加入；按捕获范围定位，并保留原选区蒙版。';
   $('aiStart').textContent=aiMode()==='psd' ? '分层' : '生成';
-  if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
+  if (aiMode()==='psd') aiMessage('点击分层，在原生面板中选择视觉与图片编辑模型');
+  else if (!routes.length) aiMessage('未配置对应模型，请在 HIOS 设置 → AI 路由中启用图片生成/编辑或 GPT 对话模型。');
   else aiMessage('AI 路由已就绪');
 }
 async function aiCatalog() {
-  try { const catalog=await aiHost({action:'catalog'}); aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }
+  try { const catalog=await aiHost({action:'catalog'}); nativeLayerSplit=catalog.nativeLayerSplit === true; aiProtocol=catalog.psdProtocol; aiChoices=catalog.choices || []; aiRoutes(); }
   catch(e) { aiMessage(e.message,true); }
 }
 function aiSettings() {
@@ -393,8 +395,22 @@ async function startAI() {
   let submittedId='';
   try {
     aiSettings();
+    if (aiMode()==='psd') {
+      if (!nativeLayerSplit) throw new Error('请更新 HIOS 至支持原生分层面板的版本');
+      $('aiCancel').hidden=true; $('aiCancel').disabled=true;
+      const capture=await captureAI();
+      if (!capture) throw new Error('请先打开图片');
+      aiMessage('请在 HIOS 分层面板中生成并确认导入');
+      const result=await aiHost({action:'native-layer-split',image:capture.image,draft:state.layerSplitDraft});
+      state.layerSplitDraft=result.draft; remember();
+      aiRunning(false);
+      if (result.cancelled) { aiMessage('已关闭分层面板，未修改原图层'); return; }
+      state.aiJob={kind:'psd',capture,status:'success',output:result.output}; remember();
+      $('aiResultActions').hidden=false; $('aiApply').disabled=false;
+      try { await applyAI(); } catch(e) { aiMessage(`素材已保存，导入未完成：${e.message}。可重试导入或作为新文档打开。`,true); }
+      return;
+    }
     if (!$('aiRoute').value || !$('aiModel').value) throw new Error('请先配置并选择对应 AI 路由和模型');
-    if(aiMode()==='psd' && aiProtocol!=='editable-file/v1') throw new Error('请先更新 HIOS 至支持 PSD 任务接口的版本');
     const capture=await captureAI(), kind=aiMode()==='psd' ? 'psd' : 'image';
     const id=crypto.randomUUID();
     submittedId=id;
@@ -409,9 +425,9 @@ async function initializeAI() {
   const s=state.aiSettings;
   if (s) { $('aiMode').value=s.mode||'psd'; $('aiScope').value=s.scope||'canvas'; $('aiLayers').value=s.layers||3; $('aiPrompt').value=s.prompt||''; }
   await aiCatalog();
-  if (state.aiJob?.id) {
+  if (state.aiJob) {
     if (state.aiJob.output) { $('aiResultActions').hidden=false; $('aiApply').disabled=!!state.aiJob.applied; }
-    void watchAI();
+    if (state.aiJob.id) void watchAI();
   }
 }
 $('aiRefresh').onclick=()=>void aiCatalog();

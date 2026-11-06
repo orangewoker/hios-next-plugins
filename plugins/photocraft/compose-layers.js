@@ -5,7 +5,7 @@ const { writePsd } = psd;
 export async function composeLayers(bytes, capture, readSource) {
   const manifest = JSON.parse(new TextDecoder().decode(bytes));
   const width = capture?.bounds?.[2], height = capture?.bounds?.[3];
-  if (manifest.schema !== 'hios.layers/v1' || !Array.isArray(manifest.layers) || manifest.layers.length < 2 || manifest.layers.length > 30) throw new Error('无效的分层素材清单');
+  if (manifest.schema !== 'hios.layers/v1' || !Array.isArray(manifest.layers) || manifest.layers.length < 1 || manifest.layers.length > 30) throw new Error('无效的分层素材清单');
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1 || width*height*manifest.layers.length > 64*1024*1024) throw new Error('分层总像素超过本地组装限制，请缩小范围或减少层数');
   async function pixels(url) {
     if (typeof url !== 'string' || !url.startsWith('hios-asset://')) throw new Error('图层仅允许读取 HIOS 本地素材');

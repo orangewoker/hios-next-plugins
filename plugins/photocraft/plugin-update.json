@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "photocraft",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "files": [
     {
       "path": "ATTRIBUTION.md",
@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "size": 8442,
-      "sha256": "1eff0ed5d6df5a6e7f0dfd75d11dfa5322bc1f19b8ddc846760dc429a160c3b5"
+      "size": 8454,
+      "sha256": "a3628cbd274ea5eab3008fb2d475488bcecd47ba6a677b7b1e2a1bd79a9fac3e"
     },
     {
       "path": "THIRD_PARTY/assets/dict/LICENSE-SCOWL.txt",
@@ -80,8 +80,8 @@
     },
     {
       "path": "app/index.html",
-      "size": 4804,
-      "sha256": "bef0783e06a729d9397aa11fc6cab991d830e1445387b89d694674323c2864a6"
+      "size": 4725,
+      "sha256": "a12031338186166234e706a698553314bc45d6240bf16cf441131cac6e01df8d"
     },
     {
       "path": "assets/icon.svg",
@@ -101,7 +101,7 @@
     {
       "path": "compose-layers.js",
       "size": 3085,
-      "sha256": "fd7f95e717e4e1cbd99fc9ba8b7e37a2cd007fafd3833592df9c8c31456ed4ea"
+      "sha256": "ef81e9c4cc70001a362a42c5e5933ccdc5a0d6189d68f43ab793a31c9490f1ff"
     },
     {
       "path": "fonts/NotoSansSC-Regular.ttf",
@@ -125,13 +125,13 @@
     },
     {
       "path": "plugin.json",
-      "size": 1934,
-      "sha256": "1d99b0ee2b4f662284fd04ef13726697f6655aefa56b3c92c26a88ddd151d12e"
+      "size": 1937,
+      "sha256": "5325dc647c9a97bf5fd5831bb84769968ce907346f55c7faa8741acead5ff91f"
     },
     {
       "path": "runtime/index.html",
-      "size": 4808,
-      "sha256": "0cf88a8862fe5031bb52f2aa9776519b2fab8195bc7e13f6f2cf9275ed659fa1"
+      "size": 4729,
+      "sha256": "e3f06bd9d754bcd807e113b3cb7205af834436fbebb3688a7aae299913113ca4"
     },
     {
       "path": "runtime/style.css",
@@ -150,8 +150,8 @@
     },
     {
       "path": "shared.js",
-      "size": 25276,
-      "sha256": "4edb260f5931b22eabc20c5028661a0440ec6150b2e5c72d6d9ac793ff5fc087"
+      "size": 26449,
+      "sha256": "69da14998ac4951a83514afb1d2b30c489c9c4947e4e1ada836d9edf2e754090"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -195,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 5489,
-      "sha256": "19d8b4ab00d825e249f90976f1717fd827513dea3509919ebfa6950335752787"
+      "size": 5866,
+      "sha256": "169562d9182a2eada367e20b7e680aa6ed0d052af020f50fb0a51f03fcc10ef1"
     },
     {
       "path": "web/build.json",
