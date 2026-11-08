@@ -61,3 +61,7 @@ plugins/
 
 `plugins/barcode-studio` 含由 DXOS barcode 发布代码重构的部分，适用其目录内 LICENSE 和 THIRD_PARTY_NOTICES.md；不将仓库根 MIT 许可自动扩展至该第三方来源代码。
 
+
+## 提示词
+
+[进入提示词板块](./prompts/README.md)：发布和订阅系统提示词、正向提示词等。支持 GitHub 网页编辑，自动生成客户端订阅索引；无需重新发布插件安装包。首条示例为“视觉创意导演 · 文生图提示词优化”。

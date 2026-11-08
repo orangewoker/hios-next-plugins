@@ -1,0 +1,9 @@
+[
+  {
+    "id": "visual-prompt-optimizer",
+    "title": "视觉创意导演 · 文生图提示词优化",
+    "kind": "system",
+    "tags": ["系统提示词", "提示词优化", "摄影", "mossimage", "krea2", "gpt-image2"],
+    "file": "system/visual-prompt-optimizer.md"
+  }
+]
