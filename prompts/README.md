@@ -15,6 +15,8 @@ HIOS 官方提示词订阅板块，与插件安装包独立。支持系统提示
 
 ### 系统提示词
 
+- [番茄小说封面 · 书名与作者排版设计](system/tomato-novel-cover-designer.md)（输入书名、作者、简介，生成含准确文字与排版的封面提示词）
+
 - [视觉创意导演 · 文生图提示词优化](system/visual-prompt-optimizer.md)
 - [图片分析 · 反推可复现的视觉提示词](system/reference-image-analyst.md)
 - [局部改图 · 保留主体与结构](system/precise-image-edit-director.md)

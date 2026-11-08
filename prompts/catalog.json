@@ -188,5 +188,17 @@
       "旁白"
     ],
     "file": "positive/voiceover-natural-narration.md"
+  },
+  {
+    "id": "tomato-novel-cover-designer",
+    "title": "番茄小说封面 · 书名与作者排版设计",
+    "kind": "system",
+    "tags": [
+      "系统提示词",
+      "小说封面",
+      "番茄小说",
+      "中文排版"
+    ],
+    "file": "system/tomato-novel-cover-designer.md"
   }
 ]
