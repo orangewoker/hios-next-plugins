@@ -3,7 +3,190 @@
     "id": "visual-prompt-optimizer",
     "title": "视觉创意导演 · 文生图提示词优化",
     "kind": "system",
-    "tags": ["系统提示词", "提示词优化", "摄影", "mossimage", "krea2", "gpt-image2"],
+    "tags": [
+      "系统提示词",
+      "提示词优化",
+      "摄影",
+      "mossimage",
+      "krea2",
+      "gpt-image2"
+    ],
     "file": "system/visual-prompt-optimizer.md"
+  },
+  {
+    "id": "reference-image-analyst",
+    "title": "图片分析 · 反推可复现的视觉提示词",
+    "kind": "system",
+    "tags": [
+      "图片分析",
+      "反推提示词",
+      "参考图"
+    ],
+    "file": "system/reference-image-analyst.md"
+  },
+  {
+    "id": "precise-image-edit-director",
+    "title": "局部改图 · 保留主体与结构",
+    "kind": "system",
+    "tags": [
+      "局部修改",
+      "图像编辑",
+      "一致性"
+    ],
+    "file": "system/precise-image-edit-director.md"
+  },
+  {
+    "id": "storyboard-planner",
+    "title": "分镜导演 · 连贯镜头与角色一致性",
+    "kind": "system",
+    "tags": [
+      "分镜",
+      "短视频",
+      "镜头设计"
+    ],
+    "file": "system/storyboard-planner.md"
+  },
+  {
+    "id": "video-prompt-designer",
+    "title": "视频提示词 · 单镜头动作与运镜",
+    "kind": "system",
+    "tags": [
+      "视频生成",
+      "图生视频",
+      "运镜"
+    ],
+    "file": "system/video-prompt-designer.md"
+  },
+  {
+    "id": "interior-render-director",
+    "title": "室内设计 · 模型截图转效果图",
+    "kind": "system",
+    "tags": [
+      "室内设计",
+      "建筑可视化",
+      "模型截图"
+    ],
+    "file": "system/interior-render-director.md"
+  },
+  {
+    "id": "clear-copy-editor",
+    "title": "中文润色 · 清晰自然不夸张",
+    "kind": "system",
+    "tags": [
+      "中文润色",
+      "文案",
+      "日常办公"
+    ],
+    "file": "system/clear-copy-editor.md"
+  },
+  {
+    "id": "product-studio-photo",
+    "title": "产品摄影 · 干净棚拍主图",
+    "kind": "positive",
+    "tags": [
+      "产品摄影",
+      "电商",
+      "棚拍"
+    ],
+    "file": "positive/product-studio-photo.md"
+  },
+  {
+    "id": "natural-adult-portrait",
+    "title": "人像摄影 · 窗边自然光",
+    "kind": "positive",
+    "tags": [
+      "人像",
+      "自然光",
+      "摄影"
+    ],
+    "file": "positive/natural-adult-portrait.md"
+  },
+  {
+    "id": "interior-daylight-render",
+    "title": "室内效果图 · 保持结构的日景渲染",
+    "kind": "positive",
+    "tags": [
+      "室内效果图",
+      "参考图",
+      "日景"
+    ],
+    "file": "positive/interior-daylight-render.md"
+  },
+  {
+    "id": "interior-night-edit",
+    "title": "日景转夜景 · 保持空间与机位",
+    "kind": "positive",
+    "tags": [
+      "图像编辑",
+      "室内效果图",
+      "夜景"
+    ],
+    "file": "positive/interior-night-edit.md"
+  },
+  {
+    "id": "character-three-views",
+    "title": "角色设定 · 正侧背三视图",
+    "kind": "positive",
+    "tags": [
+      "角色设计",
+      "三视图",
+      "一致性"
+    ],
+    "file": "positive/character-three-views.md"
+  },
+  {
+    "id": "material-replacement-edit",
+    "title": "材质替换 · 只改指定对象",
+    "kind": "positive",
+    "tags": [
+      "材质替换",
+      "局部改图",
+      "产品与室内"
+    ],
+    "file": "positive/material-replacement-edit.md"
+  },
+  {
+    "id": "food-editorial-photo",
+    "title": "美食摄影 · 温暖自然的菜单图",
+    "kind": "positive",
+    "tags": [
+      "美食",
+      "菜单",
+      "摄影"
+    ],
+    "file": "positive/food-editorial-photo.md"
+  },
+  {
+    "id": "poster-key-visual",
+    "title": "海报设计 · 留白主视觉底图",
+    "kind": "positive",
+    "tags": [
+      "海报",
+      "主视觉",
+      "设计素材"
+    ],
+    "file": "positive/poster-key-visual.md"
+  },
+  {
+    "id": "product-short-video",
+    "title": "产品视频 · 单镜头缓慢展示",
+    "kind": "positive",
+    "tags": [
+      "视频生成",
+      "产品展示",
+      "图生视频"
+    ],
+    "file": "positive/product-short-video.md"
+  },
+  {
+    "id": "voiceover-natural-narration",
+    "title": "配音指导 · 自然清晰的中文旁白",
+    "kind": "positive",
+    "tags": [
+      "音频",
+      "配音",
+      "旁白"
+    ],
+    "file": "positive/voiceover-natural-narration.md"
   }
 ]
