@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "modeling-3d",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "files": [
     {
       "path": "README.md",
@@ -31,12 +31,12 @@
     {
       "path": "engine/server.mjs",
       "size": 2917,
-      "sha256": "b632d56e8863dda3e04ef9da23a01f74cabe8f483aa59b97c1bd7361c9823579"
+      "sha256": "69bc2e43f6be6db6b266a31431bba489c5f5afae5596eec7fdc96b95e83097ea"
     },
     {
       "path": "plugin.json",
       "size": 1099,
-      "sha256": "c61e75219a9d5978e6e73a9869bd1d4f3f6366e899a1ddedb2cab4b9d9ff56f9"
+      "sha256": "a3ab8361fb1a2abd079bd8e40b4d93438ee5e3118fa161c32d83dcb725c9bbfe"
     },
     {
       "path": "runtime/app.js",
@@ -45,13 +45,13 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 3701,
-      "sha256": "5b34354bc382c806ede48f767237977dd7dcde1937e51a8f2c5307b103119812"
+      "size": 3720,
+      "sha256": "a3d4bfc46a3d8a8063b01cb5418b7b23b02630e6c6f469009abf9d303108de76"
     },
     {
       "path": "runtime/style.css",
-      "size": 7041,
-      "sha256": "59dd288fb174240047e6a514ad60c4f318eb5999ac9dc21363278f3c908cd0fd"
+      "size": 7039,
+      "sha256": "5bf05e5627661e04d1d33d3cc3a8bf9e785dda5019a0fa9296162eb3445a6894"
     },
     {
       "path": "shared/hios-adapter.css",

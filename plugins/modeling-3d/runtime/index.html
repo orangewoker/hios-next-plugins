@@ -3,7 +3,7 @@
 </head>
 <body><main>
 <header><div><strong>3D建模</strong><small>DSH × Blender</small></div><div class="row"><button id="expand" title="放大工作台">⛶ 放大</button><button id="tools-toggle" aria-expanded="false" aria-controls="tools">工具 ☰</button></div></header>
-<section id="viewer" aria-label="三维模型预览"><div id="empty">从一个想法开始<br><small>描述模型，或添加一张参考图</small></div><div id="viewport"></div></section>
+<section id="viewer" role="application" aria-label="三维模型预览"><div id="empty">从一个想法开始<br><small>描述模型，或添加一张参考图</small></div><div id="viewport"></div></section>
 <div class="view-actions"><button id="fit">适配视图</button><button id="iso">轴测</button><button id="front">正视</button><button id="top">顶视</button></div>
 <aside id="tools" hidden><div class="row"><strong>模型工具</strong><button id="tools-close" aria-label="关闭工具">×</button></div><div id="stats">可编辑源模型 · GLB 交互预览</div><label for="versions">版本历史</label><select id="versions"><option value="">暂无模型</option></select><div class="row"><select id="format" aria-label="导出格式"><option value="glb">GLB</option><option value="blend">BLEND</option><option value="fbx">FBX</option><option value="usdz">USDZ</option></select><button id="export">导出模型</button></div><button id="open">在 Blender 打开</button>  <details><summary>运行设置与当前范围</summary><label for="executable">Blender 可执行文件</label><div class="row"><input id="executable" placeholder="选择 blender.exe"><button id="choose">选择</button><button id="save-settings">保存</button></div><p>支持文字及参考图驱动的简单家具、空间与产品建模。上传原图最多 20 MiB，发送副本最长边 1600 像素；最多 4 张。图片通过所选 DSH 模型分析，可能发送到其模型提供商。当前使用基础 PBR 材质；本地 AI 人物生成及 AI 纹理未启用。预览采用 CPU 渲染。</p></details>
   <details><summary>执行记录</summary><pre id="log"></pre></details>

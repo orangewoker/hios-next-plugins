@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "modeling-3d",
   "name": "3D建模",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "DSH 驱动后台 Blender 建模，交互预览、版本修改与模型导出。无需本地 AI 权重。",
   "permissions": ["agent", "process", "filesystem", "canvas"],
   "contributes": {
