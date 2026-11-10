@@ -780,8 +780,8 @@
     },
     {
       "path": "versions.json",
-      "size": 4184,
-      "sha256": "b38a8cf3c617f29b0e457d11f52f2672d903d48c33d0d9ab489288593fa177e0"
+      "size": 3685,
+      "sha256": "bea995840637b69e95d146d2da0a7d77ba0894f3b22daa87855c4d137ffdb4f9"
     }
   ]
 }
