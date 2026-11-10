@@ -26,3 +26,5 @@ header{position:absolute;inset:14px 18px auto;z-index:3;pointer-events:none}head
 #reference-zone.dragging{background:var(--hios-accent-soft,var(--hios-control))}
 
 .blender-config{margin-left:auto;display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:11px}.blender-config [data-ready="true"]{color:var(--hios-positive,var(--hios-text))}.blender-config [data-ready="false"]{color:var(--hios-negative,var(--hios-text))}#blender-setup{padding:5px 8px}
+
+.display-actions{position:absolute;left:18px;top:66px;z-index:2;display:flex;gap:5px}.display-actions button{font-size:11px;padding:6px 9px}.display-actions [aria-pressed=true]{color:var(--hios-accent);border-color:var(--hios-accent)}@media(max-width:550px){.display-actions{top:94px;left:10px}}
