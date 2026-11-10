@@ -90,6 +90,22 @@
       ]
     },
     {
+      "version": "0.4.3",
+      "ref": "photocraft-v0.4.3",
+      "releasedAt": "2026-10-26",
+      "notes": [
+        "feat(photocraft): v0.4.3 GPU preferences and actual renderer status"
+      ]
+    },
+    {
+      "version": "0.4.2",
+      "ref": "photocraft-v0.4.2",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.4.1",
       "ref": "photocraft-v0.4.1",
       "releasedAt": "2026-10-17",

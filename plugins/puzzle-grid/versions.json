@@ -63,6 +63,14 @@
       ]
     },
     {
+      "version": "0.2.1",
+      "ref": "puzzle-grid-v0.2.1",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.2.0",
       "ref": "puzzle-grid-v0.2.0",
       "releasedAt": "2026-09-21",

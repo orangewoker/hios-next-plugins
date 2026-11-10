@@ -195,8 +195,8 @@
     },
     {
       "path": "versions.json",
-      "size": 6205,
-      "sha256": "9245fd2008dcd1c67aa5a8dfa0e0a6711b2342f0bffc17dfdacc98fd5b248a34"
+      "size": 6611,
+      "sha256": "9340c0e4f19a65c515d33502e64001eb21bae16f53f5582897840414592e372e"
     },
     {
       "path": "web/build.json",

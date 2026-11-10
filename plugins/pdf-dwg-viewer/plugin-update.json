@@ -150,8 +150,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1631,
-      "sha256": "0edf5ed7c81cc766aab121234e6fb67c411990230b7609644f7596d61ec489cc"
+      "size": 1831,
+      "sha256": "e8741b99a164521936dab78e3aab5e6052077e4d25cbd21af2ded4336025a472"
     },
     {
       "path": "vite.config.ts",

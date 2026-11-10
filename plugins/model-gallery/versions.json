@@ -27,6 +27,30 @@
         "按钮、输入框、设置滑块、开关与菜单统一为液态玻璃材质，适配深色、浅色及彩色宿主主题。",
         "保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。"
       ]
+    },
+    {
+      "version": "0.3.1",
+      "ref": "model-gallery-v0.3.1",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "feat: model preview sessions and K2 state restore fixes"
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "ref": "model-gallery-v0.3.0",
+      "releasedAt": "2026-10-30",
+      "notes": [
+        "feat(model-gallery): release 0.3.0 with themed selectors and separate library downloads"
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "ref": "model-gallery-v0.2.0",
+      "releasedAt": "2026-10-30",
+      "notes": [
+        "feat: publish model gallery 0.2.0 with install-time library downloads"
+      ]
     }
   ]
 }

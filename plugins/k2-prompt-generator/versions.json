@@ -38,6 +38,14 @@
       ]
     },
     {
+      "version": "0.2.12",
+      "ref": "k2-prompt-generator-v0.2.12",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "feat: model preview sessions and K2 state restore fixes"
+      ]
+    },
+    {
       "version": "0.2.11",
       "ref": "k2-prompt-generator-v0.2.11",
       "releasedAt": "2026-11-01",
@@ -69,6 +77,14 @@
       "releasedAt": "2026-10-28",
       "notes": [
         "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
+      ]
+    },
+    {
+      "version": "0.2.7",
+      "ref": "k2-prompt-generator-v0.2.7",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
       ]
     },
     {

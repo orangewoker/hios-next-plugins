@@ -45,6 +45,14 @@
       ]
     },
     {
+      "version": "0.3.8",
+      "ref": "image-compare-v0.3.8",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.3.6",
       "ref": "image-compare-v0.3.6",
       "releasedAt": "2026-09-28",

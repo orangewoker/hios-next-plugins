@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "modeling-3d",
+  "versions": [
+    {
+      "version": "0.3.7",
+      "ref": "modeling-3d-v0.3.7",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "fix(modeling): replace completed preview live during agent execution"
+      ]
+    },
+    {
+      "version": "0.3.6",
+      "ref": "modeling-3d-v0.3.6",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "feat(modeling): material clay wireframe modes and angle-preserving fit"
+      ]
+    },
+    {
+      "version": "0.3.5",
+      "ref": "modeling-3d-v0.3.5",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "fix(modeling): validate Blender settings from older persistent engines"
+      ]
+    },
+    {
+      "version": "0.3.4",
+      "ref": "modeling-3d-v0.3.4",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "fix(modeling): submit private draft references as validated image bytes"
+      ]
+    },
+    {
+      "version": "0.3.3",
+      "ref": "modeling-3d-v0.3.3",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "feat(modeling): inline Blender configuration status and picker"
+      ]
+    },
+    {
+      "version": "0.3.2",
+      "ref": "modeling-3d-v0.3.2",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "fix(modeling): load DSH models automatically and keep errors editable"
+      ]
+    },
+    {
+      "version": "0.3.1",
+      "ref": "modeling-3d-v0.3.1",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "fix(modeling-3d): preserve viewport layout under host auto-fit"
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "ref": "modeling-3d-v0.3.0",
+      "releasedAt": "2026-11-10",
+      "notes": [
+        "feat: release themed DSH Blender modeling plugin 0.3.0"
+      ]
+    }
+  ]
+}

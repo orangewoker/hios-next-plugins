@@ -37,6 +37,14 @@
       ]
     },
     {
+      "version": "0.1.2",
+      "ref": "pdf-dwg-viewer-v0.1.2",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.1.1",
       "ref": "pdf-dwg-viewer-v0.1.1",
       "releasedAt": "2026-09-21",

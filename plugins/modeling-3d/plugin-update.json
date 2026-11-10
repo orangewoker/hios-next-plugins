@@ -82,6 +82,11 @@
       "path": "skills/modeling/SKILL.md",
       "size": 2721,
       "sha256": "eda89778bef89bdeaa866a196fad629ec701d496e8d445bc5977e7ecd3970f52"
+    },
+    {
+      "path": "versions.json",
+      "size": 1752,
+      "sha256": "264a1a32389d8ac57b8d8d19b72581a7578585d04639d8797538eeaf63af5e99"
     }
   ]
 }

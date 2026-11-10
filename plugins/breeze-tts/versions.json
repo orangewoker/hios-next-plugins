@@ -35,6 +35,30 @@
       "notes": [
         "修复节点内部高清缩放导致的下拉菜单错位；节点自适应布局变化时保持菜单贴合控件。"
       ]
+    },
+    {
+      "version": "0.2.2",
+      "ref": "breeze-tts-v0.2.2",
+      "releasedAt": "2026-11-01",
+      "notes": [
+        "feat(breeze-tts): release 0.2.2 with canvas model start and stop"
+      ]
+    },
+    {
+      "version": "0.2.1",
+      "ref": "breeze-tts-v0.2.1",
+      "releasedAt": "2026-10-31",
+      "notes": [
+        "fix(breeze-tts): release 0.2.1 with live model and connection status"
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "ref": "breeze-tts-v0.2.0",
+      "releasedAt": "2026-10-31",
+      "notes": [
+        "feat(breeze-tts): publish 0.2.0 voice workshop for HIOS 3.8.8"
+      ]
     }
   ]
 }

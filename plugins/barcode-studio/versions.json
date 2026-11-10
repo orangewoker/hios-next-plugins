@@ -35,6 +35,30 @@
       "notes": [
         "适配夏日双模式主题，修复界面配色与主按钮文字对比度。"
       ]
+    },
+    {
+      "version": "0.1.2",
+      "ref": "barcode-studio-v0.1.2",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
+      "version": "0.1.1",
+      "ref": "barcode-studio-v0.1.1",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "fix(barcode-studio): follow host theme colors in app and canvas"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "barcode-studio-v0.1.0",
+      "releasedAt": "2026-10-24",
+      "notes": [
+        "feat: add barcode studio application and canvas plugin"
+      ]
     }
   ]
 }

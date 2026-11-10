@@ -28,6 +28,22 @@
         "保留原有编辑、定位、时间轴及输出流程；尊重减少动态效果和高对比度设置。",
         "保留已确认的调色专属材质与预设滑块填充同步。"
       ]
+    },
+    {
+      "version": "0.3.0",
+      "ref": "color-grade-v0.3.0",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "feat(color-grade): v0.3.0 portrait retouch liquify and reference color match"
+      ]
+    },
+    {
+      "version": "0.2.4",
+      "ref": "color-grade-v0.2.4",
+      "releasedAt": "2026-11-02",
+      "notes": [
+        "feat(color-grade): publish v0.2.4 local color grading and depth plugin"
+      ]
     }
   ]
 }

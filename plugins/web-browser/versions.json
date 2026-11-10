@@ -52,6 +52,14 @@
       ]
     },
     {
+      "version": "0.2.5",
+      "ref": "web-browser-v0.2.5",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.2.4",
       "ref": "web-browser-v0.2.4",
       "releasedAt": "2026-09-21",

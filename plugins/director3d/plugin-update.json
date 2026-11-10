@@ -295,8 +295,8 @@
     },
     {
       "path": "versions.json",
-      "size": 6103,
-      "sha256": "9c43b782b97fa2f29dca75eb33027301cb4e3b1cf2a6aa24c3b3d32d408849cd"
+      "size": 6299,
+      "sha256": "a1d2d472cda80dc82bd538018249f45b4b766100fc6d71d50041ca48d3cc93c4"
     },
     {
       "path": "vite.config.mjs",

@@ -39,6 +39,14 @@
       ]
     },
     {
+      "version": "0.1.5",
+      "ref": "dlss5-image-v0.1.5",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.1.4",
       "ref": "dlss5-image-v0.1.4",
       "releasedAt": "2026-09-30",

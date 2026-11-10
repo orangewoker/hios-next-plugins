@@ -37,6 +37,14 @@
       ]
     },
     {
+      "version": "0.1.6",
+      "ref": "watermark-master-v0.1.6",
+      "releasedAt": "2026-10-25",
+      "notes": [
+        "feat(ui): unify plugin surfaces with versioned UI kit"
+      ]
+    },
+    {
       "version": "0.1.5",
       "ref": "watermark-master-v0.1.5",
       "releasedAt": "2026-10-24",
