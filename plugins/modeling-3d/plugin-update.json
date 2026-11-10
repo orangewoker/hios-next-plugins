@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "modeling-3d",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": [
     {
       "path": "README.md",
-      "size": 3573,
-      "sha256": "b1887fe0e365c593d1ed78144fbe6e132601b0e89db1e77ecf848151f1d4b548"
+      "size": 3781,
+      "sha256": "52abdbfa8cdc5f39827a0008e5dc52519735e8471774d3c37b733ebe86b5fdb1"
     },
     {
       "path": "THIRD_PARTY_NOTICES.txt",
@@ -31,22 +31,22 @@
     {
       "path": "engine/server.mjs",
       "size": 2917,
-      "sha256": "69bc2e43f6be6db6b266a31431bba489c5f5afae5596eec7fdc96b95e83097ea"
+      "sha256": "954ddfc45eeb386e3f2080106002da42c048cc0946e7170242691203e84b77dd"
     },
     {
       "path": "plugin.json",
       "size": 1099,
-      "sha256": "a3ab8361fb1a2abd079bd8e40b4d93438ee5e3118fa161c32d83dcb725c9bbfe"
+      "sha256": "523e607219d0769c435f680a3fd713f62219194be4060c7d682393e56648249c"
     },
     {
       "path": "runtime/app.js",
-      "size": 640529,
-      "sha256": "75b4b9c4d6dd2b162eb8ca2a138325d5afae7cb5e5e0aaf3e89a70e3e7de4409"
+      "size": 640950,
+      "sha256": "55dde76664199e5a78e6b76715a7409a787851b9e1b1dbcc48e384a7c95e5845"
     },
     {
       "path": "runtime/index.html",
-      "size": 3720,
-      "sha256": "a3d4bfc46a3d8a8063b01cb5418b7b23b02630e6c6f469009abf9d303108de76"
+      "size": 3634,
+      "sha256": "48c9c06dc2e804a7f337859150d4d267f5332f64cc1f9086c6356b63f391eee5"
     },
     {
       "path": "runtime/style.css",

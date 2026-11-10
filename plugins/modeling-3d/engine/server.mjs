@@ -20,7 +20,7 @@ lines.on('line', async line => {
   try {
     req = JSON.parse(line); if (req.id === undefined) return;
     let result;
-    if (req.method === 'initialize') result = { protocolVersion: req.params.protocolVersion, capabilities: { tools: {} }, serverInfo: { name: 'modeling-3d', version: '0.3.1' } };
+    if (req.method === 'initialize') result = { protocolVersion: req.params.protocolVersion, capabilities: { tools: {} }, serverInfo: { name: 'modeling-3d', version: '0.3.2' } };
     else if (req.method === 'ping') result = {};
     else if (req.method === 'tools/list') result = { tools };
     else if (req.method === 'tools/call') {
