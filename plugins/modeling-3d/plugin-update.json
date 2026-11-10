@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "modeling-3d",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "files": [
     {
       "path": "README.md",
@@ -31,17 +31,17 @@
     {
       "path": "engine/server.mjs",
       "size": 2917,
-      "sha256": "90a8fa0ab75036d7e2b5abe0e93c6a13e5364221f2588553efd0f23afb0f4280"
+      "sha256": "960e158771d24b910ee55460c7d20a909bb88fe0cddb12dd5825cc027f970b9e"
     },
     {
       "path": "plugin.json",
       "size": 1099,
-      "sha256": "e8d3e0c4691781498e85afdaa0051489fa8d6e60000d70a71e681eaad8713f00"
+      "sha256": "bf40dbde207a5e145fa9dc0a36e0e7889bb8e8d5fb61cfc294524d31db4445f0"
     },
     {
       "path": "runtime/app.js",
-      "size": 641849,
-      "sha256": "15960684f775fa54166d5126e6623f53b992903264d620ce6a3946a89a9e54d0"
+      "size": 642346,
+      "sha256": "d58c4a5c1e40d3319b6433efa26c9d449fc929115355dff4275c019e23a77cce"
     },
     {
       "path": "runtime/index.html",
