@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "modeling-3d",
+  "version": "0.3.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 3573,
+      "sha256": "b1887fe0e365c593d1ed78144fbe6e132601b0e89db1e77ecf848151f1d4b548"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "size": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "engine/engine.mjs",
+      "size": 7749,
+      "sha256": "2f5a3e0a8d507d6a3744605e6bb225bb68107047c45145a25ebb75d3a1daf4e7"
+    },
+    {
+      "path": "engine/modeling_kit.py",
+      "size": 1281,
+      "sha256": "608a3c765b6f807023d75c69e24bcd694b5878629e622b807f614ef338b0ebda"
+    },
+    {
+      "path": "engine/runner.py",
+      "size": 4690,
+      "sha256": "367d79dfccd9ab8654e23a93eaff592a5ab9903207c8714d273b4573c45486e1"
+    },
+    {
+      "path": "engine/server.mjs",
+      "size": 2917,
+      "sha256": "b632d56e8863dda3e04ef9da23a01f74cabe8f483aa59b97c1bd7361c9823579"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1099,
+      "sha256": "c61e75219a9d5978e6e73a9869bd1d4f3f6366e899a1ddedb2cab4b9d9ff56f9"
+    },
+    {
+      "path": "runtime/app.js",
+      "size": 640529,
+      "sha256": "75b4b9c4d6dd2b162eb8ca2a138325d5afae7cb5e5e0aaf3e89a70e3e7de4409"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 3701,
+      "sha256": "5b34354bc382c806ede48f767237977dd7dcde1937e51a8f2c5307b103119812"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 7041,
+      "sha256": "59dd288fb174240047e6a514ad60c4f318eb5999ac9dc21363278f3c908cd0fd"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 222,
+      "sha256": "36c5b670c9d5a13ebb5c94022e936d58a26ed69ba00a35b124498d4523259611"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 6183,
+      "sha256": "adff37d35c2d80bbff571a6eedea8913202b1aa749da326bfa59ab6193b57aff"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
+    },
+    {
+      "path": "skills/modeling/SKILL.md",
+      "size": 2721,
+      "sha256": "eda89778bef89bdeaa866a196fad629ec701d496e8d445bc5977e7ecd3970f52"
+    }
+  ]
+}

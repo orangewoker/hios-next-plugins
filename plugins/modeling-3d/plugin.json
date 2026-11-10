@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "id": "modeling-3d",
+  "name": "3D建模",
+  "version": "0.3.0",
+  "description": "DSH 驱动后台 Blender 建模，交互预览、版本修改与模型导出。无需本地 AI 权重。",
+  "permissions": ["agent", "process", "filesystem", "canvas"],
+  "contributes": {
+    "skills": [{ "id": "modeling-3d", "path": "skills/modeling/SKILL.md" }],
+    "mcpServers": [{ "id": "engine", "name": "3D建模引擎", "transport": "stdio", "entry": "engine/server.mjs", "runtime": "node" }]
+  },
+  "nodes": [{
+    "id": "modeling-3d.model", "title": "3D建模", "description": "输入文字和参考图，由视觉 DSH 模型调用 Blender 生成可编辑模型。",
+    "rendererEntry": "runtime/index.html",
+    "inputs": [{ "id": "prompt", "title": "建模描述", "type": "text" }, { "id": "reference", "title": "参考图片", "type": "image", "multiple": true }],
+    "outputs": [{ "id": "model", "title": "模型 GLB", "type": "file" }, { "id": "preview", "title": "预览", "type": "image" }],
+    "defaultSize": { "width": 600, "height": 880 }, "defaultData": {}
+  }]
+}

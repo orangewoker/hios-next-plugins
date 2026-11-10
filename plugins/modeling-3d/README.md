@@ -1,0 +1,52 @@
+# 3D建模 · 可选插件
+
+首版：DSH 原生模型选择 → 文字 / 参考图驱动后台 Blender → 基础 PBR 材质 → GLB 交互预览 → 版本修改 → BLEND/GLB/FBX/USDZ 导出。
+
+## 安装与使用
+
+1. 使用HIOS Next 4.2.8 或更高版本主程序。旧版会显示接口不支持。
+2. 插件管理中从本地目录安装此目录并启用。此插件不加入主程序安装资源。
+3. 添加「3D建模」节点，在设置选择本机 `blender.exe` 并保存。
+4. 点击刷新加载 DSH 原生模型目录。需先在 HIOS 中配置好 DSH。
+5. 输入文字，上传 / 拖入参考图或连接画布图片节点，点击“让 DSH 建模”。生成后选版本，可继续修改或导出。
+
+产物保存在用户数据目录 `asset-files/plugin-workspaces/modeling-3d/<账户隔离键>/<节点会话>/versions/`。每轮保留脚本、日志、状态、源文件。卸载插件代码不删除工作区。复制到不同节点时创建新会话，不自动共享源模型。
+
+## 范围
+
+- 支持简单家具、空间、产品程序化建模及基础材质。不是本地 AI 权重推理器。
+- 参考图最多 4 张，支持 PNG/JPEG/WebP，单张原图最多 20 MiB；提交副本最长边 1600px、每张最多 2 MiB，不覆盖原图。
+- 图片以真实附件提交至所选 DSH 提供商；模型必须声明支持 image 输入，能力未知或不支持时明确拒绝，不降级为纯文字。升级后需要重启宿主和 DSH。
+- 自动视觉复核、写实人物、AI 纹理、实时控制现有 Blender、动画与骨骼均未启用。参考建模不等于照片级三维重建。
+- GLB 预览是交换格式副本，复杂 Blender 材质不保证无损。首版技能约束使用基础 PBR。
+- FBX/USDZ 已由 Blender 导出链路提供；具体 SketchUp 版本/导入器兼容性需在用户端验收。
+- Blender 使用 `--background --factory-startup`，不操作用户已打开的 Blender。预览采用 CPU Cycles 16 samples/640px，不要求大型模型或 CUDA。
+- 10 分钟引擎超时，任务取消会终止插件创建的后台 Blender；重启后不重放未完成任务。
+- DSH 使用当前选择的模型提供商，并不承诺智能体本身离线。
+
+## 执行权限
+
+插件需要 agent/process/filesystem/canvas。Blender 执行 DSH 生成的 Python，此 Python **不是操作系统沙箱**。仅安装可信插件并审阅工作流。宿主注入账户/插件/会话隔离工作区，UI 不能指定其他插件的 MCP 工具或通过产物另存接口读取工作区外文件。DSH 只获得建模、查询任务、读取版本工具，不能修改引擎路径或自动打开应用。
+
+## 构建与测试
+
+从仓库根运行：
+
+```powershell
+node plugins/modeling-3d/build.mjs
+node --test plugins/modeling-3d/tests/*.test.mjs
+$env:HIOS_TEST_BLENDER = '实际的 blender.exe 绝对路径'
+node --test plugins/modeling-3d/tests/*.test.mjs
+```
+
+运行时 MCP 引擎使用 Node 内置模块，无 npm 运行时依赖。构建依赖 esbuild 和 Three.js，仓库内可复用根目录依赖。
+
+## 后续引擎扩展
+
+插件 UI → 通用宿主能力桥 → 插件 MCP → 引擎适配器 → 版本化产物。
+
+未来本地 AI 图生 3D 是单独适配器；沿用任务状态、产物版本和导出层，不将模型下载/推理业务写入 HIOS 主体。当前不下载任何模型。
+
+## 工作台与主题
+
+节点提供大视口、悬浮输入区与折叠工具面板，可放大为工作台。跟随宿主浅色、深色及自定义主题颜色，切换时实时更新，不改变模型本身材质。
