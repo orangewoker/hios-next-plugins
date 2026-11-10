@@ -27,7 +27,9 @@ export class ModelingEngine {
         if (!isAbsolute(exe) || !/blender(?:\.exe)?$/i.test(exe) || !(await stat(exe)).isFile()) throw Error('请选择有效的 Blender 程序');
         await writeFile(join(root, 'config.json'), JSON.stringify({ executable: await realpath(exe) }));
       }
-      return { ...await this.config(root), phase: 'Blender 程序化建模；本地 AI 生成暂未启用' };
+      const config = await this.config(root);
+      const available = Boolean(config.executable && await stat(config.executable).then(s => s.isFile()).catch(() => false));
+      return { ...config, available, phase: 'Blender 程序化建模；本地 AI 生成暂未启用' };
     }
     if (name === 'modeling_history') {
       const dir = join(root, 'versions'); await mkdir(dir, { recursive: true });

@@ -24,3 +24,5 @@ header{position:absolute;inset:14px 18px auto;z-index:3;pointer-events:none}head
 .primary{background:var(--hios-accent)!important;border-color:var(--hios-accent)!important;color:var(--hios-accent-contrast,white)!important}
 #prompt:focus,button:focus-visible,select:focus-visible,summary:focus-visible,#reference-zone.dragging{outline-color:var(--hios-accent)}
 #reference-zone.dragging{background:var(--hios-accent-soft,var(--hios-control))}
+
+.blender-config{margin-left:auto;display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:11px}.blender-config [data-ready="true"]{color:var(--hios-positive,var(--hios-text))}.blender-config [data-ready="false"]{color:var(--hios-negative,var(--hios-text))}#blender-setup{padding:5px 8px}
