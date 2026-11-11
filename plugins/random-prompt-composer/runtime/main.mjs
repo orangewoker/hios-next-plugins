@@ -1,4 +1,5 @@
 import { categories, SYSTEM_PROMPT, normalizeState, randomize, compose } from './core.mjs';
+import { createTagMenu } from './tag-menu.mjs';
 
 const pluginId = 'random-prompt-composer';
 const protocols = ['hios-plugin-node/v1', 'hios-plugin-app/v1'];
@@ -8,17 +9,24 @@ let state = normalizeState(), upstream = '', initialized = false;
 const post = (type, payload = {}) => parent.postMessage({ protocol, pluginId, nodeId, appId, type, payload }, '*');
 const status = text => { $('status').textContent = text; };
 const persist = () => { if (initialized) post('state', { state }); };
+const tagMenu = createTagMenu((id, value) => {
+  $(id).value = value; $(id).dispatchEvent(new Event('change'));
+});
+$('tagSettings').addEventListener('toggle', () => tagMenu.close());
 
 for (const c of categories) {
   const row = document.createElement('div'); row.className = 'category';
-  const label = document.createElement('label'); label.htmlFor = c.id; label.textContent = c.title;
-  const select = document.createElement('select'); select.id = c.id; select.className = 'hios-control';
+  const label = document.createElement('label'); label.htmlFor = `${c.id}-trigger`; label.textContent = c.title;
+  const select = document.createElement('select'); select.id = c.id; select.hidden = true;
+  const trigger = document.createElement('button'); trigger.type = 'button'; trigger.id = `${c.id}-trigger`; trigger.className = 'hios-control tag-trigger';
+  trigger.setAttribute('aria-haspopup', 'listbox'); trigger.setAttribute('aria-controls', 'tag-options'); trigger.setAttribute('aria-expanded', 'false');
+  trigger.addEventListener('click', () => tagMenu.open(c, trigger, state.selected[c.id]));
   for (const entry of c.entries) {
     const option = document.createElement('option'); option.value = entry.id; option.textContent = `${entry.id} · ${entry.text}`; select.append(option);
   }
   const lockLabel = document.createElement('label'); lockLabel.className = 'check';
   const lock = document.createElement('input'); lock.type = 'checkbox'; lock.id = `lock-${c.id}`; lock.setAttribute('aria-label', `锁定${c.title}`);
-  lockLabel.append(lock, '锁定'); row.append(label, select, lockLabel); $('categories').append(row);
+  lockLabel.append(lock, '锁定'); row.append(label, trigger, lockLabel, select); $('categories').append(row);
   select.addEventListener('change', () => { state.selected[c.id] = select.value; state.locked[c.id] = true; render(); persist(); status(`${c.title}已选定并锁定`); });
   lock.addEventListener('change', () => { state.locked[c.id] = lock.checked; persist(); });
 }
@@ -28,6 +36,8 @@ function render() {
   for (const c of categories) {
     $(c.id).value = state.selected[c.id]; $(`lock-${c.id}`).checked = state.locked[c.id];
     $(c.id).title = $(c.id).selectedOptions[0]?.textContent || '';
+    $(`${c.id}-trigger`).textContent = $(c.id).title;
+    $(`${c.id}-trigger`).title = $(c.id).title;
   }
   $('seed').value = state.seed; $('brief').value = state.brief; $('randomOnRun').checked = state.randomOnRun;
   $('positive').value = compose(state, upstream);
@@ -53,8 +63,13 @@ $('brief').addEventListener('input', () => { state.brief = $('brief').value; $('
 $('randomOnRun').addEventListener('change', () => { state.randomOnRun = $('randomOnRun').checked; persist(); });
 async function copy(id) {
   try {
-    try { await navigator.clipboard.writeText($(id).value); }
-    catch { $(id).focus(); $(id).select(); if (!document.execCommand('copy')) throw Error('请选中文本后按 Ctrl+C 复制'); }
+    const text = id === 'system' ? SYSTEM_PROMPT : $(id).value;
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const field = document.createElement('textarea'); field.value = text; field.style.cssText = 'position:fixed;opacity:0;pointer-events:none'; document.body.append(field);
+      try { field.focus(); field.select(); if (!document.execCommand('copy')) throw Error('复制失败，请使用系统提示词文本文件'); }
+      finally { field.remove(); }
+    }
     status(id === 'system' ? '系统提示词已复制，请粘贴到 LLM 系统提示词栏' : '正向提示词已复制');
   } catch (error) { status(error.message); }
 }
@@ -74,6 +89,7 @@ window.addEventListener('message', event => {
     initialized = true;
     if (first && !payload.state?.selected) draw(); else render();
     $('run').hidden = protocol === protocols[1] || payload.hostRunControl === 'canvas-button';
+    $('systemDetails').hidden = protocol !== protocols[1];
     status('已就绪 · 手动选择自动锁定；节点之间的设置相互独立'); post('loaded');
   } else if (message.type === 'run' && initialized) {
     if (payload.inputs) upstream = payload.inputs.brief ?? '';

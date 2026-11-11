@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "random-prompt-composer",
   "name": "随机组合提示词",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "从七类本地标签库随机组合正向提示词，支持锁定、种子复现及 LLM 深化。",
   "author": "HIOS Next",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/random-prompt-composer",

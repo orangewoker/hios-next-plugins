@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "random-prompt-composer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "files": [
     {
       "path": "LLM深化系统提示词.txt",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 3437,
-      "sha256": "dd8572e50305893363c1c9353e28543d521b6f8ed405a0b1f238f3743ed2ca02"
+      "size": 3704,
+      "sha256": "b46dba0304ba9742cd779eee828e6027c2156200e62e20b453c2156ab43b45db"
     },
     {
       "path": "assets/icon.svg",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1287,
-      "sha256": "ada3275426a0501c5e4b961df165847700fdf00290636e47b37f8da76e753546"
+      "sha256": "b0f71aabc16be4ddff674cf019a40f99c1b94cc092ab6acd412a1790dd558f3c"
     },
     {
       "path": "runtime/core.mjs",
@@ -35,18 +35,23 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 2792,
-      "sha256": "8194f927339a62c34bb0aabf63f1972fc49bc17129417c400365981728b75bce"
+      "size": 2963,
+      "sha256": "b472c94ab40dacf37ed9157228dcb370ddba1d417d5964f1b4fa8de9b97f3d03"
     },
     {
       "path": "runtime/main.mjs",
-      "size": 5593,
-      "sha256": "df4a46e373f47fb864cda67bfb30ad08913c64bee1ba365917cf2f20c1f97887"
+      "size": 6697,
+      "sha256": "7c517c304e30fe344c8660d99cc520ed6c8e1e443780d6facc29109b6161b0ec"
     },
     {
       "path": "runtime/style.css",
-      "size": 1671,
-      "sha256": "10073a51c3154cb4d5cd795d8d79196c4ebaa518c19808a5011e5f4d43d660f9"
+      "size": 3202,
+      "sha256": "eca50971360f762af10e695a370c8fcd8fe5461fc21c815dcdbbb272826737b4"
+    },
+    {
+      "path": "runtime/tag-menu.mjs",
+      "size": 3966,
+      "sha256": "d833a41e000c90550b954fd20d0d0a69552362caa1cbea7072d50c673c90e6ff"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -75,8 +80,8 @@
     },
     {
       "path": "versions.json",
-      "size": 512,
-      "sha256": "c9e26a4af5db1854101b3bbc85cea75d118a41fe510746f2fe72a0a158acacfd"
+      "size": 928,
+      "sha256": "d7ca08b01332a765ede23f059a954d48298c5e0480e1a8cbdba8de19ca6c88d8"
     }
   ]
 }

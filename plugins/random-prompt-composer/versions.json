@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "pluginId": "random-prompt-composer",
   "versions": [{
+    "version": "0.1.1",
+    "ref": "random-prompt-composer-v0.1.1",
+    "releasedAt": "2026-11-11",
+    "notes": [
+      "七类标签整体支持展开与收起，应用和画布默认收起。",
+      "使用跟随HIOS主题的可搜索下拉菜单，支持键盘选择，替代系统原生下拉框。",
+      "画布节点的LLM深化系统提示词改为单个复制按钮，不再展开全文。"
+    ]
+  }, {
     "version": "0.1.0",
     "ref": "random-prompt-composer-v0.1.0",
     "releasedAt": "2026-11-11",

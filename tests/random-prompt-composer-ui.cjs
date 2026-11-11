@@ -22,7 +22,7 @@ app.whenReady().then(async () => {
     catch { res.writeHead(404); res.end(); }
   });
   await new Promise(r => server.listen(0, '127.0.0.1', r));
-  win = new BrowserWindow({ show: false, width: 600, height: 1150, webPreferences: { backgroundThrottling: false } });
+  win = new BrowserWindow({ show: false, width: 600, height: 1150, webPreferences: { offscreen: true, backgroundThrottling: false } });
   const errors = [];
   win.webContents.on('console-message', event => { if (event.level === 'error') errors.push(event.message); });
   const js = code => win.webContents.executeJavaScript(code);
@@ -33,6 +33,9 @@ app.whenReady().then(async () => {
     await wait(() => js(`messages.some(m=>m.type==='loaded')`));
     assert.equal(await child(`document.querySelectorAll('#categories option').length`), 2100);
     assert.equal(await child(`document.querySelector('#run').hidden`), true);
+    assert.equal(await child(`document.querySelector('#tagSettings').open`), false);
+    assert.equal(await child(`document.querySelector('#systemDetails').hidden`), true);
+    assert.equal(await child(`document.querySelectorAll('#copySystem').length`), 1);
     await child(`document.querySelector('#seed').value='2718';document.querySelector('#seed').dispatchEvent(new Event('change'));document.querySelector('#random').click();`);
     await wait(() => js(`saved.seed===2718`));
     await child(`document.querySelector('#top').value='099';document.querySelector('#top').dispatchEvent(new Event('change'));`);
@@ -67,18 +70,45 @@ app.whenReady().then(async () => {
     // Reject non-parent synthetic messages even when protocol and plugin ID look valid.
     await child(`dispatchEvent(new MessageEvent('message',{data:{protocol:'hios-plugin-node/v1',pluginId:'random-prompt-composer',nodeId:'test-node',type:'init',payload:{state:{}}}}));`);
     assert.equal(await child(`document.querySelector('#positive').value`), preview);
+    await child(`document.querySelector('#tagSettings').open=true;`);
+    await sleep(100);
+    await child(`document.querySelector('#top-trigger').click();`);
+    assert.equal(await child(`document.querySelector('.tag-menu').hidden`), false);
+    assert.equal(await child(`document.querySelectorAll('.tag-option').length`), 300);
+    await child(`document.querySelector('.tag-search').value='100';document.querySelector('.tag-search').dispatchEvent(new Event('input'));`);
+    assert.equal(await child(`document.querySelectorAll('.tag-option').length`), 1);
+    await child(`document.querySelector('.tag-search').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));`);
+    await wait(() => js(`saved.selected.top==='100' && saved.locked.top`));
+    assert.equal(await child(`document.querySelector('.tag-menu').hidden`), true);
+    await child(`document.querySelector('#top-trigger').click();document.querySelector('.tag-search').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));`);
+    assert.equal(await child(`document.querySelector('.tag-menu').hidden`), true);
+    // Clipboard works without exposing a system-prompt textarea in the node UI.
+    await child(`document.execCommand=()=>{window.copied=document.activeElement.value;return true};Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('fallback')}}});document.querySelector('#copySystem').click();`);
+    await wait(() => child(`window.copied?.includes('只输出一段中文正文')`));
+    await child(`document.querySelector('#tagSettings').open=false;`);
     await win.setContentSize(370, 1000);
     await js(`plugin.style.width='350px'`);
     assert.equal(await child(`document.documentElement.scrollWidth<=innerWidth`), true);
     await win.setContentSize(600, 1150); await js(`plugin.style.width='560px'`);
     const out = resolve(__dirname, '../output/random-prompt-composer'); mkdirSync(out, { recursive: true });
+    await sleep(200);
     writeFileSync(join(out, 'preview.png'), (await win.webContents.capturePage()).toPNG());
     await js(`mode='app';messages=[];plugin.src='/runtime/index.html?app=1';`);
     await wait(() => js(`messages.some(m=>m.type==='loaded')`));
     assert.equal(await child(`document.querySelector('#run').hidden`), true);
+    assert.equal(await child(`document.querySelector('#tagSettings').open`), false);
+    assert.equal(await child(`document.querySelector('#systemDetails').hidden`), false);
     assert.ok(await child(`document.querySelector('#system').value.includes('只输出一段中文正文')`));
+    await js(`send('theme',{theme:{mode:'dark',tokens:{surface:'#303030',text:'#eeeeee',control:'#222222',border:'#424242',accent:'#3399ff'},design:{version:1}}});`);
+    await child(`document.querySelector('#tagSettings').open=true;`); await sleep(100);
+    await child(`document.querySelector('#top-trigger').click();`);
+    assert.equal(await child(`getComputedStyle(document.querySelector('.tag-menu')).backgroundColor`), 'rgb(48, 48, 48)');
+    assert.equal(await child(`getComputedStyle(document.querySelector('.tag-option')).color`), 'rgb(238, 238, 238)');
+    assert.equal(await child(`(()=>{const r=document.querySelector('.tag-menu').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight})()`), true);
+    await sleep(200);
+    writeFileSync(join(out, 'dark-dropdown.png'), (await win.webContents.capturePage()).toPNG());
     assert.deepEqual(errors, []);
-    console.log('PASS sandbox init, 2100 options, lock, seeds, run/output, upstream input, reload, reuse, message isolation, narrow layout and app mode');
+    console.log('PASS sandbox init, seeds, lock, run/output, reload, themed searchable menu, keyboard, clipboard fallback, default collapse, node/app presentation and narrow layout');
     console.log('Screenshot:', join(out, 'preview.png'));
   } finally { win.destroy(); await new Promise(r => server.close(r)); }
 }).then(() => app.quit(), error => { console.error(error); if (win && !win.isDestroyed()) win.destroy(); if (server) server.close(); app.exit(1); });
