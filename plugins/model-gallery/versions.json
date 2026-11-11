@@ -3,6 +3,15 @@
   "pluginId": "model-gallery",
   "versions": [
     {
+      "version": "0.3.5",
+      "ref": "model-gallery-v0.3.5",
+      "releasedAt": "2026-11-11",
+      "notes": [
+        "姿势图片去除分类前缀，仅保留编号与角度，例如 P008_front.正面.png。",
+        "仅更新插件，无需升级主体或重新下载图库；已有节点重新运行后生效。"
+      ]
+    },
+    {
       "version": "0.3.4",
       "ref": "model-gallery-v0.3.4",
       "releasedAt": "2026-11-03",

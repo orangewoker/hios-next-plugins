@@ -62,3 +62,18 @@ export function canonicalUrl(source) { return String(source).replace(/^https?:\/
 export function renderUrl(source, locationUrl = globalThis.location?.href || '') {
   return /^http:\/\/hios-plugin\.localhost\//i.test(locationUrl) ? String(source).replace(/^(hios-(?:asset|static-site)):\/\//, 'http://$1.localhost/') : source;
 }
+
+// Keep source IDs for lookup/grouping; expose only pose number and known view names.
+export function displayId(kind, item) {
+  if (kind !== 'pose') return item.id;
+  const match = String(item.id || '').match(/(?:^|_)(P\d+)(?:_(front|side|diag|high|low|back))?$/i);
+  const number = match?.[1] || (/^P\d+$/i.test(item.number || '') ? item.number : 'pose');
+  const view = match?.[2] || ({ 正面: 'front', 侧面: 'side', 斜侧: 'diag', 俯视: 'high', 仰视: 'low', 背面: 'back' })[item.angle];
+  return number + (view ? '_' + view.toLowerCase() : '');
+}
+export function imageName(kind, item, thumb = false, extension = 'png') {
+  const stem = kind === 'pose'
+    ? displayId(kind, item) + ([...ANGLES, '背面'].includes(item.angle) ? '.' + item.angle : '')
+    : `${LABELS[kind]}-${item.id}`;
+  return `${stem}${thumb ? '-thumb' : ''}.${extension}`;
+}

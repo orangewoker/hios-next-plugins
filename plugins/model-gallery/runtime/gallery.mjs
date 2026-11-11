@@ -1,5 +1,5 @@
 import { themedSelect } from './themed-select.mjs';
-import { KINDS, LABELS, ANGLES, INDEX, defaults, normalizeCatalog, filterCatalog, groupPoses, groupKey, outputKinds, canonicalUrl, renderUrl } from './gallery-core.mjs';
+import { KINDS, LABELS, displayId, imageName, ANGLES, INDEX, defaults, normalizeCatalog, filterCatalog, groupPoses, groupKey, outputKinds, canonicalUrl, renderUrl } from './gallery-core.mjs';
 
 const P = 'hios-plugin-node/v1', $ = id => document.getElementById(id);
 const pending = new Map(), libraries = new Map(), loadingLibraries = new Map();
@@ -43,7 +43,7 @@ function renderCompact() {
     check.onchange = () => commit({ ...state, enabled: { ...state.enabled, [k]: check.checked } });
     label.append(check, document.createTextNode(LABELS[k])); row.append(label);
     if (item) row.append(button('清空', () => { const next = clone(state); delete next.selections[k]; commit(next); }, 'text-button'));
-    slot.append(pick, row, element('div', 'slot-caption', item ? `${item.id}${item.angle ? ' · ' + item.angle : ''}` : '尚未选择')); $('slots').append(slot);
+    slot.append(pick, row, element('div', 'slot-caption', item ? `${displayId(k, item)}${item.angle ? ' · ' + item.angle : ''}` : '尚未选择')); $('slots').append(slot);
   }
   $('output-count').textContent = `${state.saveAssets ? '保存原图' : '本次预览'} · ${outputKinds(state).length} 张`;
   $('add-canvas').checked = Boolean(state.addToCanvas);
@@ -138,7 +138,7 @@ function clearPreview() {
 async function showPreview(item) {
   clearPreview(); preview = item; const serial = previewSerial, k = kind, lib = libraries.get(k);
   $('use').disabled = false; $('favorite').disabled = false; $('favorite').textContent = favorites[k].has(item.id) ? '★ 已收藏' : '☆ 收藏';
-  $('preview-meta').append(element('strong', '', item.title), element('small', '', `${item.id}${item.angle ? ' · ' + item.angle : ''}`));
+  $('preview-meta').append(element('strong', '', item.title), element('small', '', `${displayId(kind, item)}${item.angle ? ' · ' + item.angle : ''}`));
   const dimensions = element('small', '', '正在读取预览…'); $('preview-meta').append(dimensions);
   const tags = element('div', 'tags'); for (const tag of item.tags) tags.append(button(tag, () => { filters[kind].q = tag; $('search').value = tag; shown = 60; renderGrid(); }, '')); $('preview-meta').append(tags);
   if (k === 'portrait' && item.section === 'styling') $('preview-meta').append(element('small', '', '造型参考是独立素材，不与正脸图配对。'));
@@ -165,8 +165,8 @@ async function storeImage(k, row, lib, thumb = false, lifetime = 'persistent') {
   if (!thumb && ![137,80,78,71,13,10,26,10].every((byte, i) => bytes[i] === byte)) throw Error('原图不是有效的 PNG 文件');
   const mime = path.endsWith('.webp') ? 'image/webp' : /\.jpe?g$/.test(path) ? 'image/jpeg' : 'image/png';
   const bitmap = await createImageBitmap(new Blob([bytes], { type: mime })); const width = bitmap.width, height = bitmap.height; bitmap.close();
-  const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lib.id}:${k}:${path}`)))].map(b => b.toString(16).padStart(2,'0')).join('');
-  const result = await request('file-store', { key: hash, name: `${LABELS[k]}-${row.id}${thumb ? '-thumb' : ''}.${path.split('.').pop()}`, mime, bytes, lifetime, ...(thumb ? { purpose: 'draft' } : {}) });
+  const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lib.id}:${k}:${path}${k === 'pose' ? ':name-v2' : ''}`)))].map(b => b.toString(16).padStart(2,'0')).join('');
+  const result = await request('file-store', { key: hash, name: imageName(k, row, thumb, path.split('.').pop()), mime, bytes, lifetime, ...(thumb ? { purpose: 'draft' } : {}) });
   return { source: canonicalUrl(result.url), width, height, mime };
 }
 async function usePreview() {
@@ -184,7 +184,7 @@ function renderDraft() {
   $('draft-slots').replaceChildren(...KINDS.map(k => {
     const item = draft.selections[k], row = element('div', 'draft-slot'), pick = button('', () => switchKind(k), ''); pick.setAttribute('aria-label', `切换到${LABELS[k]}库`);
     if (item?.thumbUrl) pick.append(image(item.thumbUrl, item.title)); else pick.textContent = '+';
-    const text = element('div'); text.append(element('strong', '', LABELS[k]), element('small', '', item ? item.id : '尚未选择'));
+    const text = element('div'); text.append(element('strong', '', LABELS[k]), element('small', '', item ? displayId(k, item) : '尚未选择'));
     if (item) text.append(button('清空', () => { delete draft.selections[k]; renderDraft(); renderGrid(true); }, 'text-button'));
     row.append(pick, text); return row;
   }));
@@ -237,7 +237,7 @@ async function run(payload) {
       const row = lib.byId.get(selected.id); if (!row) throw Error(`${LABELS[k]} ID 已不在当前索引中：${selected.id}`);
       const result = await storeImage(k, row, lib, false, lifetime);
       if (serial !== runSerial) return;
-      outputs.push({ kind: 'image', lifetime, portId: k, ...result, name: `${LABELS[k]}-${row.id}.png`, metadata: { role: k, originalId: row.id, angle: row.angle, libraryId: lib.id, addToCanvas: Boolean(snapshot.addToCanvas) } });
+      outputs.push({ kind: 'image', lifetime, portId: k, ...result, name: imageName(k, row), metadata: { role: k, originalId: row.id, angle: row.angle, libraryId: lib.id, addToCanvas: Boolean(snapshot.addToCanvas) } });
     }
     post('output-batch', { runId: payload.runId, outputs }); notify(snapshot.saveAssets ? `已提交 ${outputs.length} 张原图，等待宿主保存` : `已输出 ${outputs.length} 张本次预览，不保存到资产库；重新打开画布后清空`);
   } catch (error) { if (serial === runSerial) { post('error', { runId: payload.runId, message: error.message }); notify(error.message); } }

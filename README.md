@@ -9,7 +9,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | 3D 建模 | 0.3.7 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/modeling-3d`（需 HIOS Next ≥ 4.2.8；DSH + 本机 Blender，参考图建模与主题工作台，无 AI 权重下载） |
 | 调色（应用 + 画布节点） | 0.3.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/color-grade`（本地 AI 多人五官、磨皮、液化、参考图追色与景深；内置离线模型） |
 | Breeze TTS 语音工坊（应用 + 画布节点） | 0.2.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/breeze-tts`（需 HIOS Next ≥ 3.8.8；本机 Q8_0 或局域网远程连接，模型另行下载） |
-| 模特（人物 / 服装 / 姿势参考图库） | 0.3.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/model-gallery`（需 HIOS ≥ 3.8.1；插件与素材独立下载，已有图库直接复用） |
+| 模特（人物 / 服装 / 姿势参考图库） | 0.3.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/model-gallery`（需 HIOS ≥ 3.8.1；插件与素材独立下载，已有图库直接复用） |
 | 效果控制器（画布提示词节点） | 1.0.4 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/effect-controller`（本地生成提示词；已验证 HIOS Next 3.6.6，无需额外主程序更新） |
 | DX Cut 视频剪辑（应用 + 画布节点） | 0.2.7 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/dx-cut`（Windows x64，需 HIOS Next ≥ 3.6.2；设置中可选择 Gitee 国内渠道） |
 | 条形码工作室（应用 + 画布节点） | 0.1.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/barcode-studio` |

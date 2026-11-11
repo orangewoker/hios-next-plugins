@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "model-gallery",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "files": [
     {
       "path": "README.md",
-      "size": 6121,
-      "sha256": "fc29bbe43a8700e32d96100ba92d745dd801478a940d06c37e7b218ab949886b"
+      "size": 6607,
+      "sha256": "0c5be464da93d6c74b6085628382709be239975b9d0c5de777313c5a53553115"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -51,12 +51,12 @@
     {
       "path": "plugin.json",
       "size": 1613,
-      "sha256": "48ac4096b7e8a62fd7ed5c03c52187cb634e8bf978dedddf519b5f3aa6c9cc0f"
+      "sha256": "ee0e2df9c6f23d22244219cd3964e9749d1c7a993b98fa16b99b8679822afd91"
     },
     {
       "path": "runtime/gallery-core.mjs",
-      "size": 4524,
-      "sha256": "839c091e9177b1e650d646527df1c7b5af4ce23a221026d342ca8248c164af48"
+      "size": 5384,
+      "sha256": "cb4801e25826de58a7880d65fb0992e313460c5c91588cd130abeb28dfc9e180"
     },
     {
       "path": "runtime/gallery.css",
@@ -65,8 +65,8 @@
     },
     {
       "path": "runtime/gallery.mjs",
-      "size": 23564,
-      "sha256": "f156902e7fbc32526b035cdb7cf979966a7265ecbcbd2901ac6ba9439e665cd3"
+      "size": 23618,
+      "sha256": "193b45a8ae3f30b21e388f994c8ab2f5efe2a8eab2b5b65d6978ddae79d9cff2"
     },
     {
       "path": "runtime/index.html",
@@ -115,8 +115,8 @@
     },
     {
       "path": "versions.json",
-      "size": 1760,
-      "sha256": "d2d507deb2493be219f268cf275166c816d15368579fb1638d8871d4d3fca35e"
+      "size": 2105,
+      "sha256": "bb32510b67526c4cfd8ce074460c52f9c8ef4673e3e1f1ed42b31939794a0dd1"
     }
   ]
 }
