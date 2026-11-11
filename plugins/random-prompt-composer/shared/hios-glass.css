@@ -1,0 +1,31 @@
+/* Solid themed controls. Historical filename retained for installed plugin compatibility. */
+:root {--hios-shadow-button:0 1px 2px #00000012;--hios-glass-edge:var(--hios-border);--hios-glass-surface:var(--hios-surface);--hios-glass-control:var(--hios-control);--hios-glass-shine:transparent;--hios-glass-shadow:none;--hios-glass-thumb:#fff;--hios-glass-track:color-mix(in srgb,var(--hios-text) 11%,transparent);}
+:root[data-theme=dark] {--hios-glass-thumb:#e9edf3;}
+:root body :is(:is(.hios-control):is(button,summary),button.hios-control) {border:1px solid var(--hios-border);border-radius:12px;background:var(--hios-control);color:var(--hios-text);background-image:none;box-shadow:0 1px 2px #00000012;transition:background-color .16s,border-color .16s;}
+:root body :is(:is(.hios-control):is(button,summary),button.hios-control):hover:not(:disabled):not([aria-disabled=true]) {background:color-mix(in srgb,var(--hios-control) 90%,var(--hios-text) 10%);}
+:root body :is(:is(.hios-control):is(button,summary),button.hios-control):is(.active,.selected,.on,[aria-pressed=true]) {background:color-mix(in srgb,var(--hios-accent) 14%,var(--hios-control));border-color:var(--hios-accent);color:var(--hios-accent);}
+:root body :is(:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select)) {border-radius:12px;border-color:var(--hios-border);background:var(--hios-control);color:var(--hios-text);box-shadow:none;}
+:root body :is(:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select))::placeholder {color:var(--hios-text-muted,var(--hios-text-secondary,#777));opacity:1;}
+:root body :is(.hios-primary) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);border-color:var(--hios-accent);box-shadow:0 1px 2px #00000012;}
+:root body :is(.hios-primary):hover:not(:disabled) {background:color-mix(in srgb,var(--hios-accent) 92%,var(--hios-text) 8%);color:var(--hios-accent-contrast,#fff);}
+:root body :not(*) {border-radius:20px;border-color:var(--hios-border);background:var(--hios-surface);box-shadow:none;}
+/* No filters: backdrop-filter creates containing blocks and compositing artifacts in scaled WebViews. */
+:root body :not(*) {background:var(--hios-surface);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;}
+:root body :not(*) {background:var(--hios-surface);color:var(--hios-text);border:1px solid var(--hios-border);border-radius:12px;box-shadow:0 6px 18px #00000026;-webkit-backdrop-filter:none;backdrop-filter:none;background-image:none;}
+:root body :not(*) {border-radius:7px!important;border:0!important;background:transparent;color:var(--hios-text);box-shadow:none!important;background-image:none!important;}
+:root body :not(*):is(.active,.is-active,.selected,[aria-selected=true]) {background:var(--hios-accent);color:var(--hios-accent-contrast,#fff);box-shadow:none;}
+:root body :not(*):hover:not(.active):not(.selected):not([aria-selected=true]),:root body :not(*):focus-visible:not(.active):not(.selected):not([aria-selected=true]) {background:color-mix(in srgb,var(--hios-accent) 15%,var(--hios-surface));color:var(--hios-text);box-shadow:none;}
+/* Preserve native range semantics, widths, event handlers and keyboard behavior. */
+:root body :not(*) {appearance:none;-webkit-appearance:none;min-width:0;height:28px;min-height:0;padding:0;background:transparent;border:0;border-radius:999px;box-shadow:none;--range-fill:50%;}
+:root body :not(*)::-webkit-slider-runnable-track {height:7px;border-radius:999px;background:linear-gradient(to right,var(--hios-accent) 0 var(--range-fill),var(--hios-glass-track) var(--range-fill) 100%);box-shadow:inset 0 1px 2px #00000012;}
+:root body :not(*)::-webkit-slider-thumb {appearance:none;-webkit-appearance:none;width:27px;height:21px;margin-top:-7px;border:1px solid #ffffffaa;border-radius:12px;background:var(--hios-glass-thumb);box-shadow:inset 0 1px 0 white,0 2px 5px #00000024,0 0 0 1px #00000004;}
+:root body :not(*):hover::-webkit-slider-thumb {box-shadow:inset 0 1px 0 white,0 3px 8px #0003,0 0 0 4px color-mix(in srgb,var(--hios-accent) 9%,transparent);}
+:root body :not(*):active::-webkit-slider-thumb {box-shadow:inset 0 1px 0 white,0 3px 8px #0003,0 0 0 6px color-mix(in srgb,var(--hios-accent) 14%,transparent);}
+:root body :not(*)::-moz-range-track {height:7px;border-radius:999px;background:var(--hios-glass-track);}
+:root body :not(*)::-moz-range-progress {height:7px;border-radius:999px;background:var(--hios-accent);}
+:root body :not(*)::-moz-range-thumb {width:27px;height:21px;border:1px solid #ffffffaa;border-radius:12px;background:var(--hios-glass-thumb);box-shadow:0 2px 5px #0003;}
+
+:root body :is(:is(.hios-control):is(button,summary),button.hios-control,:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select)):focus-visible {outline:2px solid var(--hios-accent);outline-offset:2px;}
+:root body :is(:is(.hios-control):is(button,summary),button.hios-control,:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select)):is(:disabled,[aria-disabled=true]) {opacity:.4;cursor:default;box-shadow:none;}
+@media(prefers-reduced-motion:reduce) {:root body :is(:is(.hios-control):is(button,summary),button.hios-control,:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select)) {transition:none!important;}}
+@media(forced-colors:active) {:root body :is(:is(.hios-control):is(button,summary),button.hios-control),:root body :is(:is(.hios-control):is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select)),:root body :not(*) {border:1px solid ButtonText;box-shadow:none;}:root body :not(*) {appearance:auto;-webkit-appearance:auto;}:root body :not(*)::-webkit-slider-thumb {appearance:auto;-webkit-appearance:auto;}}

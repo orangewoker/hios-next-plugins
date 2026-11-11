@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "random-prompt-composer",
+  "version": "0.1.0",
+  "files": [
+    {
+      "path": "LLM深化系统提示词.txt",
+      "size": 2235,
+      "sha256": "e7724ea8d110151794864b6ab9c8190bbde223f217d101bec81558742bc2f23d"
+    },
+    {
+      "path": "README.md",
+      "size": 3437,
+      "sha256": "dd8572e50305893363c1c9353e28543d521b6f8ed405a0b1f238f3743ed2ca02"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 307,
+      "sha256": "cb1ff9737876073b4d96cda2caaed36c3e595a29afbe00f350394ccaf23d1bdb"
+    },
+    {
+      "path": "data/library.mjs",
+      "size": 270834,
+      "sha256": "4e5588648f4c80562f6a8824cd2a7d0cccf756224bb8a037d4717bfd3bd27fce"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1287,
+      "sha256": "ada3275426a0501c5e4b961df165847700fdf00290636e47b37f8da76e753546"
+    },
+    {
+      "path": "runtime/core.mjs",
+      "size": 4609,
+      "sha256": "18c172edc453fd76552e0307b8e12e282b29b8a32da459d0748c48f8506616e9"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 2792,
+      "sha256": "8194f927339a62c34bb0aabf63f1972fc49bc17129417c400365981728b75bce"
+    },
+    {
+      "path": "runtime/main.mjs",
+      "size": 5593,
+      "sha256": "df4a46e373f47fb864cda67bfb30ad08913c64bee1ba365917cf2f20c1f97887"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 1671,
+      "sha256": "10073a51c3154cb4d5cd795d8d79196c4ebaa518c19808a5011e5f4d43d660f9"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 263,
+      "sha256": "34c986db1071092a8267c5cabbbdc41394081e1d14a7e437c5aef0e7eed22f08"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 6077,
+      "sha256": "21080c5b99695430758d79258bc37aac79bff3608b5e67d60d692439ac361406"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1955,
+      "sha256": "b7da30027621e59ad492c0041bbafe868c845b6edcb320d9735aa30f2a70743f"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2256,
+      "sha256": "f81779e54b954ed8676022f3e13dd5dafda386db7fae08879b3985f3f08787ba"
+    },
+    {
+      "path": "versions.json",
+      "size": 512,
+      "sha256": "c9e26a4af5db1854101b3bbc85cea75d118a41fe510746f2fe72a0a158acacfd"
+    }
+  ]
+}

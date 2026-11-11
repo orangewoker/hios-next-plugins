@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>随机组合提示词</title>
+  <link rel="stylesheet" href="style.css">
+<!-- hios-ui:start --><link rel="stylesheet" href="../shared/hios-ui.css"><link rel="stylesheet" href="../shared/hios-adapter.css"><link rel="stylesheet" href="../shared/hios-glass.css"><script src="../shared/hios-ui.js" data-plugin-id="random-prompt-composer"></script><script src="../shared/hios-glass.js" data-ranges=""></script><!-- hios-ui:end -->
+</head>
+<body>
+<main class="hios-panel">
+  <header><div><h1>随机组合提示词</h1><p>七类标签 · 本地组合 · 接入 LLM 深化</p></div><span class="badge">2100 条</span></header>
+  <div class="help">正向提示词 → LLM 文本输入 → 图像生成。展开下方「LLM 深化」复制系统提示词，粘贴到 LLM 的系统提示词栏。</div>
+  <section id="categories" aria-label="七类素材选择"></section>
+  <div class="settings">
+    <label>随机种子 <input class="hios-control" id="seed" type="number" min="0" max="4294967295" step="1" value="0"></label>
+    <label class="check"><input id="randomOnRun" type="checkbox" checked>运行时重新随机</label>
+  </div>
+  <small id="seedInfo">0 = 每次随机；固定非零种子可复现，锁定项保持不变。</small>
+  <label class="field">补充要求<textarea class="hios-control" id="brief" rows="2" maxlength="8000" placeholder="例如：雨夜街头，冷暖对比；上衣颜色改成白色。也可连接上游文本。"></textarea></label>
+  <div class="actions"><button class="hios-control" id="random" type="button">随机未锁定项</button><button class="hios-control hios-primary plugin-run" id="run" type="button"><svg class="run-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 3 20 12 6 21Z" fill="currentColor"/></svg><span>运行</span></button></div>
+  <section class="result"><div class="result-head"><strong>正向提示词</strong><button class="hios-control" id="copy" type="button">复制正向</button></div><textarea class="hios-control" id="positive" rows="5" readonly aria-label="正向提示词预览"></textarea></section>
+  <details><summary>LLM 深化 · 系统提示词</summary><p>只复制到 LLM 的系统提示词栏，不要作为普通文本连线。本插件不调用模型、不消耗额度。</p><textarea class="hios-control" id="system" rows="9" readonly aria-label="LLM 深化系统提示词"></textarea><button class="hios-control" id="copySystem" type="button">复制系统提示词</button></details>
+  <footer id="status" role="status" aria-live="polite">正在载入…</footer>
+</main>
+<script type="module" src="main.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+/* Opt-in adapter: random-prompt-composer. Never targets canvas, SVG, media or positioning handles. */
+:root body :is(.hios-control) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+/* Prompt fields follow host theme tokens. */

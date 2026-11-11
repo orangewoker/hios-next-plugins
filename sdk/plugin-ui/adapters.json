@@ -1,4 +1,9 @@
 {
+  "random-prompt-composer": {
+    "controls": ".hios-control",
+    "css": "/* Prompt fields follow host theme tokens. */",
+    "glass": { "buttons": "button.hios-control", "primary": ".hios-primary" }
+  },
   "color-grade": {
     "controls": "button,select",
     "css": "/* Preview geometry and range controls are managed by the editor. */",

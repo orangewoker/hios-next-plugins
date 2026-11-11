@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "random-prompt-composer",
+  "versions": [{
+    "version": "0.1.0",
+    "ref": "random-prompt-composer-v0.1.0",
+    "releasedAt": "2026-11-11",
+    "notes": [
+      "首次发布随机组合提示词：七类各300条标签，支持独立应用与画布节点。",
+      "支持逐类选择与锁定、随机种子复现、上游补充要求和正向文本输出。",
+      "内置可复制的LLM深化系统提示词，无需Embedding、LM Studio或API Key。"
+    ]
+  }]
+}
