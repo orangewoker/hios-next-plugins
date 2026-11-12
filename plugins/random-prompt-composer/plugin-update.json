@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "random-prompt-composer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     {
       "path": "LLM深化系统提示词.txt",
@@ -10,8 +10,8 @@
     },
     {
       "path": "README.md",
-      "size": 3704,
-      "sha256": "b46dba0304ba9742cd779eee828e6027c2156200e62e20b453c2156ab43b45db"
+      "size": 3822,
+      "sha256": "1d3f298ab12982395168183098526893d77355d9d659c1e99c1cbeb5694d3e00"
     },
     {
       "path": "assets/icon.svg",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1287,
-      "sha256": "b0f71aabc16be4ddff674cf019a40f99c1b94cc092ab6acd412a1790dd558f3c"
+      "sha256": "b51133e6929f35ddb9b64cdab738252efc54cb3352bf583e8cc503653888314f"
     },
     {
       "path": "runtime/core.mjs",
@@ -40,8 +40,8 @@
     },
     {
       "path": "runtime/main.mjs",
-      "size": 6697,
-      "sha256": "7c517c304e30fe344c8660d99cc520ed6c8e1e443780d6facc29109b6161b0ec"
+      "size": 6805,
+      "sha256": "342d2902a65b2994bede43a39f1d4bad1a8d2c81e4d9947d3fb612fec04a4a25"
     },
     {
       "path": "runtime/style.css",
@@ -50,8 +50,8 @@
     },
     {
       "path": "runtime/tag-menu.mjs",
-      "size": 3966,
-      "sha256": "d833a41e000c90550b954fd20d0d0a69552362caa1cbea7072d50c673c90e6ff"
+      "size": 4109,
+      "sha256": "e8b9eef08315c89228d2b95addffb478bf5f3005a4038dc18356e44d08fb6918"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -80,8 +80,8 @@
     },
     {
       "path": "versions.json",
-      "size": 928,
-      "sha256": "d7ca08b01332a765ede23f059a954d48298c5e0480e1a8cbdba8de19ca6c88d8"
+      "size": 1224,
+      "sha256": "f5d97653f9a36f70d2f780991e0a36eae6a02e6d89fd18737157fff0c262cb0f"
     }
   ]
 }

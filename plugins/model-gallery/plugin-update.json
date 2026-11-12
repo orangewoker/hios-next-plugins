@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "model-gallery",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "files": [
     {
       "path": "README.md",
-      "size": 6607,
-      "sha256": "0c5be464da93d6c74b6085628382709be239975b9d0c5de777313c5a53553115"
+      "size": 6722,
+      "sha256": "31225e601caf1a07236e6ac28552b8dc85eb2dda7fa00940ad35be6467663922"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -51,7 +51,7 @@
     {
       "path": "plugin.json",
       "size": 1613,
-      "sha256": "ee0e2df9c6f23d22244219cd3964e9749d1c7a993b98fa16b99b8679822afd91"
+      "sha256": "7b738f57f9ed35907e27171a0991905347d6a59d81f6484135eab4ee4f475fb9"
     },
     {
       "path": "runtime/gallery-core.mjs",
@@ -75,8 +75,8 @@
     },
     {
       "path": "runtime/themed-select.mjs",
-      "size": 4883,
-      "sha256": "3d2fa65656b256baaab4b57b45cc8e88c3e60400e0a83d52150ab479d26bf654"
+      "size": 4965,
+      "sha256": "1d0b5a98ea74fbac4039e393c1c0e50009548edfc0ce8c36159026dc0afc195f"
     },
     {
       "path": "runtime/vendor/portrait-core.mjs",
@@ -115,8 +115,8 @@
     },
     {
       "path": "versions.json",
-      "size": 2105,
-      "sha256": "bb32510b67526c4cfd8ce074460c52f9c8ef4673e3e1f1ed42b31939794a0dd1"
+      "size": 2341,
+      "sha256": "042eb4c87dc2dd79a00368e2db0469de52249409200629bb49a71f1fde0d3fe5"
     }
   ]
 }

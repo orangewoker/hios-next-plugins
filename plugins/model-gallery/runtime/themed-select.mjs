@@ -14,7 +14,7 @@ export function themedSelect(select) {
   root.append(select, trigger, menu);
   let open = false;
   const update = () => { trigger.textContent = select.selectedOptions[0]?.textContent || '请选择'; trigger.disabled = select.disabled; };
-  const close = (focus = false) => { if (!open) return; open = false; if (menu.matches(':popover-open')) menu.hidePopover(); trigger.setAttribute('aria-expanded', 'false'); if (active === close) active = undefined; if (focus && trigger.isConnected) trigger.focus(); };
+  const close = (focus = false) => { if (!open) return; open = false; if (menu.matches(':popover-open')) menu.hidePopover(); menu.replaceChildren(); trigger.setAttribute('aria-expanded', 'false'); if (active === close) active = undefined; if (focus && trigger.isConnected) trigger.focus(); };
   const show = () => {
     if (trigger.disabled) return;
     active?.(); active = close;
@@ -43,7 +43,7 @@ export function themedSelect(select) {
     if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
     if (event.key === 'Tab') { close(true); }
   });
-  menu.addEventListener('toggle', event => { if (event.newState === 'closed') { open = false; trigger.setAttribute('aria-expanded', 'false'); if (active === close) active = undefined; } });
+  menu.addEventListener('toggle', event => { if (event.newState === 'closed' && !menu.matches(':popover-open')) { open = false; menu.replaceChildren(); trigger.setAttribute('aria-expanded', 'false'); if (active === close) active = undefined; } });
   const observer = new MutationObserver(update); observer.observe(select, { attributes: true, childList: true, subtree: true }); select.addEventListener('change', update);
   const onResize = () => close(); window.addEventListener('resize', onResize);
   const onScroll = event => { if (!menu.contains(event.target)) close(); }; document.addEventListener('scroll', onScroll, true);

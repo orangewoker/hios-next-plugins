@@ -17,13 +17,10 @@ $('tagSettings').addEventListener('toggle', () => tagMenu.close());
 for (const c of categories) {
   const row = document.createElement('div'); row.className = 'category';
   const label = document.createElement('label'); label.htmlFor = `${c.id}-trigger`; label.textContent = c.title;
-  const select = document.createElement('select'); select.id = c.id; select.hidden = true;
+  const select = document.createElement('input'); select.type = 'hidden'; select.id = c.id;
   const trigger = document.createElement('button'); trigger.type = 'button'; trigger.id = `${c.id}-trigger`; trigger.className = 'hios-control tag-trigger';
   trigger.setAttribute('aria-haspopup', 'listbox'); trigger.setAttribute('aria-controls', 'tag-options'); trigger.setAttribute('aria-expanded', 'false');
   trigger.addEventListener('click', () => tagMenu.open(c, trigger, state.selected[c.id]));
-  for (const entry of c.entries) {
-    const option = document.createElement('option'); option.value = entry.id; option.textContent = `${entry.id} · ${entry.text}`; select.append(option);
-  }
   const lockLabel = document.createElement('label'); lockLabel.className = 'check';
   const lock = document.createElement('input'); lock.type = 'checkbox'; lock.id = `lock-${c.id}`; lock.setAttribute('aria-label', `锁定${c.title}`);
   lockLabel.append(lock, '锁定'); row.append(label, trigger, lockLabel, select); $('categories').append(row);
@@ -35,7 +32,8 @@ $('system').value = SYSTEM_PROMPT;
 function render() {
   for (const c of categories) {
     $(c.id).value = state.selected[c.id]; $(`lock-${c.id}`).checked = state.locked[c.id];
-    $(c.id).title = $(c.id).selectedOptions[0]?.textContent || '';
+    const entry = c.entries.find(entry => entry.id === state.selected[c.id]);
+    $(c.id).title = entry ? `${entry.id} · ${entry.text}` : '';
     $(`${c.id}-trigger`).textContent = $(c.id).title;
     $(`${c.id}-trigger`).title = $(c.id).title;
   }
@@ -84,10 +82,12 @@ window.addEventListener('message', event => {
   if (message.type === 'init') {
     protocol = message.protocol; nodeId = message.nodeId || payload.nodeId || ''; appId = message.appId || payload.appId || ''; hostOrigin = event.origin;
     const first = !initialized;
-    state = normalizeState(payload.state);
-    upstream = payload.inputs?.brief ?? '';
+    const nextState = normalizeState(payload.state);
+    const nextUpstream = payload.inputs?.brief ?? '';
+    const changed = JSON.stringify(nextState) !== JSON.stringify(state) || JSON.stringify(nextUpstream) !== JSON.stringify(upstream);
+    state = nextState; upstream = nextUpstream;
     initialized = true;
-    if (first && !payload.state?.selected) draw(); else render();
+    if (first && !payload.state?.selected) draw(); else if (first || changed) render();
     $('run').hidden = protocol === protocols[1] || payload.hostRunControl === 'canvas-button';
     $('systemDetails').hidden = protocol !== protocols[1];
     status('已就绪 · 手动选择自动锁定；节点之间的设置相互独立'); post('loaded');

@@ -28,3 +28,7 @@
 在 HIOS Next 的“插件管理 → 安装插件”中使用：
 
 `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator`
+
+## 0.2.17 性能修复
+
+相同提示词状态不再重复解析和渲染，隐藏页面暂停轮询。

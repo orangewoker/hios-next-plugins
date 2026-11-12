@@ -1,23 +1,34 @@
 {
   "schemaVersion": 1,
   "pluginId": "random-prompt-composer",
-  "versions": [{
-    "version": "0.1.1",
-    "ref": "random-prompt-composer-v0.1.1",
-    "releasedAt": "2026-11-11",
-    "notes": [
-      "七类标签整体支持展开与收起，应用和画布默认收起。",
-      "使用跟随HIOS主题的可搜索下拉菜单，支持键盘选择，替代系统原生下拉框。",
-      "画布节点的LLM深化系统提示词改为单个复制按钮，不再展开全文。"
-    ]
-  }, {
-    "version": "0.1.0",
-    "ref": "random-prompt-composer-v0.1.0",
-    "releasedAt": "2026-11-11",
-    "notes": [
-      "首次发布随机组合提示词：七类各300条标签，支持独立应用与画布节点。",
-      "支持逐类选择与锁定、随机种子复现、上游补充要求和正向文本输出。",
-      "内置可复制的LLM深化系统提示词，无需Embedding、LM Studio或API Key。"
-    ]
-  }]
+  "versions": [
+    {
+      "version": "0.1.2",
+      "ref": "random-prompt-composer-v0.1.2",
+      "releasedAt": "2026-11-12",
+      "notes": [
+        "移除常驻的隐藏标签选项，菜单关闭即释放；相同状态不再重复刷新。"
+      ]
+    },
+    {
+      "version": "0.1.1",
+      "ref": "random-prompt-composer-v0.1.1",
+      "releasedAt": "2026-11-11",
+      "notes": [
+        "七类标签整体支持展开与收起，应用和画布默认收起。",
+        "使用跟随HIOS主题的可搜索下拉菜单，支持键盘选择，替代系统原生下拉框。",
+        "画布节点的LLM深化系统提示词改为单个复制按钮，不再展开全文。"
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "ref": "random-prompt-composer-v0.1.0",
+      "releasedAt": "2026-11-11",
+      "notes": [
+        "首次发布随机组合提示词：七类各300条标签，支持独立应用与画布节点。",
+        "支持逐类选择与锁定、随机种子复现、上游补充要求和正向文本输出。",
+        "内置可复制的LLM深化系统提示词，无需Embedding、LM Studio或API Key。"
+      ]
+    }
+  ]
 }

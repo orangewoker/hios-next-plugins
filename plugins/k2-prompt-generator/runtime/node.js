@@ -5,6 +5,7 @@
   let nodeId = new URLSearchParams(location.search).get('nodeId') || '';
   let pluginId = 'k2-prompt-generator';
   let snapshot = null;
+  let snapshotRaw;
   const $ = (id) => document.getElementById(id);
   const post = (type, payload) => parent.postMessage({ protocol, nodeId, pluginId, type, payload: payload || {} }, '*');
 
@@ -49,6 +50,10 @@
   }
 
   function syncFromApp() {
+    let raw;
+    try { raw = localStorage.getItem(sharedKey); } catch (_) { return snapshot; }
+    if (raw === snapshotRaw) return snapshot;
+    snapshotRaw = raw;
     snapshot = readSnapshot();
     render();
     return snapshot;
@@ -122,7 +127,8 @@
   });
   window.addEventListener('focus', syncFromApp);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) syncFromApp(); });
-  window.setInterval(syncFromApp, 1500);
+  // Storage events handle updates; polling remains a visible-page fallback.
+  window.setInterval(() => { if (!document.hidden) syncFromApp(); }, 1500);
 
   window.addEventListener('message', (event) => {
     if (!event.data || event.data.protocol !== protocol) return;

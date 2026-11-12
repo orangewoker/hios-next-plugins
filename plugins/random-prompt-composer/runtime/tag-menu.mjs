@@ -9,7 +9,7 @@ export function createTagMenu(onChoose) {
   function close(focus = false) {
     menu.hidden = true; trigger?.setAttribute('aria-expanded', 'false');
     if (focus) trigger?.focus();
-    trigger = null;
+    trigger = null; category = null; filtered = []; list.replaceChildren();
   }
   function highlight() {
     for (const [i, option] of [...list.children].entries()) option.classList.toggle('active', i === active);
@@ -21,11 +21,13 @@ export function createTagMenu(onChoose) {
     filtered = category.entries.filter(e => `${e.id} ${e.text}`.toLocaleLowerCase().includes(query));
     list.replaceChildren();
     active = Math.max(0, filtered.findIndex(e => e.id === selected));
+    const fragment = document.createDocumentFragment();
     for (const entry of filtered) {
       const option = document.createElement('button'); option.type = 'button'; option.className = 'tag-option'; option.setAttribute('role', 'option');
       option.setAttribute('aria-selected', String(entry.id === selected)); option.textContent = `${entry.id} · ${entry.text}`;
-      option.addEventListener('click', () => choose(entry)); list.append(option);
+      option.addEventListener('click', () => choose(entry)); fragment.append(option);
     }
+    list.append(fragment);
     if (!filtered.length) list.append(empty);
     highlight();
   }

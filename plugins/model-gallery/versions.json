@@ -3,6 +3,14 @@
   "pluginId": "model-gallery",
   "versions": [
     {
+      "version": "0.3.6",
+      "ref": "model-gallery-v0.3.6",
+      "releasedAt": "2026-11-12",
+      "notes": [
+        "关闭下拉菜单释放选项元素，保留再次打开、键盘选择和主题功能。"
+      ]
+    },
+    {
       "version": "0.3.5",
       "ref": "model-gallery-v0.3.5",
       "releasedAt": "2026-11-11",

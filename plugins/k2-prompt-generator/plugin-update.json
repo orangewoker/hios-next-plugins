@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "k2-prompt-generator",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "files": [
     {
       "path": "README.md",
-      "size": 1542,
-      "sha256": "596500c804a8b99e8d501caa36b275a75d8b69cf657485a638759d010fbd4ca6"
+      "size": 1646,
+      "sha256": "d1d87de311abf9a45d6623a695331aae07c4e3d369e6d929d529b25718aa7965"
     },
     {
       "path": "app/bridge.js",
@@ -26,7 +26,7 @@
     {
       "path": "plugin.json",
       "size": 1500,
-      "sha256": "0b67dd5f8090085438eac1df57001ac5b23af99a524a4cb66db2034df16e3caf"
+      "sha256": "32034787d954eadc04d28a133e4530ea172a292205a79cbcd5011c2c89fbd997"
     },
     {
       "path": "runtime/index.html",
@@ -35,8 +35,8 @@
     },
     {
       "path": "runtime/node.js",
-      "size": 5937,
-      "sha256": "2d112e60a4d634bfe6b0485d10731639fda0f5786a2dfc2db895f65303c6de32"
+      "size": 6232,
+      "sha256": "55c0634999f86f1868592336bec3a446ff85a548b08f2dc81bae5f534c55381a"
     },
     {
       "path": "runtime/style.css",
@@ -75,8 +75,8 @@
     },
     {
       "path": "versions.json",
-      "size": 5238,
-      "sha256": "4a469094fd87bc0c57ccfca40c6e4352fe5faba0e2897c6e0e551e06a13aefd8"
+      "size": 5470,
+      "sha256": "6803d60daad44ec44620f144c3182cf16950489c0ec20e24f8c721149ae370e7"
     }
   ]
 }

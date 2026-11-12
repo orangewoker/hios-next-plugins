@@ -1,6 +1,6 @@
 # 随机组合提示词
 
-独立 HIOS 插件，版本 0.1.1。无需 Python、Embedding、LM Studio 或 API Key。保留原 K2 人像提示词生成器，不改变它的行为。
+独立 HIOS 插件，版本 0.1.2。无需 Python、Embedding、LM Studio 或 API Key。保留原 K2 人像提示词生成器，不改变它的行为。
 
 ## 安装与连线
 
@@ -48,3 +48,7 @@ node --test tests/random-prompt-composer.test.mjs
 node_modules/.bin/electron.cmd tests/random-prompt-composer-ui.cjs
 node scripts/check-plugin-ui.mjs
 ```
+
+## 0.1.2 性能修复
+
+移除常驻的隐藏标签选项，菜单关闭即释放；相同状态不再重复刷新。
