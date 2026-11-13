@@ -3,6 +3,15 @@
   "pluginId": "puzzle-grid",
   "versions": [
     {
+      "version": "0.2.9",
+      "ref": "puzzle-grid-v0.2.9",
+      "releasedAt": "2026-11-13",
+      "notes": [
+        "修复高清缩放时预览编号与拖动区域偏移，使用插件自身布局坐标定位。",
+        "调整节点大小和展开水印设置时同步刷新预览与拖动层。"
+      ]
+    },
+    {
       "version": "0.2.8",
       "ref": "puzzle-grid-v0.2.8",
       "releasedAt": "2026-11-03",
