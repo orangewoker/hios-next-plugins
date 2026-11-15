@@ -3,6 +3,14 @@
   "pluginId": "puzzle-grid",
   "versions": [
     {
+      "version": "0.2.11",
+      "notes": [
+        "修复拼图单元格留白：图片铺满单元格，间距设置精确控制格线宽度。"
+      ],
+      "releasedAt": "2026-11-16",
+      "ref": "puzzle-grid-v0.2.11"
+    },
+    {
       "version": "0.2.10",
       "ref": "puzzle-grid-v0.2.10",
       "releasedAt": "2026-11-13",

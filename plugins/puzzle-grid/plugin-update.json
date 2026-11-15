@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "pluginId": "puzzle-grid",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "files": [
     {
       "path": "README.md",
-      "size": 1640,
-      "sha256": "363f61739c2c79600665de583f6affda01bbc50f8476f6b5babcf35056aea612"
+      "size": 1736,
+      "sha256": "264f4c738ddf1d3daadeb9628352d8b88cc6e6a6b16132e8945fcccb9b35ee00"
     },
     {
       "path": "plugin.json",
       "size": 1535,
-      "sha256": "510d4883ee2e1df7df1d794f41cfe69c5ac46361880eb5ecec798bd9a989f0af"
+      "sha256": "0f152444adcb27e4f53f6cbd5105cca9bb5c89792000ec56f4f7fa8afe76c1c3"
     },
     {
       "path": "runtime/index.html",
-      "size": 25056,
-      "sha256": "9af950da2a94c471ac2015cace15b3666118c1fab0919e4989a14391aad7a570"
+      "size": 25183,
+      "sha256": "577dd40af7ada3ddc2b7e2522ba11e6f22dad9a256d43ed58bd40d81e9e0a062"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -45,8 +45,8 @@
     },
     {
       "path": "versions.json",
-      "size": 3944,
-      "sha256": "320c50350f69bb2b51823870f12aec632aa0f704209fc68318ae92ba660f7fbd"
+      "size": 4183,
+      "sha256": "b240bea4967732f483b36684524dc9ff08777c3712f2c9d99f9ee0286f5fcf8c"
     }
   ]
 }
