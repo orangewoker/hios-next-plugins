@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "chenyu-cloud",
+  "version": "0.1.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 4608,
+      "sha256": "51ccfd08c32a37012cd38524ca6ca54b635aa35190c508cff165173ea9236131"
+    },
+    {
+      "path": "TEST_REPORT.md",
+      "size": 1501,
+      "sha256": "e7366198b7f98668c3d2e93fa42f818f5e50b01dbba668b171999567d57aa070"
+    },
+    {
+      "path": "app/app.js",
+      "size": 17773,
+      "sha256": "411d35afdb19261c43b0ef9fbaa3a3abd9b70da64c2c6eb1e632f559a13cfbf4"
+    },
+    {
+      "path": "app/index.html",
+      "size": 6298,
+      "sha256": "a0c46503baa30edd4fb5d44579556907d7d7e0e776d9a924b56fdafd5ce95471"
+    },
+    {
+      "path": "app/style.css",
+      "size": 16110,
+      "sha256": "4af3fab086f75c9722390edd8d14cfb08c0a6399706c5786c343740f50fbfd62"
+    },
+    {
+      "path": "assets/icon.svg",
+      "size": 471,
+      "sha256": "9e1c933b5c75555d4bf97fac42c8cdb6e0b7a26e990275b2487d92814043730d"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1108,
+      "sha256": "3f9322bc6f27123e04e42e0a42f95408bdda41c8913c6cba78316a2337e8ee68"
+    },
+    {
+      "path": "shared/client.js",
+      "size": 5099,
+      "sha256": "ac56cf161df3653c1cd5b4e9953b25bcdeb35980527417112b6abfe76edeae31"
+    },
+    {
+      "path": "shared/core.js",
+      "size": 11979,
+      "sha256": "34f3d52287b49ba29d250ddb1e67d05eb51fa23fa91c22a9e916f634e9531990"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 1200,
+      "sha256": "bc260e1d61ab041aea584d59ed880211a17a4180a21ce699df277be3cd11130a"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 7866,
+      "sha256": "9f637e7fd3075c0badcf26f36a82484fc5ffc52bf79620eeaddeaa9c2b0f8925"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "shared/presets.js",
+      "size": 1962,
+      "sha256": "1ed42eed2832c3de630599b1bebf44fc0488de4f89b1539e066e78f4e6dd41c4"
+    },
+    {
+      "path": "shared/runner.js",
+      "size": 5414,
+      "sha256": "b8cbcd353ae26b5af26a37cfa2373ca0abece38a8bb47412f09a7e42da838040"
+    },
+    {
+      "path": "shared/storage.js",
+      "size": 3398,
+      "sha256": "45d2eb49b516b273532945aba7fbad62e21e5a539f3c91c9e35145c481bf669c"
+    },
+    {
+      "path": "tests/client-runner.test.mjs",
+      "size": 6885,
+      "sha256": "7a406d47bea914d76426809ad38f0a8d755735e3c7f57566889d71ab26413101"
+    },
+    {
+      "path": "tests/core.test.mjs",
+      "size": 6100,
+      "sha256": "b9be273a1631ad621e5061d288aa0f47fd36d123559cc21f47220744ccfe995b"
+    },
+    {
+      "path": "tests/storage.test.mjs",
+      "size": 1744,
+      "sha256": "e2747fbd97e9b3f01a2b72e36cae2e2acaaf84ae223d5472bc2fe007295d6550"
+    },
+    {
+      "path": "tests/ui.test.mjs",
+      "size": 1276,
+      "sha256": "cf14362fb6ba6a908d53bbe5d01b720006017c534fad7b13db852094c5b64015"
+    },
+    {
+      "path": "versions.json",
+      "size": 709,
+      "sha256": "1d1c9e9c91b64cc5eb95b71860bcf647de6f048e2458a01087613282b5e15fef"
+    }
+  ]
+}

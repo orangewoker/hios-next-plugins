@@ -22,6 +22,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 | AI 提示词库 | 0.3.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/ai-prompt-library` |
 | K2 人像提示词生成器 | 0.2.14 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/k2-prompt-generator` |
 | 算力云 | 0.2.6 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/compute-cloud` |
+| 晨羽智云 | 0.1.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/chenyu-cloud`（复用应用工作流通道；含 SeedVR2 放大、Qwen 图像编辑及版本列表，无需升级当前 4.6.5 本体） |
 | 混元3D | 0.2.5 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/hunyuan-3d` |
 | 水印大师 | 0.1.9 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/watermark-master` |
 | 浏览器 | 0.3.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/web-browser`（图片解析修复需配合包含该修复的 Tauri 开发版） |

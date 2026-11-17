@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "chenyu-cloud",
+  "name": "晨羽智云",
+  "version": "0.1.0",
+  "description": "通过晨羽开放 API 运行应用工作流，支持版本锁定、素材上传、真实进度和任务恢复。",
+  "author": "HIOS Next",
+  "permissions": [
+    "network",
+    "filesystem",
+    "canvas"
+  ],
+  "contributes": {
+    "apps": [
+      {
+        "id": "chenyu-cloud",
+        "title": "晨羽智云",
+        "description": "配置晨羽 API Key，管理并运行云端工作流。",
+        "entry": "app/index.html",
+        "icon": "assets/icon.svg",
+        "category": "creative"
+      }
+    ],
+    "applicationWorkflows": [
+      {
+        "id": "workflow",
+        "appId": "chenyu-cloud",
+        "title": "晨羽智云工作流",
+        "description": "调用晨羽已配置的图片、视频、音频与文件工作流。",
+        "capabilities": [
+          "image",
+          "video",
+          "audio",
+          "text",
+          "file"
+        ]
+      }
+    ]
+  },
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/chenyu-cloud"
+}

@@ -262,5 +262,20 @@
       "bars": ".hios-cut-toolbar,.titlebar",
       "primary": "button.primary,.export-button"
     }
+  },
+  "chenyu-cloud": {
+    "controls": ".primary-button,.soft-button,.ghost-button,.field input,.field select",
+    "css": ".panel{border-radius:var(--hios-radius-panel);padding:20px}.actions{gap:12px;flex-wrap:wrap}.field{margin-bottom:14px} :root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--control:var(--hios-control);--text:var(--hios-text);--border:var(--hios-border);--accent:var(--hios-accent)} :root[data-theme]{--muted:var(--hios-muted,var(--hios-control));--text-2:var(--hios-text-secondary);--accent-2:var(--hios-accent);--positive:var(--hios-positive);--negative:var(--hios-negative)} :root[data-theme] .primary-button{background:var(--hios-accent);color:var(--hios-accent-contrast,#fff)} :root[data-theme] :is(.workflow-select-trigger,.soft-button,.ghost-button,.field input,.field select,.field textarea){background:var(--hios-control);color:var(--hios-text);border-color:var(--hios-border)} :root[data-theme] .workflow-select-menu{background:var(--hios-surface);color:var(--hios-text);border-color:var(--hios-border)}",
+    "glass": {
+      "buttons": ".nav-button,.workflow-select-trigger,.text-button",
+      "fields": ".field textarea",
+      "switches": ".check-field input[type=checkbox]",
+      "ranges": ".field input[type=range]",
+      "panels": ".panel,.progress-card",
+      "menus": ".workflow-select-menu",
+      "options": ".workflow-select-menu button",
+      "bars": ".topbar",
+      "primary": ".primary-button"
+    }
   }
 }
