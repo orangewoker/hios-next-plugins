@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "chenyu-cloud",
   "name": "晨羽智云",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "通过晨羽开放 API 运行应用工作流，支持版本锁定、素材上传、真实进度和任务恢复。",
   "author": "HIOS Next",
   "permissions": [
@@ -17,7 +17,7 @@
         "title": "晨羽智云",
         "description": "配置晨羽 API Key，管理并运行云端工作流。",
         "entry": "app/index.html",
-        "icon": "assets/icon.svg",
+        "icon": "assets/icon.png",
         "category": "creative"
       }
     ],

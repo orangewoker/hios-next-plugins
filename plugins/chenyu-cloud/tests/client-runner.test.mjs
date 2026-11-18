@@ -9,6 +9,18 @@ const workflow = normalizeWorkflow(PRESETS[0]);
 const values = { node_1_image: 'asset://test', node_3_resolution: 1024 };
 const response = data => new Response(JSON.stringify({ code: 0, data }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 function memoryStore() { const tasks = new Map(); return { loadTasks: () => [...tasks.values()], saveTask: t => { tasks.set(t.idempotencyKey, structuredClone(t)); return t; } }; }
+test('client preserves the global receiver for Window fetch on request and local media reads', async () => {
+  const calls = [];
+  const client = new ChenyuClient('fixture-key', { fetch: function (url, options) {
+    assert.equal(this, globalThis, 'native fetch must not receive the client as this');
+    calls.push(url);
+    if (String(url).startsWith('data:')) return globalThis.fetch(url);
+    assert.equal(options.headers.Authorization, 'Bearer fixture-key');
+    return Promise.resolve(response({ asset_uri: 'asset://uploaded' }));
+  } });
+  assert.deepEqual(await client.prepareInputs({ fields: [{ name: 'image', type: 'image' }] }, { image: 'data:image/png;base64,AA==' }), { image: 'asset://uploaded' });
+  assert.equal(calls.length, 2);
+});
 test('client sends Bearer auth only to fixed official API, never follows redirects', async () => {
   let request;
   const client = new ChenyuClient('fixture-key', { fetch: async (url, opts) => { request = { url, ...opts }; return response({ run_order_id: 'order' }); } });

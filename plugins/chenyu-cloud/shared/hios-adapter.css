@@ -1,3 +1,24 @@
 /* Opt-in adapter: chenyu-cloud. Never targets canvas, SVG, media or positioning handles. */
-:root body :is(.primary-button,.soft-button,.ghost-button,.field input,.field select) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
-.panel{border-radius:var(--hios-radius-panel);padding:20px}.actions{gap:12px;flex-wrap:wrap}.field{margin-bottom:14px} :root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--control:var(--hios-control);--text:var(--hios-text);--border:var(--hios-border);--accent:var(--hios-accent)} :root[data-theme]{--muted:var(--hios-muted,var(--hios-control));--text-2:var(--hios-text-secondary);--accent-2:var(--hios-accent);--positive:var(--hios-positive);--negative:var(--hios-negative)} :root[data-theme] .primary-button{background:var(--hios-accent);color:var(--hios-accent-contrast,#fff)} :root[data-theme] :is(.workflow-select-trigger,.soft-button,.ghost-button,.field input,.field select,.field textarea){background:var(--hios-control);color:var(--hios-text);border-color:var(--hios-border)} :root[data-theme] .workflow-select-menu{background:var(--hios-surface);color:var(--hios-text);border-color:var(--hios-border)}
+:root body :is(.primary-button,.soft-button,.ghost-button,.field input,.field select,.field textarea,.password-row button,.workflow-actions button) { border-radius:var(--hios-radius-control); box-shadow:var(--hios-shadow-button); }
+/* Semantic fallbacks also support hosts sending only theme.mode. */
+:root[data-theme]{--bg:var(--hios-background);--surface:var(--hios-surface);--control:var(--hios-control);--muted:var(--hios-muted,var(--hios-control));--text:var(--hios-text);--text-2:var(--hios-text-secondary,#68758a);--border:var(--hios-border);--accent:var(--hios-accent);--accent-2:var(--hios-accent);--positive:var(--hios-positive,#25895e);--negative:var(--hios-negative,#c54f5f);--warning:#946400;--shadow:none}
+:root[data-theme=dark]{--text-2:var(--hios-text-secondary,#b7bdc7);--positive:var(--hios-positive,#78dba3);--negative:var(--hios-negative,#ff8f9d);--warning:#edc56a}
+.panel{border-radius:var(--hios-radius-panel);padding:20px}.actions{gap:12px;flex-wrap:wrap}.field{margin-bottom:14px}
+:root[data-theme] .primary-button{background:var(--hios-accent);color:var(--hios-accent-contrast,#fff)}
+:root[data-theme] :is(.workflow-select-trigger,.soft-button,.ghost-button,.field input,.field select,.field textarea,.password-row button,.workflow-actions button){background:var(--hios-control);color:var(--hios-text);border-color:var(--hios-border)}
+:root[data-theme] .workflow-select-menu{background:var(--hios-surface);color:var(--hios-text);border-color:var(--hios-border)}
+:root[data-theme] :is(.status-pill.success,.default-badge){color:var(--positive);background:color-mix(in srgb,var(--positive) 14%,var(--surface))}
+:root[data-theme] .status-pill.failed{color:var(--negative);background:color-mix(in srgb,var(--negative) 14%,var(--surface))}
+:root[data-theme] .status-pill.running{color:var(--warning);background:color-mix(in srgb,var(--warning) 14%,var(--surface))}
+:root[data-theme] .workflow-actions button.danger{color:var(--negative)}
+:root[data-theme] :is(.top-status i.online,.task-dot.success){background:var(--positive);box-shadow:0 0 0 4px color-mix(in srgb,var(--positive) 12%,transparent)}
+:root[data-theme] .task-dot.failed{background:var(--negative)}
+:root[data-theme] .task-dot.running{background:var(--warning);box-shadow:0 0 0 4px color-mix(in srgb,var(--warning) 12%,transparent)}
+:root[data-theme] .toast{color:var(--text);background:var(--surface);border:1px solid var(--border)}
+:root[data-theme] input::file-selector-button{margin-right:8px;padding:6px 10px;border:1px solid var(--border);border-radius:7px;color:var(--text);background:var(--surface);font:inherit;cursor:pointer}
+:root[data-theme] :is(input,textarea)::placeholder{color:var(--hios-text-muted,var(--text-2));opacity:1}
+:root[data-theme] :is(input[type=checkbox],progress){accent-color:var(--accent)}
+:root[data-theme] progress::-webkit-progress-bar{background:var(--muted);border-radius:999px}
+:root[data-theme] progress::-webkit-progress-value{background:var(--accent);border-radius:999px}
+:root[data-theme] *{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--text-2) 45%,transparent) transparent}
+:root[data-theme] :is(button,input,textarea,select):focus-visible{outline:2px solid var(--accent);outline-offset:2px}

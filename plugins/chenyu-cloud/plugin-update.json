@@ -1,47 +1,52 @@
 {
   "schemaVersion": 1,
   "pluginId": "chenyu-cloud",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "files": [
     {
       "path": "README.md",
-      "size": 4608,
-      "sha256": "51ccfd08c32a37012cd38524ca6ca54b635aa35190c508cff165173ea9236131"
+      "size": 4796,
+      "sha256": "e02fcc405e7207b64bcca22818b4f822305048e4de76bee2163f077c8002895b"
     },
     {
       "path": "TEST_REPORT.md",
-      "size": 1501,
-      "sha256": "e7366198b7f98668c3d2e93fa42f818f5e50b01dbba668b171999567d57aa070"
+      "size": 2676,
+      "sha256": "e8096e2975e9909109ab4ddf4d89137434f3e954fa17571f86c46d5a0e539f1b"
     },
     {
       "path": "app/app.js",
-      "size": 17773,
-      "sha256": "411d35afdb19261c43b0ef9fbaa3a3abd9b70da64c2c6eb1e632f559a13cfbf4"
+      "size": 18120,
+      "sha256": "74e9e021542aff6b81a08b6056b5b6cea549a70bc8bf9d5cb49896a348b71b91"
     },
     {
       "path": "app/index.html",
       "size": 6298,
-      "sha256": "a0c46503baa30edd4fb5d44579556907d7d7e0e776d9a924b56fdafd5ce95471"
+      "sha256": "4f47caa06388064e3a9120df08affb2375092912b6d169fe1671af6cc94efd08"
     },
     {
       "path": "app/style.css",
-      "size": 16110,
-      "sha256": "4af3fab086f75c9722390edd8d14cfb08c0a6399706c5786c343740f50fbfd62"
+      "size": 17177,
+      "sha256": "e28ae155df876c4e585627f4012b24db842fb5e0218fc04ba74cf5e27da331e4"
     },
     {
-      "path": "assets/icon.svg",
-      "size": 471,
-      "sha256": "9e1c933b5c75555d4bf97fac42c8cdb6e0b7a26e990275b2487d92814043730d"
+      "path": "assets/README.md",
+      "size": 252,
+      "sha256": "2f381833d44f01d91ae633d4c6a44d74e8d46ffa9980bc341e38fc2a728f0ae6"
+    },
+    {
+      "path": "assets/icon.png",
+      "size": 106934,
+      "sha256": "c3a6d4986da4663be8902b843f2d29e38542a8ffa2a0d4b2ea171dc4e6dae4d1"
     },
     {
       "path": "plugin.json",
       "size": 1108,
-      "sha256": "3f9322bc6f27123e04e42e0a42f95408bdda41c8913c6cba78316a2337e8ee68"
+      "sha256": "cc2344fd8d47e9313fbfe597966b91d0627f37f910bdd30d89a806c52d3addea"
     },
     {
       "path": "shared/client.js",
-      "size": 5099,
-      "sha256": "ac56cf161df3653c1cd5b4e9953b25bcdeb35980527417112b6abfe76edeae31"
+      "size": 5313,
+      "sha256": "4028e94569ad38142a964c04b5f27c3b483ad377589bf423b7cf6fcc030c1b72"
     },
     {
       "path": "shared/core.js",
@@ -50,13 +55,13 @@
     },
     {
       "path": "shared/hios-adapter.css",
-      "size": 1200,
-      "sha256": "bc260e1d61ab041aea584d59ed880211a17a4180a21ce699df277be3cd11130a"
+      "size": 3327,
+      "sha256": "73f2e38b65e687d17b8ef9cb3f548b3aee1b6eda2cdc8591661d02ba5e1c3760"
     },
     {
       "path": "shared/hios-glass.css",
-      "size": 7866,
-      "sha256": "9f637e7fd3075c0badcf26f36a82484fc5ffc52bf79620eeaddeaa9c2b0f8925"
+      "size": 8672,
+      "sha256": "b70211850775d3acb31823c23270cf693a44cda5e5d69ed7e03f7232f617f552"
     },
     {
       "path": "shared/hios-glass.js",
@@ -89,9 +94,14 @@
       "sha256": "45d2eb49b516b273532945aba7fbad62e21e5a539f3c91c9e35145c481bf669c"
     },
     {
+      "path": "shared/themed-select.js",
+      "size": 7621,
+      "sha256": "e09705180bf9c86ffe922fb212b6b8fcc0c796d94913d8338e541082a7e093fe"
+    },
+    {
       "path": "tests/client-runner.test.mjs",
-      "size": 6885,
-      "sha256": "7a406d47bea914d76426809ad38f0a8d755735e3c7f57566889d71ab26413101"
+      "size": 7635,
+      "sha256": "970b05a600c3b32946808b5377844bd1ba4ff21149445b49fd714bb0d4932bf5"
     },
     {
       "path": "tests/core.test.mjs",
@@ -110,8 +120,8 @@
     },
     {
       "path": "versions.json",
-      "size": 709,
-      "sha256": "1d1c9e9c91b64cc5eb95b71860bcf647de6f048e2458a01087613282b5e15fef"
+      "size": 1301,
+      "sha256": "f4ae6d78a324eb8980d07e1d8e55201e32cce7df654e34b4a28d4f332ef659fc"
     }
   ]
 }

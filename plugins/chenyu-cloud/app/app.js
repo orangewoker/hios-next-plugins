@@ -3,6 +3,7 @@ import { PRESETS } from '../shared/presets.js';
 import { ChenyuClient, readFile, downloadOutput } from '../shared/client.js';
 import * as store from '../shared/storage.js';
 import { submitRun, pollRun, resumeSubmission } from '../shared/runner.js';
+import { enhanceSelect, syncSelect, closeSelects } from '../shared/themed-select.js';
 const PROTOCOL = 'hios-plugin-app/v1', ID = 'chenyu-cloud';
 const $ = id => document.getElementById(id);
 const post = (type, payload = {}) => parent.postMessage({ protocol: PROTOCOL, pluginId: ID, appId: ID, type, payload }, '*');
@@ -17,6 +18,7 @@ function button(label, action, className = 'soft-button') {
 function message(id, text, error = false) { $(id).textContent = text; $(id).classList.toggle('error', error); }
 function toast(text) { $('toast').textContent = text; $('toast').classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('show'), 4000); }
 function page(name) {
+  closeSelects();
   document.querySelectorAll('.page').forEach(n => n.classList.toggle('active', n.id === `page-${name}`));
   document.querySelectorAll('[data-page]').forEach(n => n.classList.toggle('active', n.dataset.page === name));
   if (name === 'tasks') renderTasks();
@@ -32,18 +34,21 @@ function saveWorkflows(workflows) {
   post('application-workflow-catalog-changed', { workflowCount: workflows.length });
 }
 function renderCatalog() {
+  closeSelects();
   if (!config.workflows.some(w => w.id === selected)) selected = config.workflows[0]?.id;
   $('workflowSelect').replaceChildren(...config.workflows.map(w => { const o = el('option', w.name); o.value = w.id; o.selected = w.id === selected; return o; }));
+  enhanceSelect($('workflowSelect'));
   $('workflowList').replaceChildren(...config.workflows.map(w => {
     const card = el('section', null, 'panel workflow-card'); card.append(el('h3', w.name), el('p', w.description), el('code', `${w.id}\n${w.revisionId}`), el('p', `${w.fields.length} 个参数 · 参考 ¥${w.quoteAmount ?? '未配置'} · ${w.externalCost === false ? '无外部模型费用' : '费用风险未确认'}`));
     const actions = el('div', null, 'actions');
     actions.append(button('编辑配置', () => { $('importText').value = JSON.stringify(w, null, 2); $('importQuote').value = w.quoteAmount ?? ''; $('importNoExternal').checked = w.externalCost === false; $('importText').focus(); }),
-      button('运行', () => { if (active) throw new Error('请先停止当前等待'); selected = w.id; renderForm(); $('workflowSelect').value = selected; page('run'); }),
+      button('运行', () => { if (active) throw new Error('请先停止当前等待'); selected = w.id; renderForm(); $('workflowSelect').value = selected; syncSelect($('workflowSelect')); page('run'); }),
       button('移除', () => { if (!confirm(`从本地配置移除“${w.name}”？任务记录不会删除。`)) return; saveWorkflows(config.workflows.filter(x => x.id !== w.id)); renderForm(); }, 'text-button danger'));
     card.append(actions); return card;
   })); status();
 }
 function renderForm() {
+  closeSelects();
   const w = workflow(); values = w ? defaults(w) : {};
   $('dynamicForm').replaceChildren();
   $('workflowInfo').textContent = w ? `${w.description}\n锁定版本 ${w.revisionId}\n参考报价 ¥${w.quoteAmount ?? '未配置'} · 最终以结算为准` : '请先导入工作流';
@@ -82,6 +87,7 @@ function renderForm() {
     }
     $('dynamicForm').append(label);
   }
+  $('dynamicForm').querySelectorAll('select').forEach(enhanceSelect);
 }
 function progress(data) {
   $('runProgress').classList.remove('hidden'); $('runStage').textContent = data.message || data.status || '';
@@ -113,7 +119,7 @@ function results(outputs) {
 async function execute(existing) {
   if (active) return;
   const controller = new AbortController(); active = controller;
-  $('runButton').disabled = true; $('stopButton').disabled = false; $('workflowSelect').disabled = true;
+  $('runButton').disabled = true; $('stopButton').disabled = false; $('workflowSelect').disabled = true; syncSelect($('workflowSelect'));
   $('activeTaskId').textContent = ''; message('runMessage', ''); results([]);
   try {
     const client = new ChenyuClient(store.loadKey());
@@ -127,7 +133,7 @@ async function execute(existing) {
   } catch (error) {
     const text = controller.signal.aborted ? '已停止本地等待；云端任务可能仍在运行，可从任务记录恢复。' : cleanError(error);
     message('runMessage', text, true); $('runStatus').textContent = controller.signal.aborted ? '停止等待' : '未完成';
-  } finally { active = null; $('runButton').disabled = !workflow(); $('stopButton').disabled = true; $('workflowSelect').disabled = false; renderTasks(); }
+  } finally { active = null; $('runButton').disabled = !workflow(); $('stopButton').disabled = true; $('workflowSelect').disabled = false; syncSelect($('workflowSelect')); renderTasks(); }
 }
 function renderTasks() {
   $('taskList').replaceChildren(...store.loadTasks().map(task => {

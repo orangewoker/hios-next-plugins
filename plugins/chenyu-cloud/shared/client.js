@@ -4,7 +4,9 @@ export class ChenyuClient {
   constructor(key, { fetch: fetcher = globalThis.fetch, timeoutMs = 60000 } = {}) {
     this.key = String(key || '').trim().replace(/^Bearer\s+/i, '');
     if (!this.key) throw new Error('请先在晨羽智云应用中配置 API Key');
-    this.fetcher = fetcher;
+    // WebView2's native fetch requires its Window receiver, including data/blob reads.
+    // Never call an unbound Window function as a ChenyuClient instance method.
+    this.fetcher = (...args) => Reflect.apply(fetcher, globalThis, args);
     this.timeoutMs = timeoutMs;
   }
   async request(path, { signal, body, form } = {}) {
