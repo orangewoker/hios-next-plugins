@@ -2,6 +2,17 @@
   "version": 1,
   "prompts": [
     {
+      "id": "su-model-to-render-general",
+      "title": "通用的SU模型转渲染",
+      "kind": "positive",
+      "tags": [
+        "正向提示词",
+        "SU模型",
+        "写实渲染"
+      ],
+      "prompt": "This is a screenshot from a 3D modeling software. Please turn it into a rendering，provide a good lighting atmosphere，and keep the picture structure and original material logic unchanged."
+    },
+    {
       "id": "rainy-city-commercial-architecture",
       "title": "雨后城市商业建筑｜高端写实渲染参考",
       "kind": "positive",

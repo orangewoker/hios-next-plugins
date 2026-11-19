@@ -27,6 +27,7 @@ HIOS 官方提示词订阅板块，与插件安装包独立。支持系统提示
 
 ### 正向提示词
 
+- [通用的SU模型转渲染](positive/su-model-to-render-general.md)
 - [雨后城市商业建筑｜高端写实渲染参考](positive/rainy-city-commercial-architecture.md)
 - [su截图转写实摄影-原木工业风咖啡店。](positive/industrial-wood-cafe-su.md)
 - [室内-冷调](positive/interior-cool-tone.md)

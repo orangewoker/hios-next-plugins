@@ -1,5 +1,16 @@
 [
   {
+    "id": "su-model-to-render-general",
+    "title": "通用的SU模型转渲染",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "SU模型",
+      "写实渲染"
+    ],
+    "file": "positive/su-model-to-render-general.md"
+  },
+  {
     "id": "rainy-city-commercial-architecture",
     "title": "雨后城市商业建筑｜高端写实渲染参考",
     "kind": "positive",
