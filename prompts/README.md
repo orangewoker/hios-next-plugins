@@ -27,6 +27,14 @@ HIOS 官方提示词订阅板块，与插件安装包独立。支持系统提示
 
 ### 正向提示词
 
+- [雨后城市商业建筑｜高端写实渲染参考](positive/rainy-city-commercial-architecture.md)
+- [su截图转写实摄影-原木工业风咖啡店。](positive/industrial-wood-cafe-su.md)
+- [室内-冷调](positive/interior-cool-tone.md)
+- [室内下午暖调](positive/interior-warm-afternoon.md)
+- [室内雨后](positive/interior-after-rain.md)
+- [室内黎明](positive/interior-dawn.md)
+- [新中式景观](positive/modern-chinese-landscape.md)
+- [室内渲染通用](positive/interior-general-render.md)
 - [产品摄影 · 干净棚拍主图](positive/product-studio-photo.md)
 - [人像摄影 · 窗边自然光](positive/natural-adult-portrait.md)
 - [室内效果图 · 保持结构的日景渲染](positive/interior-daylight-render.md)

@@ -1,5 +1,93 @@
 [
   {
+    "id": "rainy-city-commercial-architecture",
+    "title": "雨后城市商业建筑｜高端写实渲染参考",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "建筑摄影",
+      "写实渲染"
+    ],
+    "file": "positive/rainy-city-commercial-architecture.md"
+  },
+  {
+    "id": "industrial-wood-cafe-su",
+    "title": "su截图转写实摄影-原木工业风咖啡店。",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/industrial-wood-cafe-su.md"
+  },
+  {
+    "id": "interior-cool-tone",
+    "title": "室内-冷调",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/interior-cool-tone.md"
+  },
+  {
+    "id": "interior-warm-afternoon",
+    "title": "室内下午暖调",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/interior-warm-afternoon.md"
+  },
+  {
+    "id": "interior-after-rain",
+    "title": "室内雨后",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/interior-after-rain.md"
+  },
+  {
+    "id": "interior-dawn",
+    "title": "室内黎明",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/interior-dawn.md"
+  },
+  {
+    "id": "modern-chinese-landscape",
+    "title": "新中式景观",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "景观摄影",
+      "写实渲染"
+    ],
+    "file": "positive/modern-chinese-landscape.md"
+  },
+  {
+    "id": "interior-general-render",
+    "title": "室内渲染通用",
+    "kind": "positive",
+    "tags": [
+      "正向提示词",
+      "室内摄影",
+      "写实渲染"
+    ],
+    "file": "positive/interior-general-render.md"
+  },
+  {
     "id": "visual-prompt-optimizer",
     "title": "视觉创意导演 · 文生图提示词优化",
     "kind": "system",
