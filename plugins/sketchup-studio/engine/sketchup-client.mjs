@@ -1,11 +1,11 @@
 import { execFileSync, spawn } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as wait } from 'node:timers/promises';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-export const BRIDGE_VERSION = '1.1.0';
+export const BRIDGE_VERSION = '1.2.0';
 const BRIDGE_DIR = existsSync(join(HERE, 'bridge')) ? join(HERE, 'bridge') : join(HERE, '..', 'bridge');
 const BRIDGE_SOURCE_LOADER = join(BRIDGE_DIR, 'hios_sketchup_bridge.rb');
 const BRIDGE_SOURCE_MAIN = join(BRIDGE_DIR, 'hios_sketchup_bridge', 'main.rb');
@@ -298,6 +298,92 @@ export async function resolveTargetInstance({ version, pid } = {}) {
   throw new Error(`检测到多个运行中的 SketchUp 实例（${running.map(r => `SketchUp ${r.year} [PID ${r.pid}]`).join('、')}），请指定目标版本。`);
 }
 
+export function discoverDefaultTemplate(year, installDir = '') {
+  const normalizedYear = parseYear(year);
+  if (!normalizedYear) return '';
+  const shortYear = normalizedYear.slice(-2);
+  const localAppData = process.env.LOCALAPPDATA || '';
+  const appData = process.env.APPDATA || '';
+
+  const prefFiles = [
+    localAppData ? join(localAppData, 'SketchUp', `SketchUp ${normalizedYear}`, 'SketchUp', 'PrivatePreferences.json') : '',
+    appData ? join(appData, 'SketchUp', `SketchUp ${normalizedYear}`, 'SketchUp', 'SharedPreferences.json') : '',
+  ].filter(Boolean);
+
+  for (const prefFile of prefFiles) {
+    if (!existsSync(prefFile)) continue;
+    try {
+      const json = JSON.parse(readFileSync(prefFile, 'utf8'));
+      const scopes = [json['This Computer Only'], json['Shared Preferences'], json].filter(Boolean);
+      for (const scope of scopes) {
+        const prefs = scope.Preferences || {};
+        const directKeys = [`DefaultTemplate${shortYear}`, `DefaultTemplate${normalizedYear}`, 'DefaultTemplate'];
+        for (const k of directKeys) {
+          const val = typeof prefs[k] === 'string' ? prefs[k].trim() : '';
+          if (val && existsSync(val)) return resolve(val);
+        }
+        for (const [k, v] of Object.entries(prefs)) {
+          if (/^DefaultTemplate/i.test(k) && typeof v === 'string' && v.trim() && existsSync(v.trim())) {
+            return resolve(v.trim());
+          }
+        }
+        const recent = scope.RecentTemplates || {};
+        for (const k of ['value0', 'value1', 'value2']) {
+          const val = typeof recent[k] === 'string' ? recent[k].trim() : '';
+          if (val && existsSync(val)) return resolve(val);
+        }
+      }
+    } catch { /* ignore unreadable preference file */ }
+  }
+
+  // Fallback 1: user Templates folder (newest modified .skp)
+  const userTplDir = appData ? join(appData, 'SketchUp', `SketchUp ${normalizedYear}`, 'SketchUp', 'Templates') : '';
+  if (userTplDir && existsSync(userTplDir)) {
+    try {
+      const skps = readdirSync(userTplDir)
+        .filter(f => f.toLowerCase().endsWith('.skp'))
+        .map(f => {
+          const full = join(userTplDir, f);
+          let mtime = 0;
+          try { mtime = statSync(full).mtimeMs; } catch {}
+          return { full, mtime };
+        })
+        .sort((a, b) => b.mtime - a.mtime);
+      if (skps.length) return resolve(skps[0].full);
+    } catch { /* ignore */ }
+  }
+
+  // Fallback 2: built-in installation Templates
+  if (installDir) {
+    const resRoots = [join(installDir, 'SketchUp', 'Resources'), join(installDir, 'Resources')];
+    for (const resRoot of resRoots) {
+      if (!existsSync(resRoot)) continue;
+      for (const locale of ['zh-CN', 'en-US']) {
+        const dir = join(resRoot, locale, 'Templates');
+        if (!existsSync(dir)) continue;
+        try {
+          const skps = readdirSync(dir).filter(f => f.toLowerCase().endsWith('.skp'));
+          const preferred = skps.find(f => /arch|simple/i.test(f)) || skps[0];
+          if (preferred) return resolve(join(dir, preferred));
+        } catch { /* ignore */ }
+      }
+    }
+  }
+  return '';
+}
+
+export function createSessionFileFromTemplate(templatePath, year) {
+  if (!templatePath || !existsSync(templatePath)) return '';
+  const sessionsDir = join(bridgeStateRoot(), 'sessions');
+  mkdirSync(sessionsDir, { recursive: true });
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  const sessionFile = join(sessionsDir, `HIOS-SU${year || ''}-${stamp}.skp`);
+  copyFileSync(templatePath, sessionFile);
+  return sessionFile;
+}
+
 export async function launchSketchup({ version, filePath, waitSeconds = 45 } = {}) {
   const installed = discoverInstalledVersions();
   if (!installed.length) throw new Error('未在本机检测到已安装的 SketchUp');
@@ -322,7 +408,19 @@ export async function launchSketchup({ version, filePath, waitSeconds = 45 } = {
     return { reused: true, connected: true, ...ping };
   }
 
-  const args = filePath ? [filePath] : [];
+  // Bypass the SketchUp Welcome Dialog by launching a fresh session copy of the
+  // user's favorited default template (never mutating the original template file).
+  let launchFile = filePath || '';
+  let templateUsed = '';
+  if (!launchFile) {
+    const defaultTpl = discoverDefaultTemplate(targetYear, target.installDir);
+    if (defaultTpl) {
+      launchFile = createSessionFileFromTemplate(defaultTpl, targetYear);
+      templateUsed = basename(defaultTpl, '.skp');
+    }
+  }
+
+  const args = launchFile ? [launchFile] : [];
   const child = spawn(target.exePath, args, {
     detached: true,
     stdio: 'ignore',
@@ -337,7 +435,7 @@ export async function launchSketchup({ version, filePath, waitSeconds = 45 } = {
     const matched = live.find(r => r.year === targetYear);
     if (matched) {
       const { token: _omit, ...pub } = matched;
-      return { reused: false, connected: true, launchedPid: child.pid, ...pub };
+      return { reused: false, connected: true, launchedPid: child.pid, templateUsed, sessionFile: launchFile, ...pub };
     }
   }
   return {
@@ -345,7 +443,9 @@ export async function launchSketchup({ version, filePath, waitSeconds = 45 } = {
     connected: false,
     launchedPid: child.pid,
     year: targetYear,
-    note: `已启动 SketchUp ${targetYear}，但在 ${waitSeconds} 秒内尚未检测到桥接就绪（可能停留在欢迎页或插件确认框）。进入建模界面后点「刷新连接」即可。`,
+    templateUsed,
+    sessionFile: launchFile,
+    note: `已启动 SketchUp ${targetYear}${templateUsed ? `（模板 ${templateUsed}）` : ''}，但在 ${waitSeconds} 秒内尚未检测到桥接就绪。进入建模界面后点「刷新连接」即可。`,
   };
 }
 

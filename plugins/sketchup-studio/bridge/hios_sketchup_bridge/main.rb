@@ -1,5 +1,5 @@
 # encoding: utf-8
-# HIOS SketchUp Bridge Main (v1.1.0)
+# HIOS SketchUp Bridge Main (v1.2.0)
 require 'sketchup.rb'
 require 'socket'
 require 'json'
@@ -11,7 +11,7 @@ require 'time'
 require 'tmpdir'
 
 module HiosSketchupBridge
-  BRIDGE_VERSION = '1.1.0' unless defined?(BRIDGE_VERSION)
+  BRIDGE_VERSION = '1.2.0' unless defined?(BRIDGE_VERSION)
 
   class Server
     MAX_BODY_BYTES = 4 * 1024 * 1024
@@ -28,6 +28,30 @@ module HiosSketchupBridge
       @timer_id = nil
       @registry_path = nil
       @started_at = Time.now.utc.iso8601
+      @change_seq = 0
+      @observed_models = {}
+    end
+
+    def bump_change_seq
+      @change_seq += 1
+    end
+
+    def attach_model_observer(model)
+      return unless model
+      key = model.object_id
+      return if @observed_models[key]
+      bridge = self
+      obs_class = Class.new(Sketchup::ModelObserver) do
+        define_method(:onTransactionCommit) { |_m| bridge.bump_change_seq }
+        define_method(:onTransactionUndo) { |_m| bridge.bump_change_seq }
+        define_method(:onTransactionRedo) { |_m| bridge.bump_change_seq }
+        define_method(:onEraseAll) { |_m| bridge.bump_change_seq }
+        define_method(:onActivePathChanged) { |_m| bridge.bump_change_seq }
+      end
+      model.add_observer(obs_class.new)
+      @observed_models[key] = true
+    rescue StandardError
+      nil
     end
 
     def start
@@ -105,8 +129,11 @@ module HiosSketchupBridge
     def register_cleanup
       at_exit { remove_registry }
       bridge = self
+      attach_model_observer(Sketchup.active_model) rescue nil
       observer_class = Class.new(Sketchup::AppObserver) do
         define_method(:onQuit) { bridge.stop }
+        define_method(:onNewModel) { |m| bridge.attach_model_observer(m); bridge.bump_change_seq }
+        define_method(:onOpenModel) { |m| bridge.attach_model_observer(m); bridge.bump_change_seq }
       end
       Sketchup.add_observer(observer_class.new)
     rescue StandardError
@@ -230,6 +257,8 @@ module HiosSketchupBridge
         [200, handle_run_ruby(body)]
       when ['POST', '/capture_view']
         [200, handle_capture_view(body)]
+      when ['POST', '/camera_control']
+        [200, handle_camera_control(body)]
       when ['POST', '/model_file']
         [200, handle_model_file(body)]
       when ['POST', '/select_entity']
@@ -276,6 +305,24 @@ module HiosSketchupBridge
       end
     end
 
+    def model_revision(model)
+      return "none:#{@change_seq}" unless model
+      attach_model_observer(model)
+      cam = model.active_view.camera rescue nil
+      cam_sig = if cam
+        e = cam.eye
+        t = cam.target
+        u = cam.up
+        fov = cam.perspective? ? cam.fov.round(2) : cam.height.round(2)
+        "#{e.x.round(2)},#{e.y.round(2)},#{e.z.round(2)}|#{t.x.round(2)},#{t.y.round(2)},#{t.z.round(2)}|#{u.x.round(2)},#{u.y.round(2)},#{u.z.round(2)}|#{fov}"
+      else
+        'nocam'
+      end
+      bb = model.bounds
+      bb_sig = bb.empty? ? 'empty' : "#{bb.width.round(1)},#{bb.height.round(1)},#{bb.depth.round(1)},#{bb.center.x.round(1)},#{bb.center.y.round(1)},#{bb.center.z.round(1)}"
+      "#{@change_seq}:#{model.object_id}:#{model.entities.length}:#{model.active_entities.length}:#{model.modified?}:#{current_display_mode(model)}:#{model.shadow_info['DisplayShadows'] == true}:#{model.pages.length}:#{bb_sig}:#{cam_sig}"
+    end
+
     def handle_ping
       model = Sketchup.active_model
       {
@@ -285,6 +332,7 @@ module HiosSketchupBridge
         version: @version,
         pid: @pid,
         port: @port,
+        revision: model_revision(model),
         modelTitle: model ? safe_utf8(model.title) : '',
         modelPath: model ? safe_utf8(model.path) : '',
         modified: model ? model.modified? : false,
@@ -500,11 +548,17 @@ module HiosSketchupBridge
       zoom_extents = body['zoomExtents'] == true
       restore_camera = body['restoreCamera'] != false
       restore_style = body['restoreStyle'] != false
+      raw_fmt = (body['imageFormat'] || 'png').to_s.downcase
+      image_format = (raw_fmt == 'jpg' || raw_fmt == 'jpeg') ? 'jpg' : 'png'
+      transparent = (body['transparent'] == true) && (image_format == 'png')
 
       saved_cam = snapshot_camera(view.camera)
       ro = model.rendering_options
       saved_render_mode = ro['RenderMode']
       saved_edge_mode = ro['EdgeDisplayMode']
+      saved_draw_ground = ro['DrawGround']
+      saved_draw_underground = ro['DrawUnderground']
+      saved_display_fog = ro['DisplayFog']
       saved_shadows = model.shadow_info['DisplayShadows']
 
       changed_camera = false
@@ -542,6 +596,13 @@ module HiosSketchupBridge
           changed_style = true
         end
 
+        if transparent
+          ro['DrawGround'] = false rescue nil
+          ro['DrawUnderground'] = false rescue nil
+          ro['DisplayFog'] = false rescue nil
+          changed_style = true
+        end
+
         unless shadows_param.nil?
           model.shadow_info['DisplayShadows'] = (shadows_param == true)
           changed_style = true
@@ -552,20 +613,27 @@ module HiosSketchupBridge
 
         cap_dir = File.join(File.dirname(state_dir), 'captures')
         FileUtils.mkdir_p(cap_dir)
+        ext = image_format == 'jpg' ? 'jpg' : 'png'
         out_path = body['outputPath'].to_s.strip
         if out_path.empty?
-          out_path = File.join(cap_dir, "su-#{@year}-#{Time.now.strftime('%Y%m%d-%H%M%S')}-#{SecureRandom.hex(3)}.png")
+          out_path = File.join(cap_dir, "su-#{@year}-#{Time.now.strftime('%Y%m%d-%H%M%S')}-#{SecureRandom.hex(3)}.#{ext}")
         else
           FileUtils.mkdir_p(File.dirname(out_path))
         end
 
-        ok = view.write_image({
+        write_opts = {
           filename: out_path,
           width: width,
           height: height,
-          antialias: true,
-          transparent: false
-        })
+          antialias: true
+        }
+        if image_format == 'png'
+          write_opts[:transparent] = transparent
+        else
+          write_opts[:compression] = 0.92
+        end
+
+        ok = view.write_image(write_opts)
         return { ok: false, error: 'view.write_image failed' } unless ok && File.exist?(out_path)
 
         bytes = File.binread(out_path)
@@ -578,6 +646,9 @@ module HiosSketchupBridge
           sceneName: scene_name,
           displayMode: display_mode.empty? ? current_display_mode(model) : display_mode,
           shadows: model.shadow_info['DisplayShadows'] == true,
+          imageFormat: image_format,
+          mimeType: image_format == 'jpg' ? 'image/jpeg' : 'image/png',
+          transparent: transparent,
           byteSize: bytes.bytesize,
           base64: Base64.strict_encode64(bytes)
         }
@@ -585,6 +656,9 @@ module HiosSketchupBridge
         if changed_style && restore_style
           ro['RenderMode'] = saved_render_mode rescue nil
           ro['EdgeDisplayMode'] = saved_edge_mode rescue nil
+          ro['DrawGround'] = saved_draw_ground rescue nil
+          ro['DrawUnderground'] = saved_draw_underground rescue nil
+          ro['DisplayFog'] = saved_display_fog rescue nil
           model.shadow_info['DisplayShadows'] = saved_shadows rescue nil
         end
         if changed_camera && restore_camera
@@ -594,6 +668,126 @@ module HiosSketchupBridge
           view.invalidate
         end
       end
+    end
+
+    def handle_camera_control(body)
+      model = Sketchup.active_model
+      return { ok: false, error: 'No active SketchUp model' } unless model
+
+      view = model.active_view
+      cam = view.camera
+      action = body['action'].to_s.downcase
+
+      case action
+      when 'orbit'
+        dx = body['dx'].to_f
+        dy = body['dy'].to_f
+        vec = cam.eye - cam.target
+        dist = vec.length
+        dist = 100.0 if dist < 1.0
+        horiz = Math.hypot(vec.x, vec.y)
+        azimuth = Math.atan2(vec.y, vec.x) - dx * 0.0085
+        elev = Math.atan2(vec.z, horiz) + dy * 0.0085
+        elev = [[elev, -1.48].max, 1.48].min
+        cos_e = Math.cos(elev)
+        new_eye = Geom::Point3d.new(
+          cam.target.x + dist * cos_e * Math.cos(azimuth),
+          cam.target.y + dist * cos_e * Math.sin(azimuth),
+          cam.target.z + dist * Math.sin(elev)
+        )
+        new_cam = Sketchup::Camera.new(new_eye, cam.target.clone, Geom::Vector3d.new(0, 0, 1), cam.perspective?)
+        new_cam.fov = cam.fov if cam.perspective?
+        new_cam.height = cam.height unless cam.perspective?
+        view.camera = new_cam
+      when 'pan'
+        dx = body['dx'].to_f
+        dy = body['dy'].to_f
+        dist = cam.eye.distance(cam.target)
+        dist = 100.0 if dist < 1.0
+        scale = cam.perspective? ? dist * 0.0017 : cam.height * 0.0022
+        rx = cam.xaxis
+        ry = cam.yaxis
+        offset = Geom::Vector3d.new(
+          (-rx.x * dx + ry.x * dy) * scale,
+          (-rx.y * dx + ry.y * dy) * scale,
+          (-rx.z * dx + ry.z * dy) * scale
+        )
+        new_cam = Sketchup::Camera.new(cam.eye.offset(offset), cam.target.offset(offset), cam.up.clone, cam.perspective?)
+        new_cam.fov = cam.fov if cam.perspective?
+        new_cam.height = cam.height unless cam.perspective?
+        view.camera = new_cam
+      when 'zoom'
+        delta = body['delta'].to_f
+        factor = Math.exp([[delta * 0.0014, -0.45].max, 0.45].min)
+        if cam.perspective?
+          vec = cam.eye - cam.target
+          dist = vec.length
+          dist = 100.0 if dist < 1.0
+          new_dist = [[dist * factor, 2.0].max, 500000.0].min
+          new_eye = cam.target.offset(vec.normalize, new_dist)
+          new_cam = Sketchup::Camera.new(new_eye, cam.target.clone, cam.up.clone, true, cam.fov)
+          view.camera = new_cam
+        else
+          new_cam = snapshot_camera(cam)
+          new_cam.height = [[cam.height * factor, 2.0].max, 500000.0].min
+          view.camera = new_cam
+        end
+      when 'preset'
+        preset = body['preset'].to_s.downcase
+        apply_camera_preset(view, model, preset)
+        view.zoom_extents unless model.bounds.empty?
+      else
+        return { ok: false, error: "Unsupported camera action: #{action}" }
+      end
+
+      view.invalidate
+      view.refresh if view.respond_to?(:refresh)
+
+      preview_data_url = nil
+      if body['fastPreview'] == true
+        ro = model.rendering_options
+        saved_rm = ro['RenderMode']
+        saved_em = ro['EdgeDisplayMode']
+        saved_sh = model.shadow_info['DisplayShadows']
+        changed_style = false
+        begin
+          case body['displayMode'].to_s.downcase
+          when 'material'
+            ro['RenderMode'] = 3; ro['EdgeDisplayMode'] = 1; changed_style = true
+          when 'white', 'monochrome'
+            ro['RenderMode'] = 5; ro['EdgeDisplayMode'] = 1; changed_style = true
+          when 'wire', 'wireframe'
+            ro['RenderMode'] = 0; ro['EdgeDisplayMode'] = 1; changed_style = true
+          end
+          if body.key?('shadows')
+            model.shadow_info['DisplayShadows'] = (body['shadows'] == true)
+            changed_style = true
+          end
+          cap_dir = File.join(File.dirname(state_dir), 'captures')
+          FileUtils.mkdir_p(cap_dir)
+          tmp_jpg = File.join(cap_dir, "_live-#{@pid}.jpg")
+          w = [[(body['width'] || 720).to_i, 320].max, 1280].min
+          h = [[(body['height'] || 540).to_i, 240].max, 960].min
+          ok = view.write_image({ filename: tmp_jpg, width: w, height: h, antialias: false, compression: 0.72 })
+          if ok && File.exist?(tmp_jpg)
+            preview_data_url = "data:image/jpeg;base64,#{Base64.strict_encode64(File.binread(tmp_jpg))}"
+          end
+        ensure
+          if changed_style
+            ro['RenderMode'] = saved_rm rescue nil
+            ro['EdgeDisplayMode'] = saved_em rescue nil
+            model.shadow_info['DisplayShadows'] = saved_sh rescue nil
+            view.invalidate
+          end
+        end
+      end
+
+      {
+        ok: true,
+        action: action,
+        revision: model_revision(model),
+        previewDataUrl: preview_data_url
+      }
     end
 
     def handle_select_entity(body)

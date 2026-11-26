@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "sketchup-studio",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     {
       "path": "README.md",
@@ -11,42 +11,42 @@
     {
       "path": "bridge/hios_sketchup_bridge.rb",
       "size": 704,
-      "sha256": "45d879ea3aaa92f28c07ef5c970ab7feea625ca5a1ac9d1babf5dde59cfed037"
+      "sha256": "3ed626c9030fb38100245e45467ffe724a9de36c573a36b161c9c1a8d3bd1eba"
     },
     {
       "path": "bridge/hios_sketchup_bridge/main.rb",
-      "size": 22456,
-      "sha256": "daf738d8c06c27aad93e8815369e2c11382eaeb340d37f5c82965ddd895f88be"
+      "size": 30409,
+      "sha256": "5348b13ca8c4c7e8e05d23c132a81ebef1d5919f3611c888a03ba9f2bedcb71c"
     },
     {
       "path": "engine/server.mjs",
-      "size": 15851,
-      "sha256": "cba90d2b45434d60075c1f34c29d416f8226eb4f4998d66afedf95085f342b43"
+      "size": 18514,
+      "sha256": "2cd3e667e645a37ce03d153b282e0b6d4abba7cc9e7427d2c68cf7d9d5cbdb6c"
     },
     {
       "path": "engine/sketchup-client.mjs",
-      "size": 16428,
-      "sha256": "e7a3078f71409c118fe56a1215ba8b60eade622a665552938e5794999243e24e"
+      "size": 20746,
+      "sha256": "5d25609660e64bdd89026237ac3b847f866a24c190e92c56fed8372feb2a22a0"
     },
     {
       "path": "plugin.json",
       "size": 1563,
-      "sha256": "ff4f7e0f0648bbc74fdd8f73f8da14d48b7b64de3ba6076bc61a8bdff0bb7399"
+      "sha256": "2e150edcea8f4b9df97206dcd5eddfdbb4cd9123a13b35d4bc0c68d62e0b988c"
     },
     {
       "path": "runtime/app.js",
-      "size": 32149,
-      "sha256": "a96949b4e71ce5675734a63d89090dbe388815a2a36d498d00726a9eb0973c16"
+      "size": 40379,
+      "sha256": "7f248972ac9dd5a1702a47a62e8daa59219e2f94d7a25834d0baeaac652a2a27"
     },
     {
       "path": "runtime/index.html",
-      "size": 6193,
-      "sha256": "134a2caa858da94002f5cc31da19d75a481942eeb07b21a0da5d8c803bac831a"
+      "size": 6857,
+      "sha256": "d2c91c4c23df705e31bccd58f72b5441c1f56151f5bc2a70f2909bfaeb0f1d59"
     },
     {
       "path": "runtime/style.css",
-      "size": 9099,
-      "sha256": "43cd774d6445a0ae07242d73a7a08a56482d384e0f48c1b2955acb7f0b19ef8a"
+      "size": 10668,
+      "sha256": "9454e60865fdbad750b2174088082b17247bbda3699fc2a903897d1959887428"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -80,13 +80,13 @@
     },
     {
       "path": "tests/sketchup-studio.test.mjs",
-      "size": 10561,
-      "sha256": "fa522a160778b178e96d3693f0098f6b25c2f0ae19674c6e870145cf06d621b7"
+      "size": 14699,
+      "sha256": "85f3367d5a2ea38f17a6c75cb14f10d1f0db2e706ab0ce92495f04a010cef543"
     },
     {
       "path": "versions.json",
-      "size": 920,
-      "sha256": "45f48d3b0effbab5b95926febbf00329f9791292ebd8b10f540813f4db4a411d"
+      "size": 1708,
+      "sha256": "864cb7c3fbf4826e1ca04f62168abf010964b62b1a4fdb15a9ec86a57a92177b"
     }
   ]
 }

@@ -34,6 +34,11 @@ const displayModeProp = {
   enum: ['material', 'white', 'wire'],
   description: '显示样式：material（材质）/ white（纯白模）/ wire（线框）。',
 };
+const imageFormatProp = {
+  type: 'string',
+  enum: ['png', 'jpg'],
+  description: '输出图片格式：png 或 jpg（透明背景仅 png 支持）。',
+};
 
 const agentTools = [
   {
@@ -79,6 +84,8 @@ const agentTools = [
       sceneName: { type: 'string', description: '可选：按 SketchUp 中已有场景名称切换相机并截图。' },
       displayMode: displayModeProp,
       shadows: { type: 'boolean', description: '是否开启阴影。' },
+      imageFormat: imageFormatProp,
+      transparent: { type: 'boolean', description: '是否输出透明背景（仅 PNG 支持）。' },
       zoomExtents: { type: 'boolean' },
       restoreCamera: { type: 'boolean' },
       restoreStyle: { type: 'boolean' },
@@ -121,6 +128,26 @@ const uiOnlyTools = [
   { name: 'ui_install_bridge', description: 'UI 安装或升级 Ruby 桥接', inputSchema: schema({ version: versionProp }), _meta: { 'hios/uiOnly': true } },
   { name: 'ui_launch', description: 'UI 启动指定版本 SketchUp', inputSchema: schema({ version: versionProp, waitSeconds: { type: 'integer' } }), _meta: { 'hios/uiOnly': true } },
   { name: 'ui_inspect', description: 'UI 检查当前模型与历史记录', inputSchema: schema({ version: versionProp, pid: pidProp }), _meta: { 'hios/uiOnly': true } },
+  { name: 'ui_ping', description: 'UI 轻量检测 SketchUp 版本与模型/视角 revision（供实时同步）', inputSchema: schema({ version: versionProp, pid: pidProp }), _meta: { 'hios/uiOnly': true } },
+  {
+    name: 'ui_camera',
+    description: 'UI 实时旋转/平移/缩放 SketchUp 视角并返回快速预览帧',
+    inputSchema: schema({
+      version: versionProp,
+      pid: pidProp,
+      action: { type: 'string', enum: ['orbit', 'pan', 'zoom', 'preset'] },
+      dx: { type: 'number' },
+      dy: { type: 'number' },
+      delta: { type: 'number' },
+      preset: { type: 'string' },
+      displayMode: displayModeProp,
+      shadows: { type: 'boolean' },
+      fastPreview: { type: 'boolean' },
+      width: { type: 'integer' },
+      height: { type: 'integer' },
+    }, ['action']),
+    _meta: { 'hios/uiOnly': true },
+  },
   {
     name: 'ui_capture_view',
     description: 'UI 抓取带样式的视口截图并写入工作区',
@@ -131,7 +158,10 @@ const uiOnlyTools = [
       sceneName: { type: 'string' },
       displayMode: displayModeProp,
       shadows: { type: 'boolean' },
+      imageFormat: imageFormatProp,
+      transparent: { type: 'boolean' },
       zoomExtents: { type: 'boolean' },
+      restoreCamera: { type: 'boolean' },
       width: { type: 'integer' },
       height: { type: 'integer' },
     }),
@@ -177,11 +207,14 @@ function assetUrl(ctx, relPath) {
 }
 
 async function doCapture(args, ctx, returnImageBlock) {
+  const imageFormat = String(args.imageFormat || 'png').toLowerCase() === 'jpg' ? 'jpg' : 'png';
+  const transparent = Boolean(args.transparent) && imageFormat === 'png';
+  const ext = imageFormat === 'jpg' ? 'jpg' : 'png';
   let outPath = args.outputPath;
   let relPath = '';
   if (ctx?.root) {
     mkdirSync(join(ctx.root, 'captures'), { recursive: true });
-    relPath = `captures/preview-${Date.now()}.png`;
+    relPath = `captures/preview-${Date.now()}.${ext}`;
     outPath = join(ctx.root, relPath);
   }
   const res = await callSketchup('POST', '/capture_view', {
@@ -189,6 +222,8 @@ async function doCapture(args, ctx, returnImageBlock) {
     sceneName: args.sceneName || '',
     displayMode: args.displayMode || 'material',
     shadows: args.shadows,
+    imageFormat,
+    transparent,
     zoomExtents: Boolean(args.zoomExtents),
     restoreCamera: args.restoreCamera !== false,
     restoreStyle: args.restoreStyle !== false,
@@ -201,6 +236,9 @@ async function doCapture(args, ctx, returnImageBlock) {
     return { isError: true, content: [{ type: 'text', text: JSON.stringify(res, null, 2) }] };
   }
   const { base64, ...meta } = res;
+  const resolvedFormat = meta.imageFormat || imageFormat;
+  const resolvedMime = meta.mimeType || (resolvedFormat === 'jpg' ? 'image/jpeg' : 'image/png');
+  const resolvedTransparent = meta.transparent !== undefined ? Boolean(meta.transparent) : transparent;
   const entry = {
     id: `cap-${Date.now()}`,
     createdAt: Date.now(),
@@ -212,6 +250,9 @@ async function doCapture(args, ctx, returnImageBlock) {
     sceneName: meta.sceneName || '',
     displayMode: meta.displayMode || 'material',
     shadows: Boolean(meta.shadows),
+    imageFormat: resolvedFormat,
+    mimeType: resolvedMime,
+    transparent: resolvedTransparent,
   };
   if (ctx?.root) {
     const state = readWorkspaceMeta(ctx);
@@ -221,7 +262,7 @@ async function doCapture(args, ctx, returnImageBlock) {
   const payload = { ...meta, ...entry };
   const content = [{ type: 'text', text: JSON.stringify(payload, null, 2) }];
   if (returnImageBlock && typeof base64 === 'string' && base64.length > 0) {
-    content.push({ type: 'image', data: base64, mimeType: 'image/png' });
+    content.push({ type: 'image', data: base64, mimeType: resolvedMime });
   }
   return { content };
 }
@@ -267,6 +308,25 @@ async function executeTool(name, rawArgs = {}) {
         selectionOnly: Boolean(args.selectionOnly),
         maxDepth: args.maxDepth ?? 2,
       }, args);
+      return { isError: !info.ok, content: [{ type: 'text', text: JSON.stringify(info, null, 2) }] };
+    }
+    case 'ui_ping': {
+      const info = await callSketchup('GET', '/ping', undefined, { ...args, timeoutMs: 4000 });
+      return { isError: !info.ok, content: [{ type: 'text', text: JSON.stringify(info, null, 2) }] };
+    }
+    case 'ui_camera': {
+      const info = await callSketchup('POST', '/camera_control', {
+        action: args.action,
+        dx: args.dx,
+        dy: args.dy,
+        delta: args.delta,
+        preset: args.preset,
+        displayMode: args.displayMode,
+        shadows: args.shadows,
+        fastPreview: args.fastPreview !== false,
+        width: args.width || 720,
+        height: args.height || 540,
+      }, { ...args, timeoutMs: 15000 });
       return { isError: !info.ok, content: [{ type: 'text', text: JSON.stringify(info, null, 2) }] };
     }
     case 'sketchup_run_ruby': {
@@ -332,7 +392,7 @@ rl.on('line', async line => {
       result = {
         protocolVersion: req.params?.protocolVersion || '2025-03-26',
         capabilities: { tools: {} },
-        serverInfo: { name: 'sketchup-studio', version: '0.1.1' },
+        serverInfo: { name: 'sketchup-studio', version: '0.1.2' },
       };
     } else if (req.method === 'ping') {
       result = {};

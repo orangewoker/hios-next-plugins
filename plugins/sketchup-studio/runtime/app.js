@@ -8,10 +8,12 @@ const $ = id => document.getElementById(id);
 
 const els = {
   badge: $('su-badge'),
+  liveSync: $('live-sync'),
   expand: $('expand'),
   toolsToggle: $('tools-toggle'),
   tools: $('tools'),
   toolsClose: $('tools-close'),
+  viewer: $('viewer'),
   empty: $('empty'),
   previewImg: $('preview-img'),
   previewMeta: $('preview-meta'),
@@ -22,6 +24,7 @@ const els = {
   suLaunch: $('su-launch'),
   suBridge: $('su-bridge'),
   suRefresh: $('su-refresh'),
+  captureFormat: $('capture-format'),
   suScene: $('su-scene'),
   stats: $('stats'),
   undo: $('undo'),
@@ -54,12 +57,25 @@ let versionsInfo = { installed: [], running: [], defaultVersion: '' };
 let busy = false;
 let stopRequested = false;
 let activeRunId = '';
+let liveSyncTimer = null;
+let liveSyncPolling = false;
+let lastSyncRevision = '';
+let cameraDragging = false;
+let cameraAction = '';
+let dragLastX = 0;
+let dragLastY = 0;
+let pendingDx = 0;
+let pendingDy = 0;
+let cameraInFlight = false;
+let wheelSettleTimer = null;
 
 let state = {
   sessionId: '',
   version: '',
   displayMode: 'material',
   shadows: false,
+  captureFormat: 'png',
+  liveSync: false,
   cameraPreset: 'current',
   sceneName: '',
   prompt: '',
@@ -151,6 +167,16 @@ function modeLabel(mode) {
   return mode === 'white' ? '纯白模' : mode === 'wire' ? '线框' : '材质';
 }
 
+function captureFormatSpec(fmt = state.captureFormat) {
+  if (fmt === 'png-transparent') {
+    return { value: 'png-transparent', imageFormat: 'png', transparent: true, mime: 'image/png', ext: 'png', label: 'PNG 透明' };
+  }
+  if (fmt === 'jpg') {
+    return { value: 'jpg', imageFormat: 'jpg', transparent: false, mime: 'image/jpeg', ext: 'jpg', label: 'JPG' };
+  }
+  return { value: 'png', imageFormat: 'png', transparent: false, mime: 'image/png', ext: 'png', label: 'PNG' };
+}
+
 function camLabel(cam, sceneName) {
   if (sceneName) return `场景:${sceneName}`;
   const map = { current: '当前视角', iso: '轴测', front: '正视', back: '背视', left: '左视', right: '右视', top: '顶视' };
@@ -165,26 +191,36 @@ function syncStyleButtons() {
   for (const btn of camButtons) {
     btn.setAttribute('aria-pressed', String(!state.sceneName && btn.dataset.cam === state.cameraPreset));
   }
+  if (els.captureFormat) {
+    els.captureFormat.value = captureFormatSpec(state.captureFormat).value;
+  }
+  if (els.liveSync) {
+    els.liveSync.setAttribute('aria-pressed', String(Boolean(state.liveSync)));
+  }
   els.suScene.value = state.sceneName || '';
 }
 
 function renderPreview(capture) {
   if (!capture?.url) {
     els.previewImg.hidden = true;
+    els.viewer.classList.remove('is-transparent');
     els.previewMeta.hidden = true;
     els.empty.hidden = false;
     return;
   }
   const src = resolveImgSrc(capture.url);
   els.previewImg.src = src + (src.includes('?') ? '&' : '?') + 't=' + (capture.createdAt || Date.now());
+  els.viewer.classList.toggle('is-transparent', Boolean(capture.transparent));
   els.previewImg.hidden = false;
   els.empty.hidden = true;
+  const fmtTag = capture.imageFormat === 'jpg' ? 'JPG' : capture.transparent ? 'PNG透明' : 'PNG';
   const parts = [
     modeLabel(capture.displayMode || state.displayMode),
     capture.shadows ? '阴影开' : '无阴影',
+    fmtTag,
     camLabel(capture.cameraPreset || state.cameraPreset, capture.sceneName || ''),
+    '左键旋转 · 右键/Shift平移 · 滚轮缩放',
   ];
-  if (capture.width && capture.height) parts.push(`${capture.width}×${capture.height}`);
   els.previewMeta.textContent = parts.join(' · ');
   els.previewMeta.hidden = false;
 }
@@ -500,22 +536,26 @@ async function ensureSketchupReady() {
   return live;
 }
 
-async function captureStyledView({ silent = false, autoLaunch = false } = {}) {
+async function captureStyledView({ silent = false, autoLaunch = false, restoreCamera = true } = {}) {
   const live = autoLaunch ? await ensureSketchupReady() : activeRunningInstance();
   if (!live) {
     if (!silent) setStatus('SketchUp 尚未连接，请先在「工具」中启动 SketchUp。', true);
     return null;
   }
+  const fmt = captureFormatSpec(state.captureFormat);
   if (!silent) {
-    setStatus(`正在抓取 ${modeLabel(state.displayMode)}${state.shadows ? ' + 阴影' : ''} 视口图…`);
+    setStatus(`正在抓取 ${modeLabel(state.displayMode)}${state.shadows ? ' + 阴影' : ''}（${fmt.label}）视口图…`);
   }
   const cap = await callEngine('ui_capture_view', {
     version: live.year,
     displayMode: state.displayMode,
     shadows: Boolean(state.shadows),
+    imageFormat: fmt.imageFormat,
+    transparent: fmt.transparent,
     cameraPreset: state.cameraPreset || 'current',
     sceneName: state.sceneName || '',
     zoomExtents: state.cameraPreset !== 'current' && !state.sceneName,
+    restoreCamera,
     width: 1280,
     height: 960,
   }, 60000);
@@ -524,7 +564,10 @@ async function captureStyledView({ silent = false, autoLaunch = false } = {}) {
     renderPreview(cap);
     void refreshHistory(false);
     if (!silent) {
-      setStatus(`已抓取 ${modeLabel(cap.displayMode)}${cap.shadows ? ' · 阴影开' : ''} 视口图，可点击「↗ 输出底图」传给下游节点。`);
+      const needsBridgeRestart = fmt.transparent && live.bridgeVersion && live.bridgeVersion < '1.2.0';
+      setStatus(needsBridgeRestart
+        ? `已抓图，但当前 SketchUp 桥接为 v${live.bridgeVersion}；请点「装/升桥接」并重启一次 SketchUp 以启用透明 PNG。`
+        : `已抓取 ${modeLabel(cap.displayMode)}${cap.shadows ? ' · 阴影开' : ''} · ${fmt.label} 视口图，可点击「↗ 输出底图」传给下游节点。`);
     }
     return cap;
   }
@@ -534,12 +577,15 @@ async function captureStyledView({ silent = false, autoLaunch = false } = {}) {
 function buildOutputPayload(capture, modelFile) {
   const outputs = [];
   if (capture?.url) {
+    const isJpg = capture.imageFormat === 'jpg' || /\.jpe?g$/i.test(capture.path || capture.url);
+    const ext = isJpg ? 'jpg' : 'png';
+    const mime = capture.mimeType || (isJpg ? 'image/jpeg' : 'image/png');
     outputs.push({
       kind: 'image',
       portId: 'preview',
       source: canonicalAssetUrl(capture.url),
-      name: `sketchup-${capture.displayMode || 'material'}${capture.shadows ? '-shadows' : ''}.png`,
-      mime: 'image/png',
+      name: `sketchup-${capture.displayMode || 'material'}${capture.shadows ? '-shadows' : ''}${capture.transparent ? '-transparent' : ''}.${ext}`,
+      mime,
       width: capture.width,
       height: capture.height,
     });
@@ -679,7 +725,187 @@ async function stopCurrentTask() {
   setBusy(false);
 }
 
+// Live Sync Loop
+function stopLiveSyncLoop() {
+  if (liveSyncTimer) {
+    clearInterval(liveSyncTimer);
+    liveSyncTimer = null;
+  }
+}
+
+async function pollLiveSyncTick() {
+  if (!state.liveSync || liveSyncPolling || busy || cameraDragging || cameraInFlight || document.hidden) return;
+  const live = activeRunningInstance();
+  if (!live) return;
+  liveSyncPolling = true;
+  try {
+    const ping = await callEngine('ui_ping', { version: live.year }, 5000);
+    if (!ping?.ok) return;
+    if (Array.isArray(ping.scenes)) updateScenesSelect(ping.scenes);
+    const rev = String(ping.revision || `${ping.entityCount}:${ping.modified}:${ping.displayMode}:${ping.shadows}`);
+    if (rev !== lastSyncRevision) {
+      lastSyncRevision = rev;
+      await captureStyledView({ silent: true, restoreCamera: true });
+    }
+  } catch {
+    // Ignore transient poll errors while SketchUp is busy
+  } finally {
+    liveSyncPolling = false;
+  }
+}
+
+function syncLiveSyncLoop() {
+  stopLiveSyncLoop();
+  if (state.liveSync) {
+    liveSyncTimer = setInterval(() => void pollLiveSyncTick(), 650);
+    void pollLiveSyncTick();
+  }
+}
+
+// Interactive Orbit / Pan / Zoom in Viewport
+async function flushCameraDelta() {
+  if (cameraInFlight || (!pendingDx && !pendingDy)) return;
+  const live = activeRunningInstance();
+  if (!live) { pendingDx = 0; pendingDy = 0; return; }
+  const dx = pendingDx;
+  const dy = pendingDy;
+  const action = cameraAction || 'orbit';
+  pendingDx = 0;
+  pendingDy = 0;
+  cameraInFlight = true;
+  try {
+    const res = await callEngine('ui_camera', {
+      version: live.year,
+      action,
+      dx,
+      dy,
+      displayMode: state.displayMode,
+      shadows: Boolean(state.shadows),
+      fastPreview: true,
+      width: 720,
+      height: 540,
+    }, 10000);
+    if (res?.ok) {
+      if (res.revision) lastSyncRevision = res.revision;
+      if (res.previewDataUrl) {
+        els.previewImg.src = res.previewDataUrl;
+        els.previewImg.hidden = false;
+        els.empty.hidden = true;
+      }
+    }
+  } catch (err) {
+    if (String(err?.message || '').includes('Unknown route')) {
+      setStatus('当前 SketchUp 桥接版本较旧，请点击「工具 → 装/升桥接」并重启一次 SketchUp 以启用视口旋转平移。', true);
+    }
+  } finally {
+    cameraInFlight = false;
+    if (pendingDx || pendingDy) {
+      void flushCameraDelta();
+    }
+  }
+}
+
+els.viewer.addEventListener('contextmenu', e => e.preventDefault());
+
+els.viewer.addEventListener('pointerdown', e => {
+  if (busy || !activeRunningInstance()) return;
+  if (e.button !== 0 && e.button !== 1 && e.button !== 2) return;
+  e.preventDefault();
+  e.stopPropagation();
+  cameraDragging = true;
+  cameraAction = (e.button === 2 || e.button === 1 || e.shiftKey) ? 'pan' : 'orbit';
+  dragLastX = e.clientX;
+  dragLastY = e.clientY;
+  pendingDx = 0;
+  pendingDy = 0;
+  els.viewer.classList.add('dragging');
+  try { els.viewer.setPointerCapture(e.pointerId); } catch {}
+  if (state.cameraPreset !== 'current' || state.sceneName) {
+    saveState({ cameraPreset: 'current', sceneName: '' });
+    syncStyleButtons();
+  }
+});
+
+els.viewer.addEventListener('pointermove', e => {
+  if (!cameraDragging) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const dx = e.clientX - dragLastX;
+  const dy = e.clientY - dragLastY;
+  dragLastX = e.clientX;
+  dragLastY = e.clientY;
+  if (!dx && !dy) return;
+  pendingDx += dx;
+  pendingDy += dy;
+  void flushCameraDelta();
+});
+
+async function endCameraDrag(e) {
+  if (!cameraDragging) return;
+  cameraDragging = false;
+  els.viewer.classList.remove('dragging');
+  try { if (e?.pointerId !== undefined) els.viewer.releasePointerCapture(e.pointerId); } catch {}
+  // Wait briefly for in-flight drag step, then capture crisp full-res styled preview
+  setTimeout(async () => {
+    if (cameraDragging || busy) return;
+    try {
+      await captureStyledView({ silent: true, restoreCamera: true });
+    } catch {}
+  }, 120);
+}
+
+els.viewer.addEventListener('pointerup', endCameraDrag);
+els.viewer.addEventListener('pointercancel', endCameraDrag);
+
+els.viewer.addEventListener('wheel', e => {
+  if (busy || !activeRunningInstance()) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (state.cameraPreset !== 'current' || state.sceneName) {
+    saveState({ cameraPreset: 'current', sceneName: '' });
+    syncStyleButtons();
+  }
+  const live = activeRunningInstance();
+  if (!live) return;
+  if (!cameraInFlight) {
+    cameraInFlight = true;
+    void callEngine('ui_camera', {
+      version: live.year,
+      action: 'zoom',
+      delta: e.deltaY,
+      displayMode: state.displayMode,
+      shadows: Boolean(state.shadows),
+      fastPreview: true,
+      width: 720,
+      height: 540,
+    }, 10000).then(res => {
+      if (res?.ok) {
+        if (res.revision) lastSyncRevision = res.revision;
+        if (res.previewDataUrl) {
+          els.previewImg.src = res.previewDataUrl;
+          els.previewImg.hidden = false;
+          els.empty.hidden = true;
+        }
+      }
+    }).catch(() => {}).finally(() => { cameraInFlight = false; });
+  }
+  clearTimeout(wheelSettleTimer);
+  wheelSettleTimer = setTimeout(() => {
+    if (!cameraDragging && !busy) {
+      void captureStyledView({ silent: true, restoreCamera: true }).catch(() => {});
+    }
+  }, 240);
+}, { passive: false });
+
 // Event Listeners
+els.liveSync?.addEventListener('click', () => {
+  const next = !state.liveSync;
+  saveState({ liveSync: next });
+  syncStyleButtons();
+  syncLiveSyncLoop();
+  setStatus(next ? '已开启实时同步：你在 SketchUp 中的建模与视角改动将自动刷新到节点。' : '已关闭实时同步。');
+});
+
 els.expand.addEventListener('click', () => {
   post(expanded ? 'view-close' : 'view-open', {});
 });
@@ -721,7 +947,7 @@ for (const btn of camButtons) {
     saveState({ cameraPreset: btn.dataset.cam, sceneName: '' });
     syncStyleButtons();
     if (activeRunningInstance() && !busy) {
-      try { await captureStyledView(); } catch (err) { setStatus(`切换视角抓图失败：${err.message}`, true); }
+      try { await captureStyledView({ restoreCamera: false }); } catch (err) { setStatus(`切换视角抓图失败：${err.message}`, true); }
     }
   });
 }
@@ -730,7 +956,18 @@ els.suScene.addEventListener('change', async () => {
   saveState({ sceneName: els.suScene.value || '' });
   syncStyleButtons();
   if (activeRunningInstance() && !busy) {
-    try { await captureStyledView(); } catch (err) { setStatus(`切换场景抓图失败：${err.message}`, true); }
+    try { await captureStyledView({ restoreCamera: false }); } catch (err) { setStatus(`切换场景抓图失败：${err.message}`, true); }
+  }
+});
+
+els.captureFormat?.addEventListener('change', async () => {
+  const spec = captureFormatSpec(els.captureFormat.value);
+  saveState({ captureFormat: spec.value });
+  syncStyleButtons();
+  if (activeRunningInstance() && !busy) {
+    try { await captureStyledView(); } catch (err) { setStatus(`切换输出格式抓图失败：${err.message}`, true); }
+  } else {
+    setStatus(`已切换输出底图格式为：${spec.label}`);
   }
 });
 
@@ -752,7 +989,8 @@ els.pushPreview.addEventListener('click', async () => {
       return;
     }
     publishOutputs(cap, state.latestModel, '');
-    setStatus(`已将 ${modeLabel(cap.displayMode)}${cap.shadows ? ' + 阴影' : ''} 底图推送至下游节点！`);
+    const fmt = captureFormatSpec(state.captureFormat);
+    setStatus(`已将 ${modeLabel(cap.displayMode)}${cap.shadows ? ' + 阴影' : ''}（${fmt.label}）底图推送至下游节点！`);
   } catch (err) {
     setStatus(`输出底图失败：${err.message}`, true);
   }
@@ -914,7 +1152,7 @@ window.addEventListener('message', event => {
 
     if (firstInit) {
       post('loaded', {});
-      void refreshVersions(true);
+      void refreshVersions(true).then(() => syncLiveSyncLoop());
       void loadDshModels();
       void refreshHistory(false);
     }

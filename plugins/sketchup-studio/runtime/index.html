@@ -15,18 +15,19 @@
       <span id="su-badge" class="badge" data-ready="false">检测中…</span>
     </div>
     <div class="row">
+      <button id="live-sync" aria-pressed="false" title="开启后自动实时同步 SketchUp 的模型与视角改动"><span class="sync-dot" aria-hidden="true"></span>实时同步</button>
       <button id="expand" title="放大工作台">⛶ 放大</button>
       <button id="tools-toggle" aria-expanded="false" aria-controls="tools">工具 ☰</button>
     </div>
   </header>
 
-  <section id="viewer" role="application" aria-label="SketchUp 视口预览">
+  <section id="viewer" class="nodrag" data-no-node-drag role="application" aria-label="SketchUp 视口预览（左键旋转，右键/Shift平移，滚轮缩放）">
     <div id="empty">
       连接 SketchUp 开始建模
       <br>
       <small>描述建模需求或拖入参考图，也可直接抓取当前视口样式底图输出下游</small>
     </div>
-    <img id="preview-img" alt="SketchUp 视口预览" hidden>
+    <img id="preview-img" alt="SketchUp 视口预览" draggable="false" hidden>
     <div id="preview-meta" hidden></div>
   </section>
 
@@ -63,6 +64,15 @@
         <button id="su-bridge" title="安装或升级该版本的 Ruby 桥接插件">装/升桥接</button>
         <button id="su-refresh" title="重新扫描与连接">↻</button>
       </div>
+    </div>
+
+    <div class="tool-block">
+      <label for="capture-format">输出底图格式</label>
+      <select id="capture-format" aria-label="输出底图格式">
+        <option value="png">PNG（带背景）</option>
+        <option value="png-transparent">PNG（透明背景）</option>
+        <option value="jpg">JPG（带背景）</option>
+      </select>
     </div>
 
     <div class="tool-block">

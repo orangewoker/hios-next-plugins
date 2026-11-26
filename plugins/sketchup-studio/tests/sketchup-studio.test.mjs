@@ -7,6 +7,8 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
+import { discoverDefaultTemplate, createSessionFileFromTemplate } from '../engine/sketchup-client.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ROOT = join(HERE, '..');
 const SERVER_ENTRY = join(PLUGIN_ROOT, 'engine', 'server.mjs');
@@ -65,16 +67,24 @@ async function startMockBridge(stateDir, { year = '2027', pid = process.pid, tok
       if (req.url === '/ping') {
         res.end(JSON.stringify({
           ok: true,
-          bridgeVersion: '1.1.0',
+          bridgeVersion: '1.2.0',
           year,
           version: `${year}.0.1`,
           pid,
+          revision: '1:5:false:material:false',
           modelTitle: '测试模型.skp',
           units: 'mm',
           entityCount: 5,
           displayMode: 'material',
           shadows: false,
           scenes: ['客厅透视', '厨房立面'],
+        }));
+      } else if (req.url === '/camera_control') {
+        res.end(JSON.stringify({
+          ok: true,
+          action: parsed.action,
+          revision: '2:5:false:material:false',
+          previewDataUrl: `data:image/jpeg;base64,${TINY_PNG.toString('base64')}`,
         }));
       } else if (req.url === '/inspect') {
         res.end(JSON.stringify({
@@ -96,6 +106,8 @@ async function startMockBridge(stateDir, { year = '2027', pid = process.pid, tok
           result: 'ok',
         }));
       } else if (req.url === '/capture_view') {
+        const fmt = parsed.imageFormat === 'jpg' ? 'jpg' : 'png';
+        const trans = Boolean(parsed.transparent) && fmt === 'png';
         if (parsed.outputPath) writeFileSync(parsed.outputPath, TINY_PNG);
         res.end(JSON.stringify({
           ok: true,
@@ -106,6 +118,9 @@ async function startMockBridge(stateDir, { year = '2027', pid = process.pid, tok
           sceneName: parsed.sceneName || '',
           displayMode: parsed.displayMode || 'material',
           shadows: Boolean(parsed.shadows),
+          imageFormat: fmt,
+          mimeType: fmt === 'jpg' ? 'image/jpeg' : 'image/png',
+          transparent: trans,
           base64: TINY_PNG.toString('base64'),
         }));
       } else if (req.url === '/select_entity') {
@@ -152,7 +167,11 @@ test('manifest, skill parity and canvas-only node structure', () => {
   assert.match(skillText, /^---\r?\n[\s\S]*?name:\s*sketchup-studio\b/);
 
   const html = readFileSync(join(PLUGIN_ROOT, 'runtime', 'index.html'), 'utf8');
-  assert.match(html, /id="viewer"[^>]*role="application"/, 'viewport must opt out of host fitForm height collapse');
+  assert.match(html, /id="viewer"[^>]*class="nodrag"[^>]*role="application"/, 'viewport must opt out of host fitForm and node drag for orbit/pan');
+  assert.match(html, /id="live-sync"/);
+  assert.match(html, /id="capture-format"/);
+  assert.match(html, /value="png-transparent"/);
+  assert.match(html, /value="jpg"/);
   assert.match(html, /data-mode="material"/);
   assert.match(html, /data-mode="white"/);
   assert.match(html, /data-mode="wire"/);
@@ -202,15 +221,36 @@ test('MCP engine handles style+shadows capture, workspace persistence, ruby ops 
     assert.match(capMeta.url, /^hios-asset:\/\/local\/test-ws\/captures\/preview-\d+\.png$/);
     assert.ok(existsSync(join(workspace, capMeta.path)));
 
-    // 2. UI capture returns metadata without redundant huge base64 image block
+    // 2. UI capture supports transparent PNG and JPG output formats
     const uiCap = await mcp.call('tools/call', {
       name: 'ui_capture_view',
-      arguments: { version: '2027', displayMode: 'wire', shadows: false, cameraPreset: 'iso', _context: ctx },
+      arguments: {
+        version: '2027',
+        displayMode: 'wire',
+        shadows: false,
+        imageFormat: 'png',
+        transparent: true,
+        cameraPreset: 'iso',
+        _context: ctx,
+      },
     });
     assert.equal(uiCap.result.content.length, 1);
     const uiMeta = JSON.parse(uiCap.result.content[0].text);
     assert.equal(uiMeta.displayMode, 'wire');
     assert.equal(uiMeta.shadows, false);
+    assert.equal(uiMeta.imageFormat, 'png');
+    assert.equal(uiMeta.transparent, true);
+    assert.equal(uiMeta.mimeType, 'image/png');
+
+    const jpgCap = await mcp.call('tools/call', {
+      name: 'ui_capture_view',
+      arguments: { version: '2027', displayMode: 'material', imageFormat: 'jpg', transparent: true, _context: ctx },
+    });
+    const jpgMeta = JSON.parse(jpgCap.result.content[0].text);
+    assert.equal(jpgMeta.imageFormat, 'jpg');
+    assert.equal(jpgMeta.transparent, false, 'JPG cannot be transparent');
+    assert.equal(jpgMeta.mimeType, 'image/jpeg');
+    assert.match(jpgMeta.path, /\.jpg$/);
 
     // 3. Run ruby records operation history
     const rubyRes = await mcp.call('tools/call', {
@@ -231,16 +271,27 @@ test('MCP engine handles style+shadows capture, workspace persistence, ruby ops 
     // 5. History aggregates captures, ops and latestModel
     const histRes = await mcp.call('tools/call', { name: 'ui_history', arguments: { _context: ctx } });
     const hist = JSON.parse(histRes.result.content[0].text);
-    assert.equal(hist.captures.length, 2);
+    assert.equal(hist.captures.length, 3);
     assert.equal(hist.operations.length, 1);
     assert.equal(hist.operations[0].operationName, '创建框架');
     assert.equal(hist.latestModel.format, 'skp');
 
-    // 6. Undo & select entity route cleanly
+    // 6. Undo, select entity, live-sync ping and camera orbit/pan/zoom route cleanly
     const undoRes = await mcp.call('tools/call', { name: 'ui_undo', arguments: { version: '2027' } });
     assert.equal(undoRes.result.isError, false);
     const selRes = await mcp.call('tools/call', { name: 'sketchup_select_entity', arguments: { version: '2027', name: '桌面' } });
     assert.equal(selRes.result.isError, false);
+    const pingRes = await mcp.call('tools/call', { name: 'ui_ping', arguments: { version: '2027' } });
+    const pingMeta = JSON.parse(pingRes.result.content[0].text);
+    assert.equal(pingMeta.revision, '1:5:false:material:false');
+    const camRes = await mcp.call('tools/call', {
+      name: 'ui_camera',
+      arguments: { version: '2027', action: 'orbit', dx: 24, dy: -10, displayMode: 'white', shadows: true, fastPreview: true },
+    });
+    const camMeta = JSON.parse(camRes.result.content[0].text);
+    assert.equal(camMeta.ok, true);
+    assert.equal(camMeta.action, 'orbit');
+    assert.match(camMeta.previewDataUrl, /^data:image\/jpeg;base64,/);
 
     const captureReq = mock.received.find(r => r.url === '/capture_view' && r.body.displayMode === 'white');
     assert.ok(captureReq);
@@ -249,6 +300,45 @@ test('MCP engine handles style+shadows capture, workspace persistence, ruby ops 
   } finally {
     mcp.close();
     await mock.close();
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test('discoverDefaultTemplate reads PrivatePreferences DefaultTemplate and creates isolated session copy', () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), 'hios-su-tpl-'));
+  const fakeLocal = join(tempRoot, 'local');
+  const fakeRoaming = join(tempRoot, 'roaming');
+  const fakeState = join(tempRoot, 'state');
+  const prefDir = join(fakeLocal, 'SketchUp', 'SketchUp 2027', 'SketchUp');
+  const tplDir = join(fakeRoaming, 'SketchUp', 'SketchUp 2027', 'SketchUp', 'Templates');
+  mkdirSync(prefDir, { recursive: true });
+  mkdirSync(tplDir, { recursive: true });
+  const favTpl = join(tplDir, '2027-b2.skp');
+  writeFileSync(favTpl, Buffer.from('TEMPLATE_2027_B2'));
+  writeFileSync(join(prefDir, 'PrivatePreferences.json'), JSON.stringify({
+    'This Computer Only': {
+      Preferences: { DefaultTemplate27: favTpl.replace(/\\/g, '/') },
+    },
+  }));
+
+  const prevLocal = process.env.LOCALAPPDATA;
+  const prevApp = process.env.APPDATA;
+  const prevState = process.env.HIOS_SKETCHUP_STATE_DIR;
+  try {
+    process.env.LOCALAPPDATA = fakeLocal;
+    process.env.APPDATA = fakeRoaming;
+    process.env.HIOS_SKETCHUP_STATE_DIR = fakeState;
+    const found = discoverDefaultTemplate('2027');
+    assert.equal(found.toLowerCase(), favTpl.toLowerCase());
+    const sessionFile = createSessionFileFromTemplate(found, '2027');
+    assert.notEqual(sessionFile.toLowerCase(), favTpl.toLowerCase(), 'must not mutate original template');
+    assert.ok(existsSync(sessionFile));
+    assert.equal(readFileSync(sessionFile, 'utf8'), 'TEMPLATE_2027_B2');
+  } finally {
+    process.env.LOCALAPPDATA = prevLocal;
+    process.env.APPDATA = prevApp;
+    if (prevState === undefined) delete process.env.HIOS_SKETCHUP_STATE_DIR;
+    else process.env.HIOS_SKETCHUP_STATE_DIR = prevState;
     rmSync(tempRoot, { recursive: true, force: true });
   }
 });

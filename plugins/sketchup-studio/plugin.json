@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "sketchup-studio",
   "name": "SketchUp 建模",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DSH 驱动本机多版本 SketchUp 实时建模与修改，支持材质/纯白模/线框与阴影底图抓取，直接输出给画布下游 AI 渲染节点。",
   "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/sketchup-studio",
   "permissions": ["agent", "process", "filesystem", "canvas"],

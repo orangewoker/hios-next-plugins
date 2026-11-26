@@ -1,11 +1,11 @@
 # encoding: utf-8
-# HIOS SketchUp Bridge Loader (v1.1.0)
+# HIOS SketchUp Bridge Loader (v1.2.0)
 require 'sketchup.rb'
 require 'extensions.rb'
 
 module HiosSketchupBridge
   EXTENSION_ID = 'hios_sketchup_bridge'
-  BRIDGE_VERSION = '1.1.0'
+  BRIDGE_VERSION = '1.2.0'
 
   unless file_loaded?(__FILE__)
     ext = SketchupExtension.new(
