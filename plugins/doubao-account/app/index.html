@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>网页账号代理</title>
+<style>
+:root{color-scheme:dark light}
+body{margin:0;color:var(--hios-text,CanvasText);background:var(--hios-background,Canvas);font:14px/1.5 system-ui,sans-serif}
+main{box-sizing:border-box;width:min(100%,820px);margin:0 auto;padding:clamp(16px,4vw,32px)}
+h1{margin:0;font-size:22px} p{margin:6px 0 14px}form{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+label{display:grid;gap:4px}button,input,select{font:inherit;min-height:32px;padding:4px 8px}
+ul{padding:0;display:grid;gap:8px;margin:12px 0;list-style:none}
+li{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--hios-border,#6666)}
+.name{font-weight:600;overflow-wrap:anywhere}.detail{display:block;opacity:.76}
+.actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.error{color:var(--hios-negative,#d54a59)}
+</style>
+<style>
+.channels{border:0;padding:0;margin:0;min-width:0}
+.channels legend{padding:0;margin:0 0 4px}
+.channel-options{display:flex;gap:2px;padding:3px;background:var(--hios-control);border:1px solid var(--hios-border);border-radius:var(--hios-radius-control)}
+.channel-options label{display:block;position:relative;cursor:pointer}
+.channel-options input[type=radio]{position:absolute;width:1px;height:1px;min-height:0;padding:0;clip-path:inset(50%);overflow:hidden}
+.channel-options span{display:block;padding:5px 10px;border-radius:calc(var(--hios-radius-control) - 4px);color:var(--hios-text)}
+.channel-options label:hover span{background:var(--hios-surface)}
+.channel-options input:checked+span{background:var(--hios-accent);color:var(--hios-accent-contrast,white)}
+.channel-options input:focus-visible+span{outline:2px solid var(--hios-accent);outline-offset:2px}
+</style>
+<!-- hios-ui:start --><link rel="stylesheet" href="../shared/hios-ui.css"><link rel="stylesheet" href="../shared/hios-adapter.css"><link rel="stylesheet" href="../shared/hios-glass.css"><script src="../shared/hios-ui.js" data-plugin-id="doubao-account"></script><script src="../shared/hios-glass.js" data-ranges=""></script><!-- hios-ui:end -->
+</head>
+<body>
+<main>
+<h1>网页账号代理</h1>
+<p>只在网页登录时打开 Edge 窗口，模型刷新和生成均在后台运行。验证成功后，账号会自动出现在 AI 路由中。</p>
+<form>
+  <fieldset class="channels"><legend>渠道</legend><div class="channel-options">
+    <label><input type="radio" name="provider" value="muse" checked><span>Muse</span></label>
+    <label><input type="radio" name="provider" value="gemini"><span>Gemini</span></label>
+    <label><input type="radio" name="provider" value="flow"><span>Google Flow</span></label>
+  </div></fieldset>
+  <label>账号备注<input name="name" required maxlength="80" placeholder="例如：工作账号"></label>
+  <button disabled type="submit">添加账号并登录</button>
+</form>
+<p id="note" role="status" aria-live="polite"></p>
+<ul aria-label="网页账号"></ul>
+</main>
+<script>
+const protocol = 'hios-plugin-app/v1', pluginId = 'doubao-account', appId = 'accounts';
+const form = document.querySelector('form'), note = document.querySelector('#note'), list = document.querySelector('ul');
+const labels = {muse:'Muse',gemini:'Gemini',flow:'Google Flow'};
+const status = {opening:'正在打开登录窗口…',waiting:'可在窗口中登录和测试；手动关闭该账号窗口后才开始验证',verifying:'登录窗口已关闭，正在后台打开新对话并校验回复…',ready:'已接入 AI 路由',idle:'未接入 AI 路由'};
+let initialized=false, serial=0, accepted=0, inFlight=null, rendered='', busy=false;
+function send(type,payload={}){parent.postMessage({protocol,pluginId,appId,type,payload},'*')}
+function request(action, payload={}) {
+  if (!initialized || (inFlight && action==='list') || busy) return;
+  if (action!=='list') {busy=true; form.querySelector('button').disabled=true;note.textContent=action==='refresh'?'正在读取网页模型选项，不会提交生成…':'';}
+  const requestId=++serial;
+  inFlight={requestId,action,id:payload.id};
+  send('web-account-request',{...payload,action,requestId});
+  setTimeout(()=>{
+    if(inFlight?.requestId!==requestId)return;
+    inFlight=null;busy=false;form.querySelector('button').disabled=false;
+    if(action!=='list')note.textContent='宿主未返回，请检查 HIOS 版本是否支持网页账号路由。';
+  },action==='refresh'?55000:16000);
+}
+function button(label,click){const el=document.createElement('button');el.type='button';el.textContent=label;el.onclick=click;return el}
+function render(accounts){
+  const signature=JSON.stringify(accounts);
+  if(signature===rendered)return;
+  rendered=signature;
+  list.replaceChildren();
+  if(!accounts.length){const li=document.createElement('li');li.textContent='还没有添加账号';list.append(li);}
+  for(const provider of Object.keys(labels)){
+    const group=accounts.filter(a=>a.provider===provider);if(!group.length)continue;
+    const section=document.createElement('li'),groupList=document.createElement('ul'),heading=document.createElement('strong');
+    section.style.display='block';heading.textContent=labels[provider]+'（'+group.length+'）';section.append(heading,groupList);list.append(section);
+    for(const account of group){
+    const li=document.createElement('li'), copy=document.createElement('div'), title=document.createElement('span'), detail=document.createElement('small'), actions=document.createElement('div');
+    title.className='name';title.textContent=labels[account.provider]+' · '+account.name;
+    detail.className='detail'+(account.error?' error':'');detail.textContent=account.error||(account.provider==='flow'&&account.status==='waiting'?'请登录 Google Flow，打开专用项目，测试完成后手动关闭窗口':null)||status[account.status]||'';
+    copy.append(title,detail);
+    if (account.verified && Array.isArray(account.models)) {
+      for (const [kind,label] of [['chat','对话'],['image','图片'],['video','视频']]) {
+        const models=account.models.filter(m=>m.kind===kind).map(m=>m.id);
+        if (!models.length) continue;
+        const line=document.createElement('small');line.className='detail';line.textContent=label+'：'+models.join('、');copy.append(line);
+      }
+    }
+    actions.className='actions';
+    if(['opening','waiting','verifying'].includes(account.status)){
+      if(account.status!=='verifying')actions.append(button('查看登录窗口',()=>request('open',{id:account.id})));
+      actions.append(button('取消',()=>request('cancel',{id:account.id})));
+    } else {
+      actions.append(button(account.verified?'重新登录':'登录或重试',()=>request('open',{id:account.id})));
+      if(account.verified && !['muse','flow'].includes(account.provider)) actions.append(button('刷新模型',()=>request('refresh',{id:account.id})));
+      if(account.verified)actions.append(button('断开路由',()=>request('disconnect',{id:account.id})));
+    }
+    if(!['opening','waiting','verifying'].includes(account.status)){
+      const remove=button('删除账号',()=>{remove.replaceWith(button('确认删除本地账号条目',()=>request('remove',{id:account.id})),button('取消',()=>{rendered='';request('list')}));});actions.append(remove);
+    }
+    li.append(copy,actions);groupList.append(li);
+    }
+  }
+}
+form.onsubmit=e=>{
+  e.preventDefault();
+  const name=form.elements.name.value.trim();if(!name)return;
+  request('open',{provider:form.elements.provider.value,name});
+};
+addEventListener('message',e=>{
+  const m=e.data;
+  if(e.source!==parent||m?.protocol!==protocol||m.pluginId!==pluginId||m.appId!==appId)return;
+  if(m.type==='init'&&!initialized){
+    initialized=true;form.querySelector('button').disabled=false;request('list');
+  }
+  if(m.type==='web-account-result'&&initialized&&m.payload&&inFlight?.requestId===m.payload.requestId&&m.payload.requestId>accepted){
+    const {action,id}=inFlight;accepted=m.payload.requestId;inFlight=null;busy=false;form.querySelector('button').disabled=false;
+    if(m.payload.error){note.textContent=m.payload.error;return;}
+    if(action==='refresh'){
+      const account=Array.isArray(m.payload.accounts)?m.payload.accounts.find(a=>a.id===id):null;
+      const extras=account?.models?.filter(model=>!['gemini-web-chat','gemini-web-image'].includes(model.id)).length||0;
+      note.textContent=extras?'已同步 '+extras+' 个可选版本，可在 HIOS 的模型选择器中使用。':'网页未显示额外版本，保留当前账号的默认入口。';
+    } else if(action!=='list') note.textContent='';
+    if(action==='open')form.elements.name.value='';
+    if(Array.isArray(m.payload.accounts)) render(m.payload.accounts);
+  }
+});
+setInterval(()=>request('list'),2000);
+send('ready',{version:'0.8.0'});
+</script>
+</body>
+</html>

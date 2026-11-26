@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "id": "doubao-account",
+  "name": "网页账号代理",
+  "version": "0.8.0",
+  "description": "在应用中管理 Muse、Gemini 和 Google Flow 网页账号，验证后自动接入 AI 路由。",
+  "author": "HIOS Next",
+  "permissions": ["network"],
+  "contributes": {
+    "apps": [
+      {
+        "id": "accounts",
+        "title": "网页账号代理",
+        "description": "登录和管理网页账号，接入对话、图片和视频 AI 路由。",
+        "entry": "app/index.html",
+        "category": "utilities"
+      }
+    ]
+  },
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/doubao-account"
+}

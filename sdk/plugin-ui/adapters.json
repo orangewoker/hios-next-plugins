@@ -1,4 +1,10 @@
 {
+  "doubao-account": {
+    "controls": "button,input,select",
+    "glass": {
+      "primary": "form button"
+    }
+  },
   "random-prompt-composer": {
     "controls": ".hios-control",
     "css": "/* Prompt fields follow host theme tokens. */",

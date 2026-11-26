@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "doubao-account",
+  "version": "0.8.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 1927,
+      "sha256": "64cd765108436ad444ad1d3f6de2f4eaffbc9e2fb692ac00e802f7eef35747b5"
+    },
+    {
+      "path": "app/index.html",
+      "size": 8955,
+      "sha256": "c32b437a426ac405a89ad3ef7a173ba1849ab30bd720a3ad3553a334e0a01597"
+    },
+    {
+      "path": "plugin.json",
+      "size": 670,
+      "sha256": "c3645d049ed410a220559fbf3689a26693a86be1e3beacf5007d9f01b9a4b833"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 216,
+      "sha256": "76c7cc238c4718868f4c680653748c87662b482a8c36f01dfbba89da02d48eca"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 6011,
+      "sha256": "32ead87ade08f8b7009b7390622d442cb5c8c2ad4aecee88536391899500a391"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "versions.json",
+      "size": 501,
+      "sha256": "e278b408f9079c746f7e629654e75b4c21d2a1715430a5d5f80b038bca2d1908"
+    }
+  ]
+}

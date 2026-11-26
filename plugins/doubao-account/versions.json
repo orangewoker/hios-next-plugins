@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "doubao-account",
+  "versions": [
+    {
+      "version": "0.8.0",
+      "ref": "doubao-account-v0.8.0",
+      "releasedAt": "2026-11-26",
+      "notes": [
+        "首次在独立插件仓库发布网页账号代理插件，支持 Muse、Gemini 与 Google Flow 网页账号接入 AI 路由。",
+        "移除豆包网页渠道，保留 Muse、Gemini 与 Google Flow。",
+        "需配合 HIOS Next 4.8.6 及以上桌面主程序使用。"
+      ]
+    }
+  ]
+}
