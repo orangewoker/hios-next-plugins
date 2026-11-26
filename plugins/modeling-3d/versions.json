@@ -3,6 +3,14 @@
   "pluginId": "modeling-3d",
   "versions": [
     {
+      "version": "0.3.8",
+      "ref": "modeling-3d-v0.3.8",
+      "releasedAt": "2026-11-26",
+      "notes": [
+        "修复内置技能目录名与 SKILL.md name 不一致导致加载失败的问题（skills/modeling -> skills/modeling-3d）。"
+      ]
+    },
+    {
       "version": "0.3.7",
       "ref": "modeling-3d-v0.3.7",
       "releasedAt": "2026-11-10",

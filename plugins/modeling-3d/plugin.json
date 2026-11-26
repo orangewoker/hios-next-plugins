@@ -2,11 +2,11 @@
   "schemaVersion": 2,
   "id": "modeling-3d",
   "name": "3D建模",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "DSH 驱动后台 Blender 建模，交互预览、版本修改与模型导出。无需本地 AI 权重。",
   "permissions": ["agent", "process", "filesystem", "canvas"],
   "contributes": {
-    "skills": [{ "id": "modeling-3d", "path": "skills/modeling/SKILL.md" }],
+    "skills": [{ "id": "modeling-3d", "path": "skills/modeling-3d/SKILL.md" }],
     "mcpServers": [{ "id": "engine", "name": "3D建模引擎", "transport": "stdio", "entry": "engine/server.mjs", "runtime": "node" }]
   },
   "nodes": [{
