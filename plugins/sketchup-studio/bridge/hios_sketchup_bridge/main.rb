@@ -539,8 +539,8 @@ module HiosSketchupBridge
       return { ok: false, error: 'No active SketchUp model' } unless model
 
       view = model.active_view
-      width = [[(body['width'] || 1280).to_i, 320].max, 2560].min
-      height = [[(body['height'] || 960).to_i, 240].max, 1920].min
+      width = [[(body['width'] || 1280).to_i, 320].max, 4096].min
+      height = [[(body['height'] || 960).to_i, 240].max, 4096].min
       preset = (body['cameraPreset'] || 'current').to_s.downcase
       scene_name = body['sceneName'].to_s.strip
       display_mode = body['displayMode'].to_s.downcase

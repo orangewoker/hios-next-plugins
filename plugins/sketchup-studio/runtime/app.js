@@ -8,7 +8,6 @@ const $ = id => document.getElementById(id);
 
 const els = {
   badge: $('su-badge'),
-  liveSync: $('live-sync'),
   expand: $('expand'),
   toolsToggle: $('tools-toggle'),
   tools: $('tools'),
@@ -25,6 +24,10 @@ const els = {
   suBridge: $('su-bridge'),
   suRefresh: $('su-refresh'),
   captureFormat: $('capture-format'),
+  captureSize: $('capture-size'),
+  customSizeRow: $('custom-size-row'),
+  captureWidth: $('capture-width'),
+  captureHeight: $('capture-height'),
   suScene: $('su-scene'),
   stats: $('stats'),
   undo: $('undo'),
@@ -57,9 +60,6 @@ let versionsInfo = { installed: [], running: [], defaultVersion: '' };
 let busy = false;
 let stopRequested = false;
 let activeRunId = '';
-let liveSyncTimer = null;
-let liveSyncPolling = false;
-let lastSyncRevision = '';
 let cameraDragging = false;
 let cameraAction = '';
 let dragLastX = 0;
@@ -75,7 +75,9 @@ let state = {
   displayMode: 'material',
   shadows: false,
   captureFormat: 'png',
-  liveSync: false,
+  captureSize: '1280x960',
+  captureWidth: 1280,
+  captureHeight: 960,
   cameraPreset: 'current',
   sceneName: '',
   prompt: '',
@@ -177,6 +179,21 @@ function captureFormatSpec(fmt = state.captureFormat) {
   return { value: 'png', imageFormat: 'png', transparent: false, mime: 'image/png', ext: 'png', label: 'PNG' };
 }
 
+function captureDimensions() {
+  const preset = String(state.captureSize || '1280x960');
+  const m = preset.match(/^(\d+)x(\d+)$/);
+  if (m) {
+    return {
+      width: Math.max(320, Math.min(4096, Number(m[1]))),
+      height: Math.max(240, Math.min(4096, Number(m[2]))),
+    };
+  }
+  return {
+    width: Math.max(320, Math.min(4096, Number(state.captureWidth) || 1280)),
+    height: Math.max(240, Math.min(4096, Number(state.captureHeight) || 960)),
+  };
+}
+
 function camLabel(cam, sceneName) {
   if (sceneName) return `场景:${sceneName}`;
   const map = { current: '当前视角', iso: '轴测', front: '正视', back: '背视', left: '左视', right: '右视', top: '顶视' };
@@ -194,8 +211,14 @@ function syncStyleButtons() {
   if (els.captureFormat) {
     els.captureFormat.value = captureFormatSpec(state.captureFormat).value;
   }
-  if (els.liveSync) {
-    els.liveSync.setAttribute('aria-pressed', String(Boolean(state.liveSync)));
+  if (els.captureSize) {
+    const val = state.captureSize || '1280x960';
+    els.captureSize.value = [...els.captureSize.options].some(o => o.value === val) ? val : 'custom';
+    const isCustom = els.captureSize.value === 'custom';
+    if (els.customSizeRow) els.customSizeRow.hidden = !isCustom;
+    const dims = captureDimensions();
+    if (els.captureWidth && document.activeElement !== els.captureWidth) els.captureWidth.value = String(dims.width);
+    if (els.captureHeight && document.activeElement !== els.captureHeight) els.captureHeight.value = String(dims.height);
   }
   els.suScene.value = state.sceneName || '';
 }
@@ -214,10 +237,12 @@ function renderPreview(capture) {
   els.previewImg.hidden = false;
   els.empty.hidden = true;
   const fmtTag = capture.imageFormat === 'jpg' ? 'JPG' : capture.transparent ? 'PNG透明' : 'PNG';
+  const dims = capture.width && capture.height ? `${capture.width}×${capture.height}` : `${captureDimensions().width}×${captureDimensions().height}`;
   const parts = [
     modeLabel(capture.displayMode || state.displayMode),
     capture.shadows ? '阴影开' : '无阴影',
     fmtTag,
+    dims,
     camLabel(capture.cameraPreset || state.cameraPreset, capture.sceneName || ''),
     '左键旋转 · 右键/Shift平移 · 滚轮缩放',
   ];
@@ -383,7 +408,7 @@ function updateConnectionUi() {
 
 function updateScenesSelect(scenes) {
   const prev = state.sceneName || '';
-  els.suScene.innerHTML = '<option value="">使用上方预设 / 当前视角</option>';
+  els.suScene.innerHTML = '<option value="">当前视角</option>';
   for (const name of scenes || []) {
     const opt = document.createElement('option');
     opt.value = name;
@@ -543,8 +568,9 @@ async function captureStyledView({ silent = false, autoLaunch = false, restoreCa
     return null;
   }
   const fmt = captureFormatSpec(state.captureFormat);
+  const dims = captureDimensions();
   if (!silent) {
-    setStatus(`正在抓取 ${modeLabel(state.displayMode)}${state.shadows ? ' + 阴影' : ''}（${fmt.label}）视口图…`);
+    setStatus(`正在抓取 ${modeLabel(state.displayMode)}${state.shadows ? ' + 阴影' : ''}（${fmt.label} ${dims.width}×${dims.height}）视口图…`);
   }
   const cap = await callEngine('ui_capture_view', {
     version: live.year,
@@ -556,25 +582,22 @@ async function captureStyledView({ silent = false, autoLaunch = false, restoreCa
     sceneName: state.sceneName || '',
     zoomExtents: state.cameraPreset !== 'current' && !state.sceneName,
     restoreCamera,
-    width: 1280,
-    height: 960,
+    width: dims.width,
+    height: dims.height,
   }, 60000);
   if (cap?.url) {
     saveState({ latestCapture: cap });
     renderPreview(cap);
     void refreshHistory(false);
     if (!silent) {
-      const needsBridgeRestart = fmt.transparent && live.bridgeVersion && live.bridgeVersion < '1.2.0';
-      setStatus(needsBridgeRestart
-        ? `已抓图，但当前 SketchUp 桥接为 v${live.bridgeVersion}；请点「装/升桥接」并重启一次 SketchUp 以启用透明 PNG。`
-        : `已抓取 ${modeLabel(cap.displayMode)}${cap.shadows ? ' · 阴影开' : ''} · ${fmt.label} 视口图，可点击「↗ 输出底图」传给下游节点。`);
+      setStatus(`已抓取 ${modeLabel(cap.displayMode)}${cap.shadows ? ' · 阴影开' : ''} · ${fmt.label}（${cap.width || dims.width}×${cap.height || dims.height}）视口图，点「运行」自动生成底图图片节点。`);
     }
     return cap;
   }
   throw new Error(cap?.error || '视口抓图未返回有效文件');
 }
 
-function buildOutputPayload(capture, modelFile) {
+function buildOutputPayload(capture, modelFile, { addToCanvas = false } = {}) {
   const outputs = [];
   if (capture?.url) {
     const isJpg = capture.imageFormat === 'jpg' || /\.jpe?g$/i.test(capture.path || capture.url);
@@ -584,10 +607,11 @@ function buildOutputPayload(capture, modelFile) {
       kind: 'image',
       portId: 'preview',
       source: canonicalAssetUrl(capture.url),
-      name: `sketchup-${capture.displayMode || 'material'}${capture.shadows ? '-shadows' : ''}${capture.transparent ? '-transparent' : ''}.${ext}`,
+      name: `SketchUp-${modeLabel(capture.displayMode || 'material')}${capture.shadows ? '-阴影' : ''}${capture.transparent ? '-透明' : ''}.${ext}`,
       mime,
       width: capture.width,
       height: capture.height,
+      ...(addToCanvas ? { metadata: { addToCanvas: true } } : {}),
     });
   }
   if (modelFile?.url) {
@@ -602,8 +626,8 @@ function buildOutputPayload(capture, modelFile) {
   return outputs;
 }
 
-function publishOutputs(capture, modelFile, runId = '') {
-  const outputs = buildOutputPayload(capture, modelFile);
+function publishOutputs(capture, modelFile, runId = '', { addToCanvas = false } = {}) {
+  const outputs = buildOutputPayload(capture, modelFile, { addToCanvas });
   if (!outputs.length) return false;
   if (runId) {
     post('output-batch', { runId, outputs });
@@ -633,12 +657,12 @@ async function runModelingTask({ runId = '', effectivePrompt = '' } = {}) {
     const promptText = String(effectivePrompt ?? els.prompt.value ?? '').trim();
     const refs = allReferences().map(r => ({ source: r.source, name: r.name }));
 
-    // Fast path: empty prompt on canvas run -> capture styled base image & output immediately!
+    // Fast path: empty prompt on canvas run -> capture styled base image & spawn connected image node!
     if (!promptText && !refs.length) {
       const cap = await captureStyledView({ autoLaunch: true });
       if (!cap) throw new Error('未能获取 SketchUp 视口底图');
-      publishOutputs(cap, state.latestModel, runId);
-      setStatus(`已输出 ${modeLabel(cap.displayMode)}${cap.shadows ? ' + 阴影' : ''} 底图至下游节点。`);
+      publishOutputs(cap, state.latestModel, runId, { addToCanvas: Boolean(runId) });
+      setStatus(`已按当前设置生成 ${modeLabel(cap.displayMode)}${cap.shadows ? ' + 阴影' : ''} 底图图片节点。`);
       return;
     }
 
@@ -702,7 +726,7 @@ async function runModelingTask({ runId = '', effectivePrompt = '' } = {}) {
       // Non-fatal if model is empty or save skipped
     }
 
-    publishOutputs(finalCap || state.latestCapture, savedModel, runId);
+    publishOutputs(finalCap || state.latestCapture, savedModel, runId, { addToCanvas: Boolean(runId) });
     const summaryLine = (finalText || '').split(/\r?\n/).find(l => l.trim()) || 'SketchUp 建模完成，已输出底图与模型。';
     setStatus(summaryLine.slice(0, 140));
   } catch (err) {
@@ -723,43 +747,6 @@ async function stopCurrentTask() {
     await aiRequest({ action: 'extension-stop' }, 15000);
   } catch { /* ignore */ }
   setBusy(false);
-}
-
-// Live Sync Loop
-function stopLiveSyncLoop() {
-  if (liveSyncTimer) {
-    clearInterval(liveSyncTimer);
-    liveSyncTimer = null;
-  }
-}
-
-async function pollLiveSyncTick() {
-  if (!state.liveSync || liveSyncPolling || busy || cameraDragging || cameraInFlight || document.hidden) return;
-  const live = activeRunningInstance();
-  if (!live) return;
-  liveSyncPolling = true;
-  try {
-    const ping = await callEngine('ui_ping', { version: live.year }, 5000);
-    if (!ping?.ok) return;
-    if (Array.isArray(ping.scenes)) updateScenesSelect(ping.scenes);
-    const rev = String(ping.revision || `${ping.entityCount}:${ping.modified}:${ping.displayMode}:${ping.shadows}`);
-    if (rev !== lastSyncRevision) {
-      lastSyncRevision = rev;
-      await captureStyledView({ silent: true, restoreCamera: true });
-    }
-  } catch {
-    // Ignore transient poll errors while SketchUp is busy
-  } finally {
-    liveSyncPolling = false;
-  }
-}
-
-function syncLiveSyncLoop() {
-  stopLiveSyncLoop();
-  if (state.liveSync) {
-    liveSyncTimer = setInterval(() => void pollLiveSyncTick(), 650);
-    void pollLiveSyncTick();
-  }
 }
 
 // Interactive Orbit / Pan / Zoom in Viewport
@@ -784,19 +771,14 @@ async function flushCameraDelta() {
       fastPreview: true,
       width: 720,
       height: 540,
-    }, 10000);
-    if (res?.ok) {
-      if (res.revision) lastSyncRevision = res.revision;
-      if (res.previewDataUrl) {
-        els.previewImg.src = res.previewDataUrl;
-        els.previewImg.hidden = false;
-        els.empty.hidden = true;
-      }
+    }, 15000);
+    if (res?.ok && res.previewDataUrl) {
+      els.previewImg.src = res.previewDataUrl;
+      els.previewImg.hidden = false;
+      els.empty.hidden = true;
     }
   } catch (err) {
-    if (String(err?.message || '').includes('Unknown route')) {
-      setStatus('当前 SketchUp 桥接版本较旧，请点击「工具 → 装/升桥接」并重启一次 SketchUp 以启用视口旋转平移。', true);
-    }
+    setStatus(`视角操控失败：${err?.message || err}`, true);
   } finally {
     cameraInFlight = false;
     if (pendingDx || pendingDy) {
@@ -845,13 +827,12 @@ async function endCameraDrag(e) {
   cameraDragging = false;
   els.viewer.classList.remove('dragging');
   try { if (e?.pointerId !== undefined) els.viewer.releasePointerCapture(e.pointerId); } catch {}
-  // Wait briefly for in-flight drag step, then capture crisp full-res styled preview
   setTimeout(async () => {
     if (cameraDragging || busy) return;
     try {
       await captureStyledView({ silent: true, restoreCamera: true });
     } catch {}
-  }, 120);
+  }, 150);
 }
 
 els.viewer.addEventListener('pointerup', endCameraDrag);
@@ -878,34 +859,24 @@ els.viewer.addEventListener('wheel', e => {
       fastPreview: true,
       width: 720,
       height: 540,
-    }, 10000).then(res => {
-      if (res?.ok) {
-        if (res.revision) lastSyncRevision = res.revision;
-        if (res.previewDataUrl) {
-          els.previewImg.src = res.previewDataUrl;
-          els.previewImg.hidden = false;
-          els.empty.hidden = true;
-        }
+    }, 15000).then(res => {
+      if (res?.ok && res.previewDataUrl) {
+        els.previewImg.src = res.previewDataUrl;
+        els.previewImg.hidden = false;
+        els.empty.hidden = true;
       }
-    }).catch(() => {}).finally(() => { cameraInFlight = false; });
+    }).catch(err => setStatus(`滚轮缩放失败：${err?.message || err}`, true))
+      .finally(() => { cameraInFlight = false; });
   }
   clearTimeout(wheelSettleTimer);
   wheelSettleTimer = setTimeout(() => {
     if (!cameraDragging && !busy) {
       void captureStyledView({ silent: true, restoreCamera: true }).catch(() => {});
     }
-  }, 240);
+  }, 260);
 }, { passive: false });
 
 // Event Listeners
-els.liveSync?.addEventListener('click', () => {
-  const next = !state.liveSync;
-  saveState({ liveSync: next });
-  syncStyleButtons();
-  syncLiveSyncLoop();
-  setStatus(next ? '已开启实时同步：你在 SketchUp 中的建模与视角改动将自动刷新到节点。' : '已关闭实时同步。');
-});
-
 els.expand.addEventListener('click', () => {
   post(expanded ? 'view-close' : 'view-open', {});
 });
@@ -970,6 +941,36 @@ els.captureFormat?.addEventListener('change', async () => {
     setStatus(`已切换输出底图格式为：${spec.label}`);
   }
 });
+
+els.captureSize?.addEventListener('change', async () => {
+  const val = els.captureSize.value || '1280x960';
+  const m = val.match(/^(\d+)x(\d+)$/);
+  saveState({
+    captureSize: val,
+    ...(m ? { captureWidth: Number(m[1]), captureHeight: Number(m[2]) } : {}),
+  });
+  syncStyleButtons();
+  const dims = captureDimensions();
+  if (activeRunningInstance() && !busy) {
+    try { await captureStyledView(); } catch (err) { setStatus(`切换尺寸抓图失败：${err.message}`, true); }
+  } else {
+    setStatus(`已设置导出图片尺寸：${dims.width}×${dims.height}`);
+  }
+});
+
+for (const input of [els.captureWidth, els.captureHeight]) {
+  input?.addEventListener('change', async () => {
+    const w = Math.max(320, Math.min(4096, Number(els.captureWidth?.value) || 1280));
+    const h = Math.max(240, Math.min(4096, Number(els.captureHeight?.value) || 960));
+    saveState({ captureSize: 'custom', captureWidth: w, captureHeight: h });
+    syncStyleButtons();
+    if (activeRunningInstance() && !busy) {
+      try { await captureStyledView(); } catch (err) { setStatus(`按自定义尺寸抓图失败：${err.message}`, true); }
+    } else {
+      setStatus(`已设置自定义尺寸：${w}×${h}`);
+    }
+  });
+}
 
 els.captureNow.addEventListener('click', async () => {
   if (busy) return;
@@ -1152,7 +1153,7 @@ window.addEventListener('message', event => {
 
     if (firstInit) {
       post('loaded', {});
-      void refreshVersions(true).then(() => syncLiveSyncLoop());
+      void refreshVersions(true);
       void loadDshModels();
       void refreshHistory(false);
     }

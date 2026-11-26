@@ -14,8 +14,10 @@
       <strong>SketchUp 建模</strong>
       <span id="su-badge" class="badge" data-ready="false">检测中…</span>
     </div>
-    <div class="row">
-      <button id="live-sync" aria-pressed="false" title="开启后自动实时同步 SketchUp 的模型与视角改动"><span class="sync-dot" aria-hidden="true"></span>实时同步</button>
+    <div class="row header-actions">
+      <select id="su-scene" aria-label="场景选择" title="切换 SketchUp 场景（Scenes）">
+        <option value="">当前视角</option>
+      </select>
       <button id="expand" title="放大工作台">⛶ 放大</button>
       <button id="tools-toggle" aria-expanded="false" aria-controls="tools">工具 ☰</button>
     </div>
@@ -73,13 +75,21 @@
         <option value="png-transparent">PNG（透明背景）</option>
         <option value="jpg">JPG（带背景）</option>
       </select>
-    </div>
-
-    <div class="tool-block">
-      <label for="su-scene">场景快切（Scenes）</label>
-      <select id="su-scene">
-        <option value="">使用上方预设 / 当前视角</option>
+      <label for="capture-size">导出图片尺寸</label>
+      <select id="capture-size" aria-label="导出图片尺寸">
+        <option value="1280x960">1280 × 960（默认 4:3）</option>
+        <option value="1024x1024">1024 × 1024（1:1 方形）</option>
+        <option value="1920x1080">1920 × 1080（16:9 高清）</option>
+        <option value="2048x1536">2048 × 1536（2K 4:3）</option>
+        <option value="2560x1440">2560 × 1440（2K 16:9）</option>
+        <option value="1080x1920">1080 × 1920（9:16 竖屏）</option>
+        <option value="custom">自定义尺寸…</option>
       </select>
+      <div id="custom-size-row" class="row" hidden>
+        <input id="capture-width" type="number" min="320" max="4096" step="16" value="1280" aria-label="图片宽度（像素）" placeholder="宽">
+        <span class="size-sep">×</span>
+        <input id="capture-height" type="number" min="240" max="4096" step="16" value="960" aria-label="图片高度（像素）" placeholder="高">
+      </div>
     </div>
 
     <div class="tool-block">

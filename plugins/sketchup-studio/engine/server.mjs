@@ -206,9 +206,228 @@ function assetUrl(ctx, relPath) {
   return base ? `${base}/${relPath.replace(/^\/+/, '')}` : relPath;
 }
 
+function rubyLiteral(str) {
+  return JSON.stringify(String(str ?? ''));
+}
+
+async function captureViaRubyFallback(args, outPath, { imageFormat, transparent }) {
+  const width = Math.max(320, Math.min(4096, Number(args.width) || 1280));
+  const height = Math.max(240, Math.min(4096, Number(args.height) || 960));
+  const preset = String(args.cameraPreset || 'current').toLowerCase();
+  const sceneName = String(args.sceneName || '').trim();
+  const displayMode = String(args.displayMode || 'material').toLowerCase();
+  const hasShadows = typeof args.shadows === 'boolean';
+  const shadowsVal = Boolean(args.shadows);
+  const zoomExtents = Boolean(args.zoomExtents);
+  const restoreCamera = args.restoreCamera !== false;
+  const restoreStyle = args.restoreStyle !== false;
+
+  const code = `
+require 'base64'
+require 'fileutils'
+m = Sketchup.active_model
+v = m.active_view
+ro = m.rendering_options
+c = v.camera
+saved_cam = c.perspective? ? Sketchup::Camera.new(c.eye.clone, c.target.clone, c.up.clone, true, c.fov) : (cc = Sketchup::Camera.new(c.eye.clone, c.target.clone, c.up.clone, false); cc.height = c.height; cc)
+s_rm, s_em, s_dg, s_du, s_df, s_sh = ro['RenderMode'], ro['EdgeDisplayMode'], ro['DrawGround'], ro['DrawUnderground'], ro['DisplayFog'], m.shadow_info['DisplayShadows']
+changed_cam = false
+changed_style = false
+begin
+  sname = ${rubyLiteral(sceneName)}
+  if !sname.empty?
+    pg = m.pages.find { |p| p.name.to_s.encode('UTF-8', invalid: :replace, undef: :replace) == sname }
+    if pg && pg.camera
+      pc = pg.camera
+      v.camera = pc.perspective? ? Sketchup::Camera.new(pc.eye.clone, pc.target.clone, pc.up.clone, true, pc.fov) : (cc = Sketchup::Camera.new(pc.eye.clone, pc.target.clone, pc.up.clone, false); cc.height = pc.height; cc)
+      changed_cam = true
+    end
+  end
+  pr = ${rubyLiteral(preset)}
+  if pr != 'current'
+    bb = m.bounds
+    ctr = bb.empty? ? Geom::Point3d.new(0,0,0) : bb.center
+    rad = bb.empty? ? 100.0 : [bb.diagonal * 0.9, 40.0].max
+    eye, up = case pr
+      when 'iso' then [ctr.offset(Geom::Vector3d.new(1,-1,0.8).normalize, rad * 1.45), Geom::Vector3d.new(0,0,1)]
+      when 'front' then [ctr.offset(Geom::Vector3d.new(0,-1,0), rad * 1.4), Geom::Vector3d.new(0,0,1)]
+      when 'back' then [ctr.offset(Geom::Vector3d.new(0,1,0), rad * 1.4), Geom::Vector3d.new(0,0,1)]
+      when 'left' then [ctr.offset(Geom::Vector3d.new(-1,0,0), rad * 1.4), Geom::Vector3d.new(0,0,1)]
+      when 'right' then [ctr.offset(Geom::Vector3d.new(1,0,0), rad * 1.4), Geom::Vector3d.new(0,0,1)]
+      when 'top' then [ctr.offset(Geom::Vector3d.new(0,0,1), rad * 1.5), Geom::Vector3d.new(0,1,0)]
+      else [nil, nil]
+    end
+    if eye
+      v.camera = Sketchup::Camera.new(eye, ctr, up, true)
+      changed_cam = true
+    end
+  end
+  if ${zoomExtents ? 'true' : 'false'} && !m.bounds.empty?
+    v.zoom_extents
+    changed_cam = true
+  end
+  dm = ${rubyLiteral(displayMode)}
+  if dm == 'material' then ro['RenderMode'] = 3; ro['EdgeDisplayMode'] = 1; changed_style = true
+  elsif dm == 'white' then ro['RenderMode'] = 5; ro['EdgeDisplayMode'] = 1; changed_style = true
+  elsif dm == 'wire' then ro['RenderMode'] = 0; ro['EdgeDisplayMode'] = 1; changed_style = true
+  end
+  if ${transparent ? 'true' : 'false'}
+    ro['DrawGround'] = false rescue nil
+    ro['DrawUnderground'] = false rescue nil
+    ro['DisplayFog'] = false rescue nil
+    changed_style = true
+  end
+  if ${hasShadows ? 'true' : 'false'}
+    m.shadow_info['DisplayShadows'] = ${shadowsVal ? 'true' : 'false'}
+    changed_style = true
+  end
+  v.invalidate
+  v.refresh if v.respond_to?(:refresh)
+  out_p = ${rubyLiteral(outPath)}
+  FileUtils.mkdir_p(File.dirname(out_p))
+  opts = { filename: out_p, width: ${width}, height: ${height}, antialias: true }
+  if ${rubyLiteral(imageFormat)} == 'png'
+    opts[:transparent] = ${transparent ? 'true' : 'false'}
+  else
+    opts[:compression] = 0.92
+  end
+  ok = v.write_image(opts)
+  raise 'view.write_image failed' unless ok && File.exist?(out_p)
+  'OK'
+ensure
+  if changed_style && ${restoreStyle ? 'true' : 'false'}
+    ro['RenderMode'] = s_rm rescue nil
+    ro['EdgeDisplayMode'] = s_em rescue nil
+    ro['DrawGround'] = s_dg rescue nil
+    ro['DrawUnderground'] = s_du rescue nil
+    ro['DisplayFog'] = s_df rescue nil
+    m.shadow_info['DisplayShadows'] = s_sh rescue nil
+  end
+  if changed_cam && ${restoreCamera ? 'true' : 'false'}
+    v.camera = saved_cam rescue nil
+  end
+  v.invalidate if (changed_style && ${restoreStyle ? 'true' : 'false'}) || (changed_cam && ${restoreCamera ? 'true' : 'false'})
+end
+`;
+  const run = await callSketchup('POST', '/run_ruby', { code, undoable: false, operationName: 'HIOS Capture' }, { version: args.version, pid: args.pid, timeoutMs: 60000 });
+  if (!run.ok || !existsSync(outPath)) {
+    return { ok: false, error: run.error || 'Fallback Ruby capture failed' };
+  }
+  const bytes = readFileSync(outPath);
+  return {
+    ok: true,
+    path: outPath,
+    width,
+    height,
+    cameraPreset: preset,
+    sceneName,
+    displayMode,
+    shadows: shadowsVal,
+    imageFormat,
+    mimeType: imageFormat === 'jpg' ? 'image/jpeg' : 'image/png',
+    transparent,
+    byteSize: bytes.length,
+    base64: bytes.toString('base64'),
+  };
+}
+
+async function cameraControlViaRubyFallback(args, ctx) {
+  const action = String(args.action || '').toLowerCase();
+  const dx = Number(args.dx) || 0;
+  const dy = Number(args.dy) || 0;
+  const delta = Number(args.delta) || 0;
+  const displayMode = String(args.displayMode || '').toLowerCase();
+  const hasShadows = typeof args.shadows === 'boolean';
+  const shadowsVal = Boolean(args.shadows);
+  const w = Math.max(320, Math.min(1280, Number(args.width) || 720));
+  const h = Math.max(240, Math.min(960, Number(args.height) || 540));
+  const tmpFile = ctx?.root ? join(ctx.root, 'captures', '_live-fallback.jpg') : '';
+  if (tmpFile) mkdirSync(join(ctx.root, 'captures'), { recursive: true });
+
+  const code = `
+require 'fileutils'
+m = Sketchup.active_model
+v = m.active_view
+cam = v.camera
+act = ${rubyLiteral(action)}
+if act == 'orbit'
+  vec = cam.eye - cam.target
+  dist = vec.length; dist = 100.0 if dist < 1.0
+  horiz = Math.hypot(vec.x, vec.y)
+  az = Math.atan2(vec.y, vec.x) - (${dx}) * 0.0085
+  el = [[Math.atan2(vec.z, horiz) + (${dy}) * 0.0085, -1.48].max, 1.48].min
+  ce = Math.cos(el)
+  ne = Geom::Point3d.new(cam.target.x + dist * ce * Math.cos(az), cam.target.y + dist * ce * Math.sin(az), cam.target.z + dist * Math.sin(el))
+  nc = Sketchup::Camera.new(ne, cam.target.clone, Geom::Vector3d.new(0,0,1), cam.perspective?)
+  nc.fov = cam.fov if cam.perspective?
+  nc.height = cam.height unless cam.perspective?
+  v.camera = nc
+elsif act == 'pan'
+  dist = cam.eye.distance(cam.target); dist = 100.0 if dist < 1.0
+  sc = cam.perspective? ? dist * 0.0017 : cam.height * 0.0022
+  rx, ry = cam.xaxis, cam.yaxis
+  off = Geom::Vector3d.new((-rx.x * (${dx}) + ry.x * (${dy})) * sc, (-rx.y * (${dx}) + ry.y * (${dy})) * sc, (-rx.z * (${dx}) + ry.z * (${dy})) * sc)
+  nc = Sketchup::Camera.new(cam.eye.offset(off), cam.target.offset(off), cam.up.clone, cam.perspective?)
+  nc.fov = cam.fov if cam.perspective?
+  nc.height = cam.height unless cam.perspective?
+  v.camera = nc
+elsif act == 'zoom'
+  fac = Math.exp([[((${delta}) * 0.0014), -0.45].max, 0.45].min)
+  if cam.perspective?
+    vec = cam.eye - cam.target
+    dist = vec.length; dist = 100.0 if dist < 1.0
+    nd = [[dist * fac, 2.0].max, 500000.0].min
+    v.camera = Sketchup::Camera.new(cam.target.offset(vec.normalize, nd), cam.target.clone, cam.up.clone, true, cam.fov)
+  else
+    nc = Sketchup::Camera.new(cam.eye.clone, cam.target.clone, cam.up.clone, false)
+    nc.height = [[cam.height * fac, 2.0].max, 500000.0].min
+    v.camera = nc
+  end
+end
+v.invalidate
+v.refresh if v.respond_to?(:refresh)
+tmp = ${rubyLiteral(tmpFile)}
+if !tmp.empty?
+  ro = m.rendering_options
+  s_rm, s_em, s_sh = ro['RenderMode'], ro['EdgeDisplayMode'], m.shadow_info['DisplayShadows']
+  cs = false
+  begin
+    dm = ${rubyLiteral(displayMode)}
+    if dm == 'material' then ro['RenderMode'] = 3; ro['EdgeDisplayMode'] = 1; cs = true
+    elsif dm == 'white' then ro['RenderMode'] = 5; ro['EdgeDisplayMode'] = 1; cs = true
+    elsif dm == 'wire' then ro['RenderMode'] = 0; ro['EdgeDisplayMode'] = 1; cs = true
+    end
+    if ${hasShadows ? 'true' : 'false'}
+      m.shadow_info['DisplayShadows'] = ${shadowsVal ? 'true' : 'false'}
+      cs = true
+    end
+    FileUtils.mkdir_p(File.dirname(tmp))
+    v.write_image({ filename: tmp, width: ${w}, height: ${h}, antialias: false, compression: 0.72 })
+  ensure
+    if cs
+      ro['RenderMode'] = s_rm rescue nil
+      ro['EdgeDisplayMode'] = s_em rescue nil
+      m.shadow_info['DisplayShadows'] = s_sh rescue nil
+      v.invalidate
+    end
+  end
+end
+'OK'
+`;
+  const run = await callSketchup('POST', '/run_ruby', { code, undoable: false, operationName: 'HIOS Camera' }, { version: args.version, pid: args.pid, timeoutMs: 15000 });
+  if (!run.ok) return { ok: false, error: run.error || 'Camera control failed' };
+  let previewDataUrl = null;
+  if (tmpFile && existsSync(tmpFile)) {
+    previewDataUrl = `data:image/jpeg;base64,${readFileSync(tmpFile).toString('base64')}`;
+  }
+  return { ok: true, action, previewDataUrl };
+}
+
 async function doCapture(args, ctx, returnImageBlock) {
   const imageFormat = String(args.imageFormat || 'png').toLowerCase() === 'jpg' ? 'jpg' : 'png';
   const transparent = Boolean(args.transparent) && imageFormat === 'png';
+  const width = Math.max(320, Math.min(4096, Number(args.width) || 1280));
+  const height = Math.max(240, Math.min(4096, Number(args.height) || 960));
   const ext = imageFormat === 'jpg' ? 'jpg' : 'png';
   let outPath = args.outputPath;
   let relPath = '';
@@ -217,7 +436,8 @@ async function doCapture(args, ctx, returnImageBlock) {
     relPath = `captures/preview-${Date.now()}.${ext}`;
     outPath = join(ctx.root, relPath);
   }
-  const res = await callSketchup('POST', '/capture_view', {
+
+  let res = await callSketchup('POST', '/capture_view', {
     cameraPreset: args.cameraPreset || 'current',
     sceneName: args.sceneName || '',
     displayMode: args.displayMode || 'material',
@@ -227,10 +447,21 @@ async function doCapture(args, ctx, returnImageBlock) {
     zoomExtents: Boolean(args.zoomExtents),
     restoreCamera: args.restoreCamera !== false,
     restoreStyle: args.restoreStyle !== false,
-    width: args.width || 1280,
-    height: args.height || 960,
+    width,
+    height,
     outputPath: outPath,
   }, { version: args.version, pid: args.pid, timeoutMs: 60000 });
+
+  // Older v1.1.0 bridge ignores transparent/jpg and caps dimensions at 2560x1920.
+  // Transparently fall back to /run_ruby so users don't even have to restart SketchUp!
+  const needsV12Fallback = res.ok && outPath && (
+    (transparent && res.transparent !== true) ||
+    (imageFormat === 'jpg' && res.imageFormat !== 'jpg') ||
+    ((width > 2560 || height > 1920) && (res.width !== width || res.height !== height))
+  );
+  if (needsV12Fallback) {
+    res = await captureViaRubyFallback({ ...args, width, height }, outPath, { imageFormat, transparent });
+  }
 
   if (!res.ok) {
     return { isError: true, content: [{ type: 'text', text: JSON.stringify(res, null, 2) }] };
@@ -315,18 +546,27 @@ async function executeTool(name, rawArgs = {}) {
       return { isError: !info.ok, content: [{ type: 'text', text: JSON.stringify(info, null, 2) }] };
     }
     case 'ui_camera': {
-      const info = await callSketchup('POST', '/camera_control', {
-        action: args.action,
-        dx: args.dx,
-        dy: args.dy,
-        delta: args.delta,
-        preset: args.preset,
-        displayMode: args.displayMode,
-        shadows: args.shadows,
-        fastPreview: args.fastPreview !== false,
-        width: args.width || 720,
-        height: args.height || 540,
-      }, { ...args, timeoutMs: 15000 });
+      let info;
+      try {
+        info = await callSketchup('POST', '/camera_control', {
+          action: args.action,
+          dx: args.dx,
+          dy: args.dy,
+          delta: args.delta,
+          preset: args.preset,
+          displayMode: args.displayMode,
+          shadows: args.shadows,
+          fastPreview: args.fastPreview !== false,
+          width: args.width || 720,
+          height: args.height || 540,
+        }, { ...args, timeoutMs: 15000 });
+      } catch (err) {
+        if (/Unknown route|404/i.test(String(err?.message || ''))) {
+          info = await cameraControlViaRubyFallback(args, ctx);
+        } else {
+          throw err;
+        }
+      }
       return { isError: !info.ok, content: [{ type: 'text', text: JSON.stringify(info, null, 2) }] };
     }
     case 'sketchup_run_ruby': {
@@ -392,7 +632,7 @@ rl.on('line', async line => {
       result = {
         protocolVersion: req.params?.protocolVersion || '2025-03-26',
         capabilities: { tools: {} },
-        serverInfo: { name: 'sketchup-studio', version: '0.1.2' },
+        serverInfo: { name: 'sketchup-studio', version: '0.1.3' },
       };
     } else if (req.method === 'ping') {
       result = {};

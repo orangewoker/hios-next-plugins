@@ -292,7 +292,7 @@
     "css": "/* Viewport-first SketchUp canvas node follows host theme tokens. */",
     "glass": {
       "buttons": ".display-actions button,.view-actions button,header button,#composer button,#tools button",
-      "fields": "#prompt,#tools select,#composer select",
+      "fields": "#prompt,header select,#tools select,#composer select,#tools input[type=number]",
       "panels": "#composer,#tools",
       "primary": "button.primary"
     }

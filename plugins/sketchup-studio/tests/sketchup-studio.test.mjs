@@ -168,8 +168,11 @@ test('manifest, skill parity and canvas-only node structure', () => {
 
   const html = readFileSync(join(PLUGIN_ROOT, 'runtime', 'index.html'), 'utf8');
   assert.match(html, /id="viewer"[^>]*class="nodrag"[^>]*role="application"/, 'viewport must opt out of host fitForm and node drag for orbit/pan');
-  assert.match(html, /id="live-sync"/);
+  assert.doesNotMatch(html, /id="live-sync"/, 'live-sync button replaced by header scene select');
+  assert.match(html, /<header>[\s\S]*id="su-scene"[\s\S]*<\/header>/, 'scene select must be in header');
   assert.match(html, /id="capture-format"/);
+  assert.match(html, /id="capture-size"/);
+  assert.match(html, /id="capture-width"/);
   assert.match(html, /value="png-transparent"/);
   assert.match(html, /value="jpg"/);
   assert.match(html, /data-mode="material"/);

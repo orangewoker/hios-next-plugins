@@ -100,28 +100,28 @@ button:disabled { opacity: .45; cursor: default; }
   border-color: color-mix(in srgb, var(--hios-accent, #2563eb) 55%, var(--hios-border, #43464d));
 }
 
-#live-sync {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.header-actions {
+  flex-shrink: 0;
+}
+header #su-scene {
+  flex: 0 1 auto;
+  min-width: 96px;
+  max-width: 150px;
   font-size: 11px;
-  padding: 6px 10px;
+  padding: 6px 8px;
+  background: var(--hios-control, #2d3036);
+  color: var(--hios-text, #e8eaf0);
+  border-color: var(--hios-border, #43464d);
 }
-#live-sync .sync-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--hios-text-secondary, #9aa4b2);
-  transition: background-color .15s, box-shadow .15s;
+#custom-size-row[hidden] { display: none; }
+#custom-size-row input {
+  text-align: center;
+  padding: 6px 8px;
+  font-size: 12px;
 }
-#live-sync[aria-pressed="true"] {
-  color: var(--hios-positive, #2e9b63);
-  border-color: color-mix(in srgb, var(--hios-positive, #2e9b63) 55%, var(--hios-border, #43464d));
-  background: color-mix(in srgb, var(--hios-positive, #2e9b63) 12%, var(--hios-control, #2d3036));
-}
-#live-sync[aria-pressed="true"] .sync-dot {
-  background: var(--hios-positive, #2e9b63);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--hios-positive, #2e9b63) 26%, transparent);
+.size-sep {
+  opacity: .6;
+  font-size: 12px;
 }
 
 #viewer {
