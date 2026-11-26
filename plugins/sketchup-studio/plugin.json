@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "sketchup-studio",
+  "name": "SketchUp 建模",
+  "version": "0.1.0",
+  "description": "DSH 驱动本机多版本 SketchUp 实时建模与修改，支持材质/纯白模/线框与阴影底图抓取，直接输出给画布下游 AI 渲染节点。",
+  "homepage": "https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/sketchup-studio",
+  "permissions": ["agent", "process", "filesystem", "canvas"],
+  "contributes": {
+    "skills": [
+      {
+        "id": "sketchup-studio",
+        "path": "skills/sketchup-studio/SKILL.md"
+      }
+    ],
+    "mcpServers": [
+      {
+        "id": "engine",
+        "name": "SketchUp 建模引擎",
+        "transport": "stdio",
+        "entry": "engine/server.mjs",
+        "runtime": "node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "sketchup-studio.model",
+      "title": "SketchUp 建模",
+      "description": "连接本机 SketchUp（2021–2027 多版本可选），通过文字与参考图由 DSH 驱动建模，并输出材质/纯白模/线框+阴影底图与模型文件。",
+      "rendererEntry": "runtime/index.html",
+      "inputs": [
+        { "id": "prompt", "title": "建模描述", "type": "text" },
+        { "id": "reference", "title": "参考图片", "type": "image", "multiple": true }
+      ],
+      "outputs": [
+        { "id": "preview", "title": "视口预览图", "type": "image" },
+        { "id": "model", "title": "模型文件", "type": "file" }
+      ],
+      "defaultSize": { "width": 620, "height": 860 },
+      "defaultData": {}
+    }
+  ]
+}

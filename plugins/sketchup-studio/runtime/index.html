@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SketchUp 建模</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- hios-ui:start --><link rel="stylesheet" href="../shared/hios-ui.css"><link rel="stylesheet" href="../shared/hios-adapter.css"><link rel="stylesheet" href="../shared/hios-glass.css"><script src="../shared/hios-ui.js" data-plugin-id="sketchup-studio"></script><script src="../shared/hios-glass.js" data-ranges=""></script><!-- hios-ui:end -->
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <strong>SketchUp 建模</strong>
+      <span id="su-badge" class="badge" data-ready="false">检测中…</span>
+    </div>
+    <div class="row">
+      <button id="expand" title="放大工作台">⛶ 放大</button>
+      <button id="tools-toggle" aria-expanded="false" aria-controls="tools">工具 ☰</button>
+    </div>
+  </header>
+
+  <section id="viewer" role="region" aria-label="SketchUp 视口预览">
+    <div id="empty">
+      连接 SketchUp 开始建模
+      <br>
+      <small>描述建模需求或拖入参考图，也可直接抓取当前视口样式底图输出下游</small>
+    </div>
+    <img id="preview-img" alt="SketchUp 视口预览" hidden>
+    <div id="preview-meta" hidden></div>
+  </section>
+
+  <div class="display-actions" role="group" aria-label="底图显示样式">
+    <button id="display-material" data-mode="material" aria-pressed="true" title="材质贴图模式">材质</button>
+    <button id="display-white" data-mode="white" aria-pressed="false" title="纯白模（单色体块）">纯白模</button>
+    <button id="display-wire" data-mode="wire" aria-pressed="false" title="线框结构模式">线框</button>
+    <span class="divider" aria-hidden="true"></span>
+    <button id="toggle-shadows" aria-pressed="false" title="开启或关闭 SketchUp 阴影">阴影</button>
+  </div>
+
+  <div class="view-actions" role="group" aria-label="视角与底图输出">
+    <button data-cam="current" aria-pressed="true" title="保持 SketchUp 当前视角">当前</button>
+    <button data-cam="iso" aria-pressed="false" title="轴测透视视角">轴测</button>
+    <button data-cam="front" aria-pressed="false" title="正面视角">正视</button>
+    <button data-cam="top" aria-pressed="false" title="俯视视角">顶视</button>
+    <button id="capture-now" title="按当前样式立即抓取 SketchUp 视口">↻ 抓图</button>
+    <button id="push-preview" class="accent-outline" title="将当前样式视口图立即输出到下游节点">↗ 输出底图</button>
+  </div>
+
+  <aside id="tools" hidden>
+    <div class="row tools-head">
+      <strong>SketchUp 控制面板</strong>
+      <button id="tools-close" aria-label="关闭工具">×</button>
+    </div>
+
+    <div class="tool-block">
+      <label for="su-version">SketchUp 版本</label>
+      <select id="su-version">
+        <option value="">正在扫描本机 SketchUp…</option>
+      </select>
+      <div class="row">
+        <button id="su-launch" class="primary">启动 SU</button>
+        <button id="su-bridge" title="安装或升级该版本的 Ruby 桥接插件">装/升桥接</button>
+        <button id="su-refresh" title="重新扫描与连接">↻</button>
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <label for="su-scene">场景快切（Scenes）</label>
+      <select id="su-scene">
+        <option value="">使用上方预设 / 当前视角</option>
+      </select>
+    </div>
+
+    <div class="tool-block">
+      <div id="stats">未连接 SketchUp 实例</div>
+      <div class="row">
+        <button id="undo" title="撤销 SketchUp 上一步操作">↶ 撤销</button>
+        <select id="format" aria-label="导出格式">
+          <option value="skp">SKP</option>
+          <option value="dae">DAE</option>
+          <option value="obj">OBJ</option>
+          <option value="stl">STL</option>
+          <option value="fbx">FBX</option>
+        </select>
+        <button id="export">保存 / 导出</button>
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <button id="sync-dsh" title="将本插件的 SketchUp MCP 同步注册到首页 DSH 对话">同步到首页 DSH</button>
+      <p class="tool-tip">提示：首次安装或升级桥接后，若 SketchUp 已在运行，请重启一次 SketchUp。</p>
+    </div>
+
+    <details>
+      <summary>最近截图与操作</summary>
+      <div id="history-list" class="history-list"><small>暂无记录</small></div>
+    </details>
+
+    <details>
+      <summary>DSH 执行日志</summary>
+      <pre id="log">等待任务…</pre>
+    </details>
+  </aside>
+
+  <section id="composer" aria-label="建模输入面板">
+    <section id="reference-zone" aria-label="参考图上传区" tabindex="0">
+      <div class="row">
+        <label>参考图 <span id="reference-count">0 / 4</span></label>
+        <button id="add-reference">＋ 添加参考图</button>
+        <span class="hint">可拖入或连接画布上游图片节点</span>
+      </div>
+      <input id="reference-files" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+      <div id="references"></div>
+    </section>
+
+    <label class="sr-only" for="prompt">建模描述</label>
+    <textarea id="prompt" rows="2" placeholder="描述要新建或修改的 SketchUp 模型（留空运行则直接按当前样式抓图输出下游）…"></textarea>
+
+    <div class="row composer-actions">
+      <select id="model" aria-label="DSH 智能体模型">
+        <option value="">DSH 默认模型</option>
+      </select>
+      <button id="refresh-models" title="刷新 DSH 模型列表" aria-label="刷新 DSH 模型列表">↻</button>
+      <span id="su-inline-status" class="inline-status" data-ready="false">SU 未连接</span>
+      <button id="build-btn" class="primary">开始建模</button>
+      <button id="stop" disabled>停止</button>
+    </div>
+
+    <p id="status" role="status" aria-live="polite">选择 SketchUp 版本后可点击「开始建模」，或直接抓取样式底图输出下游。</p>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "sketchup-studio",
+  "versions": [
+    {
+      "version": "0.1.0",
+      "ref": "sketchup-studio-v0.1.0",
+      "releasedAt": "2026-11-26",
+      "notes": [
+        "首次发布 SketchUp 建模画布节点插件：支持 SketchUp 2021-2027 多版本选择与自动 Ruby 桥接（v1.1.0）。",
+        "视口区支持 材质 / 纯白模 / 线框 + 阴影开关、预设视角与模型场景抓图，直接输出下游 AI 渲染底图。",
+        "内置 DSH 视觉参考图建模、撤销、SKP/DAE/OBJ/STL/FBX 导出与一键同步到首页 DSH。"
+      ]
+    }
+  ]
+}

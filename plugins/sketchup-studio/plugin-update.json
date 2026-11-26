@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "sketchup-studio",
+  "version": "0.1.0",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 2056,
+      "sha256": "9473d72b153e20622842d2cf524d0a99bce3782c9ed472087906b71d9351aaa7"
+    },
+    {
+      "path": "bridge/hios_sketchup_bridge.rb",
+      "size": 704,
+      "sha256": "45d879ea3aaa92f28c07ef5c970ab7feea625ca5a1ac9d1babf5dde59cfed037"
+    },
+    {
+      "path": "bridge/hios_sketchup_bridge/main.rb",
+      "size": 22456,
+      "sha256": "daf738d8c06c27aad93e8815369e2c11382eaeb340d37f5c82965ddd895f88be"
+    },
+    {
+      "path": "engine/server.mjs",
+      "size": 15851,
+      "sha256": "dd418b3e19bfbffd7754ae50ac7f0152718c2f2081a4d9aedb45f378fbf4f407"
+    },
+    {
+      "path": "engine/sketchup-client.mjs",
+      "size": 16428,
+      "sha256": "e7a3078f71409c118fe56a1215ba8b60eade622a665552938e5794999243e24e"
+    },
+    {
+      "path": "plugin.json",
+      "size": 1563,
+      "sha256": "235f69c3f35fb3fa3a4086f8952b06cde1b4725c63b632f10ea74b7ad5c6c08a"
+    },
+    {
+      "path": "runtime/app.js",
+      "size": 32149,
+      "sha256": "a96949b4e71ce5675734a63d89090dbe388815a2a36d498d00726a9eb0973c16"
+    },
+    {
+      "path": "runtime/index.html",
+      "size": 6188,
+      "sha256": "646259dd76dd9249ccb73328b4d5c689ba6274c59ca00f88e420b3c96dd249b7"
+    },
+    {
+      "path": "runtime/style.css",
+      "size": 9071,
+      "sha256": "7eb7c241b2bb595a5e89049f0f148432d707c375baf22687b96cb04a763a3165"
+    },
+    {
+      "path": "shared/hios-adapter.css",
+      "size": 294,
+      "sha256": "46ec833662ad958b8ad1a55562735940e3c524b61f09b3f646cb48d19b85d5da"
+    },
+    {
+      "path": "shared/hios-glass.css",
+      "size": 7012,
+      "sha256": "ec0639709812f9b796746488b7099b6066b25876ce15ef5ed9847f9e7b3879b7"
+    },
+    {
+      "path": "shared/hios-glass.js",
+      "size": 2710,
+      "sha256": "c82e33ee7120cfebf3bbbb26c7338e84294f98010b0473f3209873252fa368e6"
+    },
+    {
+      "path": "shared/hios-ui.css",
+      "size": 1566,
+      "sha256": "02cf5c72c5cbc6790f6311abd0c1c722fda7e9e43bdb81ec0b76fde57e7abc96"
+    },
+    {
+      "path": "shared/hios-ui.js",
+      "size": 2097,
+      "sha256": "2c05c2fdd187a931216caef345cabacf370585bc60442599fdaf6fd4077072a8"
+    },
+    {
+      "path": "skills/sketchup-studio/SKILL.md",
+      "size": 3098,
+      "sha256": "f335092fec76b8bf5581eaccbbe065ae3e891a29ac70a19d61fdb5e52ca99eb9"
+    },
+    {
+      "path": "tests/sketchup-studio.test.mjs",
+      "size": 10444,
+      "sha256": "da5cdd16a498d0c37de76a8da6b998432e78c65c92f83d7681101af463149ae2"
+    },
+    {
+      "path": "versions.json",
+      "size": 611,
+      "sha256": "d19f2fe5445ab3f0a677a7613c18fe52db629c2ce65cf23a42537e1241715b93"
+    }
+  ]
+}
