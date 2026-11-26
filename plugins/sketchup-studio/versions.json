@@ -3,6 +3,14 @@
   "pluginId": "sketchup-studio",
   "versions": [
     {
+      "version": "0.1.1",
+      "ref": "sketchup-studio-v0.1.1",
+      "releasedAt": "2026-11-26",
+      "notes": [
+        "修复视口容器缺少 role=\"application\" 导致宿主表单自动高度（fitForm）把主容器压成 0 高度、画布节点打开显示空白的问题。"
+      ]
+    },
+    {
       "version": "0.1.0",
       "ref": "sketchup-studio-v0.1.0",
       "releasedAt": "2026-11-26",

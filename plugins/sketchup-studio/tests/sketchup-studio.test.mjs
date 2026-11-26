@@ -152,6 +152,7 @@ test('manifest, skill parity and canvas-only node structure', () => {
   assert.match(skillText, /^---\r?\n[\s\S]*?name:\s*sketchup-studio\b/);
 
   const html = readFileSync(join(PLUGIN_ROOT, 'runtime', 'index.html'), 'utf8');
+  assert.match(html, /id="viewer"[^>]*role="application"/, 'viewport must opt out of host fitForm height collapse');
   assert.match(html, /data-mode="material"/);
   assert.match(html, /data-mode="white"/);
   assert.match(html, /data-mode="wire"/);

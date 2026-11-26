@@ -332,7 +332,7 @@ rl.on('line', async line => {
       result = {
         protocolVersion: req.params?.protocolVersion || '2025-03-26',
         capabilities: { tools: {} },
-        serverInfo: { name: 'sketchup-studio', version: '0.1.0' },
+        serverInfo: { name: 'sketchup-studio', version: '0.1.1' },
       };
     } else if (req.method === 'ping') {
       result = {};

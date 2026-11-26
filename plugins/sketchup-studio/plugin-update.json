@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "sketchup-studio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "files": [
     {
       "path": "README.md",
@@ -21,7 +21,7 @@
     {
       "path": "engine/server.mjs",
       "size": 15851,
-      "sha256": "dd418b3e19bfbffd7754ae50ac7f0152718c2f2081a4d9aedb45f378fbf4f407"
+      "sha256": "cba90d2b45434d60075c1f34c29d416f8226eb4f4998d66afedf95085f342b43"
     },
     {
       "path": "engine/sketchup-client.mjs",
@@ -31,7 +31,7 @@
     {
       "path": "plugin.json",
       "size": 1563,
-      "sha256": "235f69c3f35fb3fa3a4086f8952b06cde1b4725c63b632f10ea74b7ad5c6c08a"
+      "sha256": "ff4f7e0f0648bbc74fdd8f73f8da14d48b7b64de3ba6076bc61a8bdff0bb7399"
     },
     {
       "path": "runtime/app.js",
@@ -40,13 +40,13 @@
     },
     {
       "path": "runtime/index.html",
-      "size": 6188,
-      "sha256": "646259dd76dd9249ccb73328b4d5c689ba6274c59ca00f88e420b3c96dd249b7"
+      "size": 6193,
+      "sha256": "134a2caa858da94002f5cc31da19d75a481942eeb07b21a0da5d8c803bac831a"
     },
     {
       "path": "runtime/style.css",
-      "size": 9071,
-      "sha256": "7eb7c241b2bb595a5e89049f0f148432d707c375baf22687b96cb04a763a3165"
+      "size": 9099,
+      "sha256": "43cd774d6445a0ae07242d73a7a08a56482d384e0f48c1b2955acb7f0b19ef8a"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -80,13 +80,13 @@
     },
     {
       "path": "tests/sketchup-studio.test.mjs",
-      "size": 10444,
-      "sha256": "da5cdd16a498d0c37de76a8da6b998432e78c65c92f83d7681101af463149ae2"
+      "size": 10561,
+      "sha256": "fa522a160778b178e96d3693f0098f6b25c2f0ae19674c6e870145cf06d621b7"
     },
     {
       "path": "versions.json",
-      "size": 611,
-      "sha256": "d19f2fe5445ab3f0a677a7613c18fe52db629c2ce65cf23a42537e1241715b93"
+      "size": 920,
+      "sha256": "45f48d3b0effbab5b95926febbf00329f9791292ebd8b10f540813f4db4a411d"
     }
   ]
 }
