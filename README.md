@@ -6,7 +6,7 @@ HIOS Next 官方与社区插件统一仓库。每个插件独立放在 `plugins/
 
 | 插件 | 版本 | 安装 URL |
 | --- | --- | --- |
-| SketchUp 建模（画布节点） | 0.1.3 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/sketchup-studio`（DSH 驱动本机多版本 SketchUp 建模与修改，支持材质/纯白模/线框+阴影底图输出下游 AI 渲染） |
+| SketchUp 建模（画布节点） | 0.1.4 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/sketchup-studio`（DSH 驱动本机多版本 SketchUp 建模与修改，支持材质/纯白模/线框+阴影底图与 3D 模型文件节点输出） |
 | 网页账号代理 | 0.8.0 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/doubao-account`（需 HIOS Next ≥ 4.8.6；支持 Muse、Gemini 与 Google Flow 网页账号接入 AI 路由） |
 | 随机组合提示词 | 0.1.2 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/random-prompt-composer`（七类共2100条标签；默认折叠、主题下拉菜单、锁定、种子复现、LLM深化系统提示词） |
 | 3D 建模 | 0.3.8 | `https://github.com/orangewoker/hios-next-plugins/tree/main/plugins/modeling-3d`（需 HIOS Next ≥ 4.2.8；DSH + 本机 Blender，参考图建模与主题工作台，无 AI 权重下载） |

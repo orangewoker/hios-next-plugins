@@ -23,7 +23,7 @@
     </div>
   </header>
 
-  <section id="viewer" class="nodrag" data-no-node-drag role="application" aria-label="SketchUp 视口预览（左键旋转，右键/Shift平移，滚轮缩放）">
+  <section id="viewer" role="application" aria-label="SketchUp 视口预览">
     <div id="empty">
       连接 SketchUp 开始建模
       <br>
@@ -41,13 +41,13 @@
     <button id="toggle-shadows" aria-pressed="false" title="开启或关闭 SketchUp 阴影">阴影</button>
   </div>
 
-  <div class="view-actions" role="group" aria-label="视角与底图输出">
+  <div class="view-actions" role="group" aria-label="视角刷新与模型输出">
     <button data-cam="current" aria-pressed="true" title="保持 SketchUp 当前视角">当前</button>
     <button data-cam="iso" aria-pressed="false" title="轴测透视视角">轴测</button>
     <button data-cam="front" aria-pressed="false" title="正面视角">正视</button>
     <button data-cam="top" aria-pressed="false" title="俯视视角">顶视</button>
-    <button id="capture-now" title="按当前样式立即抓取 SketchUp 视口">↻ 抓图</button>
-    <button id="push-preview" class="accent-outline" title="将当前样式视口图立即输出到下游节点">↗ 输出底图</button>
+    <button id="capture-now" title="刷新当前 SketchUp 场景列表、模型状态与视口预览">↻ 刷新</button>
+    <button id="push-preview" class="accent-outline" title="导出当前 SketchUp 模型并在画布自动生成 3D 模型文件节点">↗ 输出模型</button>
   </div>
 
   <aside id="tools" hidden>

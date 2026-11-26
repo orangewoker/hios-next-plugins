@@ -60,14 +60,6 @@ let versionsInfo = { installed: [], running: [], defaultVersion: '' };
 let busy = false;
 let stopRequested = false;
 let activeRunId = '';
-let cameraDragging = false;
-let cameraAction = '';
-let dragLastX = 0;
-let dragLastY = 0;
-let pendingDx = 0;
-let pendingDy = 0;
-let cameraInFlight = false;
-let wheelSettleTimer = null;
 
 let state = {
   sessionId: '',
@@ -244,7 +236,6 @@ function renderPreview(capture) {
     fmtTag,
     dims,
     camLabel(capture.cameraPreset || state.cameraPreset, capture.sceneName || ''),
-    '左键旋转 · 右键/Shift平移 · 滚轮缩放',
   ];
   els.previewMeta.textContent = parts.join(' · ');
   els.previewMeta.hidden = false;
@@ -749,133 +740,6 @@ async function stopCurrentTask() {
   setBusy(false);
 }
 
-// Interactive Orbit / Pan / Zoom in Viewport
-async function flushCameraDelta() {
-  if (cameraInFlight || (!pendingDx && !pendingDy)) return;
-  const live = activeRunningInstance();
-  if (!live) { pendingDx = 0; pendingDy = 0; return; }
-  const dx = pendingDx;
-  const dy = pendingDy;
-  const action = cameraAction || 'orbit';
-  pendingDx = 0;
-  pendingDy = 0;
-  cameraInFlight = true;
-  try {
-    const res = await callEngine('ui_camera', {
-      version: live.year,
-      action,
-      dx,
-      dy,
-      displayMode: state.displayMode,
-      shadows: Boolean(state.shadows),
-      fastPreview: true,
-      width: 720,
-      height: 540,
-    }, 15000);
-    if (res?.ok && res.previewDataUrl) {
-      els.previewImg.src = res.previewDataUrl;
-      els.previewImg.hidden = false;
-      els.empty.hidden = true;
-    }
-  } catch (err) {
-    setStatus(`视角操控失败：${err?.message || err}`, true);
-  } finally {
-    cameraInFlight = false;
-    if (pendingDx || pendingDy) {
-      void flushCameraDelta();
-    }
-  }
-}
-
-els.viewer.addEventListener('contextmenu', e => e.preventDefault());
-
-els.viewer.addEventListener('pointerdown', e => {
-  if (busy || !activeRunningInstance()) return;
-  if (e.button !== 0 && e.button !== 1 && e.button !== 2) return;
-  e.preventDefault();
-  e.stopPropagation();
-  cameraDragging = true;
-  cameraAction = (e.button === 2 || e.button === 1 || e.shiftKey) ? 'pan' : 'orbit';
-  dragLastX = e.clientX;
-  dragLastY = e.clientY;
-  pendingDx = 0;
-  pendingDy = 0;
-  els.viewer.classList.add('dragging');
-  try { els.viewer.setPointerCapture(e.pointerId); } catch {}
-  if (state.cameraPreset !== 'current' || state.sceneName) {
-    saveState({ cameraPreset: 'current', sceneName: '' });
-    syncStyleButtons();
-  }
-});
-
-els.viewer.addEventListener('pointermove', e => {
-  if (!cameraDragging) return;
-  e.preventDefault();
-  e.stopPropagation();
-  const dx = e.clientX - dragLastX;
-  const dy = e.clientY - dragLastY;
-  dragLastX = e.clientX;
-  dragLastY = e.clientY;
-  if (!dx && !dy) return;
-  pendingDx += dx;
-  pendingDy += dy;
-  void flushCameraDelta();
-});
-
-async function endCameraDrag(e) {
-  if (!cameraDragging) return;
-  cameraDragging = false;
-  els.viewer.classList.remove('dragging');
-  try { if (e?.pointerId !== undefined) els.viewer.releasePointerCapture(e.pointerId); } catch {}
-  setTimeout(async () => {
-    if (cameraDragging || busy) return;
-    try {
-      await captureStyledView({ silent: true, restoreCamera: true });
-    } catch {}
-  }, 150);
-}
-
-els.viewer.addEventListener('pointerup', endCameraDrag);
-els.viewer.addEventListener('pointercancel', endCameraDrag);
-
-els.viewer.addEventListener('wheel', e => {
-  if (busy || !activeRunningInstance()) return;
-  e.preventDefault();
-  e.stopPropagation();
-  if (state.cameraPreset !== 'current' || state.sceneName) {
-    saveState({ cameraPreset: 'current', sceneName: '' });
-    syncStyleButtons();
-  }
-  const live = activeRunningInstance();
-  if (!live) return;
-  if (!cameraInFlight) {
-    cameraInFlight = true;
-    void callEngine('ui_camera', {
-      version: live.year,
-      action: 'zoom',
-      delta: e.deltaY,
-      displayMode: state.displayMode,
-      shadows: Boolean(state.shadows),
-      fastPreview: true,
-      width: 720,
-      height: 540,
-    }, 15000).then(res => {
-      if (res?.ok && res.previewDataUrl) {
-        els.previewImg.src = res.previewDataUrl;
-        els.previewImg.hidden = false;
-        els.empty.hidden = true;
-      }
-    }).catch(err => setStatus(`滚轮缩放失败：${err?.message || err}`, true))
-      .finally(() => { cameraInFlight = false; });
-  }
-  clearTimeout(wheelSettleTimer);
-  wheelSettleTimer = setTimeout(() => {
-    if (!cameraDragging && !busy) {
-      void captureStyledView({ silent: true, restoreCamera: true }).catch(() => {});
-    }
-  }, 260);
-}, { passive: false });
-
 // Event Listeners
 els.expand.addEventListener('click', () => {
   post(expanded ? 'view-close' : 'view-open', {});
@@ -974,26 +838,63 @@ for (const input of [els.captureWidth, els.captureHeight]) {
 
 els.captureNow.addEventListener('click', async () => {
   if (busy) return;
+  els.captureNow.disabled = true;
   try {
-    await captureStyledView({ autoLaunch: false });
+    setStatus('正在刷新 SketchUp 场景文件与视口预览…');
+    await refreshVersions(true);
+    void refreshHistory(false);
+    if (!activeRunningInstance()) {
+      setStatus('未检测到运行中的 SketchUp 实例，请先在「工具」中启动 SketchUp。', true);
+      return;
+    }
+    const cap = await captureStyledView({ silent: true, autoLaunch: false });
+    const live = activeRunningInstance();
+    const sceneCount = (live?.scenes || []).length;
+    setStatus(`已刷新「${live?.modelTitle || '当前模型'}」（${sceneCount} 个场景）与 ${modeLabel(cap?.displayMode || state.displayMode)} 视口预览。`);
   } catch (err) {
-    setStatus(`抓图失败：${err.message}`, true);
+    setStatus(`刷新失败：${err.message}`, true);
+  } finally {
+    els.captureNow.disabled = busy;
   }
 });
 
 els.pushPreview.addEventListener('click', async () => {
   if (busy) return;
+  const live = activeRunningInstance();
+  if (!live) {
+    setStatus('SketchUp 尚未连接，请先在「工具」中启动 SketchUp。', true);
+    return;
+  }
+  const format = (els.format?.value || 'skp').toLowerCase();
+  els.pushPreview.disabled = true;
+  setStatus(`正在导出 ${format.toUpperCase()} 模型并生成画布文件节点…`);
   try {
-    const cap = activeRunningInstance() ? await captureStyledView({ silent: true }) : state.latestCapture;
-    if (!cap?.url) {
-      setStatus('还没有可输出的视口图，请先启动 SketchUp 并抓图。', true);
-      return;
+    const res = await callEngine('ui_export_model', {
+      version: live.year,
+      format,
+      modelTitle: live.modelTitle || '',
+    }, 90000);
+    if (!res?.file?.url) {
+      throw new Error(res?.error || '未生成可输出的模型文件');
     }
-    publishOutputs(cap, state.latestModel, '');
-    const fmt = captureFormatSpec(state.captureFormat);
-    setStatus(`已将 ${modeLabel(cap.displayMode)}${cap.shadows ? ' + 阴影' : ''}（${fmt.label}）底图推送至下游节点！`);
+    saveState({ latestModel: res.file });
+    post('output', {
+      kind: 'file',
+      portId: 'model',
+      source: canonicalAssetUrl(res.file.url),
+      name: res.file.name || `sketchup-model.${format}`,
+      mime: format === 'obj' ? 'text/plain' : 'model/3d',
+      metadata: {
+        addToCanvas: true,
+        fileKind: 'model',
+        modelFormat: format.toUpperCase(),
+      },
+    });
+    setStatus(`已输出模型「${res.file.name}」，并在画布自动生成 3D 模型文件节点。`);
   } catch (err) {
-    setStatus(`输出底图失败：${err.message}`, true);
+    setStatus(`输出模型失败：${err.message}`, true);
+  } finally {
+    els.pushPreview.disabled = busy;
   }
 });
 

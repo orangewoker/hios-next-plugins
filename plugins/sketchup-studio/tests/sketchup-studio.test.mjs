@@ -167,7 +167,12 @@ test('manifest, skill parity and canvas-only node structure', () => {
   assert.match(skillText, /^---\r?\n[\s\S]*?name:\s*sketchup-studio\b/);
 
   const html = readFileSync(join(PLUGIN_ROOT, 'runtime', 'index.html'), 'utf8');
-  assert.match(html, /id="viewer"[^>]*class="nodrag"[^>]*role="application"/, 'viewport must opt out of host fitForm and node drag for orbit/pan');
+  const appJs = readFileSync(join(PLUGIN_ROOT, 'runtime', 'app.js'), 'utf8');
+  assert.match(html, /id="viewer"[^>]*role="application"/, 'viewport must keep role=application so host fitForm does not collapse height');
+  assert.doesNotMatch(html, /左键旋转/, 'viewport drag/wheel hint must be removed');
+  assert.doesNotMatch(appJs, /flushCameraDelta|左键旋转/, 'viewport drag/wheel camera interaction must be removed');
+  assert.match(html, /id="capture-now"[^>]*>↻ 刷新<\/button>/, 'capture button renamed to refresh');
+  assert.match(html, /id="push-preview"[^>]*>↗ 输出模型<\/button>/, 'push button renamed to export model');
   assert.doesNotMatch(html, /id="live-sync"/, 'live-sync button replaced by header scene select');
   assert.match(html, /<header>[\s\S]*id="su-scene"[\s\S]*<\/header>/, 'scene select must be in header');
   assert.match(html, /id="capture-format"/);

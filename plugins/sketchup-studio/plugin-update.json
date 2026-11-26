@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "sketchup-studio",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "files": [
     {
       "path": "README.md",
@@ -15,13 +15,13 @@
     },
     {
       "path": "bridge/hios_sketchup_bridge/main.rb",
-      "size": 30409,
-      "sha256": "88c5cc2535602df223d0bb0e8c379b65fcab8a06d13ef5d1509a3f0a478a8644"
+      "size": 30530,
+      "sha256": "97bb4edfb0760326325d2de71b165d3caa4956585e5671d86543c77c91b95493"
     },
     {
       "path": "engine/server.mjs",
-      "size": 28667,
-      "sha256": "19c1d68cccd850d37a27c06f4dd17e7decbede41bb7ec4f509fce0f04ac8541b"
+      "size": 29947,
+      "sha256": "6e9d1d097a67b54d588bcfd1cae4766304c9b049281fe792236cea4f9c212762"
     },
     {
       "path": "engine/sketchup-client.mjs",
@@ -31,22 +31,22 @@
     {
       "path": "plugin.json",
       "size": 1563,
-      "sha256": "d322ed4ae16be376fa611f16ca3a8eaa19aec43588c865de934878331e22fa82"
+      "sha256": "d3aa8bfcae7ba8f25c2b6b527cd0acb57229e08371203d9a3bb435b4a1278c2b"
     },
     {
       "path": "runtime/app.js",
-      "size": 41054,
-      "sha256": "f553c4e82e12efa7e2732fd9664eb3ad93cdcd95408ede59ed1703d0bf16384d"
+      "size": 38331,
+      "sha256": "30955fc95408f8cc7ac198a0ffcc813b59ee13ea389f38dc40bbd9c8f4f6311a"
     },
     {
       "path": "runtime/index.html",
-      "size": 7655,
-      "sha256": "93f9d6d6d99c2bf2eb7dc8bacf94d85758894384d06c3cd0ce5f92dff2f1c821"
+      "size": 7618,
+      "sha256": "dfe884cb07f30f2d700d2e92371773e233d0e0ccab0988d3f5475f8ef8efec3b"
     },
     {
       "path": "runtime/style.css",
-      "size": 10375,
-      "sha256": "524babcffa0dd35cec93a0acc4a5732b18f026ee7c8ebab2171bef71b67d9fd7"
+      "size": 10277,
+      "sha256": "4c9b765f1157488dd2148a74b97576818760ee6e02e08e1e2edfefc7cde7563c"
     },
     {
       "path": "shared/hios-adapter.css",
@@ -80,13 +80,13 @@
     },
     {
       "path": "tests/sketchup-studio.test.mjs",
-      "size": 14950,
-      "sha256": "286598004580a011f5eae9066082fea36f458b9cddcccf35890ede17523489a1"
+      "size": 15449,
+      "sha256": "53a78da80ea4b8756b2c700e66e6fad7a32464e77eef97d5cbb77014457b7dbc"
     },
     {
       "path": "versions.json",
-      "size": 2419,
-      "sha256": "319ebf635c99f8dc2e8877395dc1d7b2b7dda36b7bc03d97b10e77fa93a6227d"
+      "size": 3115,
+      "sha256": "fce8f104985fb7f835a39c2ff5aa647aea10ca0855c1aaafdd04a990ef647b72"
     }
   ]
 }

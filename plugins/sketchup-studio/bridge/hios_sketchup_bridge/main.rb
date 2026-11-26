@@ -829,13 +829,13 @@ module HiosSketchupBridge
         return { ok: false, error: "File does not exist: #{path}" } unless File.exist?(path)
         ok = Sketchup.open_file(path)
         { ok: ok, action: 'open', path: safe_utf8(path) }
-      when 'save'
+      when 'save', 'save_copy'
         return { ok: false, error: 'No active model' } unless model
         target = path.empty? ? model.path : path
         return { ok: false, error: 'Model has never been saved; please provide a target .skp path' } if target.to_s.empty?
         FileUtils.mkdir_p(File.dirname(target))
-        ok = model.save(target)
-        { ok: ok, action: 'save', path: safe_utf8(target) }
+        ok = (action == 'save_copy' && model.respond_to?(:save_copy)) ? model.save_copy(target) : model.save(target)
+        { ok: ok && File.exist?(target), action: action, path: safe_utf8(target) }
       when 'export'
         return { ok: false, error: 'No active model' } unless model
         return { ok: false, error: 'Missing export path' } if path.empty?

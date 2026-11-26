@@ -167,7 +167,7 @@ const uiOnlyTools = [
     }),
     _meta: { 'hios/uiOnly': true },
   },
-  { name: 'ui_export_model', description: 'UI 保存或导出当前模型到工作区', inputSchema: schema({ format: { type: 'string', enum: ['skp', 'dae', 'obj', 'stl', 'fbx'] }, version: versionProp, pid: pidProp }), _meta: { 'hios/uiOnly': true } },
+  { name: 'ui_export_model', description: 'UI 保存或导出当前模型到工作区', inputSchema: schema({ format: { type: 'string', enum: ['skp', 'dae', 'obj', 'stl', 'fbx'] }, modelTitle: { type: 'string' }, version: versionProp, pid: pidProp }), _meta: { 'hios/uiOnly': true } },
   { name: 'ui_undo', description: 'UI 执行撤销', inputSchema: schema({ version: versionProp, pid: pidProp }), _meta: { 'hios/uiOnly': true } },
   { name: 'ui_history', description: 'UI 读取当前节点工作区历史截图与操作记录', inputSchema: schema({}), _meta: { 'hios/uiOnly': true } },
   { name: 'ui_sync_dsh', description: 'UI 将当前插件 MCP 同步到首页 DSH 配置', inputSchema: schema({}), _meta: { 'hios/uiOnly': true } },
@@ -498,19 +498,47 @@ async function doCapture(args, ctx, returnImageBlock) {
   return { content };
 }
 
+function sanitizeModelBaseName(title) {
+  const cleaned = String(title || '')
+    .trim()
+    .replace(/\.(?:skp|dae|obj|stl|fbx)$/i, '')
+    .replace(/[<>:"/\\|?*\x00-\x1f]+/g, '_')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleaned || 'sketchup-model';
+}
+
 async function doExportOrSave(args, ctx) {
   const format = String(args.format || 'skp').toLowerCase();
   let targetPath = args.path;
   let relPath = '';
   const action = args.action || (format === 'skp' ? 'save' : 'export');
-  if (!targetPath && ctx?.root && (action === 'save' || action === 'export')) {
+  const displayName = `${sanitizeModelBaseName(args.modelTitle)}.${format}`;
+  if (!targetPath && ctx?.root && (action === 'save' || action === 'save_copy' || action === 'export')) {
     mkdirSync(join(ctx.root, 'exports'), { recursive: true });
     relPath = `exports/model-${Date.now()}.${format}`;
     targetPath = join(ctx.root, relPath);
   }
-  const res = await callSketchup('POST', '/model_file', { action, path: targetPath }, { version: args.version, pid: args.pid, timeoutMs: 60000 });
+  let res = await callSketchup('POST', '/model_file', { action, path: targetPath }, { version: args.version, pid: args.pid, timeoutMs: 60000 });
+  // Older v1.1.0/v1.2.0 bridge doesn't recognize save_copy yet; run save_copy via /run_ruby so we never hijack the user's open .skp path.
+  if (!res.ok && action === 'save_copy' && targetPath && /Unsupported model_file action/i.test(String(res.error || ''))) {
+    const code = `
+require 'fileutils'
+m = Sketchup.active_model
+raise 'No active model' unless m
+t = ${rubyLiteral(targetPath)}
+FileUtils.mkdir_p(File.dirname(t))
+ok = m.respond_to?(:save_copy) ? m.save_copy(t) : m.save(t)
+raise 'save_copy failed' unless ok && File.exist?(t)
+'OK'
+`;
+    const run = await callSketchup('POST', '/run_ruby', { code, undoable: false, operationName: 'HIOS Save Copy' }, { version: args.version, pid: args.pid, timeoutMs: 60000 });
+    res = run.ok && existsSync(targetPath)
+      ? { ok: true, action: 'save_copy', path: targetPath }
+      : { ok: false, error: run.error || 'save_copy failed' };
+  }
   if (!res.ok) return { isError: true, content: [{ type: 'text', text: JSON.stringify(res, null, 2) }] };
-  const artifact = relPath ? { path: relPath, url: assetUrl(ctx, relPath), format, name: `sketchup-model.${format}`, createdAt: Date.now() } : null;
+  const artifact = relPath ? { path: relPath, url: assetUrl(ctx, relPath), format, name: displayName, createdAt: Date.now() } : null;
   if (artifact && ctx?.root) {
     const state = readWorkspaceMeta(ctx);
     state.latestModel = artifact;
@@ -601,7 +629,7 @@ async function executeTool(name, rawArgs = {}) {
     case 'sketchup_model_file':
       return doExportOrSave(args, ctx);
     case 'ui_export_model':
-      return doExportOrSave({ ...args, action: (args.format || 'skp') === 'skp' ? 'save' : 'export' }, ctx);
+      return doExportOrSave({ ...args, action: (args.format || 'skp') === 'skp' ? 'save_copy' : 'export' }, ctx);
     case 'sketchup_undo':
     case 'ui_undo': {
       const res = await callSketchup('POST', '/undo', {}, args);
@@ -632,7 +660,7 @@ rl.on('line', async line => {
       result = {
         protocolVersion: req.params?.protocolVersion || '2025-03-26',
         capabilities: { tools: {} },
-        serverInfo: { name: 'sketchup-studio', version: '0.1.3' },
+        serverInfo: { name: 'sketchup-studio', version: '0.1.4' },
       };
     } else if (req.method === 'ping') {
       result = {};
